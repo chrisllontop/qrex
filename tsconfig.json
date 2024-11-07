@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+  "target": "ESNext",
+  "module": "ESNext",
+  "moduleResolution": "Node",
+  "outDir": "./dist",
+  "declaration": true,
+  "declarationMap": true,
+  "sourceMap": true,
+  "strict": true,
+  "esModuleInterop": true,
+  "skipLibCheck": true,
+  "forceConsistentCasingInFileNames": true,
+  "allowJs": true,
+  "checkJs": true,
+  "resolveJsonModule": true,
+  "baseUrl": ".",
+  "paths": {
+    "*": ["*"]
+  }
+},
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  },
+  "include": ["**/*.js", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "dist", "build", "test"]
+}

@@ -1,11 +1,13 @@
-# IDEs
-.idea
-.vscode
-
-# OS
+# Local
 .DS_Store
-Thumbs.db
+*.local
+*.log*
 
-# Node
+# Dist
 node_modules
-.pnpm-debug.log
+dist/
+
+# IDE
+.vscode/*
+!.vscode/extensions.json
+.idea

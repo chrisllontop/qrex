@@ -1,5 +1,5 @@
-const test = require('tap').test
-const pattern = require('core/alignment-pattern')
+const test = require("tap").test;
+const pattern = require("core/alignment-pattern");
 
 /**
  * Row/column coordinates of the center module of each alignment pattern.
@@ -47,33 +47,45 @@ const EXPECTED_POSITION_TABLE = [
   [6, 28, 54, 80, 106, 132, 158],
   [6, 32, 58, 84, 110, 136, 162],
   [6, 26, 54, 82, 110, 138, 166],
-  [6, 30, 58, 86, 114, 142, 170]
-]
+  [6, 30, 58, 86, 114, 142, 170],
+];
 
-test('Alignment pattern - Row/Col coords', function (t) {
-  t.plan(40)
+test("Alignment pattern - Row/Col coords", function (t) {
+  t.plan(40);
 
   for (let i = 1; i <= 40; i++) {
-    const pos = pattern.getRowColCoords(i)
-    t.deepEqual(pos, EXPECTED_POSITION_TABLE[i - 1], 'Should return correct coords')
+    const pos = pattern.getRowColCoords(i);
+    t.deepEqual(
+      pos,
+      EXPECTED_POSITION_TABLE[i - 1],
+      "Should return correct coords",
+    );
   }
-})
+});
 
-test('Alignment pattern - Positions', function (t) {
+test("Alignment pattern - Positions", function (t) {
   for (let i = 1; i <= 40; i++) {
-    const pos = pattern.getPositions(i)
-    const expectedPos = EXPECTED_POSITION_TABLE[i - 1]
-    const expectedLength = (Math.pow(expectedPos.length, 2) || 3) - 3
+    const pos = pattern.getPositions(i);
+    const expectedPos = EXPECTED_POSITION_TABLE[i - 1];
+    const expectedLength = (Math.pow(expectedPos.length, 2) || 3) - 3;
 
-    t.equal(pos.length, expectedLength, 'Should return correct number of positions')
+    t.equal(
+      pos.length,
+      expectedLength,
+      "Should return correct number of positions",
+    );
 
     // For each coord value check if it's present in the expected coords table
     pos.forEach(function (position) {
       position.forEach(function (coord) {
-        t.notEqual(expectedPos.indexOf(coord), -1, 'Should return valid coord value')
-      })
-    })
+        t.notEqual(
+          expectedPos.indexOf(coord),
+          -1,
+          "Should return valid coord value",
+        );
+      });
+    });
   }
 
-  t.end()
-})
+  t.end();
+});

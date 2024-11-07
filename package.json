@@ -23,12 +23,7 @@
     "./lib/qrex.js": "./lib/qrex.browser.js",
     "fs": false
   },
-  "files": [
-    "bin",
-    "build",
-    "lib",
-    "helper"
-  ],
+  "files": ["bin", "build", "lib", "helper"],
   "homepage": "https://github.com/chrisllontop/qrify",
   "license": "MIT",
   "scripts": {
@@ -36,7 +31,7 @@
     "build:esm": "rspack --config rspack.config.esm.js",
     "build": "pnpm run build:cjs && pnpm run build:esm",
     "lint": "biome lint",
-    "lint:fix": "biome format",
+    "lint:fix": "biome format --fix",
     "pretest": "npm run lint",
     "test": "node --throw-deprecation test.js",
     "prepublish": "npm run build",
@@ -53,7 +48,7 @@
   "devDependencies": {
     "@rspack/cli": "^1.1.0",
     "@rspack/core": "^1.1.0",
-    "biome": "^0.3.3",
+    "@biomejs/biome": "^1.9.4",
     "browserify": "^16.5.1",
     "canvas": "^2.8.0",
     "canvasutil": "0.0.4",
@@ -73,11 +68,7 @@
     "node": ">=20.0.0"
   },
   "standard": {
-    "ignore": [
-      "build/",
-      "examples/vendors/",
-      "lib/core/regex.js"
-    ]
+    "ignore": ["build/", "examples/vendors/", "lib/core/regex.js"]
   },
   "packageManager": "pnpm@9.10.0+sha512.73a29afa36a0d092ece5271de5177ecbf8318d454ecd701343131b8ebc0c1a91c487da46ab77c8e596d6acf1461e3594ced4becedf8921b074fbd8653ed7051c"
 }

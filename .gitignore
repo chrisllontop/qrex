@@ -1,0 +1,11 @@
+# IDEs
+.idea
+.vscode
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules
+.pnpm-debug.log

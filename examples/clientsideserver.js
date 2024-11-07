@@ -2,7 +2,7 @@ const express = require("express");
 const app = express(); // .createServer()
 const http = require("http");
 const fs = require("fs");
-const QRCode = require("../lib");
+const QRCode = require("../src");
 const canvasutil = require("canvasutil");
 const { createCanvas, loadImage } = require("canvas");
 

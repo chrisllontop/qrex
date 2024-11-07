@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 var yargs = require('yargs')
-var qr = require('../lib')
+var qr = require('../src')
 
 function save (file, text, options) {
   qr.toFile(file, text, options, function (err, data) {

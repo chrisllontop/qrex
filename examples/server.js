@@ -1,4 +1,4 @@
-const QRCode = require("../lib");
+const QRCode = require("../src");
 const http = require("http");
 
 function testQRCode(req, res) {

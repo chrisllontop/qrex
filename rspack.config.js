@@ -1,4 +1,6 @@
 const path = require("path");
+const TerserPlugin = require("terser-webpack-plugin");
+
 const babelConfig = {
   babelrc: false,
   presets: [
@@ -6,19 +8,17 @@ const babelConfig = {
   ],
 };
 
-const outputPath = path.resolve(__dirname, "dist/esm");
-
 module.exports = [
   {
-    entry: "./lib/index.js",
+    entry: "./src/index.ts",
     output: {
-      path: outputPath,
+      path: path.resolve(__dirname, "dist/cjs"),
       filename: "qrex.js",
       library: {
-        type: "module",
+        type: "commonjs2",
+        name: "QRCode",
       },
-      module: true,
-      chunkFormat: "module",
+      iife: true,
     },
     module: {
       rules: [
@@ -33,23 +33,20 @@ module.exports = [
       ],
     },
     resolve: {
-      extensions: [".js", ".json"],
+      extensions: [".js", ".ts"],
     },
-    target: "web",
-    experiments: {
-      outputModule: true,
+    optimization: {
+      minimize: true,
+      minimizer: [new TerserPlugin()],
     },
+    target: "node",
   },
   {
-    entry: "./lib/browser.js",
+    entry: "./src/browser.js",
     output: {
-      path: outputPath,
+      path: path.resolve(__dirname, "dist/cjs"),
       filename: "qrex.browser.js",
-      library: {
-        type: "module",
-      },
-      module: true,
-      chunkFormat: "module",
+      iife: true,
     },
     module: {
       rules: [
@@ -64,11 +61,12 @@ module.exports = [
       ],
     },
     resolve: {
-      extensions: [".js", ".json"],
+      extensions: [".js", ".ts"],
     },
-    target: "web",
-    experiments: {
-      outputModule: true,
+    optimization: {
+      minimize: true,
+      minimizer: [new TerserPlugin()],
     },
+    target: "node",
   },
 ];

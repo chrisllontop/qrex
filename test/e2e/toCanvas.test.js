@@ -1,6 +1,6 @@
 const test = require("tap").test;
 const { Canvas, createCanvas } = require("canvas");
-const QRCode = require("lib");
+const QRCode = require("src");
 const Helpers = require("test/helpers");
 
 test("toCanvas - no promise available", function (t) {

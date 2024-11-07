@@ -1,8 +1,8 @@
 const test = require("tap").test;
 const fs = require("fs");
 const path = require("path");
-const QRCode = require("lib");
-const browser = require("lib/browser");
+const QRCode = require("src");
+const browser = require("src/browser");
 const Helpers = require("test/helpers");
 
 test("toString - no promise available", function (t) {

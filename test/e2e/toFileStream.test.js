@@ -1,6 +1,6 @@
 const test = require("tap").test;
 const sinon = require("sinon");
-const QRCode = require("lib");
+const QRCode = require("src");
 const StreamMock = require("../mocks/writable-stream");
 
 test("toFileStream png", function (t) {

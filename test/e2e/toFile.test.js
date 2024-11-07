@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const os = require("os");
 const sinon = require("sinon");
-const QRCode = require("lib");
+const QRCode = require("src");
 const Helpers = require("test/helpers");
 const StreamMock = require("test/mocks/writable-stream");
 

@@ -1,6 +1,6 @@
 const test = require("tap").test;
-const QRCode = require("lib");
-const QRCodeBrowser = require("lib/browser");
+const QRCode = require("src");
+const QRCodeBrowser = require("src/browser");
 const { createCanvas } = require("canvas");
 const Helpers = require("test/helpers");
 

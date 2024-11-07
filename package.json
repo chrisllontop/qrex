@@ -23,13 +23,11 @@
     "./lib/qrex.js": "./lib/qrex.browser.js",
     "fs": false
   },
-  "files": ["bin", "build", "lib", "helper"],
+  "files": ["bin", "build", "src", "helper"],
   "homepage": "https://github.com/chrisllontop/qrify",
   "license": "MIT",
   "scripts": {
-    "build:cjs": "rspack --config rspack.config.cjs.js",
-    "build:esm": "rspack --config rspack.config.esm.js",
-    "build": "pnpm run build:cjs && pnpm run build:esm",
+    "build": "rspack build",
     "lint": "biome lint",
     "lint:fix": "biome format --fix",
     "pretest": "npm run lint",
@@ -46,9 +44,11 @@
     "yargs": "^15.3.1"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.26.0",
+    "@biomejs/biome": "^1.9.4",
     "@rspack/cli": "^1.1.0",
     "@rspack/core": "^1.1.0",
-    "@biomejs/biome": "^1.9.4",
+    "babel-loader": "^9.2.1",
     "browserify": "^16.5.1",
     "canvas": "^2.8.0",
     "canvasutil": "0.0.4",
@@ -57,6 +57,7 @@
     "express": "^4.17.1",
     "htmlparser2": "^4.1.0",
     "pngjs": "^5.0.0",
+    "terser-webpack-plugin": "^5.3.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.3"
   },

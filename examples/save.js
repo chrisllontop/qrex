@@ -1,4 +1,4 @@
-const QRCode = require("../lib");
+const QRCode = require("../src");
 
 const path = "./tmp.png";
 QRCode.toFile(

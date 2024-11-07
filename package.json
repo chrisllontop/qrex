@@ -20,10 +20,10 @@
     }
   },
   "browser": {
-    "./lib/qrex.js": "./lib/qrex.browser.js",
+    "./dist/cjs/qrex.js": "./dist/cjs/qrex.browser.js",
     "fs": false
   },
-  "files": ["bin", "build", "src", "helper"],
+  "files": ["bin", "dist", "helper"],
   "homepage": "https://github.com/chrisllontop/qrex",
   "license": "MIT",
   "scripts": {
@@ -54,7 +54,6 @@
     "canvasutil": "0.0.4",
     "colors": "^1.4.0",
     "cross-env": "^7.0.3",
-    "express": "^4.17.1",
     "htmlparser2": "^4.1.0",
     "terser-webpack-plugin": "^5.3.10",
     "ts-node": "^10.9.2",

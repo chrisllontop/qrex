@@ -27,20 +27,20 @@
 Inside your project folder do:
 
 ```shell
-npm install --save qrcode
+npm install --save qrex
 ```
 
-or, install it globally to use `qr-code` from the command line to save qrcode images or generate ones you can view in your terminal.
+or, install it globally to use `qrex` from the command line to save qrcode images or generate ones you can view in your terminal.
 
 ```shell
-npm install -g qrcode
+npm install -g qrex
 ```
 
 ## Usage
 ### CLI
 
 ```
-Usage: qrcode [options] <input string>
+Usage: qrex [options] <input string>
 
 QR Code options:
   -v, --qversion  QR Code symbol version (1 - 40)                       [number]
@@ -62,15 +62,15 @@ Options:
   --version     Show version number                                    [boolean]
 
 Examples:
-  qrcode "some text"                    Draw in terminal window
-  qrcode -o out.png "some text"         Save as png image
-  qrcode -d F00 -o out.png "some text"  Use red as foreground color
+  qrex "some text"                    Draw in terminal window
+  qrex -o out.png "some text"         Save as png image
+  qrex -d F00 -o out.png "some text"  Use red as foreground color
 ```
 If not specified, output type is guessed from file extension.<br>
 Recognized extensions are `png`, `svg` and `txt`.
 
 ### Browser
-`node-qrcode` can be used in browser through module bundlers like [Browserify](https://github.com/substack/node-browserify) and [Webpack](https://github.com/webpack/webpack) or by including the precompiled bundle present in `build/` folder.
+`qrex` can be used in browser through module bundlers like [Browserify](https://github.com/substack/node-browserify) and [Webpack](https://github.com/webpack/webpack) or by including the precompiled bundle present in `build/` folder.
 
 #### Module bundlers
 ```html
@@ -85,10 +85,10 @@ Recognized extensions are `png`, `svg` and `txt`.
 
 ```javascript
 // index.js -> bundle.js
-var QRCode = require('qrcode')
-var canvas = document.getElementById('canvas')
+var qrex = require('qrex')
+const canvas = document.getElementById('canvas')
 
-QRCode.toCanvas(canvas, 'sample text', function (error) {
+QRex.toCanvas(canvas, 'sample text', function (error) {
   if (error) console.error(error)
   console.log('success!');
 })
@@ -98,35 +98,35 @@ QRCode.toCanvas(canvas, 'sample text', function (error) {
 ```html
 <canvas id="canvas"></canvas>
 
-<script src="/build/qrcode.js"></script>
+<script src="/build/qrex.js"></script>
 <script>
-  QRCode.toCanvas(document.getElementById('canvas'), 'sample text', function (error) {
+  QRex.toCanvas(document.getElementById('canvas'), 'sample text', function (error) {
     if (error) console.error(error)
     console.log('success!');
   })
 </script>
 ```
 
-If you install through `npm`, precompiled files will be available in `node_modules/qrcode/build/` folder.
+If you install through `npm`, precompiled files will be available in `node_modules/qrex/build/` folder.
 
 The precompiled bundle have support for [Internet Explorer 10+, Safari 5.1+, and all evergreen browsers](https://browserl.ist/?q=defaults%2C+IE+%3E%3D+10%2C+Safari+%3E%3D+5.1).
 
 ### NodeJS
-Require the module `qrcode`
+Require the module `qrex`
 
 ```javascript
-var QRCode = require('qrcode')
+const QRex = require('qrex')
 
-QRCode.toDataURL('I am a pony!', function (err, url) {
+QRex.toDataURL('I am a pony!', function (err, url) {
   console.log(url)
 })
 ```
 
-render a qrcode for the terminal
+render a qrex for the terminal
 ```js
-var QRCode = require('qrcode')
+const QRex = require('qrex')
 
-QRCode.toString('I am a pony!',{type:'terminal'}, function (err, url) {
+QRex.toString('I am a pony!',{type:'terminal'}, function (err, url) {
   console.log(url)
 })
 ```
@@ -135,10 +135,10 @@ QRCode.toString('I am a pony!',{type:'terminal'}, function (err, url) {
 Promises and Async/Await can be used in place of callback function.
 
 ```javascript
-import QRCode from 'qrcode'
+import QRex from 'qrex'
 
 // With promises
-QRCode.toDataURL('I am a pony!')
+QRex.toDataURL('I am a pony!')
   .then(url => {
     console.log(url)
   })
@@ -149,7 +149,7 @@ QRCode.toDataURL('I am a pony!')
 // With async/await
 const generateQR = async text => {
   try {
-    console.log(await QRCode.toDataURL(text))
+    console.log(await QRex.toDataURL(text))
   } catch (err) {
     console.error(err)
   }
@@ -179,7 +179,7 @@ Error level can be set through `options.errorCorrectionLevel` property.<br>
 If not specified, the default value is `M`.
 
 ```javascript
-QRCode.toDataURL('some text', { errorCorrectionLevel: 'H' }, function (err, url) {
+QRex.toDataURL('some text', { errorCorrectionLevel: 'H' }, function (err, url) {
   console.log(url)
 })
 ```
@@ -207,7 +207,7 @@ QR Code version can be set through `options.version` property.<br>
 If no version is specified, the more suitable value will be used. Unless a specific version is required, this option is not needed.
 
 ```javascript
-QRCode.toDataURL('some text', { version: 2 }, function (err, url) {
+QRex.toDataURL('some text', { version: 2 }, function (err, url) {
   console.log(url)
 })
 ```
@@ -255,14 +255,14 @@ In this way no segment optimizations will be applied under the hood.<br>
 Segments list can be passed as an array of object:
 
 ```javascript
-  var QRCode = require('qrcode')
+  const QRex = require('qrex')
 
-  var segs = [
+  constsegs = [
     { data: 'ABCDEFG', mode: 'alphanumeric' },
     { data: '0123456', mode: 'numeric' }
   ]
 
-  QRCode.toDataURL(segs, function (err, url) {
+  QRex.toDataURL(segs, function (err, url) {
     console.log(url)
   })
 ```
@@ -279,10 +279,10 @@ An helper method is provided by the lib through an optional file that you can in
 **Note:** Support for Kanji mode is only needed if you want to benefit of the data compression, otherwise is still possible to encode kanji using Byte mode (See [Multibyte characters](#multibyte-characters)).
 
 ```javascript
-  var QRCode = require('qrcode')
-  var toSJIS = require('qrcode/helper/to-sjis')
+  const qrex = require('qrex')
+  const toSJIS = require('qrex/helper/to-sjis')
 
-  QRCode.toDataURL(kanjiString, { toSJISFunc: toSJIS }, function (err, url) {
+  QRex.toDataURL(kanjiString, { toSJISFunc: toSJIS }, function (err, url) {
     console.log(url)
   })
 ```
@@ -292,11 +292,11 @@ With precompiled bundle:
 ```html
 <canvas id="canvas"></canvas>
 
-<script src="/build/qrcode.min.js"></script>
-<script src="/build/qrcode.tosjis.min.js"></script>
+<script src="/build/qrex.min.js"></script>
+<script src="/build/qrex.tosjis.min.js"></script>
 <script>
-  QRCode.toCanvas(document.getElementById('canvas'),
-    'sample text', { toSJISFunc: QRCode.toSJIS }, function (error) {
+  QRex.toCanvas(document.getElementById('canvas'),
+    'sample text', { toSJISFunc: QRex.toSJIS }, function (error) {
     if (error) console.error(error)
     console.log('success!')
   })
@@ -309,41 +309,39 @@ QR Codes can hold arbitrary byte-based binary data. If you attempt to create a b
 ```javascript
 // Regular array example
 // WARNING: Element values will be clamped to 0-255 even if your data contains higher values.
-const QRCode = require('qrcode')
-QRCode.toFile(
+const QRex = require('qrex')
+QRex.toFile(
   'foo.png',
   [{ data: [253,254,255], mode: 'byte' }],
-  ...options...,
-  ...callback...
+  ...options,
+  ...callback,
 )
 ```
 
 ```javascript
 // Uint8ClampedArray example
-const QRCode = require('qrcode')
+const QRex = require('qrex')
 
-QRCode.toFile(
+QRex.toFile(
   'foo.png',
   [{ data: new Uint8ClampedArray([253,254,255]), mode: 'byte' }],
-  ...options...,
-  ...callback...
+  ...options,
+  ...callback,
 )
 ```
 
 ```javascript
 // Node Buffer example
 // WARNING: Element values will be clamped to 0-255 even if your data contains higher values.
-const QRCode = require('qrcode')
+const QRex = require('qrex')
 
-QRCode.toFile(
+QRex.toFile(
   'foo.png',
   [{ data: Buffer.from([253,254,255]), mode: 'byte' }],
-  ...options...,
-  ...callback...
+  ...options,
+  ...callback,
 )
 ```
-
-TypeScript users: if you are using [@types/qrcode](https://www.npmjs.com/package/@types/qrcode), you will need to add a `// @ts-ignore` above the data segment because it expects `data: string`.
 
 ## Multibyte characters
 Support for multibyte characters isn't present in the initial QR Code standard, but is possible to encode UTF-8 characters in Byte mode.
@@ -385,7 +383,7 @@ See [QR Code options](#qr-code-options).
 Type: `Object`
 
 ```javascript
-// QRCode object
+// QRex object
 {
   modules,              // Bitmatrix class with modules data
   version,              // Calculated QR Code version
@@ -422,10 +420,10 @@ Callback function called on finish.
 
 ##### Example
 ```javascript
-QRCode.toCanvas('text', { errorCorrectionLevel: 'H' }, function (err, canvas) {
+QRex.toCanvas('text', { errorCorrectionLevel: 'H' }, function (err, canvas) {
   if (err) throw err
 
-  var container = document.getElementById('container')
+  const container = document.getElementById('container')
   container.appendChild(canvas)
 })
 ```
@@ -470,7 +468,7 @@ Callback function called on finish.
 
 ##### Example
 ```javascript
-var opts = {
+const opts = {
   errorCorrectionLevel: 'H',
   type: 'image/jpeg',
   quality: 0.3,
@@ -481,10 +479,10 @@ var opts = {
   }
 }
 
-QRCode.toDataURL('text', opts, function (err, url) {
+QRex.toDataURL('text', opts, function (err, url) {
   if (err) throw err
 
-  var img = document.getElementById('image')
+  const img = document.getElementById('image')
   img.src = url
 })
 ```

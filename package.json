@@ -1,5 +1,5 @@
 {
-  "name": "qrify",
+  "name": "qrex",
   "description": "QR-Code / 2D Barcode api with both server side and client side support using canvas",
   "version": "0.1.0",
   "author": "Christian Llontop <me@chrisllontop.com>",
@@ -24,7 +24,7 @@
     "fs": false
   },
   "files": ["bin", "build", "src", "helper"],
-  "homepage": "https://github.com/chrisllontop/qrify",
+  "homepage": "https://github.com/chrisllontop/qrex",
   "license": "MIT",
   "scripts": {
     "build": "rspack build",
@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "dijkstrajs": "^1.0.1",
-    "qrcode": "^1.5.4",
+    "pngjs": "^5.0.0",
     "yargs": "^15.3.1"
   },
   "devDependencies": {
@@ -56,20 +56,16 @@
     "cross-env": "^7.0.3",
     "express": "^4.17.1",
     "htmlparser2": "^4.1.0",
-    "pngjs": "^5.0.0",
     "terser-webpack-plugin": "^5.3.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.3"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/chrisllontop/qrify.git"
+    "url": "git://github.com/chrisllontop/qrex.git"
   },
   "engines": {
     "node": ">=20.0.0"
-  },
-  "standard": {
-    "ignore": ["build/", "examples/vendors/", "lib/core/regex.js"]
   },
   "packageManager": "pnpm@9.10.0+sha512.73a29afa36a0d092ece5271de5177ecbf8318d454ecd701343131b8ebc0c1a91c487da46ab77c8e596d6acf1461e3594ced4becedf8921b074fbd8653ed7051c"
 }

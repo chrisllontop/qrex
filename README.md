@@ -1,4 +1,4 @@
-# qrify
+# qrex
 > QR code/2d barcode generator
 
 - [Highlights](#highlights)
@@ -746,7 +746,7 @@ Default: `#ffffffff`
 Color of light module. Value must be in hex format (RGBA).<br>
 
 ## License
-[MIT](https://github.com/chrisllontop/qrify/blob/master/license)
+[MIT](https://github.com/chrisllontop/qrex/blob/main/license)
 
 The word "QR Code" is registered trademark of:<br>
 DENSO WAVE INCORPORATED

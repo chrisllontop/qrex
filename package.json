@@ -1,5 +1,5 @@
 {
-  "name": "qrify",
+  "name": "qrex",
   "description": "QR-Code / 2D Barcode api with both server side and client side support using canvas",
   "version": "0.1.0",
   "author": "Christian Llontop <me@chrisllontop.com>",
@@ -22,7 +22,7 @@
     "lib",
     "helper"
   ],
-  "homepage": "https://github.com/chrisllontop/qrify",
+  "homepage": "https://github.com/chrisllontop/qrex",
   "license": "MIT",
   "scripts": {
     "lint": "standard",
@@ -33,7 +33,7 @@
     "browser": "node examples/clientsideserver.js"
   },
   "bin": {
-    "qrify": "./bin/qrcode"
+    "qrex": "./bin/qrcode"
   },
   "dependencies": {
     "dijkstrajs": "^1.0.1",
@@ -60,7 +60,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/chrisllontop/qrify.git"
+    "url": "git://github.com/chrisllontop/qrex.git"
   },
   "engines": {
     "node": ">=20.0.0"

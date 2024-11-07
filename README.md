@@ -494,168 +494,26 @@ QRCode.toDataURL('text', opts, function (err, url) {
 
 Returns a string representation of the QR Code.<br>
 
+## Setup
 
-##### `text`
-Type: `String|Array`
+Install the dependencies:
 
-Text to encode or a list of objects describing segments.
-
-##### `options`
-- ###### `type`
-  Type: `String`<br>
-  Default: `utf8`
-
-  Output format.<br>
-  Possible values are: `terminal`,`utf8`, and `svg`.
-
-See [Options](#options) for other settings.
-
-##### `cb`
-Type: `Function`
-
-Callback function called on finish.
-
-##### Example
-```javascript
-QRCode.toString('http://www.google.com', function (err, string) {
-  if (err) throw err
-  console.log(string)
-})
+```bash
+npm install
 ```
 
-<br>
+## Get Started
 
+Start the dev server:
 
-### Server API
-#### `create(text, [options])`
-See [create](#createtext-options).
-
-<br>
-
-#### `toCanvas(canvas, text, [options], [cb(error)])`
-Draws qr code symbol to [node canvas](https://github.com/Automattic/node-canvas).
-
-##### `text`
-Type: `String|Array`
-
-Text to encode or a list of objects describing segments.
-
-##### `options`
-See [Options](#options).
-
-##### `cb`
-Type: `Function`
-
-Callback function called on finish.
-
-<br>
-
-#### `toDataURL(text, [options], [cb(error, url)])`
-Returns a Data URI containing a representation of the QR Code image.<br>
-Only works with `image/png` type for now.
-
-##### `text`
-Type: `String|Array`
-
-Text to encode or a list of objects describing segments.
-
-##### `options`
-See [Options](#options) for other settings.
-
-##### `cb`
-Type: `Function`
-
-Callback function called on finish.
-
-<br>
-
-#### `toString(text, [options], [cb(error, string)])`
-Returns a string representation of the QR Code.<br>
-If choosen output format is `svg` it will returns a string containing xml code.
-
-##### `text`
-Type: `String|Array`
-
-Text to encode or a list of objects describing segments.
-
-##### `options`
-- ###### `type`
-  Type: `String`<br>
-  Default: `utf8`
-
-  Output format.<br>
-  Possible values are: `utf8`, `svg`, `terminal`.
-
-See [Options](#options) for other settings.
-
-##### `cb`
-Type: `Function`
-
-Callback function called on finish.
-
-##### Example
-```javascript
-QRCode.toString('http://www.google.com', function (err, string) {
-  if (err) throw err
-  console.log(string)
-})
+```bash
+npm run dev
 ```
 
-<br>
+Build the app for production:
 
-#### `toFile(path, text, [options], [cb(error)])`
-Saves QR Code to image file.<br>
-If `options.type` is not specified, the format will be guessed from file extension.<br>
-Recognized extensions are `png`, `svg`, `txt`.
-
-##### `path`
-Type: `String`
-
-Path where to save the file.
-
-##### `text`
-Type: `String|Array`
-
-Text to encode or a list of objects describing segments.
-
-##### `options`
-- ###### `type`
-  Type: `String`<br>
-  Default: `png`
-
-  Output format.<br>
-  Possible values are: `png`, `svg`, `utf8`.
-
-- ###### `rendererOpts.deflateLevel` **(png only)**
-  Type: `Number`<br>
-  Default: `9`
-
-  Compression level for deflate.
-
-- ###### `rendererOpts.deflateStrategy` **(png only)**
-  Type: `Number`<br>
-  Default: `3`
-
-  Compression strategy for deflate.
-
-See [Options](#options) for other settings.
-
-##### `cb`
-Type: `Function`
-
-Callback function called on finish.
-
-##### Example
-```javascript
-QRCode.toFile('path/to/filename.png', 'Some text', {
-  color: {
-    dark: '#00F',  // Blue dots
-    light: '#0000' // Transparent background
-  }
-}, function (err) {
-  if (err) throw err
-  console.log('done')
-})
+```bash
+npm run build
 ```
 
 <br>

@@ -1,2 +1,2 @@
 /* global QRCode */
-QRCode.toSJIS = require('./to-sjis')
+QRCode.toSJIS = require("./to-sjis");

@@ -11,29 +11,32 @@
     "node-qrcode",
     "qrcode-generator"
   ],
-  "main": "./lib/index.js",
+  "main": "dist/cjs/qrex.js",
+  "module": "dist/esm/qrex.js",
+  "exports": {
+    ".": {
+      "require": "./dist/cjs/qrex.js",
+      "import": "./dist/esm/qrex.js"
+    }
+  },
   "browser": {
-    "./lib/index.js": "./lib/browser.js",
+    "./lib/qrex.js": "./lib/qrex.browser.js",
     "fs": false
   },
-  "files": [
-    "bin",
-    "build",
-    "lib",
-    "helper"
-  ],
+  "files": ["bin", "build", "src", "helper"],
   "homepage": "https://github.com/chrisllontop/qrex",
   "license": "MIT",
   "scripts": {
-    "lint": "standard",
+    "build": "rspack build",
+    "lint": "biome lint",
+    "lint:fix": "biome format --fix",
     "pretest": "npm run lint",
     "test": "node --throw-deprecation test.js",
-    "build": "rollup -c",
     "prepublish": "npm run build",
     "browser": "node examples/clientsideserver.js"
   },
   "bin": {
-    "qrex": "./bin/qrcode"
+    "qrex": "./bin/qrex"
   },
   "dependencies": {
     "dijkstrajs": "^1.0.1",
@@ -41,22 +44,21 @@
     "yargs": "^15.3.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/preset-env": "^7.9.5",
-    "@rollup/plugin-commonjs": "^11.1.0",
-    "@rollup/plugin-node-resolve": "^7.1.3",
+    "@babel/preset-env": "^7.26.0",
+    "@biomejs/biome": "^1.9.4",
+    "@rspack/cli": "^1.1.0",
+    "@rspack/core": "^1.1.0",
+    "babel-loader": "^9.2.1",
     "browserify": "^16.5.1",
     "canvas": "^2.8.0",
     "canvasutil": "0.0.4",
     "colors": "^1.4.0",
+    "cross-env": "^7.0.3",
     "express": "^4.17.1",
     "htmlparser2": "^4.1.0",
-    "rollup": "^2.6.1",
-    "rollup-plugin-babel": "^4.4.0",
-    "rollup-plugin-terser": "^5.3.0",
-    "sinon": "^9.0.2",
-    "standard": "^16.0.4",
-    "tap": "^16.2.0"
+    "terser-webpack-plugin": "^5.3.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
   },
   "repository": {
     "type": "git",
@@ -64,13 +66,6 @@
   },
   "engines": {
     "node": ">=20.0.0"
-  },
-  "standard": {
-    "ignore": [
-      "build/",
-      "examples/vendors/",
-      "lib/core/regex.js"
-    ]
   },
   "packageManager": "pnpm@9.10.0+sha512.73a29afa36a0d092ece5271de5177ecbf8318d454ecd701343131b8ebc0c1a91c487da46ab77c8e596d6acf1461e3594ced4becedf8921b074fbd8653ed7051c"
 }

@@ -1,9 +1,9 @@
-const big = require("./terminal/terminal");
-const small = require("./terminal/terminal-small");
+import * as small from './terminal/terminal-small'
+import * as big from './terminal/terminal'
 
-exports.render = function (qrData, options, cb) {
-  if (options && options.small) {
+export function render (qrData, options, cb) {
+  if (options?.small) {
     return small.render(qrData, options, cb);
   }
   return big.render(qrData, options, cb);
-};
+}

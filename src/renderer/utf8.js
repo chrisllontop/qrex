@@ -1,4 +1,5 @@
-const Utils = require("./utils");
+import fs from 'fs'
+import * as Utils from './utils'
 
 const BLOCK_CHAR = {
   WW: " ",
@@ -21,7 +22,7 @@ function getBlockChar(top, bottom, blocks) {
   return blocks.WW;
 }
 
-exports.render = function (qrData, options, cb) {
+export function render (qrData, options, cb) {
   const opts = Utils.getOptions(options);
   let blocks = BLOCK_CHAR;
   if (opts.color.dark.hex === "#ffffff" || opts.color.light.hex === "#000000") {
@@ -33,7 +34,8 @@ exports.render = function (qrData, options, cb) {
 
   let output = "";
   let hMargin = Array(size + opts.margin * 2 + 1).join(blocks.WW);
-  hMargin = Array(opts.margin / 2 + 1).join(hMargin + "\n");
+  hMargin = Array(opts.margin / 2 + 1).join(`${hMargin}
+`);
 
   const vMargin = Array(opts.margin + 1).join(blocks.WW);
 
@@ -47,7 +49,8 @@ exports.render = function (qrData, options, cb) {
       output += getBlockChar(topModule, bottomModule, blocks);
     }
 
-    output += vMargin + "\n";
+    output += `${vMargin}
+`;
   }
 
   output += hMargin.slice(0, -1);
@@ -57,15 +60,13 @@ exports.render = function (qrData, options, cb) {
   }
 
   return output;
-};
+}
 
-exports.renderToFile = function renderToFile(path, qrData, options, cb) {
+export function renderToFile (path, qrData, options, cb) {
   if (typeof cb === "undefined") {
     cb = options;
     options = undefined;
   }
-
-  const fs = require("fs");
-  const utf8 = exports.render(qrData, options);
+  const utf8 = render(qrData, options);
   fs.writeFile(path, utf8, cb);
-};
+}

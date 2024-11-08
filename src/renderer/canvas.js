@@ -1,4 +1,4 @@
-const Utils = require("./utils");
+import * as Utils from './utils'
 
 function clearCanvas(ctx, canvas, size) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -6,8 +6,8 @@ function clearCanvas(ctx, canvas, size) {
   if (!canvas.style) canvas.style = {};
   canvas.height = size;
   canvas.width = size;
-  canvas.style.height = size + "px";
-  canvas.style.width = size + "px";
+  canvas.style.height = `${size}px`;
+  canvas.style.width = `${size}px`;
 }
 
 function getCanvasElement() {
@@ -18,7 +18,7 @@ function getCanvasElement() {
   }
 }
 
-exports.render = function render(qrData, canvas, options) {
+export function render (qrData, canvas, options) {
   let opts = options;
   let canvasEl = canvas;
 
@@ -42,9 +42,9 @@ exports.render = function render(qrData, canvas, options) {
   ctx.putImageData(image, 0, 0);
 
   return canvasEl;
-};
+}
 
-exports.renderToDataURL = function renderToDataURL(qrData, canvas, options) {
+export function renderToDataURL (qrData, canvas, options) {
   let opts = options;
 
   if (typeof opts === "undefined" && (!canvas || !canvas.getContext)) {
@@ -54,10 +54,10 @@ exports.renderToDataURL = function renderToDataURL(qrData, canvas, options) {
 
   if (!opts) opts = {};
 
-  const canvasEl = exports.render(qrData, canvas, opts);
+  const canvasEl = render(qrData, canvas, opts);
 
   const type = opts.type || "image/png";
   const rendererOpts = opts.rendererOpts || {};
 
   return canvasEl.toDataURL(type, rendererOpts.quality);
-};
+}

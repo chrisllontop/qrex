@@ -1,5 +1,6 @@
-const getSymbolSize = require("./utils").getSymbolSize;
-const FINDER_PATTERN_SIZE = 7;
+import { getSymbolSize } from './utils'
+
+const FINDER_PATTERN_SIZE = 7
 
 /**
  * Returns an array containing the positions of each finder pattern.
@@ -8,8 +9,8 @@ const FINDER_PATTERN_SIZE = 7;
  * @param  {Number} version QR Code version
  * @return {Array}          Array of coordinates
  */
-exports.getPositions = function getPositions(version) {
-  const size = getSymbolSize(version);
+export function getPositions (version) {
+  const size = getSymbolSize(version)
 
   return [
     // top-left
@@ -18,5 +19,5 @@ exports.getPositions = function getPositions(version) {
     [size - FINDER_PATTERN_SIZE, 0],
     // bottom-left
     [0, size - FINDER_PATTERN_SIZE],
-  ];
-};
+  ]
+}

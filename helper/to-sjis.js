@@ -307,7 +307,7 @@ const SJIS_UTF8 = [
   ],
 ];
 
-module.exports = function toSJIS(utf8Char) {
+export default function toSJIS (utf8Char) {
   if (!utf8Char || utf8Char === "") return;
 
   for (let i = 0; i < SJIS_UTF8.length; i++) {
@@ -318,4 +318,4 @@ module.exports = function toSJIS(utf8Char) {
       return SJIS_UTF8[i][0] + posIndex;
     }
   }
-};
+}

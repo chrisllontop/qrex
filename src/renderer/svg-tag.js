@@ -1,17 +1,17 @@
-const Utils = require("./utils");
+import * as Utils from './utils'
 
 function getColorAttrib(color, attrib) {
   const alpha = color.a / 255;
-  const str = attrib + '="' + color.hex + '"';
+  const str = `${attrib}="${color.hex}"`;
 
   return alpha < 1
-    ? str + " " + attrib + '-opacity="' + alpha.toFixed(2).slice(1) + '"'
+    ? `${str} ${attrib}-opacity="${alpha.toFixed(2).slice(1)}"`
     : str;
 }
 
 function svgCmd(cmd, x, y) {
   let str = cmd + x;
-  if (typeof y !== "undefined") str += " " + y;
+  if (typeof y !== "undefined") str += ` ${y}`;
 
   return str;
 }
@@ -52,7 +52,7 @@ function qrToPath(data, size, margin) {
   return path;
 }
 
-exports.render = function render(qrData, options, cb) {
+export function render (qrData, options, cb) {
   const opts = Utils.getOptions(options);
   const size = qrData.modules.size;
   const data = qrData.modules.data;
@@ -60,39 +60,24 @@ exports.render = function render(qrData, options, cb) {
 
   const bg = !opts.color.light.a
     ? ""
-    : "<path " +
-      getColorAttrib(opts.color.light, "fill") +
-      ' d="M0 0h' +
-      qrcodesize +
-      "v" +
-      qrcodesize +
-      'H0z"/>';
+    : `<path ${getColorAttrib(opts.color.light, "fill")} d="M0 0h${qrcodesize}v${qrcodesize}H0z"/>`;
 
   const path =
-    "<path " +
-    getColorAttrib(opts.color.dark, "stroke") +
-    ' d="' +
-    qrToPath(data, size, opts.margin) +
-    '"/>';
+    `<path ${getColorAttrib(opts.color.dark, "stroke")} d="${qrToPath(data, size, opts.margin)}"/>`;
 
-  const viewBox = 'viewBox="' + "0 0 " + qrcodesize + " " + qrcodesize + '"';
+  const viewBox = `viewBox="0 0 ${qrcodesize} ${qrcodesize}"`;
 
   const width = !opts.width
     ? ""
-    : 'width="' + opts.width + '" height="' + opts.width + '" ';
+    : `width="${opts.width}" height="${opts.width}" `;
 
   const svgTag =
-    '<svg xmlns="http://www.w3.org/2000/svg" ' +
-    width +
-    viewBox +
-    ' shape-rendering="crispEdges">' +
-    bg +
-    path +
-    "</svg>\n";
+    `<svg xmlns="http://www.w3.org/2000/svg" ${width}${viewBox} shape-rendering="crispEdges">${bg}${path}</svg>
+`;
 
   if (typeof cb === "function") {
     cb(null, svgTag);
   }
 
   return svgTag;
-};
+}

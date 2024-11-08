@@ -32,8 +32,7 @@
     "lint:fix": "biome format --fix",
     "pretest": "npm run lint",
     "test": "node --throw-deprecation test.js",
-    "prepublish": "npm run build",
-    "browser": "node examples/clientsideserver.js"
+    "prepublish": "npm run build"
   },
   "bin": {
     "qrex": "./bin/qrex"

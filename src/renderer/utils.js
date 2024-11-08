@@ -9,34 +9,32 @@ function hex2rgba(hex) {
 
   let hexCode = hex.slice().replace("#", "").split("");
   if (hexCode.length < 3 || hexCode.length === 5 || hexCode.length > 8) {
-    throw new Error("Invalid hex color: " + hex);
+    throw new Error(`Invalid hex color: ${hex}`);
   }
 
   // Convert from short to long form (fff -> ffffff)
   if (hexCode.length === 3 || hexCode.length === 4) {
     hexCode = Array.prototype.concat.apply(
       [],
-      hexCode.map(function (c) {
-        return [c, c];
-      }),
+      hexCode.map(c => [c, c]),
     );
   }
 
   // Add default alpha value
   if (hexCode.length === 6) hexCode.push("F", "F");
 
-  const hexValue = parseInt(hexCode.join(""), 16);
+  const hexValue = Number.parseInt(hexCode.join(""), 16);
 
   return {
     r: (hexValue >> 24) & 255,
     g: (hexValue >> 16) & 255,
     b: (hexValue >> 8) & 255,
     a: hexValue & 255,
-    hex: "#" + hexCode.slice(0, 6).join(""),
+    hex: `#${hexCode.slice(0, 6).join("")}`,
   };
 }
 
-exports.getOptions = function getOptions(options) {
+export function getOptions (options) {
   if (!options) options = {};
   if (!options.color) options.color = {};
 
@@ -62,23 +60,23 @@ exports.getOptions = function getOptions(options) {
     type: options.type,
     rendererOpts: options.rendererOpts || {},
   };
-};
+}
 
-exports.getScale = function getScale(qrSize, opts) {
+export function getScale (qrSize, opts) {
   return opts.width && opts.width >= qrSize + opts.margin * 2
     ? opts.width / (qrSize + opts.margin * 2)
     : opts.scale;
-};
+}
 
-exports.getImageWidth = function getImageWidth(qrSize, opts) {
-  const scale = exports.getScale(qrSize, opts);
+export function getImageWidth (qrSize, opts) {
+  const scale = getScale(qrSize, opts);
   return Math.floor((qrSize + opts.margin * 2) * scale);
-};
+}
 
-exports.qrToImageData = function qrToImageData(imgData, qr, opts) {
+export function qrToImageData (imgData, qr, opts) {
   const size = qr.modules.size;
   const data = qr.modules.data;
-  const scale = exports.getScale(size, opts);
+  const scale = getScale(size, opts);
   const symbolSize = Math.floor((size + opts.margin * 2) * scale);
   const scaledMargin = opts.margin * scale;
   const palette = [opts.color.light, opts.color.dark];
@@ -105,4 +103,4 @@ exports.qrToImageData = function qrToImageData(imgData, qr, opts) {
       imgData[posDst] = pxColor.a;
     }
   }
-};
+}

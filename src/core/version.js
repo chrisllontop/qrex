@@ -1,8 +1,8 @@
-const Utils = require("./utils");
-const ECCode = require("./error-correction-code");
-const ECLevel = require("./error-correction-level");
-const Mode = require("./mode");
-const VersionCheck = require("./version-check");
+import { getBCHDigit, getSymbolTotalCodewords } from './utils'
+import { getTotalCodewordsCount } from './error-correction-code'
+import { from as _from, M } from './error-correction-level'
+import { getCharCountIndicator, MIXED, BYTE, NUMERIC, ALPHANUMERIC, KANJI } from './mode'
+import { isValid } from './version-check'
 
 // Generator polynomial used to encode version information
 const G18 =
@@ -13,49 +13,49 @@ const G18 =
   (1 << 8) |
   (1 << 5) |
   (1 << 2) |
-  (1 << 0);
-const G18_BCH = Utils.getBCHDigit(G18);
+  (1 << 0)
+const G18_BCH = getBCHDigit(G18)
 
-function getBestVersionForDataLength(mode, length, errorCorrectionLevel) {
+function getBestVersionForDataLength (mode, length, errorCorrectionLevel) {
   for (let currentVersion = 1; currentVersion <= 40; currentVersion++) {
     if (
-      length <= exports.getCapacity(currentVersion, errorCorrectionLevel, mode)
+      length <= getCapacity(currentVersion, errorCorrectionLevel, mode)
     ) {
-      return currentVersion;
+      return currentVersion
     }
   }
 
-  return undefined;
+  return undefined
 }
 
-function getReservedBitsCount(mode, version) {
+function getReservedBitsCount (mode, version) {
   // Character count indicator + mode indicator bits
-  return Mode.getCharCountIndicator(mode, version) + 4;
+  return getCharCountIndicator(mode, version) + 4
 }
 
-function getTotalBitsFromDataArray(segments, version) {
-  let totalBits = 0;
+function getTotalBitsFromDataArray (segments, version) {
+  let totalBits = 0
 
-  segments.forEach(function (data) {
-    const reservedBits = getReservedBitsCount(data.mode, version);
-    totalBits += reservedBits + data.getBitsLength();
-  });
+  for (const data of segments) {
+    const reservedBits = getReservedBitsCount(data.mode, version)
+    totalBits += reservedBits + data.getBitsLength()
+  }
 
-  return totalBits;
+  return totalBits
 }
 
-function getBestVersionForMixedData(segments, errorCorrectionLevel) {
+function getBestVersionForMixedData (segments, errorCorrectionLevel) {
   for (let currentVersion = 1; currentVersion <= 40; currentVersion++) {
-    const length = getTotalBitsFromDataArray(segments, currentVersion);
+    const length = getTotalBitsFromDataArray(segments, currentVersion)
     if (
       length <=
-      exports.getCapacity(currentVersion, errorCorrectionLevel, Mode.MIXED)
+      getCapacity(currentVersion, errorCorrectionLevel, MIXED)
     ) {
-      return currentVersion;
+      return currentVersion
     }
   }
 
-  return undefined;
+  return undefined
 }
 
 /**
@@ -66,13 +66,13 @@ function getBestVersionForMixedData(segments, errorCorrectionLevel) {
  * @param  {Number}        defaultValue Fallback value
  * @return {Number}                     QR Code version number
  */
-exports.from = function from(value, defaultValue) {
-  if (VersionCheck.isValid(value)) {
-    return parseInt(value, 10);
+export function from (value, defaultValue) {
+  if (isValid(value)) {
+    return Number.parseInt(value, 10)
   }
 
-  return defaultValue;
-};
+  return defaultValue
+}
 
 /**
  * Returns how much data can be stored with the specified QR code version
@@ -83,51 +83,51 @@ exports.from = function from(value, defaultValue) {
  * @param  {Mode}   mode                 Data mode
  * @return {Number}                      Quantity of storable data
  */
-exports.getCapacity = function getCapacity(
+export function getCapacity (
   version,
   errorCorrectionLevel,
   mode,
 ) {
-  if (!VersionCheck.isValid(version)) {
-    throw new Error("Invalid QR Code version");
+  if (!isValid(version)) {
+    throw new Error('Invalid QR Code version')
   }
 
   // Use Byte mode as default
-  if (typeof mode === "undefined") mode = Mode.BYTE;
+  if (typeof mode === 'undefined') mode = BYTE
 
   // Total codewords for this QR code version (Data + Error correction)
-  const totalCodewords = Utils.getSymbolTotalCodewords(version);
+  const totalCodewords = getSymbolTotalCodewords(version)
 
   // Total number of error correction codewords
-  const ecTotalCodewords = ECCode.getTotalCodewordsCount(
+  const ecTotalCodewords = getTotalCodewordsCount(
     version,
     errorCorrectionLevel,
-  );
+  )
 
   // Total number of data codewords
-  const dataTotalCodewordsBits = (totalCodewords - ecTotalCodewords) * 8;
+  const dataTotalCodewordsBits = (totalCodewords - ecTotalCodewords) * 8
 
-  if (mode === Mode.MIXED) return dataTotalCodewordsBits;
+  if (mode === MIXED) return dataTotalCodewordsBits
 
   const usableBits =
-    dataTotalCodewordsBits - getReservedBitsCount(mode, version);
+    dataTotalCodewordsBits - getReservedBitsCount(mode, version)
 
   // Return max number of storable codewords
   switch (mode) {
-    case Mode.NUMERIC:
-      return Math.floor((usableBits / 10) * 3);
+    case NUMERIC:
+      return Math.floor((usableBits / 10) * 3)
 
-    case Mode.ALPHANUMERIC:
-      return Math.floor((usableBits / 11) * 2);
+    case ALPHANUMERIC:
+      return Math.floor((usableBits / 11) * 2)
 
-    case Mode.KANJI:
-      return Math.floor(usableBits / 13);
+    case KANJI:
+      return Math.floor(usableBits / 13)
 
-    case Mode.BYTE:
+    case BYTE:
     default:
-      return Math.floor(usableBits / 8);
+      return Math.floor(usableBits / 8)
   }
-};
+}
 
 /**
  * Returns the minimum version needed to contain the amount of data
@@ -137,30 +137,30 @@ exports.getCapacity = function getCapacity(
  * @param  {Mode} mode                       Data mode
  * @return {Number}                          QR Code version
  */
-exports.getBestVersionForData = function getBestVersionForData(
+export function getBestVersionForData (
   data,
   errorCorrectionLevel,
 ) {
-  let seg;
+  let seg
 
-  const ecl = ECLevel.from(errorCorrectionLevel, ECLevel.M);
+  const ecl = _from(errorCorrectionLevel, M)
 
   if (Array.isArray(data)) {
     if (data.length > 1) {
-      return getBestVersionForMixedData(data, ecl);
+      return getBestVersionForMixedData(data, ecl)
     }
 
     if (data.length === 0) {
-      return 1;
+      return 1
     }
 
-    seg = data[0];
+    seg = data[0]
   } else {
-    seg = data;
+    seg = data
   }
 
-  return getBestVersionForDataLength(seg.mode, seg.getLength(), ecl);
-};
+  return getBestVersionForDataLength(seg.mode, seg.getLength(), ecl)
+}
 
 /**
  * Returns version information with relative error correction bits
@@ -172,16 +172,16 @@ exports.getBestVersionForData = function getBestVersionForData(
  * @param  {Number} version QR Code version
  * @return {Number}         Encoded version info bits
  */
-exports.getEncodedBits = function getEncodedBits(version) {
-  if (!VersionCheck.isValid(version) || version < 7) {
-    throw new Error("Invalid QR Code version");
+export function getEncodedBits (version) {
+  if (!isValid(version) || version < 7) {
+    throw new Error('Invalid QR Code version')
   }
 
-  let d = version << 12;
+  let d = version << 12
 
-  while (Utils.getBCHDigit(d) - G18_BCH >= 0) {
-    d ^= G18 << (Utils.getBCHDigit(d) - G18_BCH);
+  while (getBCHDigit(d) - G18_BCH >= 0) {
+    d ^= G18 << (getBCHDigit(d) - G18_BCH)
   }
 
-  return (version << 12) | d;
-};
+  return (version << 12) | d
+}

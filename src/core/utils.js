@@ -49,12 +49,12 @@ const CODEWORDS_COUNT = [
  * @param  {Number} version QR Code version
  * @return {Number}         size of QR code
  */
-exports.getSymbolSize = function getSymbolSize(version) {
-  if (!version) throw new Error('"version" cannot be null or undefined');
+export function getSymbolSize (version) {
+  if (!version) throw new Error('"version" cannot be null or undefined')
   if (version < 1 || version > 40)
-    throw new Error('"version" should be in range from 1 to 40');
-  return version * 4 + 17;
-};
+    throw new Error('"version" should be in range from 1 to 40')
+  return version * 4 + 17
+}
 
 /**
  * Returns the total number of codewords used to store data and EC information.
@@ -62,9 +62,9 @@ exports.getSymbolSize = function getSymbolSize(version) {
  * @param  {Number} version QR Code version
  * @return {Number}         Data length in bits
  */
-exports.getSymbolTotalCodewords = function getSymbolTotalCodewords(version) {
-  return CODEWORDS_COUNT[version];
-};
+export function getSymbolTotalCodewords (version) {
+  return CODEWORDS_COUNT[version]
+}
 
 /**
  * Encode data with Bose-Chaudhuri-Hocquenghem
@@ -72,29 +72,29 @@ exports.getSymbolTotalCodewords = function getSymbolTotalCodewords(version) {
  * @param  {Number} data Value to encode
  * @return {Number}      Encoded value
  */
-exports.getBCHDigit = function (data) {
-  let digit = 0;
+export function getBCHDigit (data) {
+  let digit = 0
 
   while (data !== 0) {
-    digit++;
-    data >>>= 1;
+    digit++
+    data >>>= 1
   }
 
-  return digit;
-};
+  return digit
+}
 
-exports.setToSJISFunction = function setToSJISFunction(f) {
-  if (typeof f !== "function") {
-    throw new Error('"toSJISFunc" is not a valid function.');
+export function setToSJISFunction (f) {
+  if (typeof f !== 'function') {
+    throw new Error('"toSJISFunc" is not a valid function.')
   }
 
-  toSJISFunction = f;
-};
+  toSJISFunction = f
+}
 
-exports.isKanjiModeEnabled = function () {
-  return typeof toSJISFunction !== "undefined";
-};
+export function isKanjiModeEnabled () {
+  return typeof toSJISFunction !== 'undefined'
+}
 
-exports.toSJIS = function toSJIS(kanji) {
-  return toSJISFunction(kanji);
-};
+export function toSJIS (kanji) {
+  return toSJISFunction(kanji)
+}

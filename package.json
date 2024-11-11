@@ -44,6 +44,7 @@
   "dependencies": {
     "dijkstrajs": "^1.0.1",
     "pngjs": "^5.0.0",
+    "runtypes": "^6.7.0",
     "yargs": "^15.3.1"
   },
   "devDependencies": {
@@ -54,6 +55,9 @@
     "@rspack/core": "^1.1.0",
     "@vitest/coverage-istanbul": "2.1.4",
     "@vitest/coverage-v8": "^2.1.5",
+    "@types/node": "^16.18.119",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
     "babel-loader": "^9.2.1",
     "canvas": "^2.8.0",
     "htmlparser2": "^4.1.0",

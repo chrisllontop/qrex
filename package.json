@@ -29,8 +29,7 @@
   "scripts": {
     "build": "rspack build",
     "lint": "biome lint",
-    "lint:fix": "biome format --fix",
-    "pretest": "npm run lint",
+    "lint:fix": "biome lint --fix",
     "test": "node --throw-deprecation test.js",
     "prepublish": "npm run build"
   },

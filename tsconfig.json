@@ -2,48 +2,43 @@
   "compilerOptions": {
     "allowJs": true,
     "checkJs": false,
-    "noImplicitAny": false,
     "strict": false,
     "target": "es6",
-    "module": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node",
-    "jsx": "react-jsx",
-    "sourceMap": true,
-    "declaration": false,
-    "baseUrl": ".", // Changed from "src" to "."
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "baseUrl": ".",
     "paths": {
       "@/*": [
         "src/*"
-      ] // Updated to reflect baseUrl change
+      ]
     },
     "lib": [
-      "dom",
-      "dom.iterable",
       "esnext"
     ],
-    "resolveJsonModule": true,
     "types": [
-      "node",
-      "react",
-      "react-dom"
+      "node"
     ],
     "skipLibCheck": true,
     "esModuleInterop": true,
+    "noImplicitAny": false,
     "allowSyntheticDefaultImports": true,
+    "ignoreDeprecations": "5.0",
+    "declaration": false,
+    "noImplicitAny": false,
+    "resolveJsonModule": true,
+    "sourceMap": true,
     "isolatedModules": true,
-    "noEmit": true
+    "noImplicitThis": false,
+    "strictNullChecks": false
   },
   "include": [
-    "src/**/*",
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.js",
-    "src/**/*.jsx"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",
     "build",
     "dist",
-    "**/*.spec.ts"
   ]
 }

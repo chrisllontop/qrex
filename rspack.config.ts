@@ -11,16 +11,16 @@ const babelConfig = {
 
 module.exports = [
   {
-    entry: "./src/index.js",
-    plugins: [
-      codecovWebpackPlugin({
-        enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
-        bundleName: "qrex",
-        uploadToken: process.env.CODECOV_TOKEN,
-      }),
-    ],
+    entry: "./src/index.ts",
     output: {
       path: path.resolve(__dirname, "dist/cjs"),
+      plugins: [
+        codecovWebpackPlugin({
+          enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
+          bundleName: "qrex",
+          uploadToken: process.env.CODECOV_TOKEN,
+        }),
+      ],
       filename: "qrex.js",
       library: {
         type: "commonjs2",
@@ -50,7 +50,7 @@ module.exports = [
     target: "node",
   },
   {
-    entry: "./src/browser.js",
+    entry: "./src/browser.ts",
     output: {
       path: path.resolve(__dirname, "dist/cjs"),
       filename: "qrex.browser.js",

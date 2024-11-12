@@ -10,14 +10,14 @@ kanji = kanji.replace(/u/g, "\\u");
 const byte = `(?:(?![A-Z0-9 $%*+\\-./:]|${kanji})(?:.|[\r\n]))+`;
 
 export const KANJI = new RegExp(kanji, 'g')
-export const BYTE_KANJI = new RegExp('[^A-Z0-9 $%*+\\-./:]+', 'g')
+export const BYTE_KANJI = /[^A-Z0-9 $%*+\-.\/:]+/g
 export const BYTE = new RegExp(byte, 'g')
 export const NUMERIC = new RegExp(numeric, 'g')
 export const ALPHANUMERIC = new RegExp(alphanumeric, 'g')
 
 const TEST_KANJI = new RegExp(`^${kanji}$`)
 const TEST_NUMERIC = new RegExp(`^${numeric}$`)
-const TEST_ALPHANUMERIC = new RegExp('^[A-Z0-9 $%*+\\-./:]+$')
+const TEST_ALPHANUMERIC = /^[A-Z0-9 $%*+\-.\/:]+$/
 
 export function testKanji (str) {
   return TEST_KANJI.test(str)

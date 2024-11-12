@@ -10,7 +10,7 @@ const EXPECTED_FORMAT_BITS = [
   [0x1689, 0x13be, 0x1ce7, 0x19d0, 0x0762, 0x0255, 0x0d0c, 0x083b],
 ];
 
-test("Format encoded info", function (t) {
+test("Format encoded info", (t) => {
   const levels = [ECLevel.L, ECLevel.M, ECLevel.Q, ECLevel.H];
   const patterns = Object.keys(MaskPattern.Patterns).length;
 

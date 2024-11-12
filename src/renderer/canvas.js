@@ -1,4 +1,4 @@
-import * as Utils from './utils'
+import * as Utils from "./utils";
 
 function clearCanvas(ctx, canvas, size) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -18,7 +18,7 @@ function getCanvasElement() {
   }
 }
 
-export function render (qrData, canvas, options) {
+export function render(qrData, canvas, options) {
   let opts = options;
   let canvasEl = canvas;
 
@@ -44,7 +44,7 @@ export function render (qrData, canvas, options) {
   return canvasEl;
 }
 
-export function renderToDataURL (qrData, canvas, options) {
+export function renderToDataURL(qrData, canvas, options) {
   let opts = options;
 
   if (typeof opts === "undefined" && (!canvas || !canvas.getContext)) {

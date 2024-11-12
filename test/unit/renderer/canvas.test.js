@@ -3,7 +3,7 @@ const { Canvas, createCanvas } = require("canvas");
 const QRCode = require("core/qrcode");
 const CanvasRenderer = require("renderer/canvas");
 
-test("CanvasRenderer interface", function (t) {
+test("CanvasRenderer interface", (t) => {
   t.type(CanvasRenderer.render, "function", "Should have render function");
 
   t.type(
@@ -15,10 +15,10 @@ test("CanvasRenderer interface", function (t) {
   t.end();
 });
 
-test("CanvasRenderer render", function (t) {
+test("CanvasRenderer render", (t) => {
   // Mock document object
   global.document = {
-    createElement: function (el) {
+    createElement: (el) => {
       if (el === "canvas") {
         return createCanvas(200, 200);
       }
@@ -28,13 +28,13 @@ test("CanvasRenderer render", function (t) {
   const sampleQrData = QRCode.create("sample text", { version: 2 });
   let canvasEl;
 
-  t.notThrow(function () {
+  t.notThrow(() => {
     canvasEl = CanvasRenderer.render(sampleQrData);
   }, "Should not throw if canvas is not provided");
 
   t.ok(canvasEl instanceof Canvas, "Should return a new canvas object");
 
-  t.notThrow(function () {
+  t.notThrow(() => {
     canvasEl = CanvasRenderer.render(sampleQrData, {
       margin: 10,
       scale: 1,
@@ -48,22 +48,22 @@ test("CanvasRenderer render", function (t) {
 
   global.document = undefined;
 
-  t.throw(function () {
+  t.throw(() => {
     canvasEl = CanvasRenderer.render(sampleQrData);
   }, "Should throw if canvas cannot be created");
 
   t.end();
 });
 
-test("CanvasRenderer render to provided canvas", function (t) {
+test("CanvasRenderer render to provided canvas", (t) => {
   const sampleQrData = QRCode.create("sample text", { version: 2 });
   const canvasEl = createCanvas(200, 200);
 
-  t.notThrow(function () {
+  t.notThrow(() => {
     CanvasRenderer.render(sampleQrData, canvasEl);
   }, "Should not throw with only qrData and canvas param");
 
-  t.notThrow(function () {
+  t.notThrow(() => {
     CanvasRenderer.render(sampleQrData, canvasEl, {
       margin: 10,
       scale: 1,
@@ -78,10 +78,10 @@ test("CanvasRenderer render to provided canvas", function (t) {
   t.end();
 });
 
-test("CanvasRenderer renderToDataURL", function (t) {
+test("CanvasRenderer renderToDataURL", (t) => {
   // Mock document object
   global.document = {
-    createElement: function (el) {
+    createElement: (el) => {
       if (el === "canvas") {
         return createCanvas(200, 200);
       }
@@ -91,11 +91,11 @@ test("CanvasRenderer renderToDataURL", function (t) {
   const sampleQrData = QRCode.create("sample text", { version: 2 });
   let url;
 
-  t.notThrow(function () {
+  t.notThrow(() => {
     url = CanvasRenderer.renderToDataURL(sampleQrData);
   }, "Should not throw if canvas is not provided");
 
-  t.notThrow(function () {
+  t.notThrow(() => {
     url = CanvasRenderer.renderToDataURL(sampleQrData, {
       margin: 10,
       scale: 1,
@@ -118,16 +118,16 @@ test("CanvasRenderer renderToDataURL", function (t) {
   t.end();
 });
 
-test("CanvasRenderer renderToDataURL to provided canvas", function (t) {
+test("CanvasRenderer renderToDataURL to provided canvas", (t) => {
   const sampleQrData = QRCode.create("sample text", { version: 2 });
   const canvasEl = createCanvas(200, 200);
   let url;
 
-  t.notThrow(function () {
+  t.notThrow(() => {
     url = CanvasRenderer.renderToDataURL(sampleQrData, canvasEl);
   }, "Should not throw with only qrData and canvas param");
 
-  t.notThrow(function () {
+  t.notThrow(() => {
     url = CanvasRenderer.renderToDataURL(sampleQrData, canvasEl, {
       margin: 10,
       scale: 1,

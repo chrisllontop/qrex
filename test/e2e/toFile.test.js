@@ -7,15 +7,15 @@ const QRCode = require("src");
 const Helpers = require("test/helpers");
 const StreamMock = require("test/mocks/writable-stream");
 
-test("toFile - no promise available", function (t) {
+test("toFile - no promise available", (t) => {
   Helpers.removeNativePromise();
   const fileName = path.join(os.tmpdir(), "qrimage.png");
 
-  t.throw(function () {
+  t.throw(() => {
     QRCode.toFile(fileName, "some text");
   }, "Should throw if a callback is not provided");
 
-  t.throw(function () {
+  t.throw(() => {
     QRCode.toFile(fileName, "some text", {});
   }, "Should throw if a callback is not a function");
 
@@ -24,14 +24,14 @@ test("toFile - no promise available", function (t) {
   Helpers.restoreNativePromise();
 });
 
-test("toFile", function (t) {
+test("toFile", (t) => {
   const fileName = path.join(os.tmpdir(), "qrimage.png");
 
-  t.throw(function () {
-    QRCode.toFile("some text", function () {});
+  t.throw(() => {
+    QRCode.toFile("some text", () => {});
   }, "Should throw if path is not provided");
 
-  t.throw(function () {
+  t.throw(() => {
     QRCode.toFile(fileName);
   }, "Should throw if text is not provided");
 
@@ -44,7 +44,7 @@ test("toFile", function (t) {
   t.end();
 });
 
-test("toFile png", function (t) {
+test("toFile png", (t) => {
   const fileName = path.join(os.tmpdir(), "qrimage.png");
   const expectedBase64Output = [
     "iVBORw0KGgoAAAANSUhEUgAAAHQAAAB0CAYAAABUmhYnAAAAAklEQVR4AewaftIAAAKzSU",
@@ -72,14 +72,14 @@ test("toFile png", function (t) {
     {
       errorCorrectionLevel: "L",
     },
-    function (err) {
+    (err) => {
       t.ok(!err, "There should be no error");
 
-      fs.stat(fileName, function (err) {
+      fs.stat(fileName, (err) => {
         t.ok(!err, "Should save file with correct file name");
       });
 
-      fs.readFile(fileName, function (err, buffer) {
+      fs.readFile(fileName, (err, buffer) => {
         if (err) throw err;
 
         t.equal(
@@ -98,19 +98,19 @@ test("toFile png", function (t) {
       errorCorrectionLevel: "L",
       type: "png",
     },
-    function (err) {
+    (err) => {
       t.ok(!err, "There should be no errors if file type is specified");
     },
   );
 
   QRCode.toFile(fileName, "i am a pony!", {
     errorCorrectionLevel: "L",
-  }).then(function () {
-    fs.stat(fileName, function (err) {
+  }).then(() => {
+    fs.stat(fileName, (err) => {
       t.ok(!err, "Should save file with correct file name (promise)");
     });
 
-    fs.readFile(fileName, function (err, buffer) {
+    fs.readFile(fileName, (err, buffer) => {
       if (err) throw err;
 
       t.equal(
@@ -130,21 +130,21 @@ test("toFile png", function (t) {
     {
       errorCorrectionLevel: "L",
     },
-    function (err) {
+    (err) => {
       t.ok(err, "There should be an error");
     },
   );
 
   QRCode.toFile(fileName, "i am a pony!", {
     errorCorrectionLevel: "L",
-  }).catch(function (err) {
+  }).catch((err) => {
     t.ok(err, "Should catch an error (promise)");
   });
 
   fsStub.restore();
 });
 
-test("toFile svg", function (t) {
+test("toFile svg", (t) => {
   const fileName = path.join(os.tmpdir(), "qrimage.svg");
   const expectedOutput = fs.readFileSync(
     path.join(__dirname, "/svg.expected.out"),
@@ -159,14 +159,14 @@ test("toFile svg", function (t) {
     {
       errorCorrectionLevel: "H",
     },
-    function (err) {
+    (err) => {
       t.ok(!err, "There should be no error");
 
-      fs.stat(fileName, function (err) {
+      fs.stat(fileName, (err) => {
         t.ok(!err, "Should save file with correct file name");
       });
 
-      fs.readFile(fileName, "utf8", function (err, content) {
+      fs.readFile(fileName, "utf8", (err, content) => {
         if (err) throw err;
         t.equal(content, expectedOutput, "Should write correct content");
       });
@@ -180,19 +180,19 @@ test("toFile svg", function (t) {
       errorCorrectionLevel: "H",
       type: "svg",
     },
-    function (err) {
+    (err) => {
       t.ok(!err, "There should be no errors if file type is specified");
     },
   );
 
   QRCode.toFile(fileName, "http://www.google.com", {
     errorCorrectionLevel: "H",
-  }).then(function () {
-    fs.stat(fileName, function (err) {
+  }).then(() => {
+    fs.stat(fileName, (err) => {
       t.ok(!err, "Should save file with correct file name (promise)");
     });
 
-    fs.readFile(fileName, "utf8", function (err, content) {
+    fs.readFile(fileName, "utf8", (err, content) => {
       if (err) throw err;
       t.equal(
         content,
@@ -203,7 +203,7 @@ test("toFile svg", function (t) {
   });
 });
 
-test("toFile utf8", function (t) {
+test("toFile utf8", (t) => {
   const fileName = path.join(os.tmpdir(), "qrimage.txt");
   const expectedOutput = [
     "                                 ",
@@ -227,14 +227,14 @@ test("toFile utf8", function (t) {
 
   t.plan(6);
 
-  QRCode.toFile(fileName, "http://www.google.com", function (err) {
+  QRCode.toFile(fileName, "http://www.google.com", (err) => {
     t.ok(!err, "There should be no error");
 
-    fs.stat(fileName, function (err) {
+    fs.stat(fileName, (err) => {
       t.ok(!err, "Should save file with correct file name");
     });
 
-    fs.readFile(fileName, "utf8", function (err, content) {
+    fs.readFile(fileName, "utf8", (err, content) => {
       if (err) throw err;
       t.equal(content, expectedOutput, "Should write correct content");
     });
@@ -247,17 +247,17 @@ test("toFile utf8", function (t) {
       errorCorrectionLevel: "M",
       type: "utf8",
     },
-    function (err) {
+    (err) => {
       t.ok(!err, "There should be no errors if file type is specified");
     },
   );
 
-  QRCode.toFile(fileName, "http://www.google.com").then(function () {
-    fs.stat(fileName, function (err) {
+  QRCode.toFile(fileName, "http://www.google.com").then(() => {
+    fs.stat(fileName, (err) => {
       t.ok(!err, "Should save file with correct file name (promise)");
     });
 
-    fs.readFile(fileName, "utf8", function (err, content) {
+    fs.readFile(fileName, "utf8", (err, content) => {
       if (err) throw err;
       t.equal(
         content,
@@ -268,7 +268,7 @@ test("toFile utf8", function (t) {
   });
 });
 
-test("toFile manual segments", function (t) {
+test("toFile manual segments", (t) => {
   const fileName = path.join(os.tmpdir(), "qrimage.txt");
   const segs = [
     { data: "ABCDEFG", mode: "alphanumeric" },
@@ -299,14 +299,14 @@ test("toFile manual segments", function (t) {
     {
       errorCorrectionLevel: "L",
     },
-    function (err) {
+    (err) => {
       t.ok(!err, "There should be no errors if text is not string");
 
-      fs.stat(fileName, function (err) {
+      fs.stat(fileName, (err) => {
         t.ok(!err, "Should save file with correct file name");
       });
 
-      fs.readFile(fileName, "utf8", function (err, content) {
+      fs.readFile(fileName, "utf8", (err, content) => {
         if (err) throw err;
         t.equal(content, expectedOutput, "Should write correct content");
       });

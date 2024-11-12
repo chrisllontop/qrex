@@ -4,14 +4,14 @@
  * @param {Number} size Symbol size
  */
 export class BitMatrix {
-  constructor (size) {
+  constructor(size) {
     if (!size || size < 1) {
-      throw new Error('BitMatrix size must be defined and greater than 0')
+      throw new Error("BitMatrix size must be defined and greater than 0");
     }
 
-    this.size = size
-    this.data = new Uint8Array(size * size)
-    this.reservedBit = new Uint8Array(size * size)
+    this.size = size;
+    this.data = new Uint8Array(size * size);
+    this.reservedBit = new Uint8Array(size * size);
   }
 
   /**
@@ -23,10 +23,10 @@ export class BitMatrix {
    * @param {Boolean} value
    * @param {Boolean} reserved
    */
-  set (row, col, value, reserved) {
-    const index = row * this.size + col
-    this.data[index] = value
-    if (reserved) this.reservedBit[index] = true
+  set(row, col, value, reserved) {
+    const index = row * this.size + col;
+    this.data[index] = value;
+    if (reserved) this.reservedBit[index] = true;
   }
 
   /**
@@ -36,8 +36,8 @@ export class BitMatrix {
    * @param  {Number}  col
    * @return {Boolean}
    */
-  get (row, col) {
-    return this.data[row * this.size + col]
+  get(row, col) {
+    return this.data[row * this.size + col];
   }
 
   /**
@@ -48,8 +48,8 @@ export class BitMatrix {
    * @param {Number}  col
    * @param {Boolean} value
    */
-  xor (row, col, value) {
-    this.data[row * this.size + col] ^= value
+  xor(row, col, value) {
+    this.data[row * this.size + col] ^= value;
   }
 
   /**
@@ -59,8 +59,7 @@ export class BitMatrix {
    * @param {Number}   col
    * @return {Boolean}
    */
-  isReserved (row, col) {
-    return this.reservedBit[row * this.size + col]
+  isReserved(row, col) {
+    return this.reservedBit[row * this.size + col];
   }
 }
-

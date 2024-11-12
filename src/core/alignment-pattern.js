@@ -8,7 +8,7 @@
  * and their number depends on the symbol version.
  */
 
-import { getSymbolSize } from './utils'
+import { getSymbolSize } from "./utils";
 
 /**
  * Calculate the row/column coordinates of the center module of each alignment pattern
@@ -24,22 +24,22 @@ import { getSymbolSize } from './utils'
  * @param  {Number} version QR Code version
  * @return {Array}          Array of coordinate
  */
-export function getRowColCoords (version) {
-  if (version === 1) return []
+export function getRowColCoords(version) {
+  if (version === 1) return [];
 
-  const posCount = Math.floor(version / 7) + 2
-  const size = getSymbolSize(version)
+  const posCount = Math.floor(version / 7) + 2;
+  const size = getSymbolSize(version);
   const intervals =
-    size === 145 ? 26 : Math.ceil((size - 13) / (2 * posCount - 2)) * 2
-  const positions = [size - 7] // Last coord is always (size - 7)
+    size === 145 ? 26 : Math.ceil((size - 13) / (2 * posCount - 2)) * 2;
+  const positions = [size - 7]; // Last coord is always (size - 7)
 
   for (let i = 1; i < posCount - 1; i++) {
-    positions[i] = positions[i - 1] - intervals
+    positions[i] = positions[i - 1] - intervals;
   }
 
-  positions.push(6) // First coord is always 6
+  positions.push(6); // First coord is always 6
 
-  return positions.reverse()
+  return positions.reverse();
 }
 
 /**
@@ -62,10 +62,10 @@ export function getRowColCoords (version) {
  * @param  {Number} version QR Code version
  * @return {Array}          Array of coordinates
  */
-export function getPositions (version) {
-  const coords = []
-  const pos = getRowColCoords(version)
-  const posLength = pos.length
+export function getPositions(version) {
+  const coords = [];
+  const pos = getRowColCoords(version);
+  const posLength = pos.length;
 
   for (let i = 0; i < posLength; i++) {
     for (let j = 0; j < posLength; j++) {
@@ -76,12 +76,12 @@ export function getPositions (version) {
         (i === posLength - 1 && j === 0)
       ) {
         // top-right
-        continue
+        continue;
       }
 
-      coords.push([pos[i], pos[j]])
+      coords.push([pos[i], pos[j]]);
     }
   }
 
-  return coords
+  return coords;
 }

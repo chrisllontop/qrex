@@ -1,5 +1,5 @@
-import fs from 'fs'
-import * as Utils from './utils'
+import fs from "node:fs";
+import * as Utils from "./utils";
 
 const BLOCK_CHAR = {
   WW: " ",
@@ -22,7 +22,7 @@ function getBlockChar(top, bottom, blocks) {
   return blocks.WW;
 }
 
-export function render (qrData, options, cb) {
+export function render(qrData, options, cb) {
   const opts = Utils.getOptions(options);
   let blocks = BLOCK_CHAR;
   if (opts.color.dark.hex === "#ffffff" || opts.color.light.hex === "#000000") {
@@ -62,7 +62,7 @@ export function render (qrData, options, cb) {
   return output;
 }
 
-export function renderToFile (path, qrData, options, cb) {
+export function renderToFile(path, qrData, options, cb) {
   if (typeof cb === "undefined") {
     cb = options;
     options = undefined;

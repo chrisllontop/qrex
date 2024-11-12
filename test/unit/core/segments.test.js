@@ -158,7 +158,7 @@ const kanjiTestData = [
 
 testData = testData.concat(kanjiTestData);
 
-test("Segments from array", function (t) {
+test("Segments from array", (t) => {
   t.deepEqual(
     Segments.fromArray(["abcdef", "12345"]),
     [new ByteData("abcdef"), new NumericData("12345")],
@@ -191,7 +191,7 @@ test("Segments from array", function (t) {
 
   t.deepEqual(Segments.fromArray([{}]), [], "Should return an empty array");
 
-  t.throw(function () {
+  t.throw(() => {
     Segments.fromArray([{ data: "ABCDE", mode: "numeric" }]);
   }, "Should throw if segment cannot be encoded with specified mode");
 
@@ -204,7 +204,7 @@ test("Segments from array", function (t) {
   t.end();
 });
 
-test("Segments optimization", function (t) {
+test("Segments optimization", (t) => {
   t.deepEqual(
     Segments.fromString("乂ЁЖ", 1),
     Segments.fromArray([{ data: "乂ЁЖ", mode: "byte" }]),
@@ -212,7 +212,7 @@ test("Segments optimization", function (t) {
   );
 
   Utils.setToSJISFunction(toSJIS);
-  testData.forEach(function (data) {
+  testData.forEach((data) => {
     t.deepEqual(
       Segments.fromString(data.input, 1),
       Segments.fromArray(data.result),
@@ -222,7 +222,7 @@ test("Segments optimization", function (t) {
   t.end();
 });
 
-test("Segments raw split", function (t) {
+test("Segments raw split", (t) => {
   const splitted = [
     new ByteData("abc"),
     new AlphanumericData("DEF"),

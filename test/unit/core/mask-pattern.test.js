@@ -2,7 +2,7 @@ const test = require("tap").test;
 const BitMatrix = require("core/bit-matrix");
 const MaskPattern = require("core/mask-pattern");
 
-test("Mask pattern - Pattern references", function (t) {
+test("Mask pattern - Pattern references", (t) => {
   const patternsCount = Object.keys(MaskPattern.Patterns).length;
   t.equals(patternsCount, 8, "Should return 8 patterns");
 
@@ -49,7 +49,7 @@ const expectedPattern111 = [
   1, 0, 0, 0, 0, 1, 1, 1, 0, 0,
 ];
 
-test("MaskPattern validity", function (t) {
+test("MaskPattern validity", (t) => {
   t.notOk(MaskPattern.isValid(), "Should return false if no input");
   t.notOk(
     MaskPattern.isValid(""),
@@ -67,7 +67,7 @@ test("MaskPattern validity", function (t) {
   t.end();
 });
 
-test("MaskPattern from value", function (t) {
+test("MaskPattern from value", (t) => {
   t.equal(
     MaskPattern.from(5),
     5,
@@ -92,7 +92,7 @@ test("MaskPattern from value", function (t) {
   t.end();
 });
 
-test("Mask pattern - Apply mask", function (t) {
+test("Mask pattern - Apply mask", (t) => {
   const patterns = Object.keys(MaskPattern.Patterns).length;
   const expectedPatterns = [
     expectedPattern000,
@@ -128,14 +128,14 @@ test("Mask pattern - Apply mask", function (t) {
     "Should leave reserved bit unchanged",
   );
 
-  t.throws(function () {
+  t.throws(() => {
     MaskPattern.applyMask(-1, new BitMatrix(1));
   }, "Should throw if pattern is invalid");
 
   t.end();
 });
 
-test("Mask pattern - Penalty N1", function (t) {
+test("Mask pattern - Penalty N1", (t) => {
   let matrix = new BitMatrix(11);
   matrix.data = [
     1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1,
@@ -187,7 +187,7 @@ test("Mask pattern - Penalty N1", function (t) {
   t.end();
 });
 
-test("Mask pattern - Penalty N2", function (t) {
+test("Mask pattern - Penalty N2", (t) => {
   let matrix = new BitMatrix(8);
   matrix.data = [
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1,
@@ -229,7 +229,7 @@ test("Mask pattern - Penalty N2", function (t) {
   t.end();
 });
 
-test("Mask pattern - Penalty N3", function (t) {
+test("Mask pattern - Penalty N3", (t) => {
   const matrix = new BitMatrix(11);
   matrix.data = [
     0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0,
@@ -262,7 +262,7 @@ test("Mask pattern - Penalty N3", function (t) {
   t.end();
 });
 
-test("Mask pattern - Penalty N4", function (t) {
+test("Mask pattern - Penalty N4", (t) => {
   const matrix = new BitMatrix(10);
   matrix.data = new Array(50).fill(1).concat(new Array(50).fill(0));
 
@@ -293,7 +293,7 @@ test("Mask pattern - Penalty N4", function (t) {
   t.end();
 });
 
-test("Mask pattern - Best mask", function (t) {
+test("Mask pattern - Best mask", (t) => {
   const matrix = new BitMatrix(11);
   matrix.data = [
     0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0,
@@ -303,7 +303,7 @@ test("Mask pattern - Best mask", function (t) {
     0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0,
   ];
 
-  const mask = MaskPattern.getBestMask(matrix, function () {});
+  const mask = MaskPattern.getBestMask(matrix, () => {});
   t.ok(!isNaN(mask), "Should return a number");
 
   t.ok(mask >= 0 && mask < 8, "Should return a number in range 0,7");

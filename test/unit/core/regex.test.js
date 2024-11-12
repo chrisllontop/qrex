@@ -1,7 +1,7 @@
 const test = require("tap").test;
 const Regex = require("core/regex");
 
-test("Regex", function (t) {
+test("Regex", (t) => {
   t.ok(Regex.NUMERIC instanceof RegExp, "Should export a regex for NUMERIC");
 
   t.ok(
@@ -21,7 +21,7 @@ test("Regex", function (t) {
   t.end();
 });
 
-test("Regex test", function (t) {
+test("Regex test", (t) => {
   t.ok(Regex.testNumeric("123456"), "Should return true if is a number");
   t.notOk(
     Regex.testNumeric("a12345"),

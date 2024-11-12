@@ -1,7 +1,7 @@
 const test = require("tap").test;
 const toSJIS = require("helper/to-sjis");
 
-test("SJIS from char", function (t) {
+test("SJIS from char", (t) => {
   t.notOk(toSJIS(""), "Should return undefined if character is invalid");
 
   t.notOk(toSJIS("A"), "Should return undefined if character is not a kanji");

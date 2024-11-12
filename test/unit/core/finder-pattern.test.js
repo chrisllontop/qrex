@@ -1,7 +1,7 @@
 const test = require("tap").test;
 const pattern = require("core/finder-pattern");
 
-test("Finder pattern", function (t) {
+test("Finder pattern", (t) => {
   for (let i = 1; i <= 40; i++) {
     t.equal(
       pattern.getPositions(i).length,

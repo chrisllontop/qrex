@@ -1,4 +1,4 @@
-export function render (qrData, options, cb) {
+export function render(qrData, options, cb) {
   const size = qrData.modules.size;
   const data = qrData.modules.data;
 

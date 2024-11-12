@@ -1,11 +1,11 @@
 const test = require("tap").test;
 const RS = require("core/reed-solomon-encoder");
 
-test("Reed-Solomon encoder", function (t) {
+test("Reed-Solomon encoder", (t) => {
   let enc = new RS();
 
   t.notOk(enc.genPoly, "Should have an undefined generator polynomial");
-  t.throw(function () {
+  t.throw(() => {
     enc.encode([]);
   }, "Should throw if generator polynomial is undefined");
 

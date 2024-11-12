@@ -1,7 +1,7 @@
 const test = require("tap").test;
 const Mode = require("core/mode");
 
-test("Mode bits", function (t) {
+test("Mode bits", (t) => {
   const EXPECTED_BITS = {
     numeric: 1,
     alphanumeric: 2,
@@ -19,7 +19,7 @@ test("Mode bits", function (t) {
   t.end();
 });
 
-test("Char count bits", function (t) {
+test("Char count bits", (t) => {
   const EXPECTED_BITS = {
     numeric: [10, 12, 14],
     alphanumeric: [9, 11, 13],
@@ -67,18 +67,18 @@ test("Char count bits", function (t) {
     t.equal(Mode.getCharCountIndicator(Mode.KANJI, v), EXPECTED_BITS.kanji[2]);
   }
 
-  t.throw(function () {
+  t.throw(() => {
     Mode.getCharCountIndicator({}, 1);
   }, "Should throw if mode is invalid");
 
-  t.throw(function () {
+  t.throw(() => {
     Mode.getCharCountIndicator(Mode.BYTE, 0);
   }, "Should throw if version is invalid");
 
   t.end();
 });
 
-test("Best mode", function (t) {
+test("Best mode", (t) => {
   /* eslint-disable quote-props */
   const EXPECTED_MODE = {
     12345: Mode.NUMERIC,
@@ -92,7 +92,7 @@ test("Best mode", function (t) {
     皿a晒三: Mode.BYTE,
   };
 
-  Object.keys(EXPECTED_MODE).forEach(function (data) {
+  Object.keys(EXPECTED_MODE).forEach((data) => {
     t.equal(
       Mode.getBestModeForData(data),
       EXPECTED_MODE[data],
@@ -106,7 +106,7 @@ test("Best mode", function (t) {
   t.end();
 });
 
-test("Is valid", function (t) {
+test("Is valid", (t) => {
   t.ok(Mode.isValid(Mode.NUMERIC));
   t.ok(Mode.isValid(Mode.ALPHANUMERIC));
   t.ok(Mode.isValid(Mode.BYTE));
@@ -119,7 +119,7 @@ test("Is valid", function (t) {
   t.end();
 });
 
-test("From value", function (t) {
+test("From value", (t) => {
   const modes = [
     { name: "numeric", mode: Mode.NUMERIC },
     { name: "alphanumeric", mode: Mode.ALPHANUMERIC },
@@ -148,13 +148,13 @@ test("From value", function (t) {
   t.end();
 });
 
-test("To string", function (t) {
+test("To string", (t) => {
   t.equal(Mode.toString(Mode.NUMERIC), "Numeric");
   t.equal(Mode.toString(Mode.ALPHANUMERIC), "Alphanumeric");
   t.equal(Mode.toString(Mode.BYTE), "Byte");
   t.equal(Mode.toString(Mode.KANJI), "Kanji");
 
-  t.throw(function () {
+  t.throw(() => {
     Mode.toString({});
   }, "Should throw if mode is invalid");
 

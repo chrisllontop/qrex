@@ -1,11 +1,11 @@
 const test = require("tap").test;
 const BitMatrix = require("core/bit-matrix");
 
-test("Bit Matrix", function (t) {
-  t.throw(function () {
+test("Bit Matrix", (t) => {
+  t.throw(() => {
     BitMatrix(0);
   }, "Should throw if size is 0");
-  t.throw(function () {
+  t.throw(() => {
     BitMatrix(-1);
   }, "Should throw if size less than 0");
 

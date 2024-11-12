@@ -1,4 +1,4 @@
-import * as Utils from './utils'
+import * as Utils from "./utils";
 
 function getColorAttrib(color, attrib) {
   const alpha = color.a / 255;
@@ -52,7 +52,7 @@ function qrToPath(data, size, margin) {
   return path;
 }
 
-export function render (qrData, options, cb) {
+export function render(qrData, options, cb) {
   const opts = Utils.getOptions(options);
   const size = qrData.modules.size;
   const data = qrData.modules.data;
@@ -62,8 +62,7 @@ export function render (qrData, options, cb) {
     ? ""
     : `<path ${getColorAttrib(opts.color.light, "fill")} d="M0 0h${qrcodesize}v${qrcodesize}H0z"/>`;
 
-  const path =
-    `<path ${getColorAttrib(opts.color.dark, "stroke")} d="${qrToPath(data, size, opts.margin)}"/>`;
+  const path = `<path ${getColorAttrib(opts.color.dark, "stroke")} d="${qrToPath(data, size, opts.margin)}"/>`;
 
   const viewBox = `viewBox="0 0 ${qrcodesize} ${qrcodesize}"`;
 
@@ -71,8 +70,7 @@ export function render (qrData, options, cb) {
     ? ""
     : `width="${opts.width}" height="${opts.width}" `;
 
-  const svgTag =
-    `<svg xmlns="http://www.w3.org/2000/svg" ${width}${viewBox} shape-rendering="crispEdges">${bg}${path}</svg>
+  const svgTag = `<svg xmlns="http://www.w3.org/2000/svg" ${width}${viewBox} shape-rendering="crispEdges">${bg}${path}</svg>
 `;
 
   if (typeof cb === "function") {

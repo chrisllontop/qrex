@@ -1,4 +1,4 @@
-export function render(qrData, options, cb) {
+function render(qrData, options, cb) {
   const size = qrData.modules.size;
   const data = qrData.modules.data;
 
@@ -34,3 +34,7 @@ export function render(qrData, options, cb) {
 
   return output;
 }
+
+export const Terminal = {
+  render,
+};

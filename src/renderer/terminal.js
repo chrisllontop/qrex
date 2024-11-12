@@ -1,9 +1,13 @@
-import * as big from "./terminal/terminal";
-import * as small from "./terminal/terminal-small";
+import { Terminal } from "./terminal/terminal";
+import { TerminalSmall } from "./terminal/terminal-small";
 
-export function render(qrData, options, cb) {
+function render(qrData, options, cb) {
   if (options?.small) {
-    return small.render(qrData, options, cb);
+    return TerminalSmall.render(qrData, options, cb);
   }
-  return big.render(qrData, options, cb);
+  return Terminal.render(qrData, options, cb);
 }
+
+export const RendererTerminal = {
+  render,
+};

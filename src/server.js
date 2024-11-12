@@ -1,9 +1,11 @@
 import canPromise from "./can-promise";
-import * as QRCode from "./core/qrcode";
-import * as PngRenderer from "./renderer/png";
-import * as SvgRenderer from "./renderer/svg";
-import * as TerminalRenderer from "./renderer/terminal";
-import * as Utf8Renderer from "./renderer/utf8";
+import { QRCode } from "./core/qrcode";
+import { RendererPng } from "./renderer/png";
+import { RendererSvg } from "./renderer/svg";
+import { RendererTerminal } from "./renderer/terminal";
+import { RendererUtf8 } from "./renderer/utf8";
+
+import { toCanvas as browserToCanvas } from "./browser";
 
 function checkParams(text, opts, cb) {
   if (typeof text === "undefined") {
@@ -36,25 +38,25 @@ function getTypeFromFilename(path) {
 function getRendererFromType(type) {
   switch (type) {
     case "svg":
-      return SvgRenderer;
+      return RendererSvg;
 
     case "txt":
     case "utf8":
-      return Utf8Renderer;
+      return RendererUtf8;
     default:
-      return PngRenderer;
+      return RendererPng;
   }
 }
 
 function getStringRendererFromType(type) {
   switch (type) {
     case "svg":
-      return SvgRenderer;
+      return RendererSvg;
 
     case "terminal":
-      return TerminalRenderer;
+      return RendererTerminal;
     default:
-      return Utf8Renderer;
+      return RendererUtf8;
   }
 }
 
@@ -82,7 +84,7 @@ function render(renderFunc, text, params) {
 
 export const create = QRCode.create;
 
-export const toCanvas = require("./browser").toCanvas;
+export const toCanvas = browserToCanvas;
 
 export function toString(text, opts, cb) {
   const params = checkParams(text, opts, cb);

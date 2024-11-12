@@ -1,9 +1,9 @@
 import fs from "node:fs";
-import * as svgTagRenderer from "./svg-tag";
+import { RendererSvgTag } from "./svg-tag";
 
-export const render = svgTagRenderer.render;
+const render = RendererSvgTag.render;
 
-export function renderToFile(path, qrData, options, cb) {
+function renderToFile(path, qrData, options, cb) {
   if (typeof cb === "undefined") {
     cb = options;
     options = undefined;
@@ -14,3 +14,8 @@ export function renderToFile(path, qrData, options, cb) {
 
   fs.writeFile(path, xmlStr, cb);
 }
+
+export const RendererSvg = {
+  render,
+  renderToFile,
+};

@@ -38,6 +38,23 @@ module.exports = [
             options: babelConfig,
           },
         },
+        {
+          test: /\.ts?$/,
+          use: {
+            loader: 'builtin:swc-loader',
+            options: {
+              sourceMap: true,
+              jsc: {
+                parser: {
+                  syntax: 'typescript',
+                  tsx: false,
+                },
+                target: 'es6'
+              }
+            }
+          },
+          exclude: /node_modules/
+        }
       ],
     },
     resolve: {
@@ -66,6 +83,23 @@ module.exports = [
             options: babelConfig,
           },
         },
+        {
+          test: /\.ts?$/,
+          use: {
+            loader: 'builtin:swc-loader',
+            options: {
+              sourceMap: true,
+              jsc: {
+                parser: {
+                  syntax: 'typescript',
+                  tsx: false,
+                },
+                target: 'es6'
+              }
+            }
+          },
+          exclude: /node_modules/
+        }
       ],
     },
     resolve: {

@@ -26,7 +26,6 @@
     "allowSyntheticDefaultImports": true,
     "ignoreDeprecations": "5.0",
     "declaration": false,
-    "noImplicitAny": false,
     "resolveJsonModule": true,
     "sourceMap": true,
     "isolatedModules": true,
@@ -39,6 +38,6 @@
   "exclude": [
     "node_modules",
     "build",
-    "dist",
+    "dist"
   ]
 }

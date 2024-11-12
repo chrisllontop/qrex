@@ -65,7 +65,7 @@ function renderCanvas(renderFunc, canvas, text, opts, cb) {
 }
 
 export const create = QRCode.create;
-export const toCanvas = renderCanvas.bind(null, RendererCanvas.canvasRender);
+export const toCanvas = renderCanvas.bind(null, RendererCanvas.render);
 export const toDataURL = renderCanvas.bind(
   null,
   RendererCanvas.renderToDataURL,

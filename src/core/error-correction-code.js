@@ -1,4 +1,4 @@
-import { H, L, M, Q } from "./error-correction-level";
+import { ECLevel } from "./error-correction-level";
 
 const EC_BLOCKS_TABLE = [
   // L  M  Q  H
@@ -35,15 +35,15 @@ const EC_CODEWORDS_TABLE = [
  * @param  {Number} errorCorrectionLevel Error correction level
  * @return {Number}                      Number of error correction blocks
  */
-export function getBlocksCount(version, errorCorrectionLevel) {
+function getBlocksCount(version, errorCorrectionLevel) {
   switch (errorCorrectionLevel) {
-    case L:
+    case ECLevel.L:
       return EC_BLOCKS_TABLE[(version - 1) * 4];
-    case M:
+    case ECLevel.M:
       return EC_BLOCKS_TABLE[(version - 1) * 4 + 1];
-    case Q:
+    case ECLevel.Q:
       return EC_BLOCKS_TABLE[(version - 1) * 4 + 2];
-    case H:
+    case ECLevel.H:
       return EC_BLOCKS_TABLE[(version - 1) * 4 + 3];
     default:
       return undefined;
@@ -58,17 +58,22 @@ export function getBlocksCount(version, errorCorrectionLevel) {
  * @param  {Number} errorCorrectionLevel Error correction level
  * @return {Number}                      Number of error correction codewords
  */
-export function getTotalCodewordsCount(version, errorCorrectionLevel) {
+function getTotalCodewordsCount(version, errorCorrectionLevel) {
   switch (errorCorrectionLevel) {
-    case L:
+    case ECLevel.L:
       return EC_CODEWORDS_TABLE[(version - 1) * 4];
-    case M:
+    case ECLevel.M:
       return EC_CODEWORDS_TABLE[(version - 1) * 4 + 1];
-    case Q:
+    case ECLevel.Q:
       return EC_CODEWORDS_TABLE[(version - 1) * 4 + 2];
-    case H:
+    case ECLevel.H:
       return EC_CODEWORDS_TABLE[(version - 1) * 4 + 3];
     default:
       return undefined;
   }
 }
+
+export const ECCode = {
+  getBlocksCount,
+  getTotalCodewordsCount,
+};

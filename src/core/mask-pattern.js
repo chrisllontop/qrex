@@ -1,4 +1,4 @@
-export const Patterns = {
+const Patterns = {
   PATTERN000: 0,
   PATTERN001: 1,
   PATTERN010: 2,
@@ -26,7 +26,7 @@ const PenaltyScores = {
  * @param  {Number}  mask    Mask pattern
  * @return {Boolean}         true if valid, false otherwise
  */
-export function isValid(mask) {
+function isValid(mask) {
   return (
     mask != null && mask !== "" && !Number.isNaN(mask) && mask >= 0 && mask <= 7
   );
@@ -39,7 +39,7 @@ export function isValid(mask) {
  * @param  {Number|String} value        Mask pattern value
  * @return {Number}                     Valid mask pattern or undefined
  */
-export function from(value) {
+function from(value) {
   return isValid(value) ? Number.parseInt(value, 10) : undefined;
 }
 
@@ -50,7 +50,7 @@ export function from(value) {
  * Points: N1 + i
  * i is the amount by which the number of adjacent modules of the same color exceeds 5
  */
-export function getPenaltyN1(data) {
+function getPenaltyN1(data) {
   const size = data.size;
   let points = 0;
   let sameCountCol = 0;
@@ -94,7 +94,7 @@ export function getPenaltyN1(data) {
  *
  * Points: N2 * (m - 1) * (n - 1)
  */
-export function getPenaltyN2(data) {
+function getPenaltyN2(data) {
   const size = data.size;
   let points = 0;
 
@@ -119,7 +119,7 @@ export function getPenaltyN2(data) {
  *
  * Points: N3 * number of pattern found
  */
-export function getPenaltyN3(data) {
+function getPenaltyN3(data) {
   const size = data.size;
   let points = 0;
   let bitsCol = 0;
@@ -147,7 +147,7 @@ export function getPenaltyN3(data) {
  * k is the rating of the deviation of the proportion of dark modules
  * in the symbol from 50% in steps of 5%
  */
-export function getPenaltyN4(data) {
+function getPenaltyN4(data) {
   let darkCount = 0;
   const modulesCount = data.data.length;
 
@@ -196,7 +196,7 @@ function getMaskAt(maskPattern, i, j) {
  * @param  {Number}    pattern Pattern reference number
  * @param  {BitMatrix} data    BitMatrix data
  */
-export function applyMask(pattern, data) {
+function applyMask(pattern, data) {
   const size = data.size;
 
   for (let col = 0; col < size; col++) {
@@ -214,7 +214,7 @@ export function applyMask(pattern, data) {
  * @param setupFormatFunc
  * @return {Number} Mask pattern reference number
  */
-export function getBestMask(data, setupFormatFunc) {
+function getBestMask(data, setupFormatFunc) {
   const numPatterns = Object.keys(Patterns).length;
   let bestPattern = 0;
   let lowerPenalty = Number.POSITIVE_INFINITY;
@@ -241,3 +241,15 @@ export function getBestMask(data, setupFormatFunc) {
 
   return bestPattern;
 }
+
+export const MaskPattern = {
+  Patterns,
+  isValid,
+  from,
+  getPenaltyN1,
+  getPenaltyN2,
+  getPenaltyN3,
+  getPenaltyN4,
+  applyMask,
+  getBestMask,
+};

@@ -47,7 +47,7 @@ const mkCodePixel = (modules, size, x, y) => {
 const mkCode = (modules, size, x, y) =>
   mkCodePixel(modules, size, x, y) + mkCodePixel(modules, size, x, y + 1);
 
-export function render(qrData, options, cb) {
+function render(qrData, options, cb) {
   const size = qrData.modules.size;
   const data = qrData.modules.data;
 
@@ -78,3 +78,7 @@ ${lineSetup}`;
 
   return output;
 }
+
+export const TerminalSmall = {
+  render,
+};

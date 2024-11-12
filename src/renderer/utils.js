@@ -34,7 +34,7 @@ function hex2rgba(hex) {
   };
 }
 
-export function getOptions(options) {
+function getOptions(options) {
   if (!options) options = {};
   if (!options.color) options.color = {};
 
@@ -62,18 +62,18 @@ export function getOptions(options) {
   };
 }
 
-export function getScale(qrSize, opts) {
+function getScale(qrSize, opts) {
   return opts.width && opts.width >= qrSize + opts.margin * 2
     ? opts.width / (qrSize + opts.margin * 2)
     : opts.scale;
 }
 
-export function getImageWidth(qrSize, opts) {
+function getImageWidth(qrSize, opts) {
   const scale = getScale(qrSize, opts);
   return Math.floor((qrSize + opts.margin * 2) * scale);
 }
 
-export function qrToImageData(imgData, qr, opts) {
+function qrToImageData(imgData, qr, opts) {
   const size = qr.modules.size;
   const data = qr.modules.data;
   const scale = getScale(size, opts);
@@ -104,3 +104,9 @@ export function qrToImageData(imgData, qr, opts) {
     }
   }
 }
+
+export const RendererUtils = {
+  getOptions,
+  getImageWidth,
+  qrToImageData,
+};

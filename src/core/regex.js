@@ -9,24 +9,35 @@ kanji = kanji.replace(/u/g, "\\u");
 
 const byte = `(?:(?![A-Z0-9 $%*+\\-./:]|${kanji})(?:.|[\r\n]))+`;
 
-export const KANJI = new RegExp(kanji, 'g')
-export const BYTE_KANJI = /[^A-Z0-9 $%*+\-.\/:]+/g
-export const BYTE = new RegExp(byte, 'g')
-export const NUMERIC = new RegExp(numeric, 'g')
-export const ALPHANUMERIC = new RegExp(alphanumeric, 'g')
+const KANJI = new RegExp(kanji, "g");
+const BYTE_KANJI = /[^A-Z0-9 $%*+\-.\/:]+/g;
+const BYTE = new RegExp(byte, "g");
+const NUMERIC = new RegExp(numeric, "g");
+const ALPHANUMERIC = new RegExp(alphanumeric, "g");
 
-const TEST_KANJI = new RegExp(`^${kanji}$`)
-const TEST_NUMERIC = new RegExp(`^${numeric}$`)
-const TEST_ALPHANUMERIC = /^[A-Z0-9 $%*+\-.\/:]+$/
+const TEST_KANJI = new RegExp(`^${kanji}$`);
+const TEST_NUMERIC = new RegExp(`^${numeric}$`);
+const TEST_ALPHANUMERIC = /^[A-Z0-9 $%*+\-.\/:]+$/;
 
-export function testKanji (str) {
-  return TEST_KANJI.test(str)
+function testKanji(str) {
+  return TEST_KANJI.test(str);
 }
 
-export function testNumeric (str) {
-  return TEST_NUMERIC.test(str)
+function testNumeric(str) {
+  return TEST_NUMERIC.test(str);
 }
 
-export function testAlphanumeric (str) {
-  return TEST_ALPHANUMERIC.test(str)
+function testAlphanumeric(str) {
+  return TEST_ALPHANUMERIC.test(str);
 }
+
+export const Regex = {
+  KANJI,
+  BYTE_KANJI,
+  BYTE,
+  NUMERIC,
+  ALPHANUMERIC,
+  testKanji,
+  testNumeric,
+  testAlphanumeric,
+};

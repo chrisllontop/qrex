@@ -4,6 +4,10 @@
  * @param  {Number}  version QR Code version
  * @return {Boolean}         true if valid version, false otherwise
  */
-export function isValid(version) {
+function isValid(version) {
   return !Number.isNaN(version) && version >= 1 && version <= 40;
 }
+
+export const VersionCheck = {
+  isValid,
+};

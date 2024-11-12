@@ -1,4 +1,4 @@
-import * as Utils from "./utils";
+import { RendererUtils } from "./utils";
 
 function getColorAttrib(color, attrib) {
   const alpha = color.a / 255;
@@ -52,8 +52,8 @@ function qrToPath(data, size, margin) {
   return path;
 }
 
-export function render(qrData, options, cb) {
-  const opts = Utils.getOptions(options);
+function render(qrData, options, cb) {
+  const opts = RendererUtils.getOptions(options);
   const size = qrData.modules.size;
   const data = qrData.modules.data;
   const qrcodesize = size + opts.margin * 2;
@@ -79,3 +79,7 @@ export function render(qrData, options, cb) {
 
   return svgTag;
 }
+
+export const RendererSvgTag = {
+  render,
+};

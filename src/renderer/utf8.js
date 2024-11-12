@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import * as Utils from "./utils";
+import { RendererUtils } from "./utils";
 
 const BLOCK_CHAR = {
   WW: " ",
@@ -22,8 +22,8 @@ function getBlockChar(top, bottom, blocks) {
   return blocks.WW;
 }
 
-export function render(qrData, options, cb) {
-  const opts = Utils.getOptions(options);
+function render(qrData, options, cb) {
+  const opts = RendererUtils.getOptions(options);
   let blocks = BLOCK_CHAR;
   if (opts.color.dark.hex === "#ffffff" || opts.color.light.hex === "#000000") {
     blocks = INVERTED_BLOCK_CHAR;
@@ -62,7 +62,7 @@ export function render(qrData, options, cb) {
   return output;
 }
 
-export function renderToFile(path, qrData, options, cb) {
+function renderToFile(path, qrData, options, cb) {
   if (typeof cb === "undefined") {
     cb = options;
     options = undefined;
@@ -70,3 +70,8 @@ export function renderToFile(path, qrData, options, cb) {
   const utf8 = render(qrData, options);
   fs.writeFile(path, utf8, cb);
 }
+
+export const RendererUtf8 = {
+  render,
+  renderToFile,
+};

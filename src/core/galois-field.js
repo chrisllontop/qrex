@@ -39,7 +39,7 @@ const LOG_TABLE = new Uint8Array(256);
  * @param  {Number} n
  * @return {Number}
  */
-export function log(n) {
+function log(n) {
   if (n < 1) throw new Error(`log(${n})`);
   return LOG_TABLE[n];
 }
@@ -50,7 +50,7 @@ export function log(n) {
  * @param  {Number} n
  * @return {Number}
  */
-export function exp(n) {
+function exp(n) {
   return EXP_TABLE[n];
 }
 
@@ -61,10 +61,16 @@ export function exp(n) {
  * @param  {Number} y
  * @return {Number}
  */
-export function mul(x, y) {
+function mul(x, y) {
   if (x === 0 || y === 0) return 0;
 
   // should be EXP_TABLE[(LOG_TABLE[x] + LOG_TABLE[y]) % 255] if EXP_TABLE wasn't oversized
   // @see {@link initTables}
   return EXP_TABLE[LOG_TABLE[x] + LOG_TABLE[y]];
 }
+
+export const GaloisField = {
+  exp,
+  log,
+  mul,
+};

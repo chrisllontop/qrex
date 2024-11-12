@@ -9,15 +9,15 @@ const lineSetupInverse = backgroundBlack + foregroundWhite; // setup colors
 const createPalette = (lineSetup, foregroundWhite, foregroundBlack) => ({
   // 1 ... white, 2 ... black, 0 ... transparent (default)
 
-  '00': `${reset} ${lineSetup}`,
-  '01': `${reset + foregroundWhite}▄${lineSetup}`,
-  '02': `${reset + foregroundBlack}▄${lineSetup}`,
+  "00": `${reset} ${lineSetup}`,
+  "01": `${reset + foregroundWhite}▄${lineSetup}`,
+  "02": `${reset + foregroundBlack}▄${lineSetup}`,
   10: `${reset + foregroundWhite}▀${lineSetup}`,
-  11: ' ',
-  12: '▄',
+  11: " ",
+  12: "▄",
   20: `${reset + foregroundBlack}▀${lineSetup}`,
-  21: '▀',
-  22: '█',
+  21: "▀",
+  22: "█",
 });
 
 /**
@@ -44,17 +44,15 @@ const mkCodePixel = (modules, size, x, y) => {
  * @param {number} y
  * @return {keyof palette}
  */
-const mkCode = (modules, size, x, y) => (
-  mkCodePixel(modules, size, x, y) + mkCodePixel(modules, size, x, y + 1)
-);
+const mkCode = (modules, size, x, y) =>
+  mkCodePixel(modules, size, x, y) + mkCodePixel(modules, size, x, y + 1);
 
-export function render (qrData, options, cb) {
+export function render(qrData, options, cb) {
   const size = qrData.modules.size;
   const data = qrData.modules.data;
 
-  const inverse = !!(options?.inverse);
-  const lineSetup =
-    options?.inverse ? lineSetupInverse : lineSetupNormal;
+  const inverse = !!options?.inverse;
+  const lineSetup = options?.inverse ? lineSetupInverse : lineSetupNormal;
   const white = inverse ? foregroundBlack : foregroundWhite;
   const black = inverse ? foregroundWhite : foregroundBlack;
 

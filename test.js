@@ -3,7 +3,7 @@ const path = require("path");
 
 const opt = {
   cwd: __dirname,
-  env: (function () {
+  env: (() => {
     process.env.NODE_PATH = "./" + path.delimiter + "./lib";
     return process.env;
   })(),

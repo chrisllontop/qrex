@@ -1,43 +1,45 @@
-import { NUMERIC } from './mode'
+import { NUMERIC } from "./mode";
 
-function NumericData (data) {
-  this.mode = NUMERIC
-  this.data = data.toString()
+function NumericData(data) {
+  this.mode = NUMERIC;
+  this.data = data.toString();
 }
 
-NumericData.getBitsLength = function getBitsLength (length) {
-  return 10 * Math.floor(length / 3) + (length % 3 ? (length % 3) * 3 + 1 : 0)
-}
+NumericData.getBitsLength = function getBitsLength(length) {
+  return 10 * Math.floor(length / 3) + (length % 3 ? (length % 3) * 3 + 1 : 0);
+};
 
-NumericData.prototype.getLength = function getLength () {
-  return this.data.length
-}
+NumericData.prototype.getLength = function getLength() {
+  return this.data.length;
+};
 
-NumericData.prototype.getBitsLength = function getBitsLength () {
-  return NumericData.getBitsLength(this.data.length)
-}
+NumericData.prototype.getBitsLength = function getBitsLength() {
+  return NumericData.getBitsLength(this.data.length);
+};
 
-NumericData.prototype.write = function write (bitBuffer) {
-  let i, group, value
+NumericData.prototype.write = function write(bitBuffer) {
+  let i;
+  let group;
+  let value;
 
   // The input data string is divided into groups of three digits,
   // and each group is converted to its 10-bit binary equivalent.
   for (i = 0; i + 3 <= this.data.length; i += 3) {
-    group = this.data.substr(i, 3)
-    value = Number.parseInt(group, 10)
+    group = this.data.substr(i, 3);
+    value = Number.parseInt(group, 10);
 
-    bitBuffer.put(value, 10)
+    bitBuffer.put(value, 10);
   }
 
   // If the number of input digits is not an exact multiple of three,
   // the final one or two digits are converted to 4 or 7 bits respectively.
-  const remainingNum = this.data.length - i
+  const remainingNum = this.data.length - i;
   if (remainingNum > 0) {
-    group = this.data.substr(i)
-    value = Number.parseInt(group, 10)
+    group = this.data.substr(i);
+    value = Number.parseInt(group, 10);
 
-    bitBuffer.put(value, remainingNum * 3 + 1)
+    bitBuffer.put(value, remainingNum * 3 + 1);
   }
-}
+};
 
 export default NumericData;

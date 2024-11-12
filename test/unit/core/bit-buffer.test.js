@@ -1,7 +1,7 @@
 const test = require("tap").test;
 const BitBuffer = require("core/bit-buffer");
 
-test("Bit Buffer", function (t) {
+test("Bit Buffer", (t) => {
   const testData = 0x41; // 'A'
   const expectedDataBits = [
     false,

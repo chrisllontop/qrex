@@ -11,15 +11,15 @@ function getExpectedViewbox(size, margin) {
 }
 
 function testSvgFragment(t, svgFragment, expectedTags) {
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     const parser = new htmlparser.Parser(
       {
-        onopentag: function (name, attribs) {
+        onopentag: (name, attribs) => {
           const tag = expectedTags.shift();
 
           t.equal(tag.name, name, "Should have a " + tag.name + " tag");
 
-          tag.attribs.forEach(function (attr) {
+          tag.attribs.forEach((attr) => {
             t.equal(
               attribs[attr.name],
               attr.value.toString(),
@@ -28,11 +28,11 @@ function testSvgFragment(t, svgFragment, expectedTags) {
           });
         },
 
-        onend: function () {
+        onend: () => {
           resolve();
         },
 
-        onerror: function (e) {
+        onerror: (e) => {
           reject(e);
         },
       },
@@ -49,7 +49,7 @@ function buildTest(t, data, opts, expectedTags) {
   return testSvgFragment(t, svg, expectedTags.slice());
 }
 
-test("svgrender interface", function (t) {
+test("svgrender interface", (t) => {
   t.type(SvgRenderer.render, "function", "Should have render function");
 
   t.type(
@@ -61,7 +61,7 @@ test("svgrender interface", function (t) {
   t.end();
 });
 
-test("Svg render", function (t) {
+test("Svg render", (t) => {
   const tests = [];
 
   const data = QRCode.create("sample text", { version: 2 });
@@ -152,19 +152,19 @@ test("Svg render", function (t) {
     ]),
   );
 
-  Promise.all(tests).then(function () {
+  Promise.all(tests).then(() => {
     t.end();
   });
 });
 
-test("Svg renderToFile", function (t) {
+test("Svg renderToFile", (t) => {
   const sampleQrData = QRCode.create("sample text", { version: 2 });
   const fileName = "qrimage.svg";
   let fsStub = sinon.stub(fs, "writeFile").callsArg(2);
 
   t.plan(5);
 
-  SvgRenderer.renderToFile(fileName, sampleQrData, function (err) {
+  SvgRenderer.renderToFile(fileName, sampleQrData, (err) => {
     t.ok(!err, "Should not generate errors with only qrData param");
 
     t.equal(
@@ -181,7 +181,7 @@ test("Svg renderToFile", function (t) {
       margin: 10,
       scale: 1,
     },
-    function (err) {
+    (err) => {
       t.ok(!err, "Should not generate errors with options param");
 
       t.equal(
@@ -195,7 +195,7 @@ test("Svg renderToFile", function (t) {
   fsStub.restore();
   fsStub = sinon.stub(fs, "writeFile").callsArgWith(2, new Error());
 
-  SvgRenderer.renderToFile(fileName, sampleQrData, function (err) {
+  SvgRenderer.renderToFile(fileName, sampleQrData, (err) => {
     t.ok(err, "Should fail if error occurs during save");
   });
 

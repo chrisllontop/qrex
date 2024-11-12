@@ -1,7 +1,7 @@
 const test = require("tap").test;
 const Poly = require("core/polynomial");
 
-test("Generator polynomial", function (t) {
+test("Generator polynomial", (t) => {
   const result = Poly.generateECPolynomial(0);
   t.ok(result instanceof Uint8Array, "Should return an Uint8Array");
   t.deepEqual(
@@ -21,7 +21,7 @@ test("Generator polynomial", function (t) {
   t.end();
 });
 
-test("Polynomial", function (t) {
+test("Polynomial", (t) => {
   const p1 = [0, 1, 2, 3, 4];
   const p2 = [5, 6];
 

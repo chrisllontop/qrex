@@ -37,8 +37,8 @@ const testData = [
   },
 ];
 
-test("Numeric Data", function (t) {
-  testData.forEach(function (data) {
+test("Numeric Data", (t) => {
+  testData.forEach((data) => {
     const numericData = new NumericData(data.data);
 
     t.equal(numericData.mode, Mode.NUMERIC, "Mode should be NUMERIC");

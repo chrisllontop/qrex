@@ -24,8 +24,8 @@ const testData = [
   },
 ];
 
-test("Alphanumeric Data", function (t) {
-  testData.forEach(function (data) {
+test("Alphanumeric Data", (t) => {
+  testData.forEach((data) => {
     const alphanumericData = new AlphanumericData(data.data);
 
     t.equal(

@@ -1,8 +1,8 @@
 const test = require("tap").test;
 const GF = require("core/galois-field");
 
-test("Galois Field", function (t) {
-  t.throw(function () {
+test("Galois Field", (t) => {
+  t.throw(() => {
     GF.log(0);
   }, "Should throw for log(n) with n < 1");
 

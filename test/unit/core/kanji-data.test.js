@@ -5,7 +5,7 @@ const Mode = require("core/mode");
 const toSJIS = require("helper/to-sjis");
 require("core/utils").setToSJISFunction(toSJIS);
 
-test("Kanji Data", function (t) {
+test("Kanji Data", (t) => {
   const data = "漢字漾癶";
   const length = 4;
   const bitLength = 52; // length * 13
@@ -28,7 +28,7 @@ test("Kanji Data", function (t) {
 
   kanjiData = new KanjiData("abc");
   bitBuffer = new BitBuffer();
-  t.throw(function () {
+  t.throw(() => {
     kanjiData.write(bitBuffer);
   }, "Should throw if data is invalid");
 

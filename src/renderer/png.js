@@ -1,8 +1,8 @@
-import fs from 'fs'
-import { PNG } from 'pngjs'
-import * as Utils from './utils'
+import fs from "node:fs";
+import { PNG } from "pngjs";
+import * as Utils from "./utils";
 
-export function render (qrData, options) {
+export function render(qrData, options) {
   const opts = Utils.getOptions(options);
   const pngOpts = opts.rendererOpts;
   const size = Utils.getImageWidth(qrData.modules.size, opts);
@@ -16,7 +16,7 @@ export function render (qrData, options) {
   return pngImage;
 }
 
-export function renderToDataURL (qrData, options, cb) {
+export function renderToDataURL(qrData, options, cb) {
   if (typeof cb === "undefined") {
     cb = options;
     options = undefined;
@@ -30,7 +30,7 @@ export function renderToDataURL (qrData, options, cb) {
   });
 }
 
-export function renderToBuffer (qrData, options, cb) {
+export function renderToBuffer(qrData, options, cb) {
   if (typeof cb === "undefined") {
     cb = options;
     options = undefined;
@@ -41,7 +41,7 @@ export function renderToBuffer (qrData, options, cb) {
 
   png.on("error", cb);
 
-  png.on("data", data => {
+  png.on("data", (data) => {
     buffer.push(data);
   });
 
@@ -52,7 +52,7 @@ export function renderToBuffer (qrData, options, cb) {
   png.pack();
 }
 
-export function renderToFile (path, qrData, options, cb) {
+export function renderToFile(path, qrData, options, cb) {
   if (typeof cb === "undefined") {
     cb = options;
     options = undefined;
@@ -72,11 +72,7 @@ export function renderToFile (path, qrData, options, cb) {
   renderToFileStream(stream, qrData, options);
 }
 
-export function renderToFileStream (
-  stream,
-  qrData,
-  options,
-) {
+export function renderToFileStream(stream, qrData, options) {
   const png = render(qrData, options);
   png.pack().pipe(stream);
 }

@@ -4,12 +4,12 @@ const Version = require("core/version");
 const QRCode = require("core/qrcode");
 const toSJIS = require("helper/to-sjis");
 
-test("QRCode interface", function (t) {
+test("QRCode interface", (t) => {
   t.type(QRCode.create, "function", 'Should have "create" function');
-  t.throw(function () {
+  t.throw(() => {
     QRCode.create();
   }, "Should throw if no data is provided");
-  t.notThrow(function () {
+  t.notThrow(() => {
     QRCode.create("1234567");
   }, "Should not throw");
 
@@ -24,15 +24,15 @@ test("QRCode interface", function (t) {
   const darkModule = qr.modules.get(qr.modules.size - 8, 8);
   t.ok(darkModule, "Should have a dark module at coords [size-8][8]");
 
-  t.throw(function () {
+  t.throw(() => {
     qr = QRCode.create({});
   }, "Should throw if invalid data is passed");
 
-  t.notThrow(function () {
+  t.notThrow(() => {
     qr = QRCode.create("AAAAA00000", { version: 5 });
   }, "Should accept data as string");
 
-  t.notThrow(function () {
+  t.notThrow(() => {
     qr = QRCode.create(
       [
         { data: "ABCDEFG", mode: "alphanumeric" },
@@ -44,7 +44,7 @@ test("QRCode interface", function (t) {
     );
   }, "Should accept data as array of objects");
 
-  t.notThrow(function () {
+  t.notThrow(() => {
     qr = QRCode.create("AAAAA00000", { errorCorrectionLevel: "quartile" });
     qr = QRCode.create("AAAAA00000", { errorCorrectionLevel: "q" });
   }, "Should accept errorCorrectionLevel as string");
@@ -52,7 +52,7 @@ test("QRCode interface", function (t) {
   t.end();
 });
 
-test("QRCode error correction", function (t) {
+test("QRCode error correction", (t) => {
   let qr;
   const ecValues = [
     { name: ["l", "low"], level: ECLevel.L },
@@ -63,7 +63,7 @@ test("QRCode error correction", function (t) {
 
   for (let l = 0; l < ecValues.length; l++) {
     for (let i = 0; i < ecValues[l].name.length; i++) {
-      t.notThrow(function () {
+      t.notThrow(() => {
         qr = QRCode.create("ABCDEFG", {
           errorCorrectionLevel: ecValues[l].name[i],
         });
@@ -75,7 +75,7 @@ test("QRCode error correction", function (t) {
         "Should have correct errorCorrectionLevel value",
       );
 
-      t.notThrow(function () {
+      t.notThrow(() => {
         qr = QRCode.create("ABCDEFG", {
           errorCorrectionLevel: ecValues[l].name[i].toUpperCase(),
         });
@@ -100,7 +100,7 @@ test("QRCode error correction", function (t) {
   t.end();
 });
 
-test("QRCode version", function (t) {
+test("QRCode version", (t) => {
   let qr = QRCode.create("data", {
     version: 9,
     errorCorrectionLevel: ECLevel.M,
@@ -109,28 +109,28 @@ test("QRCode version", function (t) {
   t.equal(qr.version, 9, "Should create qrcode with correct version");
   t.equal(qr.errorCorrectionLevel, ECLevel.M, "Should set correct EC level");
 
-  t.throw(function () {
+  t.throw(() => {
     qr = QRCode.create(new Array(Version.getCapacity(2, ECLevel.H)).join("a"), {
       version: 1,
       errorCorrectionLevel: ECLevel.H,
     });
   }, "Should throw if data cannot be contained with chosen version");
 
-  t.throw(function () {
+  t.throw(() => {
     qr = QRCode.create(
       new Array(Version.getCapacity(40, ECLevel.H) + 2).join("a"),
       { version: 40, errorCorrectionLevel: ECLevel.H },
     );
   }, "Should throw if data cannot be contained in a qr code");
 
-  t.notThrow(function () {
+  t.notThrow(() => {
     qr = QRCode.create("abcdefg", { version: "invalid" });
   }, "Should use best version if the one provided is invalid");
 
   t.end();
 });
 
-test("QRCode capacity", function (t) {
+test("QRCode capacity", (t) => {
   let qr;
 
   qr = QRCode.create([{ data: "abcdefg", mode: "byte" }]);

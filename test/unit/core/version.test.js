@@ -190,7 +190,7 @@ const EXPECTED_VERSION_BITS = [
   0x27541, 0x28c69,
 ];
 
-test("Version validity", function (t) {
+test("Version validity", (t) => {
   t.notOk(VersionCheck.isValid(), "Should return false if no input");
   t.notOk(
     VersionCheck.isValid(""),
@@ -208,7 +208,7 @@ test("Version validity", function (t) {
   t.end();
 });
 
-test("Version from value", function (t) {
+test("Version from value", (t) => {
   t.equal(Version.from(5), 5, "Should return correct version from a number");
   t.equal(Version.from("5"), 5, "Should return correct version from a string");
   t.equal(
@@ -225,17 +225,17 @@ test("Version from value", function (t) {
   t.end();
 });
 
-test("Version capacity", function (t) {
-  t.throws(function () {
+test("Version capacity", (t) => {
+  t.throws(() => {
     Version.getCapacity();
   }, "Should throw if version is undefined");
-  t.throws(function () {
+  t.throws(() => {
     Version.getCapacity("");
   }, "Should throw if version is not a number");
-  t.throws(function () {
+  t.throws(() => {
     Version.getCapacity(0);
   }, "Should throw if version is not in range");
-  t.throws(function () {
+  t.throws(() => {
     Version.getCapacity(41);
   }, "Should throw if version is not in range");
 
@@ -276,7 +276,7 @@ test("Version capacity", function (t) {
   t.end();
 });
 
-test("Version best match", function (t) {
+test("Version best match", (t) => {
   function testBestVersionForCapacity(expectedCapacity, DataCtor) {
     for (let v = 0; v < 40; v++) {
       for (let l = 0; l < EC_LEVELS.length; l++) {
@@ -356,11 +356,11 @@ test("Version best match", function (t) {
   t.end();
 });
 
-test("Version encoded info", function (t) {
+test("Version encoded info", (t) => {
   let v;
 
   for (v = 0; v < 7; v++) {
-    t.throws(function () {
+    t.throws(() => {
       Version.getEncodedBits(v);
     }, "Should throw if version is invalid or less than 7");
   }

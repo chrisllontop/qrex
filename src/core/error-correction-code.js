@@ -1,4 +1,4 @@
-import { L, M, Q, H } from './error-correction-level'
+import { H, L, M, Q } from "./error-correction-level";
 
 const EC_BLOCKS_TABLE = [
   // L  M  Q  H
@@ -10,7 +10,7 @@ const EC_BLOCKS_TABLE = [
   14, 28, 38, 45, 15, 29, 40, 48, 16, 31, 43, 51, 17, 33, 45, 54, 18, 35, 48,
   57, 19, 37, 51, 60, 19, 38, 53, 63, 20, 40, 56, 66, 21, 43, 59, 70, 22, 45,
   62, 74, 24, 47, 65, 77, 25, 49, 68, 81,
-]
+];
 
 const EC_CODEWORDS_TABLE = [
   // L  M  Q  H
@@ -25,7 +25,7 @@ const EC_CODEWORDS_TABLE = [
   1350, 1620, 540, 980, 1440, 1710, 570, 1036, 1530, 1800, 570, 1064, 1590,
   1890, 600, 1120, 1680, 1980, 630, 1204, 1770, 2100, 660, 1260, 1860, 2220,
   720, 1316, 1950, 2310, 750, 1372, 2040, 2430,
-]
+];
 
 /**
  * Returns the number of error correction block that the QR Code should contain
@@ -35,21 +35,18 @@ const EC_CODEWORDS_TABLE = [
  * @param  {Number} errorCorrectionLevel Error correction level
  * @return {Number}                      Number of error correction blocks
  */
-export function getBlocksCount (
-  version,
-  errorCorrectionLevel,
-) {
+export function getBlocksCount(version, errorCorrectionLevel) {
   switch (errorCorrectionLevel) {
     case L:
-      return EC_BLOCKS_TABLE[(version - 1) * 4]
+      return EC_BLOCKS_TABLE[(version - 1) * 4];
     case M:
-      return EC_BLOCKS_TABLE[(version - 1) * 4 + 1]
+      return EC_BLOCKS_TABLE[(version - 1) * 4 + 1];
     case Q:
-      return EC_BLOCKS_TABLE[(version - 1) * 4 + 2]
+      return EC_BLOCKS_TABLE[(version - 1) * 4 + 2];
     case H:
-      return EC_BLOCKS_TABLE[(version - 1) * 4 + 3]
+      return EC_BLOCKS_TABLE[(version - 1) * 4 + 3];
     default:
-      return undefined
+      return undefined;
   }
 }
 
@@ -61,20 +58,17 @@ export function getBlocksCount (
  * @param  {Number} errorCorrectionLevel Error correction level
  * @return {Number}                      Number of error correction codewords
  */
-export function getTotalCodewordsCount (
-  version,
-  errorCorrectionLevel,
-) {
+export function getTotalCodewordsCount(version, errorCorrectionLevel) {
   switch (errorCorrectionLevel) {
     case L:
-      return EC_CODEWORDS_TABLE[(version - 1) * 4]
+      return EC_CODEWORDS_TABLE[(version - 1) * 4];
     case M:
-      return EC_CODEWORDS_TABLE[(version - 1) * 4 + 1]
+      return EC_CODEWORDS_TABLE[(version - 1) * 4 + 1];
     case Q:
-      return EC_CODEWORDS_TABLE[(version - 1) * 4 + 2]
+      return EC_CODEWORDS_TABLE[(version - 1) * 4 + 2];
     case H:
-      return EC_CODEWORDS_TABLE[(version - 1) * 4 + 3]
+      return EC_CODEWORDS_TABLE[(version - 1) * 4 + 3];
     default:
-      return undefined
+      return undefined;
   }
 }

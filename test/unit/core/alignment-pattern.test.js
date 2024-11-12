@@ -50,7 +50,7 @@ const EXPECTED_POSITION_TABLE = [
   [6, 30, 58, 86, 114, 142, 170],
 ];
 
-test("Alignment pattern - Row/Col coords", function (t) {
+test("Alignment pattern - Row/Col coords", (t) => {
   t.plan(40);
 
   for (let i = 1; i <= 40; i++) {
@@ -63,7 +63,7 @@ test("Alignment pattern - Row/Col coords", function (t) {
   }
 });
 
-test("Alignment pattern - Positions", function (t) {
+test("Alignment pattern - Positions", (t) => {
   for (let i = 1; i <= 40; i++) {
     const pos = pattern.getPositions(i);
     const expectedPos = EXPECTED_POSITION_TABLE[i - 1];
@@ -76,8 +76,8 @@ test("Alignment pattern - Positions", function (t) {
     );
 
     // For each coord value check if it's present in the expected coords table
-    pos.forEach(function (position) {
-      position.forEach(function (coord) {
+    pos.forEach((position) => {
+      position.forEach((coord) => {
         t.notEqual(
           expectedPos.indexOf(coord),
           -1,

@@ -3,7 +3,7 @@ const ECLevel = require("core/error-correction-level");
 
 const EC_LEVELS = [ECLevel.L, ECLevel.M, ECLevel.Q, ECLevel.H];
 
-test("Error level from input value", function (t) {
+test("Error level from input value", (t) => {
   const values = [
     ["l", "low"],
     ["m", "medium"],
@@ -37,7 +37,7 @@ test("Error level from input value", function (t) {
   t.end();
 });
 
-test("Error level validity", function (t) {
+test("Error level validity", (t) => {
   for (let l = 0; l < EC_LEVELS.length; l++) {
     t.ok(
       ECLevel.isValid(EC_LEVELS[l]),

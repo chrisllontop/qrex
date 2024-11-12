@@ -1,4 +1,4 @@
-const Mode = require("./mode");
+import { Mode } from "./mode";
 
 export class ByteData {
   constructor(data) {

@@ -1,7 +1,7 @@
-import { NUMERIC } from "./mode";
+import { Mode } from "./mode";
 
 function NumericData(data) {
-  this.mode = NUMERIC;
+  this.mode = Mode.NUMERIC;
   this.data = data.toString();
 }
 

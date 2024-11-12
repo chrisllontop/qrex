@@ -1,5 +1,5 @@
-const Mode = require("./mode");
-const Utils = require("./utils");
+import { Mode } from "./mode";
+import { CoreUtils } from "./utils";
 
 export class KanjiData {
   constructor(data) {
@@ -22,7 +22,7 @@ export class KanjiData {
     // These byte values are shifted from the JIS X 0208 values.
     // JIS X 0208 gives details of the shift coded representation.
     for (i = 0; i < this.data.length; i++) {
-      let value = Utils.toSJIS(this.data[i]);
+      let value = CoreUtils.toSJIS(this.data[i]);
 
       // For characters with Shift JIS values from 0x8140 to 0x9FFC:
       if (value >= 0x8140 && value <= 0x9ffc) {

@@ -1,4 +1,4 @@
-import * as Polynomial from "./polynomial";
+import { Polynomial } from "./polynomial";
 
 export class ReedSolomonEncoder {
   constructor(degree) {

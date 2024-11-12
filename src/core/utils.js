@@ -49,7 +49,7 @@ const CODEWORDS_COUNT = [
  * @param  {Number} version QR Code version
  * @return {Number}         size of QR code
  */
-export function getSymbolSize(version) {
+function getSymbolSize(version) {
   if (!version) throw new Error('"version" cannot be null or undefined');
   if (version < 1 || version > 40)
     throw new Error('"version" should be in range from 1 to 40');
@@ -62,7 +62,7 @@ export function getSymbolSize(version) {
  * @param  {Number} version QR Code version
  * @return {Number}         Data length in bits
  */
-export function getSymbolTotalCodewords(version) {
+function getSymbolTotalCodewords(version) {
   return CODEWORDS_COUNT[version];
 }
 
@@ -72,18 +72,19 @@ export function getSymbolTotalCodewords(version) {
  * @param  {Number} data Value to encode
  * @return {Number}      Encoded value
  */
-export function getBCHDigit(data) {
+function getBCHDigit(data) {
   let digit = 0;
+  let value = data;
 
-  while (data !== 0) {
+  while (value !== 0) {
     digit++;
-    data >>>= 1;
+    value >>>= 1;
   }
 
   return digit;
 }
 
-export function setToSJISFunction(f) {
+function setToSJISFunction(f) {
   if (typeof f !== "function") {
     throw new Error('"toSJISFunc" is not a valid function.');
   }
@@ -91,10 +92,19 @@ export function setToSJISFunction(f) {
   toSJISFunction = f;
 }
 
-export function isKanjiModeEnabled() {
+function isKanjiModeEnabled() {
   return typeof toSJISFunction !== "undefined";
 }
 
-export function toSJIS(kanji) {
+function toSJIS(kanji) {
   return toSJISFunction(kanji);
 }
+
+export const CoreUtils = {
+  getSymbolSize,
+  getSymbolTotalCodewords,
+  getBCHDigit,
+  setToSJISFunction,
+  isKanjiModeEnabled,
+  toSJIS,
+};

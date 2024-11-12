@@ -1,4 +1,4 @@
-import { ALPHANUMERIC } from "./mode";
+import { Mode } from "./mode";
 
 /**
  * Array of characters available in alphanumeric mode
@@ -59,7 +59,7 @@ const ALPHA_NUM_CHARS = [
 
 export class AlphanumericData {
   constructor(data) {
-    this.mode = ALPHANUMERIC;
+    this.mode = Mode.ALPHANUMERIC;
     this.data = data;
   }
 

@@ -1,4 +1,4 @@
-import { getSymbolSize } from "./utils";
+import { CoreUtils } from "./utils";
 
 const FINDER_PATTERN_SIZE = 7;
 
@@ -9,8 +9,8 @@ const FINDER_PATTERN_SIZE = 7;
  * @param  {Number} version QR Code version
  * @return {Array}          Array of coordinates
  */
-export function getPositions(version) {
-  const size = getSymbolSize(version);
+function getPositions(version) {
+  const size = CoreUtils.getSymbolSize(version);
 
   return [
     // top-left
@@ -21,3 +21,7 @@ export function getPositions(version) {
     [0, size - FINDER_PATTERN_SIZE],
   ];
 }
+
+export const FinderPattern = {
+  getPositions,
+};

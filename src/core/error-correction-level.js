@@ -1,7 +1,7 @@
-export const L = { bit: 1 };
-export const M = { bit: 0 };
-export const Q = { bit: 3 };
-export const H = { bit: 2 };
+const L = { bit: 1 };
+const M = { bit: 0 };
+const Q = { bit: 3 };
+const H = { bit: 2 };
 
 function fromString(string) {
   if (typeof string !== "string") {
@@ -32,13 +32,13 @@ function fromString(string) {
   }
 }
 
-export function isValid(level) {
+function isValid(level) {
   return (
     level && typeof level.bit !== "undefined" && level.bit >= 0 && level.bit < 4
   );
 }
 
-export function from(value, defaultValue) {
+function from(value, defaultValue) {
   if (isValid(value)) {
     return value;
   }
@@ -49,3 +49,12 @@ export function from(value, defaultValue) {
     return defaultValue;
   }
 }
+
+export const ECLevel = {
+  L,
+  M,
+  Q,
+  H,
+  from,
+  isValid,
+};

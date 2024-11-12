@@ -1,31 +1,31 @@
-import { testAlphanumeric, testKanji, testNumeric } from "./regex";
-import { isValid as _isValid } from "./version-check";
+import { Regex } from "./regex";
+import { VersionCheck } from "./version-check";
 
-export const NUMERIC = {
+const NUMERIC = {
   id: "Numeric",
   bit: 1 << 0,
   ccBits: [10, 12, 14],
 };
 
-export const ALPHANUMERIC = {
+const ALPHANUMERIC = {
   id: "Alphanumeric",
   bit: 1 << 1,
   ccBits: [9, 11, 13],
 };
 
-export const BYTE = {
+const BYTE = {
   id: "Byte",
   bit: 1 << 2,
   ccBits: [8, 16, 16],
 };
 
-export const KANJI = {
+const KANJI = {
   id: "Kanji",
   bit: 1 << 3,
   ccBits: [8, 10, 12],
 };
 
-export const MIXED = {
+const MIXED = {
   bit: -1,
 };
 
@@ -37,10 +37,10 @@ export const MIXED = {
  * @param  {Number} version QR Code version
  * @return {Number}         Number of bits
  */
-export function getCharCountIndicator(mode, version) {
+function getCharCountIndicator(mode, version) {
   if (!mode.ccBits) throw new Error(`Invalid mode: ${mode}`);
 
-  if (!_isValid(version)) {
+  if (!VersionCheck.isValid(version)) {
     throw new Error(`Invalid version: ${version}`);
   }
 
@@ -55,10 +55,10 @@ export function getCharCountIndicator(mode, version) {
  * @param  {String} dataStr Input data string
  * @return {Mode}           Best mode
  */
-export function getBestModeForData(dataStr) {
-  if (testNumeric(dataStr)) return NUMERIC;
-  if (testAlphanumeric(dataStr)) return ALPHANUMERIC;
-  if (testKanji(dataStr)) return KANJI;
+function getBestModeForData(dataStr) {
+  if (Regex.testNumeric(dataStr)) return NUMERIC;
+  if (Regex.testAlphanumeric(dataStr)) return ALPHANUMERIC;
+  if (Regex.testKanji(dataStr)) return KANJI;
   return BYTE;
 }
 
@@ -68,7 +68,7 @@ export function getBestModeForData(dataStr) {
  * @param {Mode} mode Mode object
  * @returns {String}  Mode name
  */
-export function toString(mode) {
+function toString(mode) {
   if (mode?.id) return mode.id;
   throw new Error("Invalid mode");
 }
@@ -79,7 +79,7 @@ export function toString(mode) {
  * @param   {Mode}    mode Mode object
  * @returns {Boolean} True if valid mode, false otherwise
  */
-export function isValid(mode) {
+function isValid(mode) {
   return mode?.bit && mode.ccBits;
 }
 
@@ -118,7 +118,7 @@ function fromString(string) {
  * @param  {Mode}        defaultValue Fallback value
  * @return {Mode}                     Encoding mode
  */
-export function from(value, defaultValue) {
+function from(value, defaultValue) {
   if (isValid(value)) {
     return value;
   }
@@ -129,3 +129,16 @@ export function from(value, defaultValue) {
     return defaultValue;
   }
 }
+
+export const Mode = {
+  NUMERIC,
+  ALPHANUMERIC,
+  BYTE,
+  KANJI,
+  MIXED,
+  getCharCountIndicator,
+  getBestModeForData,
+  toString,
+  isValid,
+  from,
+};

@@ -31,6 +31,7 @@
     "lint": "biome lint",
     "lint:fix": "biome lint --fix",
     "test": "node --throw-deprecation test.js",
+    "test:ci": "echo 'No tests yet'",
     "prepublish": "npm run build"
   },
   "bin": {

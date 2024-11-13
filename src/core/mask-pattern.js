@@ -185,8 +185,8 @@ function getMaskAt(maskPattern, i, j) {
     case Patterns.PATTERN111:
       return (((i * j) % 3) + ((i + j) % 2)) % 2 === 0;
 
-    // default:
-    //   throw new Error(`bad maskPattern:${maskPattern}`);
+    default:
+      throw new Error(`bad maskPattern:${maskPattern}`);
   }
 }
 

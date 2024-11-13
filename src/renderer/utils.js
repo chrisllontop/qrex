@@ -109,4 +109,5 @@ export const RendererUtils = {
   getOptions,
   getImageWidth,
   qrToImageData,
+  getScale
 };

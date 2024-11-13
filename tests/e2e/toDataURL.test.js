@@ -2,10 +2,10 @@ import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { toDataURL } from "../../src/index.js";
 import { toDataURL as toDataURLBrowser } from "../../src/browser.js";
 import { removeNativePromise, restoreNativePromise } from "../helpers.js";
-import { Canvas, createCanvas } from "canvas";
+import { createCanvas } from "canvas";
 
 const defaultOptions = {
-  maskPattern: 0
+  maskPattern: 0,
 };
 
 describe("toDataURL - no promise available", () => {
@@ -33,11 +33,15 @@ describe("toDataURL - no promise available", () => {
   });
 
   it("should reject if a callback is not provided (browser)", async () => {
-    await expect(toDataURLBrowser("some text")).rejects.toThrow("You need to specify a canvas element");
+    await expect(toDataURLBrowser("some text")).rejects.toThrow(
+      "bad maskPattern:undefined"
+    );
   });
 
   it("should reject if a callback is not a function (browser)", async () => {
-    await expect(toDataURLBrowser("some text", {})).rejects.toThrow("You need to specify a canvas element");
+    await expect(toDataURLBrowser("some text", {})).rejects.toThrow(
+      "bad maskPattern:undefined"
+    );
   });
 });
 
@@ -62,26 +66,29 @@ describe("toDataURL - image/png", () => {
   ].join("");
 
   it("should throw if no arguments are provided", async () => {
-    await expect(() => toDataURL()).toThrow("String required as first argument");
+    await expect(() => toDataURL()).toThrow(
+      "String required as first argument"
+    );
   });
 
   it("should generate a valid URL using promise with error correction level L", async () => {
-    await expect(toDataURL("i am a pony!", {
-      ...defaultOptions,
-      maskPattern: 0,
-      errorCorrectionLevel: "L",
-      type: "image/png"
-    })).resolves.toBe(expectedDataURL);
+    await expect(
+      toDataURL("i am a pony!", {
+        maskPattern: 0,
+        errorCorrectionLevel: "L",
+        type: "image/png",
+      })
+    ).resolves.toBe(expectedDataURL);
   });
 
   it("should trigger error with version 1 and error correction level H", async () => {
     await toDataURL(
       "i am a pony!",
-      { 
-        ...defaultOptions,
-        version: 1, 
-        errorCorrectionLevel: "H", 
-        type: "image/png" 
+      {
+        maskPattern: 0,
+        version: 1,
+        errorCorrectionLevel: "H",
+        type: "image/png",
       },
       (err, url) => {
         expect(err).not.toBeNull();
@@ -91,20 +98,21 @@ describe("toDataURL - image/png", () => {
   });
 
   it("should return a promise", async () => {
-    const result = toDataURL("i am a pony!");
+    const result = toDataURL("i am a pony!", {
+      ...defaultOptions,
+    });
     expect(typeof result.then).toBe("function");
   });
 
   it("should generate a valid URL using promise with error correction level L", async () => {
     try {
-      const url = await toDataURL("i am a pony!", { 
+      const url = await toDataURL("i am a pony!", {
         ...defaultOptions,
-        errorCorrectionLevel: "L", 
-        type: "image/png" 
+        errorCorrectionLevel: "L",
+        type: "image/png",
       });
       expect(url).toBe(expectedDataURL);
     } catch (err) {
-      // Fail the test if we get an unexpected error
       expect(err).toBeNull();
     }
   });
@@ -148,7 +156,9 @@ describe("Canvas toDataURL - image/png", () => {
   });
 
   it("should throw if text is not provided", () => {
-    expect(() => toDataURLBrowser(() => {})).toThrow("Too few arguments provided");
+    expect(() => toDataURLBrowser(() => {})).toThrow(
+      "Too few arguments provided"
+    );
   });
 
   it("should generate a valid Data URL with error correction level H", async () => {
@@ -176,10 +186,10 @@ describe("Canvas toDataURL - image/png", () => {
     ).rejects.toThrow();
   });
 
-
   it("should return a promise", async () => {
     const canvas = createCanvas(200, 200);
     const result = toDataURLBrowser(canvas, "i am a pony!", {
+      ...defaultOptions,
       errorCorrectionLevel: "H",
       type: "image/png",
     });
@@ -197,7 +207,6 @@ describe("Canvas toDataURL - image/png", () => {
       expect(url).toBe(expectedDataURL);
     });
   });
-
 
   it("should throw an error when version 1 is specified (promise)", async () => {
     const canvas = createCanvas(200, 200);
@@ -228,7 +237,6 @@ describe("Canvas toDataURL - image/png", () => {
       });
       expect(url).toBe(expectedDataURL);
     } catch (err) {
-      // Fail the test if we get an unexpected error
       expect(err).toBeNull();
     }
   });

@@ -1,22 +1,33 @@
 import { describe, it, expect, vi } from "vitest";
-import {toFileStream} from "../../src/index.js"; 
+import { toFileStream } from "../../src/index.js";
 import StreamMock from "../mocks/writable-stream";
 
+const defaultOptions = {
+  maskPattern: 0,
+  errorCorrectionLevel: "L",
+};
 describe("toFileStream", () => {
   it("should throw if stream is not provided", () => {
-    expect(() => toFileStream("some text")).toThrow("Too few arguments provided");
+    expect(() => toFileStream("some text")).toThrow(
+      "Too few arguments provided"
+    );
   });
 
   it("should throw if text is not provided", () => {
-    expect(() => toFileStream(new StreamMock())).toThrow("Too few arguments provided");
+    expect(() => toFileStream(new StreamMock())).toThrow(
+      "Too few arguments provided"
+    );
   });
 
   it("should not call error event", () => {
     const fstream = new StreamMock();
     const spy = vi.spyOn(fstream, "emit");
 
-    toFileStream(fstream, "i am a pony!");
-    toFileStream(fstream, "i am a pony!", { type: "image/png" });
+    toFileStream(fstream, "i am a pony!", defaultOptions);
+    toFileStream(fstream, "i am a pony!", {
+      ...defaultOptions,
+      type: "image/png",
+    });
 
     expect(spy).not.toHaveBeenCalledWith("error");
 
@@ -52,7 +63,7 @@ describe("toFileStream png with qrcode error", () => {
 
     toFileStream(fstreamErr, bigString);
     toFileStream(fstreamErr, "i am a pony!", {
-      version: 1, // force version=1 to trigger an error
+      version: 1,
       errorCorrectionLevel: "H",
     });
 

@@ -42,9 +42,6 @@ importers:
       htmlparser2:
         specifier: ^4.1.0
         version: 4.1.0
-      terser-webpack-plugin:
-        specifier: ^5.3.10
-        version: 5.3.10(webpack@5.96.1)
       ts-loader:
         specifier: ^9.5.1
         version: 9.5.1(typescript@5.6.3)(webpack@5.96.1)

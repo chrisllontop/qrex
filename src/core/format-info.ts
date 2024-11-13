@@ -1,9 +1,9 @@
-import { CoreUtils } from "./utils";
+import { getBCHDigit } from './utils';
 
 const G15 =
   (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0);
 const G15_MASK = (1 << 14) | (1 << 12) | (1 << 10) | (1 << 4) | (1 << 1);
-const G15_BCH = CoreUtils.getBCHDigit(G15);
+const G15_BCH = getBCHDigit(G15);
 
 /**
  * Returns format information with relative error correction bits
@@ -15,12 +15,12 @@ const G15_BCH = CoreUtils.getBCHDigit(G15);
  * @param  {Number} mask                 Mask pattern
  * @return {Number}                      Encoded format information bits
  */
-function getEncodedBits(errorCorrectionLevel, mask) {
+export function getEncodedBits(errorCorrectionLevel: number, mask: number): number {
   const data = (errorCorrectionLevel.bit << 3) | mask;
   let d = data << 10;
 
-  while (CoreUtils.getBCHDigit(d) - G15_BCH >= 0) {
-    d ^= G15 << (CoreUtils.getBCHDigit(d) - G15_BCH);
+  while (getBCHDigit(d) - G15_BCH >= 0) {
+    d ^= G15 << (getBCHDigit(d) - G15_BCH);
   }
 
   // xor final data with mask pattern in order to ensure that

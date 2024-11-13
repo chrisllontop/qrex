@@ -1,6 +1,6 @@
-import { ECLevel } from "./error-correction-level";
+import { L, M, Q, H } from './error-correction-level';
 
-const EC_BLOCKS_TABLE = [
+const EC_BLOCKS_TABLE: number[] = [
   // L  M  Q  H
   1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 2, 2, 4, 1, 2, 4, 4, 2, 4, 4, 4, 2, 4,
   6, 5, 2, 4, 6, 6, 2, 5, 8, 8, 4, 5, 8, 8, 4, 5, 8, 11, 4, 8, 10, 11, 4, 9, 12,
@@ -12,7 +12,7 @@ const EC_BLOCKS_TABLE = [
   62, 74, 24, 47, 65, 77, 25, 49, 68, 81,
 ];
 
-const EC_CODEWORDS_TABLE = [
+const EC_CODEWORDS_TABLE: number[] = [
   // L  M  Q  H
   7, 10, 13, 17, 10, 16, 22, 28, 15, 26, 36, 44, 20, 36, 52, 64, 26, 48, 72, 88,
   36, 64, 96, 112, 40, 72, 108, 130, 48, 88, 132, 156, 60, 110, 160, 192, 72,
@@ -35,15 +35,18 @@ const EC_CODEWORDS_TABLE = [
  * @param  {Number} errorCorrectionLevel Error correction level
  * @return {Number}                      Number of error correction blocks
  */
-function getBlocksCount(version, errorCorrectionLevel) {
+export function getBlocksCount(
+  version: number,
+  errorCorrectionLevel: number,
+): number | undefined {
   switch (errorCorrectionLevel) {
-    case ECLevel.L:
+    case L.bit:
       return EC_BLOCKS_TABLE[(version - 1) * 4];
-    case ECLevel.M:
+    case M.bit:
       return EC_BLOCKS_TABLE[(version - 1) * 4 + 1];
-    case ECLevel.Q:
+    case Q.bit:
       return EC_BLOCKS_TABLE[(version - 1) * 4 + 2];
-    case ECLevel.H:
+    case H.bit:
       return EC_BLOCKS_TABLE[(version - 1) * 4 + 3];
     default:
       return undefined;
@@ -58,6 +61,7 @@ function getBlocksCount(version, errorCorrectionLevel) {
  * @param  {Number} errorCorrectionLevel Error correction level
  * @return {Number}                      Number of error correction codewords
  */
+<<<<<<< HEAD
 function getTotalCodewordsCount(version, errorCorrectionLevel) {
   switch (errorCorrectionLevel) {
     case ECLevel.L:
@@ -67,6 +71,20 @@ function getTotalCodewordsCount(version, errorCorrectionLevel) {
     case ECLevel.Q:
       return EC_CODEWORDS_TABLE[(version - 1) * 4 + 2];
     case ECLevel.H:
+=======
+export function getTotalCodewordsCount(
+  version: number,
+  errorCorrectionLevel: number,
+): number | undefined {
+  switch (errorCorrectionLevel) {
+    case L.bit:
+      return EC_CODEWORDS_TABLE[(version - 1) * 4];
+    case M.bit:
+      return EC_CODEWORDS_TABLE[(version - 1) * 4 + 1];
+    case Q.bit:
+      return EC_CODEWORDS_TABLE[(version - 1) * 4 + 2];
+    case H.bit:
+>>>>>>> efb7136 (Iterative typing phase one)
       return EC_CODEWORDS_TABLE[(version - 1) * 4 + 3];
     default:
       return undefined;

@@ -8,7 +8,7 @@
  * and their number depends on the symbol version.
  */
 
-import { CoreUtils } from "./utils";
+import { getSymbolSize } from './utils';
 
 /**
  * Calculate the row/column coordinates of the center module of each alignment pattern
@@ -23,12 +23,12 @@ import { CoreUtils } from "./utils";
  *
  * @param  {Number} version QR Code version
  * @return {Array}          Array of coordinate
- */
-export function getRowColCoords(version) {
+  */
+export function getRowColCoords(version: number): number[] {
   if (version === 1) return [];
 
   const posCount = Math.floor(version / 7) + 2;
-  const size = CoreUtils.getSymbolSize(version);
+  const size = getSymbolSize(version);
   const intervals =
     size === 145 ? 26 : Math.ceil((size - 13) / (2 * posCount - 2)) * 2;
   const positions = [size - 7]; // Last coord is always (size - 7)
@@ -62,7 +62,7 @@ export function getRowColCoords(version) {
  * @param  {Number} version QR Code version
  * @return {Array}          Array of coordinates
  */
-function getPositions(version) {
+export function getPositions(version: number): number[] {
   const coords = [];
   const pos = getRowColCoords(version);
   const posLength = pos.length;

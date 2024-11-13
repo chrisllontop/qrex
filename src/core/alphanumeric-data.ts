@@ -1,4 +1,4 @@
-import { Mode } from "./mode";
+import { type Mode, ALPHANUMERIC } from './mode';
 
 /**
  * Array of characters available in alphanumeric mode
@@ -8,70 +8,73 @@ import { Mode } from "./mode";
  * with the array index
  *
  * @type {Array}
- */
-const ALPHA_NUM_CHARS = [
-  "0",
-  "1",
-  "2",
-  "3",
-  "4",
-  "5",
-  "6",
-  "7",
-  "8",
-  "9",
-  "A",
-  "B",
-  "C",
-  "D",
-  "E",
-  "F",
-  "G",
-  "H",
-  "I",
-  "J",
-  "K",
-  "L",
-  "M",
-  "N",
-  "O",
-  "P",
-  "Q",
-  "R",
-  "S",
-  "T",
-  "U",
-  "V",
-  "W",
-  "X",
-  "Y",
-  "Z",
-  " ",
-  "$",
-  "%",
-  "*",
-  "+",
-  "-",
-  ".",
-  "/",
-  ":",
+  */
+const ALPHA_NUM_CHARS: Array<string> = [
+  '0',
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9',
+  'A',
+  'B',
+  'C',
+  'D',
+  'E',
+  'F',
+  'G',
+  'H',
+  'I',
+  'J',
+  'K',
+  'L',
+  'M',
+  'N',
+  'O',
+  'P',
+  'Q',
+  'R',
+  'S',
+  'T',
+  'U',
+  'V',
+  'W',
+  'X',
+  'Y',
+  'Z',
+  ' ',
+  '$',
+  '%',
+  '*',
+  '+',
+  '-',
+  '.',
+  '/',
+  ':',
 ];
 
 export class AlphanumericData {
-  constructor(data) {
-    this.mode = Mode.ALPHANUMERIC;
+  mode: Mode;
+  data: string[];
+
+  constructor(data: string[]) {
     this.data = data;
+    this.mode = ALPHANUMERIC;
   }
 
-  getLength() {
+  getLength(): number {
     return this.data.length;
   }
 
-  getBitsLength() {
+  getBitsLength(): number {
     return AlphanumericData.getBitsLength(this.data.length);
   }
 
-  write(bitBuffer) {
+  write(bitBuffer: Buffers): void {
     let i;
 
     // Input data characters are divided into groups of two characters
@@ -94,7 +97,7 @@ export class AlphanumericData {
     }
   }
 
-  static getBitsLength(length) {
+  static getBitsLength(length: number): number {
     return 11 * Math.floor(length / 2) + 6 * (length % 2);
   }
 }

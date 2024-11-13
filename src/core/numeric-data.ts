@@ -1,26 +1,27 @@
-import { Mode } from "./mode";
+import { type Mode, NUMERIC } from './mode';
 
-function NumericData(data) {
-  this.mode = Mode.NUMERIC;
+function NumericData(data: Uint8Array) {
+  mode: Mode;
+  data: string;
+
+  this.mode = NUMERIC;
   this.data = data.toString();
 }
 
 NumericData.getBitsLength = function getBitsLength(length) {
   return 10 * Math.floor(length / 3) + (length % 3 ? (length % 3) * 3 + 1 : 0);
-};
+}
 
 NumericData.prototype.getLength = function getLength() {
   return this.data.length;
-};
+}
 
 NumericData.prototype.getBitsLength = function getBitsLength() {
   return NumericData.getBitsLength(this.data.length);
-};
+}
 
-NumericData.prototype.write = function write(bitBuffer) {
-  let i;
-  let group;
-  let value;
+NumericData.prototype.write = function write(bitBuffer: Buffers): void {
+  let i, group, value;
 
   // The input data string is divided into groups of three digits,
   // and each group is converted to its 10-bit binary equivalent.

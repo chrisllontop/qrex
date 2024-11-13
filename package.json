@@ -42,6 +42,8 @@
     "qrex": "./bin/qrex"
   },
   "dependencies": {
+    "@types/buffers": "^0.1.34",
+    "@types/qrcode": "^1.5.5",
     "dijkstrajs": "^1.0.1",
     "pngjs": "^5.0.0",
     "yargs": "^15.3.1"

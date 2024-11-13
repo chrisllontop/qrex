@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import * as fs from "node:fs";
 import { RendererSvgTag } from "./svg-tag";
 
 const render = RendererSvgTag.render;

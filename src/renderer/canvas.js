@@ -19,45 +19,46 @@ function getCanvasElement() {
 }
 
 function render(qrData, canvas, options) {
-  let opts = options;
-  let canvasEl = canvas;
+  let resolvedOpts = options;
+  let resolvedCanvas = canvas;
 
-  if (typeof opts === "undefined" && (!canvas || !canvas.getContext)) {
-    opts = canvas;
-    canvas = undefined;
+  if (typeof resolvedOpts === "undefined" && (!canvas || !canvas.getContext)) {
+    resolvedOpts = canvas;
+    resolvedCanvas = undefined;
   }
 
   if (!canvas) {
-    canvasEl = getCanvasElement();
+    resolvedCanvas = getCanvasElement();
   }
 
-  opts = RendererUtils.getOptions(opts);
-  const size = RendererUtils.getImageWidth(qrData.modules.size, opts);
+  resolvedOpts = RendererUtils.getOptions(resolvedOpts);
+  const size = RendererUtils.getImageWidth(qrData.modules.size, resolvedOpts);
 
-  const ctx = canvasEl.getContext("2d");
+  const ctx = resolvedCanvas.getContext("2d");
   const image = ctx.createImageData(size, size);
-  RendererUtils.qrToImageData(image.data, qrData, opts);
+  RendererUtils.qrToImageData(image.data, qrData, resolvedOpts);
 
-  clearCanvas(ctx, canvasEl, size);
+  clearCanvas(ctx, resolvedCanvas, size);
   ctx.putImageData(image, 0, 0);
 
-  return canvasEl;
+  return resolvedCanvas;
 }
 
 function renderToDataURL(qrData, canvas, options) {
-  let opts = options;
+  let resolvedOpts = options;
+  let resolvedCanvas = canvas;
 
-  if (typeof opts === "undefined" && (!canvas || !canvas.getContext)) {
-    opts = canvas;
-    canvas = undefined;
+  if (typeof resolvedOpts === "undefined" && (!canvas || !canvas.getContext)) {
+    resolvedOpts = canvas;
+    resolvedCanvas = undefined;
   }
 
-  if (!opts) opts = {};
+  if (!resolvedOpts) resolvedOpts = {};
 
-  const canvasEl = render(qrData, canvas, opts);
+  const canvasEl = render(qrData, resolvedCanvas, resolvedOpts);
 
-  const type = opts.type || "image/png";
-  const rendererOpts = opts.rendererOpts || {};
+  const type = resolvedOpts.type || "image/png";
+  const rendererOpts = resolvedOpts.rendererOpts || {};
 
   return canvasEl.toDataURL(type, rendererOpts.quality);
 }

@@ -406,12 +406,11 @@ function createSymbol(data, version, errorCorrectionLevel, maskPattern) {
     throw new Error("The amount of data is too big to be stored in a QR Code");
   }
 
-  // If not specified, use min version as default
-  if (!version) {
-    version = bestVersion;
+  // Use resolvedVersion to avoid reassigning the 'version' parameter
+  const resolvedVersion = version || bestVersion;
 
-    // Check if the specified version can contain the data
-  } else if (version < bestVersion) {
+  // Check if the specified version can contain the data
+  if (version && version < bestVersion) {
     throw new Error(
       `
 The chosen QR Code version cannot contain this amount of data.
@@ -420,16 +419,16 @@ Minimum version required to store current data is: ${bestVersion}.
     );
   }
 
-  const dataBits = createData(version, errorCorrectionLevel, segments);
+  const dataBits = createData(resolvedVersion, errorCorrectionLevel, segments);
 
   // Allocate matrix buffer
-  const moduleCount = CoreUtils.getSymbolSize(version);
+  const moduleCount = CoreUtils.getSymbolSize(resolvedVersion);
   const modules = new BitMatrix(moduleCount);
 
   // Add function modules
-  setupFinderPattern(modules, version);
+  setupFinderPattern(modules, resolvedVersion);
   setupTimingPattern(modules);
-  setupAlignmentPattern(modules, version);
+  setupAlignmentPattern(modules, resolvedVersion);
 
   // Add temporary dummy bits for format info just to set them as reserved.
   // This is needed to prevent these bits from being masked by {@link MaskPattern.applyMask}
@@ -437,20 +436,20 @@ Minimum version required to store current data is: ${bestVersion}.
   // These blocks will be replaced with correct values later in code.
   setupFormatInfo(modules, errorCorrectionLevel, 0);
 
-  if (version >= 7) {
-    setupVersionInfo(modules, version);
+  if (resolvedVersion >= 7) {
+    setupVersionInfo(modules, resolvedVersion);
   }
 
   // Add data codewords
   setupData(modules, dataBits);
 
-  if (Number.isNaN(maskPattern)) {
-    // Find best mask pattern
-    maskPattern = MaskPattern.getBestMask(
-      modules,
-      setupFormatInfo.bind(null, modules, errorCorrectionLevel),
-    );
-  }
+  // Determine the best mask pattern if maskPattern is NaN
+  const resolvedMaskPattern = Number.isNaN(maskPattern)
+    ? MaskPattern.getBestMask(
+        modules,
+        setupFormatInfo.bind(null, modules, errorCorrectionLevel),
+      )
+    : maskPattern;
 
   // Apply mask pattern
   MaskPattern.applyMask(maskPattern, modules);
@@ -460,9 +459,9 @@ Minimum version required to store current data is: ${bestVersion}.
 
   return {
     modules: modules,
-    version: version,
+    version: resolvedVersion,
     errorCorrectionLevel: errorCorrectionLevel,
-    maskPattern: maskPattern,
+    maskPattern: resolvedMaskPattern,
     segments: segments,
   };
 }

@@ -1,15 +1,13 @@
 function hex2rgba(hex) {
-  if (typeof hex === "number") {
-    hex = hex.toString();
-  }
+  const hexString = typeof hex === "number" ? hex.toString() : hex;
 
-  if (typeof hex !== "string") {
+  if (typeof hexString !== "string") {
     throw new Error("Color should be defined as hex string");
   }
 
-  let hexCode = hex.slice().replace("#", "").split("");
+  let hexCode = hexString.slice().replace("#", "").split("");
   if (hexCode.length < 3 || hexCode.length === 5 || hexCode.length > 8) {
-    throw new Error(`Invalid hex color: ${hex}`);
+    throw new Error(`Invalid hex color: ${hexString}`);
   }
 
   // Convert from short to long form (fff -> ffffff)
@@ -35,30 +33,30 @@ function hex2rgba(hex) {
 }
 
 function getOptions(options) {
-  if (!options) options = {};
-  if (!options.color) options.color = {};
+  const resolvedOptions = options || {};
+  if (!resolvedOptions.color) resolvedOptions.color = {};
 
   const margin =
-    typeof options.margin === "undefined" ||
-    options.margin === null ||
-    options.margin < 0
+    typeof resolvedOptions.margin === "undefined" ||
+    resolvedOptions.margin === null ||
+    resolvedOptions.margin < 0
       ? 4
-      : options.margin;
+      : resolvedOptions.margin;
 
   const width =
-    options.width && options.width >= 21 ? options.width : undefined;
-  const scale = options.scale || 4;
+    resolvedOptions.width && resolvedOptions.width >= 21 ? resolvedOptions.width : undefined;
+  const scale = resolvedOptions.scale || 4;
 
   return {
     width: width,
     scale: width ? 4 : scale,
     margin: margin,
     color: {
-      dark: hex2rgba(options.color.dark || "#000000ff"),
-      light: hex2rgba(options.color.light || "#ffffffff"),
+      dark: hex2rgba(resolvedOptions.color.dark || "#000000ff"),
+      light: hex2rgba(resolvedOptions.color.light || "#ffffffff"),
     },
-    type: options.type,
-    rendererOpts: options.rendererOpts || {},
+    type: resolvedOptions.type,
+    rendererOpts: resolvedOptions.rendererOpts || {},
   };
 }
 

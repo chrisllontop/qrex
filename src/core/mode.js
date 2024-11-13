@@ -68,7 +68,7 @@ function getBestModeForData(dataStr) {
  * @param {Mode} mode Mode object
  * @returns {String}  Mode name
  */
-function toString(mode) {
+function modeToString(mode) {
   if (mode?.id) return mode.id;
   throw new Error("Invalid mode");
 }
@@ -138,7 +138,7 @@ export const Mode = {
   MIXED,
   getCharCountIndicator,
   getBestModeForData,
-  toString,
+  toString: modeToString,
   isValid,
   from,
 };

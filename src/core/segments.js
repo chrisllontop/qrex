@@ -28,15 +28,16 @@ function getStringByteLength(str) {
  */
 function getSegments(regex, mode, str) {
   const segments = [];
-  let result;
+  let result = regex.exec(str);
 
-  while ((result = regex.exec(str)) !== null) {
+  while (result !== null) {
     segments.push({
       data: result[0],
       index: result.index,
       mode: mode,
       length: result[0].length,
     });
+    result = regex.exec(str);
   }
 
   return segments;

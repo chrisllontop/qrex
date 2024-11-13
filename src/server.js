@@ -12,22 +12,25 @@ function checkParams(text, opts, cb) {
     throw new Error("String required as first argument");
   }
 
+  let resolvedOpts = opts;
+  let resolvedCb = cb;
+
   if (typeof cb === "undefined") {
-    cb = opts;
-    opts = {};
+    resolvedCb = opts;
+    resolvedOpts = {};
   }
 
   if (typeof cb !== "function") {
     if (!canPromise()) {
       throw new Error("Callback required as last argument");
     }
-    opts = cb || {};
-    cb = null;
+    resolvedOpts = cb || {};
+    resolvedCb = null;
   }
 
   return {
-    opts: opts,
-    cb: cb,
+    opts: resolvedOpts,
+    cb: resolvedCb,
   };
 }
 
@@ -66,7 +69,7 @@ function render(renderFunc, text, params) {
       try {
         const data = QRCode.create(text, params.opts);
         return renderFunc(data, params.opts, (err, data) =>
-          err ? reject(err) : resolve(data),
+          err ? reject(err) : resolve(data)
         );
       } catch (e) {
         reject(e);
@@ -86,12 +89,14 @@ export const create = QRCode.create;
 
 export const toCanvas = browserToCanvas;
 
-export function toString(text, opts, cb) {
+function renderToString(text, opts, cb) {
   const params = checkParams(text, opts, cb);
   const type = params.opts ? params.opts.type : undefined;
   const renderer = getStringRendererFromType(type);
   return render(renderer.render, text, params);
 }
+
+export { renderToString as toString };
 
 export function toDataURL(text, opts, cb) {
   const params = checkParams(text, opts, cb);
@@ -105,7 +110,9 @@ export function toBuffer(text, opts, cb) {
   return render(renderer.renderToBuffer, text, params);
 }
 
-export function toFile(path, text, opts, cb) {
+export function toFile(...args) {
+  const [path, text, opts, cb] = args;
+
   if (
     typeof path !== "string" ||
     !(typeof text === "string" || typeof text === "object")
@@ -113,7 +120,7 @@ export function toFile(path, text, opts, cb) {
     throw new Error("Invalid argument");
   }
 
-  if (arguments.length < 3 && !canPromise()) {
+  if (args.length < 3 && !canPromise()) {
     throw new Error("Too few arguments provided");
   }
 
@@ -125,8 +132,10 @@ export function toFile(path, text, opts, cb) {
   return render(renderToFile, text, params);
 }
 
-export function toFileStream(stream, text, opts) {
-  if (arguments.length < 2) {
+export function toFileStream(...args) {
+const [stream, text, opts] = args;
+
+  if (args.length < 2) {
     throw new Error("Too few arguments provided");
   }
 

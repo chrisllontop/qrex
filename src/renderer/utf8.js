@@ -63,12 +63,11 @@ function render(qrData, options, cb) {
 }
 
 function renderToFile(path, qrData, options, cb) {
-  if (typeof cb === "undefined") {
-    cb = options;
-    options = undefined;
-  }
-  const utf8 = render(qrData, options);
-  fs.writeFile(path, utf8, cb);
+  const resolvedCb = typeof cb === "undefined" ? options : cb;
+  const resolvedOptions = typeof cb === "undefined" ? undefined : options;
+
+  const utf8 = render(qrData, resolvedOptions);
+  fs.writeFile(path, utf8, resolvedCb);
 }
 
 export const RendererUtf8 = {

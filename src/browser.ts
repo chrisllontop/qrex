@@ -1,7 +1,7 @@
 import canPromise from "./can-promise";
 import { QRCode } from "./core/qrcode";
 import { RendererCanvas } from "./renderer/canvas";
-import { RendererSvgTag } from "./renderer/svg-tag.js";
+import { RendererSvgTag } from "./renderer/svg-tag";
 
 function renderCanvas(renderFunc, canvas, text, opts, cb) {
   const args = [].slice.call(arguments, 1);

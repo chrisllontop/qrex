@@ -10,7 +10,7 @@ const babelConfig = {
 
 module.exports = [
   {
-    entry: "./src/index.js",
+    entry: "./src/index.ts",
     output: {
       path: path.resolve(__dirname, "dist/cjs"),
       filename: "qrex.js",
@@ -42,7 +42,7 @@ module.exports = [
     target: "node",
   },
   {
-    entry: "./src/browser.js",
+    entry: "./src/browser.ts",
     output: {
       path: path.resolve(__dirname, "dist/cjs"),
       filename: "qrex.browser.js",

@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - add-ci
   pull_request:
     branches:
       - main
@@ -24,7 +23,7 @@ jobs:
       - name: ✏️ Lint code
         run: pnpm lint
 
-      - name: 🏗 Build project
+      - name: 🛠️ Build project
         run: pnpm build
 
       - name: 🧪 Run tests

@@ -1,9 +1,9 @@
 const path = require("node:path");
-const TerserPlugin = require("terser-webpack-plugin");
 
 const babelConfig = {
   babelrc: false,
   presets: [
+    "@babel/preset-typescript",
     ["@babel/preset-env", { targets: "defaults, IE >= 10, Safari >= 5.1" }],
   ],
 };
@@ -23,7 +23,7 @@ module.exports = [
     module: {
       rules: [
         {
-          test: /\.js$/,
+          test: /\.ts$/,
           exclude: /node_modules/,
           use: {
             loader: "babel-loader",
@@ -33,11 +33,7 @@ module.exports = [
       ],
     },
     resolve: {
-      extensions: [".js", ".ts"],
-    },
-    optimization: {
-      minimize: true,
-      minimizer: [new TerserPlugin()],
+      extensions: [".ts", ".js"],
     },
     target: "node",
   },
@@ -51,7 +47,7 @@ module.exports = [
     module: {
       rules: [
         {
-          test: /\.js$/,
+          test: /\.ts$/,
           exclude: /node_modules/,
           use: {
             loader: "babel-loader",
@@ -61,11 +57,7 @@ module.exports = [
       ],
     },
     resolve: {
-      extensions: [".js", ".ts"],
-    },
-    optimization: {
-      minimize: true,
-      minimizer: [new TerserPlugin()],
+      extensions: [".ts", ".js"],
     },
     target: "node",
   },

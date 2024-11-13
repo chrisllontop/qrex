@@ -400,7 +400,6 @@ function createSymbol(data, version, errorCorrectionLevel, maskPattern) {
     segments,
     errorCorrectionLevel,
   );
-  
 
   // If no version is found, data cannot be stored
   if (!bestVersion) {

@@ -1,8 +1,5 @@
 function hex2rgba(hex) {
   const hexString = typeof hex === "number" ? hex.toString() : hex;
-  // if (typeof hex === "number") {
-  //   hex = hex.toString();
-  // }
 
   if (typeof hexString !== "string") {
     throw new Error("Color should be defined as hex string");

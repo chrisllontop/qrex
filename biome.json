@@ -21,12 +21,12 @@
     "rules": {
       "recommended": true,
       "suspicious": {
-        "noShadowRestrictedNames": "off",
-        "noAssignInExpressions": "off"
+        "noShadowRestrictedNames": "error",
+        "noAssignInExpressions": "error"
       },
       "style": {
-        "noParameterAssign": "off",
-        "noArguments": "off"
+        "noParameterAssign": "error",
+        "noArguments": "error"
       }
     }
   },

@@ -17,59 +17,53 @@ function render(qrData, options) {
 }
 
 function renderToDataURL(qrData, options, cb) {
-  if (typeof cb === "undefined") {
-    cb = options;
-    options = undefined;
-  }
+  const resolvedCb = typeof cb === "undefined" ? options : cb;
+  const resolvedOptions = typeof cb === "undefined" ? undefined : options;
 
-  renderToBuffer(qrData, options, (err, output) => {
-    if (err) cb(err);
+  renderToBuffer(qrData, resolvedOptions, (err, output) => {
+    if (err) resolvedCb(err);
     let url = "data:image/png;base64,";
     url += output.toString("base64");
-    cb(null, url);
+    resolvedCb(null, url);
   });
 }
 
 function renderToBuffer(qrData, options, cb) {
-  if (typeof cb === "undefined") {
-    cb = options;
-    options = undefined;
-  }
+  const resolvedCb = typeof cb === "undefined" ? options : cb;
+  const resolvedOptions = typeof cb === "undefined" ? undefined : options;
 
-  const png = render(qrData, options);
+  const png = render(qrData, resolvedOptions);
   const buffer = [];
 
-  png.on("error", cb);
+  png.on("error", resolvedCb);
 
   png.on("data", (data) => {
     buffer.push(data);
   });
 
   png.on("end", () => {
-    cb(null, Buffer.concat(buffer));
+    resolvedCb(null, Buffer.concat(buffer));
   });
 
   png.pack();
 }
 
 function renderToFile(path, qrData, options, cb) {
-  if (typeof cb === "undefined") {
-    cb = options;
-    options = undefined;
-  }
+  const resolvedCb = typeof cb === "undefined" ? options : cb;
+  const resolvedOptions = typeof cb === "undefined" ? undefined : options;
 
   let called = false;
   const done = (...args) => {
     if (called) return;
     called = true;
-    cb.apply(null, args);
+    resolvedCb.apply(null, args);
   };
   const stream = fs.createWriteStream(path);
 
   stream.on("error", done);
   stream.on("close", done);
 
-  renderToFileStream(stream, qrData, options);
+  renderToFileStream(stream, qrData, resolvedOptions);
 }
 
 function renderToFileStream(stream, qrData, options) {

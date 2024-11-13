@@ -86,7 +86,7 @@ function getCapacity(version, errorCorrectionLevel, mode) {
   }
 
   // Use Byte mode as default
-  if (typeof mode === "undefined") mode = Mode.BYTE;
+  const resolvedMode = typeof mode === "undefined" ? Mode.BYTE : mode;
 
   // Total codewords for this QR code version (Data + Error correction)
   const totalCodewords = CoreUtils.getSymbolTotalCodewords(version);
@@ -100,13 +100,13 @@ function getCapacity(version, errorCorrectionLevel, mode) {
   // Total number of data codewords
   const dataTotalCodewordsBits = (totalCodewords - ecTotalCodewords) * 8;
 
-  if (mode === Mode.MIXED) return dataTotalCodewordsBits;
+  if (resolvedMode === Mode.MIXED) return dataTotalCodewordsBits;
 
   const usableBits =
-    dataTotalCodewordsBits - getReservedBitsCount(mode, version);
+    dataTotalCodewordsBits - getReservedBitsCount(resolvedMode, version);
 
   // Return max number of storable codewords
-  switch (mode) {
+  switch (resolvedMode) {
     case Mode.NUMERIC:
       return Math.floor((usableBits / 10) * 3);
 

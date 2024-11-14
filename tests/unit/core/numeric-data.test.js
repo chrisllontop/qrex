@@ -31,7 +31,7 @@ const testData = [
 ];
 
 describe("Numeric Data", () => {
-  testData.forEach((data) => {
+  for (const data of testData) {
     it(`Testing numeric data: ${data.data}`, () => {
       const numericData = new NumericData(data.data);
 
@@ -44,5 +44,5 @@ describe("Numeric Data", () => {
 
       expect(bitBuffer.buffer).toEqual(data.dataBit);
     });
-  });
+  };
 });

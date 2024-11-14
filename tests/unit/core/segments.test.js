@@ -197,9 +197,9 @@ describe("Segments optimization", () => {
 
   it("should match Segments from test data", () => {
     CoreUtils.setToSJISFunction(toSJIS);
-    testData.forEach((data) => {
+    for (const data of testData) {
       expect(Segments.fromString(data.input, 1)).toEqual(Segments.fromArray(data.result));
-    });
+    };
   });
 });
 

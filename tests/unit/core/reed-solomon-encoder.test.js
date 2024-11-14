@@ -23,7 +23,7 @@ describe("Reed-Solomon encoder", () => {
   });
 
   it("should reinitialize the generator polynomial when degree changes", () => {
-    let enc = new RS(2);
+    const enc = new RS(2);
     const genPoly = enc.genPoly;
     expect(enc.degree).toBe(2);
     expect(enc.genPoly).toBeDefined();

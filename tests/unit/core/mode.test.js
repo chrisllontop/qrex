@@ -94,9 +94,9 @@ describe("Best mode", () => {
   };
 
   it("Best mode for data", () => {
-    Object.keys(EXPECTED_MODE).forEach((data) => {
+    for (const data of Object.keys(EXPECTED_MODE)) {
       expect(Mode.getBestModeForData(data)).toBe(EXPECTED_MODE[data]);
-    });
+    };
   });
 });
 
@@ -124,11 +124,11 @@ describe("From value", () => {
   ];
 
   it("From name or mode", () => {
-    modes.forEach(({ name, mode }) => {
+    for (const { name, mode } of modes)  {
       expect(Mode.from(name)).toBe(mode);
       expect(Mode.from(name.toUpperCase())).toBe(mode);
       expect(Mode.from(mode)).toBe(mode);
-    });
+    };
 
     expect(Mode.from("", Mode.NUMERIC)).toBe(Mode.NUMERIC);
     expect(Mode.from(null, Mode.NUMERIC)).toBe(Mode.NUMERIC);

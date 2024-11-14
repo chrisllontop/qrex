@@ -71,8 +71,8 @@ describe("QRCode Error Correction", () => {
   ];
 
   it("Should handle error correction levels correctly", () => {
-    ecValues.forEach(({ name, level }) => {
-      name.forEach((ecName) => {
+    for (const { name, level } of ecValues) {
+      for(const ecName of name) {
         expect(() => {
           const qr = QRCode.create("ABCDEFG", { errorCorrectionLevel: ecName,maskPattern: 0 });
           expect(qr.errorCorrectionLevel).toEqual(level);
@@ -82,8 +82,8 @@ describe("QRCode Error Correction", () => {
           const qr = QRCode.create("ABCDEFG", { errorCorrectionLevel: ecName.toUpperCase(),maskPattern: 0 });
           expect(qr.errorCorrectionLevel).toEqual(level);
         }).not.toThrow();
-      });
-    });
+      };
+    };
   });
 
   it("Should set default error correction level to M", () => {

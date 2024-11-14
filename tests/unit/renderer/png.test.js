@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import fs from "fs";
+import fs from "node:fs";
 import { QRCode } from "../../../src/core/qrcode";
 import { RendererPng } from "../../../src/renderer/png";
 import { PNG } from "pngjs";

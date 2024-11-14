@@ -2,7 +2,7 @@ const nativePromise = global.Promise;
 
 export function removeNativePromise() {
   if (global.Promise) {
-    delete global.Promise;
+    global.Promise=undefined;
   }
 }
 

@@ -157,7 +157,7 @@ describe("RendererCanvas renderToDataURL", () => {
       version: 2,
       maskPattern: 0,
     });
-    let url = RendererCanvas.renderToDataURL(sampleQrData);
+    const url = RendererCanvas.renderToDataURL(sampleQrData);
 
     expect(typeof url).toBe("string");
   });
@@ -167,7 +167,7 @@ describe("RendererCanvas renderToDataURL", () => {
       version: 2,
       maskPattern: 0,
     });
-    let url = RendererCanvas.renderToDataURL(sampleQrData);
+    const url = RendererCanvas.renderToDataURL(sampleQrData);
 
     expect(url.split(",")[0]).toBe("data:image/png;base64");
   });
@@ -177,7 +177,7 @@ describe("RendererCanvas renderToDataURL", () => {
       version: 2,
       maskPattern: 0,
     });
-    let url = RendererCanvas.renderToDataURL(sampleQrData);
+    const url = RendererCanvas.renderToDataURL(sampleQrData);
 
     const b64png = url.split(",")[1];
     expect(b64png.length % 4).toBe(0);
@@ -225,7 +225,7 @@ describe("RendererCanvas renderToDataURL to provided canvas", () => {
       maskPattern: 0,
     });
     const canvasEl = createCanvas(200, 200);
-    let url = RendererCanvas.renderToDataURL(sampleQrData, canvasEl);
+    const url = RendererCanvas.renderToDataURL(sampleQrData, canvasEl);
 
     expect(typeof url).toBe("string");
   });
@@ -236,7 +236,7 @@ describe("RendererCanvas renderToDataURL to provided canvas", () => {
       maskPattern: 0,
     });
     const canvasEl = createCanvas(200, 200);
-    let url = RendererCanvas.renderToDataURL(sampleQrData, canvasEl);
+    const url = RendererCanvas.renderToDataURL(sampleQrData, canvasEl);
 
     expect(url.split(",")[0]).toBe("data:image/png;base64");
   });
@@ -247,7 +247,7 @@ describe("RendererCanvas renderToDataURL to provided canvas", () => {
       maskPattern: 0,
     });
     const canvasEl = createCanvas(200, 200);
-    let url = RendererCanvas.renderToDataURL(sampleQrData, canvasEl);
+    const url = RendererCanvas.renderToDataURL(sampleQrData, canvasEl);
 
     const b64png = url.split(",")[1];
     expect(b64png.length % 4).toBe(0);

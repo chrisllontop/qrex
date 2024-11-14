@@ -149,7 +149,7 @@ describe("Utils qrToImageData", () => {
 
   let imageData = [];
   const expectedImageSize = (sampleQrData.modules.size + margin * 2) * scale;
-  let expectedImageDataLength = Math.pow(expectedImageSize, 2) * 4;
+  let expectedImageDataLength = (expectedImageSize ** 2) * 4;
 
   it("should return correct imageData length", () => {
     RendererUtils.qrToImageData(imageData, sampleQrData, opts);
@@ -158,7 +158,7 @@ describe("Utils qrToImageData", () => {
 
   imageData = [];
   opts.width = width;
-  expectedImageDataLength = Math.pow(width, 2) * 4;
+  expectedImageDataLength = (width ** 2) * 4;
 
   it("should return correct imageData length when width is specified", () => {
     RendererUtils.qrToImageData(imageData, sampleQrData, opts);

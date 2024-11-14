@@ -13,10 +13,10 @@ describe("Galois Field", () => {
       expLogResult: GF.exp(GF.log(i)),
     }));
 
-    logExpResults.forEach(({ value, logExpResult, expLogResult }) => {
+    for (const { value, logExpResult, expLogResult } of logExpResults) {
       expect(logExpResult).toBe(value);
       expect(expLogResult).toBe(value);
-    });
+    }
   });
 
   it("should return 0 if first parameter is 0 in multiplication", () => {
@@ -38,8 +38,8 @@ describe("Galois Field", () => {
       commutativeResult: GF.mul(255 - j, j),
     }));
 
-    mulResults.forEach(({ mulResult, commutativeResult }) => {
+    for (const { mulResult, commutativeResult } of mulResults) {
       expect(mulResult).toBe(commutativeResult);
-    });
+    }
   });
 });

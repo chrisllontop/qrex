@@ -2,8 +2,8 @@ import { describe, it, expect, vi, afterEach, beforeEach } from "vitest";
 import { toString } from "../../src/index.js";
 import { toString as toStringBrowser } from "../../src/browser.js";
 import { removeNativePromise, restoreNativePromise } from "../helpers.js";
-import path from "path";
-import fs from "fs";
+import path from "node:path";
+import fs from "node:fs";
 
 const baseOptions = {
   maskPattern: 0,
@@ -303,8 +303,8 @@ describe("QRCode.toString terminal", () => {
         }
 
         if (code) {
-          const cleanCode = code.replace(/\u001b\[[0-9;]*m/g, "");
-          expect(cleanCode + "\n").toEqual(expectedTerminal);
+          const cleanCode = code.replace(/\\u001b\[[0-9;]*m/g, "");
+          expect(`${cleanCode}\n`).toEqual(expectedTerminal);
         } else {
           throw new Error("QR code output is undefined");
         }
@@ -318,8 +318,8 @@ describe("QRCode.toString terminal", () => {
       });
 
       if (code) {
-        const cleanCode = code.replace(/\u001b\[[0-9;]*m/g, "");
-        expect(cleanCode + "\n").toEqual(expectedTerminal);
+        const cleanCode = code.replace(/\\u001b\[[0-9;]*m/g, "");
+        expect(`${cleanCode}\n`).toEqual(expectedTerminal);
       } else {
         throw new Error("QR code output is undefined");
       }

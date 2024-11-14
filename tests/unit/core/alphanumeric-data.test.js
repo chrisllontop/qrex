@@ -26,7 +26,7 @@ const testData = [
 
 describe("Alphanumeric Data", () => {
   it("should handle alphanumeric data correctly", () => {
-    testData.forEach((data) => {
+    for (const data of testData) {
       const alphanumericData = new AlphanumericData(data.data);
 
       expect(alphanumericData.mode).toBe(Mode.ALPHANUMERIC);
@@ -37,6 +37,6 @@ describe("Alphanumeric Data", () => {
       alphanumericData.write(bitBuffer);
 
       expect(bitBuffer.buffer).toEqual(data.dataBit);
-    });
+    };
   });
 });

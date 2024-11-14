@@ -282,18 +282,19 @@ const EXPECTED_VERSION_BITS = [
         }
       });
   
-      results.numeric.forEach(({ version, level, result, expected }) => {
+      for (const { version, level, result, expected } of results.numeric) {
         expect(result).toBe(expected);
-      });
-      results.alphanumeric.forEach(({ version, level, result, expected }) => {
+      }
+      
+      for (const { version, level, result, expected } of results.alphanumeric) {
         expect(result).toBe(expected);
-      });
-      results.kanji.forEach(({ version, level, result, expected }) => {
+        }
+      for (const { version, level, result, expected } of results.kanji) {
         expect(result).toBe(expected);
-      });
-      results.byte.forEach(({ version, level, result, expected }) => {
+      }
+      for (const { version, level, result, expected } of results.byte) {
         expect(result).toBe(expected);
-      });
+      }
     });
   });
   
@@ -302,7 +303,7 @@ const EXPECTED_VERSION_BITS = [
       const results = [];
   
       for (let v = 0; v < 40; v++) {
-        EC_LEVELS.forEach((level, l) => {
+        for (const [l, level] of EC_LEVELS.entries()) {
           const capacity = expectedCapacity[v][l];
           const data = new DataCtor(new Array(capacity + 1).join("-"));
           results.push({
@@ -320,12 +321,12 @@ const EXPECTED_VERSION_BITS = [
               expected: v + 1,
             });
           }
-        });
+        }
       }
   
-      results.forEach(({ version, level, result, expected }) => {
+      for (const { version, level, result, expected } of results) {
         expect(result).toBe(expected);
-      });
+      }
     }
   
     it("should return correct best versions for capacities", () => {
@@ -336,11 +337,11 @@ const EXPECTED_VERSION_BITS = [
     });
   
     it("should return undefined if data is too big", () => {
-      EC_LEVELS.forEach((level, i) => {
+      for (const [i, level] of EC_LEVELS.entries()) {
         const exceededCapacity = EXPECTED_NUMERIC_CAPACITY[39][i] + 1;
         const tooBigData = new NumericData(new Array(exceededCapacity + 1).join("-"));
         expect(Version.getBestVersionForData(tooBigData, level)).toBeFalsy();
-      });
+      }
     });
   
     it("should return a version number if input array is valid", () => {
@@ -357,11 +358,11 @@ const EXPECTED_VERSION_BITS = [
   
   describe("Version encoded info", () => {
     it("should throw if version is invalid or less than 7", () => {
-      Array.from({ length: 7 }, (_, v) => v).forEach((v) => {
+      for (const v of Array.from({ length: 7 }, (_, v) => v)) {
         expect(() => {
           Version.getEncodedBits(v);
         }).toThrow();
-      });
+      }
     });
   
     it("should return correct bits", () => {
@@ -371,8 +372,8 @@ const EXPECTED_VERSION_BITS = [
         expected: EXPECTED_VERSION_BITS[v - 7],
       }));
   
-      results.forEach(({ result, expected }) => {
+      for (const { result, expected } of results) {
         expect(result).toBe(expected);
+      }
       });
-    });
   });

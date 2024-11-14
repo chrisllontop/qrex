@@ -44,9 +44,9 @@ it("BCH Digit", () => {
     { data: 8, bch: 4 },
   ];
 
-  testData.forEach((d) => {
+  for(const d of testData) {
     expect(CoreUtils.getBCHDigit(d.data)).toBe(d.bch);
-  });
+  };
 });
 
 it("Set/Get SJIS function", () => {
@@ -56,7 +56,7 @@ it("Set/Get SJIS function", () => {
 
   expect(CoreUtils.isKanjiModeEnabled()).toBe(false);
 
-  const testFunc = (c) => "test_" + c;
+  const testFunc = (c) => `test_${c}`;
 
   CoreUtils.setToSJISFunction(testFunc);
 

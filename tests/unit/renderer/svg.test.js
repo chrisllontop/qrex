@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import fs from "fs";
+import fs from "node:fs";
 import { QRCode } from "../../../src/core/qrcode";
 import { RendererSvg } from "../../../src/renderer/svg";
 import htmlparser from "htmlparser2";
@@ -17,9 +17,9 @@ function testSvgFragment(svgFragment, expectedTags) {
           const tag = expectedTags.shift();
 
           expect(tag.name).toBe(name);
-          tag.attribs.forEach((attr) => {
+          for (const attr of tag.attribs) {
             expect(attribs[attr.name]?.toString()).toBe(attr.value.toString());
-          });
+          }
         },
 
         onend: () => {

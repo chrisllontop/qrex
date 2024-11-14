@@ -18,9 +18,9 @@ function render(qrData, options) {
 
 function renderToDataURL(qrData, options, cb) {
   const resolvedCb = typeof cb === "undefined" ? options : cb;
-  const resolvedOptions = typeof cb === "undefined" ? undefined : options;
+  const opts = typeof cb === "undefined" ? undefined : options;
 
-  renderToBuffer(qrData, resolvedOptions, (err, output) => {
+  renderToBuffer(qrData, opts, (err, output) => {
     if (err) resolvedCb(err);
     let url = "data:image/png;base64,";
     url += output.toString("base64");
@@ -30,9 +30,9 @@ function renderToDataURL(qrData, options, cb) {
 
 function renderToBuffer(qrData, options, cb) {
   const resolvedCb = typeof cb === "undefined" ? options : cb;
-  const resolvedOptions = typeof cb === "undefined" ? undefined : options;
+  const opts = typeof cb === "undefined" ? undefined : options;
 
-  const png = render(qrData, resolvedOptions);
+  const png = render(qrData, opts);
   const buffer = [];
 
   png.on("error", resolvedCb);
@@ -50,7 +50,7 @@ function renderToBuffer(qrData, options, cb) {
 
 function renderToFile(path, qrData, options, cb) {
   const resolvedCb = typeof cb === "undefined" ? options : cb;
-  const resolvedOptions = typeof cb === "undefined" ? undefined : options;
+  const opts = typeof cb === "undefined" ? undefined : options;
 
   let called = false;
   const done = (...args) => {
@@ -63,7 +63,7 @@ function renderToFile(path, qrData, options, cb) {
   stream.on("error", done);
   stream.on("close", done);
 
-  renderToFileStream(stream, qrData, resolvedOptions);
+  renderToFileStream(stream, qrData, opts);
 }
 
 function renderToFileStream(stream, qrData, options) {

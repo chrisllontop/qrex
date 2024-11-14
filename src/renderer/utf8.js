@@ -64,9 +64,9 @@ function render(qrData, options, cb) {
 
 function renderToFile(path, qrData, options, cb) {
   const resolvedCb = typeof cb === "undefined" ? options : cb;
-  const resolvedOptions = typeof cb === "undefined" ? undefined : options;
+  const opts = typeof cb === "undefined" ? undefined : options;
 
-  const utf8 = render(qrData, resolvedOptions);
+  const utf8 = render(qrData, opts);
   fs.writeFile(path, utf8, resolvedCb);
 }
 

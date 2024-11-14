@@ -21,7 +21,7 @@ jobs:
         run: pnpm install
 
       - name: ✏️ Lint code
-        run: pnpm lint
+        run: pnpm lint:ci
 
       - name: 🛠️ Build project
         run: pnpm build

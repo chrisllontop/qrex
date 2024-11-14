@@ -36,6 +36,7 @@
     "lint:fix": "biome lint --fix",
     "test": "vitest",
     "test:ui": "vitest --ui",
+    "test:ci": "echo 'No tests yet'",
     "prepublish": "npm run build"
   },
   "bin": {

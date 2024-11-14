@@ -20,10 +20,6 @@
     "enabled": true,
     "rules": {
       "recommended": true,
-      "suspicious": {
-        "noShadowRestrictedNames": "error",
-        "noAssignInExpressions": "error"
-      },
       "style": {
         "noParameterAssign": "error",
         "noArguments": "error"

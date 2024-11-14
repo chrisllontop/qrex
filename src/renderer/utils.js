@@ -32,31 +32,31 @@ function hex2rgba(hex) {
   };
 }
 
-function getOptions(options) {
-  const resolvedOptions = options || {};
-  if (!resolvedOptions.color) resolvedOptions.color = {};
+function getOptions(opts) {
+  const options = opts || {};
+  if (!options.color) options.color = {};
 
   const margin =
-    typeof resolvedOptions.margin === "undefined" ||
-    resolvedOptions.margin === null ||
-    resolvedOptions.margin < 0
+    typeof options.margin === "undefined" ||
+    options.margin === null ||
+    options.margin < 0
       ? 4
-      : resolvedOptions.margin;
+      : options.margin;
 
   const width =
-    resolvedOptions.width && resolvedOptions.width >= 21 ? resolvedOptions.width : undefined;
-  const scale = resolvedOptions.scale || 4;
+    options.width && options.width >= 21 ? options.width : undefined;
+  const scale = options.scale || 4;
 
   return {
     width: width,
     scale: width ? 4 : scale,
     margin: margin,
     color: {
-      dark: hex2rgba(resolvedOptions.color.dark || "#000000ff"),
-      light: hex2rgba(resolvedOptions.color.light || "#ffffffff"),
+      dark: hex2rgba(options.color.dark || "#000000ff"),
+      light: hex2rgba(options.color.light || "#ffffffff"),
     },
-    type: resolvedOptions.type,
-    rendererOpts: resolvedOptions.rendererOpts || {},
+    type: options.type,
+    rendererOpts: options.rendererOpts || {},
   };
 }
 

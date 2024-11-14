@@ -1,8 +1,8 @@
-import { describe, it, expect, vi } from "vitest";
 import fs from "node:fs";
+import { PNG } from "pngjs";
+import { describe, expect, it, vi } from "vitest";
 import { QRCode } from "../../../src/core/qrcode";
 import { RendererPng } from "../../../src/renderer/png";
-import { PNG } from "pngjs";
 import StreamMock from "../../mocks/writable-stream";
 
 describe("PNG renderer interface", () => {

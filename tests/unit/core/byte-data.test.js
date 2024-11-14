@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { BitBuffer } from "../../../src/core/bit-buffer";
 import { ByteData } from "../../../src/core/byte-data";
 import { Mode } from "../../../src/core/mode";

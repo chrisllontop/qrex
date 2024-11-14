@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { BitBuffer } from "../../../src/core/bit-buffer";
-import NumericData from "../../../src/core/numeric-data";
 import { Mode } from "../../../src/core/mode";
+import NumericData from "../../../src/core/numeric-data";
 
 const testData = [
   {

@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeAll, afterAll } from "vitest";
 import { Canvas, createCanvas } from "canvas";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { QRCode } from "../../../src/core/qrcode";
 import { RendererCanvas } from "../../../src/renderer/canvas";
 

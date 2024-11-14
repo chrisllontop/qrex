@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { QRCode } from "../../../src/core/qrcode";
 import { RendererTerminal } from "../../../src/renderer/terminal";
 

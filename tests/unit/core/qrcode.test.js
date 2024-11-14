@@ -3,6 +3,9 @@ import { ECLevel } from "../../../src/core/error-correction-level";
 import Version from "../../../src/core/version";
 import { QRCode } from "../../../src/core/qrcode";
 import toSJIS from "../../../helper/to-sjis";
+import { ECLevel } from "../../../src/core/error-correction-level";
+import { QRCode } from "../../../src/core/qrcode";
+import Version from "../../../src/core/version";
 
 describe("QRCode Interface", () => {
   const defaultOptions = {

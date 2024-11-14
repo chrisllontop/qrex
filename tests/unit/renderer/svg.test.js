@@ -1,8 +1,8 @@
-import { describe, it, expect, vi } from "vitest";
 import fs from "node:fs";
+import htmlparser from "htmlparser2";
+import { describe, expect, it, vi } from "vitest";
 import { QRCode } from "../../../src/core/qrcode";
 import { RendererSvg } from "../../../src/renderer/svg";
-import htmlparser from "htmlparser2";
 
 function getExpectedViewbox(size, margin) {
   const expectedQrCodeSize = size + margin * 2;

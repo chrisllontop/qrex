@@ -1,9 +1,9 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
+import { ECCode } from "../../../src/core/error-correction-code";
+import { ECLevel } from "../../../src/core/error-correction-level";
+import { Mode } from "../../../src/core/mode";
 import { CoreUtils } from "../../../src/core/utils";
 import { Version } from "../../../src/core/version";
-import { ECLevel } from "../../../src/core/error-correction-level";
-import { ECCode } from "../../../src/core/error-correction-code";
-import { Mode } from "../../../src/core/mode";
 
 describe("Error Correction Codewords", () => {
   const levels = [ECLevel.L, ECLevel.M, ECLevel.Q, ECLevel.H];

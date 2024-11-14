@@ -3,6 +3,9 @@ import { BitBuffer } from "../../../src/core/bit-buffer";
 import { KanjiData } from "../../../src/core/kanji-data";
 import { Mode } from "../../../src/core/mode";
 import toSJIS from "../../../helper/to-sjis";
+import { BitBuffer } from "../../../src/core/bit-buffer";
+import { KanjiData } from "../../../src/core/kanji-data";
+import { Mode } from "../../../src/core/mode";
 import { CoreUtils } from "../../../src/core/utils";
 
 CoreUtils.setToSJISFunction(toSJIS);

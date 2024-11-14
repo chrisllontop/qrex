@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { Mode } from "../../../src/core/mode";
 
 describe("Mode bits", () => {

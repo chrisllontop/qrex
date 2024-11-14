@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { BitMatrix } from "../../../src/core/bit-matrix";
 import { MaskPattern } from "../../../src/core/mask-pattern";
 

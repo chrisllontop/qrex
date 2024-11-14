@@ -1,10 +1,10 @@
-import { describe, it, expect } from "vitest";
-import { Mode } from "../../../src/core/mode";
-import { Segments } from "../../../src/core/segments";
-import NumericData from "../../../src/core/numeric-data";
+import { describe, expect, it } from "vitest";
+import toSJIS from "../../../helper/to-sjis";
 import { AlphanumericData } from "../../../src/core/alphanumeric-data";
 import { ByteData } from "../../../src/core/byte-data";
-import toSJIS from "../../../helper/to-sjis";
+import { Mode } from "../../../src/core/mode";
+import NumericData from "../../../src/core/numeric-data";
+import { Segments } from "../../../src/core/segments";
 import { CoreUtils } from "../../../src/core/utils";
 
 let testData = [

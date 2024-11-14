@@ -1,8 +1,5 @@
 import { Canvas, createCanvas } from "canvas";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { toCanvas } from "../../src/index.js";
-import { removeNativePromise, restoreNativePromise } from "../helpers.js";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { toCanvas } from "../../src";
 import { removeNativePromise, restoreNativePromise } from "../helpers";
 

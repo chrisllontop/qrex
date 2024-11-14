@@ -1,9 +1,10 @@
+import { type BitMatrix as BMatrix } from "qrcode";
 /**
  * Helper class to handle QR Code symbol modules
  *
  * @param {Number} size Symbol size
  */
-export class BitMatrix {
+export class BitMatrix implements BMatrix {
   size: number;
   data: Uint8Array;
   reservedBit: Array<boolean>;

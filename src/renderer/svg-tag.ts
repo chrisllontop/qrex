@@ -1,6 +1,7 @@
-import { RendererUtils } from "./utils";
+import { type QRCode } from "qrcode";
+import { type RGBAValue, getOptions } from "./utils";
 
-function getColorAttrib(color, attrib) {
+function getColorAttrib(color: RGBAValue, attrib: string): string {
   const alpha = color.a / 255;
   const str = `${attrib}="${color.hex}"`;
 
@@ -9,14 +10,14 @@ function getColorAttrib(color, attrib) {
     : str;
 }
 
-function svgCmd(cmd, x, y) {
+function svgCmd(cmd: string, x: number, y: number): string {
   let str = cmd + x;
   if (typeof y !== "undefined") str += ` ${y}`;
 
   return str;
 }
 
-function qrToPath(data, size, margin) {
+function qrToPath(data: Array<boolean>, size: number, margin: number) {
   let path = "";
   let moveBy = 0;
   let newRow = false;
@@ -52,8 +53,8 @@ function qrToPath(data, size, margin) {
   return path;
 }
 
-function render(qrData, options, cb) {
-  const opts = RendererUtils.getOptions(options);
+export function render(qrData: QRCode, options: RendererOptions, cb: function): string {
+  const opts = getOptions(options);
   const size = qrData.modules.size;
   const data = qrData.modules.data;
   const qrcodesize = size + opts.margin * 2;

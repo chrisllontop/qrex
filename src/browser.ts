@@ -13,7 +13,7 @@ import { create as qrCodeCreate } from './core/qrcode'
 import { render as canvasRender, renderToDataURL } from './renderer/canvas'
 import { render as svgTagRender } from './renderer/svg-tag'
 
-function renderCanvas(renderFunc, canvas, text, opts, cb) {
+function renderCanvas(renderFunc: function, canvas: HTMLCanvasElement, text: string, opts: Object, cb: function | undefined) {
   const args = [].slice.call(arguments, 1)
   const argsNum = args.length
   const isLastArgCb = typeof args[argsNum - 1] === 'function'

@@ -1,3 +1,5 @@
+import { type QRCodeToDataURLOptionsJpegWebp as RendererOptions, type QRCode } from "qrcode";
+
 const backgroundWhite = "\x1b[47m";
 const backgroundBlack = "\x1b[40m";
 const foregroundWhite = "\x1b[37m";
@@ -6,7 +8,11 @@ const reset = "\x1b[0m";
 const lineSetupNormal = backgroundWhite + foregroundBlack; // setup colors
 const lineSetupInverse = backgroundBlack + foregroundWhite; // setup colors
 
-const createPalette = (lineSetup, foregroundWhite, foregroundBlack) => ({
+const createPalette = (
+  lineSetup: string,
+  foregroundWhite: string,
+  foregroundBlack: string
+): Record<string, string> => ({
   // 1 ... white, 2 ... black, 0 ... transparent (default)
 
   "00": `${reset} ${lineSetup}`,
@@ -28,7 +34,7 @@ const createPalette = (lineSetup, foregroundWhite, foregroundBlack) => ({
  * @param {number} y
  * @return {'0' | '1' | '2'}
  */
-const mkCodePixel = (modules, size, x, y) => {
+const mkCodePixel = (modules: boolean[][], size: number, x: number, y: number): string => {
   const sizePlus = size + 1;
   if (x >= sizePlus || y >= sizePlus || y < -1 || x < -1) return "0";
   if (x >= size || y >= size || y < 0 || x < 0) return "1";
@@ -44,10 +50,11 @@ const mkCodePixel = (modules, size, x, y) => {
  * @param {number} y
  * @return {keyof palette}
  */
-const mkCode = (modules, size, x, y) =>
-  mkCodePixel(modules, size, x, y) + mkCodePixel(modules, size, x, y + 1);
+const mkCode = (modules: boolean[][], size: number, x: number, y: number): number => (
+  mkCodePixel(modules, size, x, y) + mkCodePixel(modules, size, x, y + 1)
+);
 
-function render(qrData, options, cb) {
+export function render(qrData: QRCode, options: RenderOptions, cb: function) {
   const size = qrData.modules.size;
   const data = qrData.modules.data;
 

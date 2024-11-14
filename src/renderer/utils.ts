@@ -1,4 +1,14 @@
-function hex2rgba(hex) {
+import { type QRCodeToDataURLOptionsJpegWebp as RendererOptions, type QRCode } from "qrcode";
+
+export type RGBAValue = {
+  r: number;
+  g: number;
+  b: number;
+  a: number;
+  hex: string;
+}
+
+function hex2rgba(hex: number | string): RGBAValue {
   if (typeof hex === "number") {
     hex = hex.toString();
   }
@@ -34,14 +44,14 @@ function hex2rgba(hex) {
   };
 }
 
-function getOptions(options) {
+export function getOptions(options: RendererOptions | undefined): RendererOptions {
   if (!options) options = {};
   if (!options.color) options.color = {};
 
   const margin =
     typeof options.margin === "undefined" ||
-    options.margin === null ||
-    options.margin < 0
+      options.margin === null ||
+      options.margin < 0
       ? 4
       : options.margin;
 
@@ -62,18 +72,18 @@ function getOptions(options) {
   };
 }
 
-function getScale(qrSize, opts) {
+export function getScale(qrSize: number, opts: RendererOptions): number {
   return opts.width && opts.width >= qrSize + opts.margin * 2
     ? opts.width / (qrSize + opts.margin * 2)
     : opts.scale;
 }
 
-function getImageWidth(qrSize, opts) {
+export function getImageWidth(qrSize: number, opts: RendererOptions): number {
   const scale = getScale(qrSize, opts);
   return Math.floor((qrSize + opts.margin * 2) * scale);
 }
 
-function qrToImageData(imgData, qr, opts) {
+export function qrToImageData(imgData: Array<number>, qr: QRCode, opts: RendererOptions) {
   const size = qr.modules.size;
   const data = qr.modules.data;
   const scale = getScale(size, opts);

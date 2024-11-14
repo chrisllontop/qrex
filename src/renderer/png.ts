@@ -1,22 +1,24 @@
-import fs from "node:fs";
+import fs from "fs";
 import { PNG } from "pngjs";
-import { RendererUtils } from "./utils";
+import { getOptions, getImageWidth, qrToImageData } from "./utils";
+import { type QRCodeToDataURLOptionsJpegWebp as RendererOptions, type QRCode } from "qrcode";
 
-function render(qrData, options) {
-  const opts = RendererUtils.getOptions(options);
+export function render(qrData: QRCode, options: RendererOptions) {
+  const opts = getOptions(options);
   const pngOpts = opts.rendererOpts;
-  const size = RendererUtils.getImageWidth(qrData.modules.size, opts);
+  const size = getImageWidth(qrData.modules.size, opts);
 
   pngOpts.width = size;
   pngOpts.height = size;
 
   const pngImage = new PNG(pngOpts);
-  RendererUtils.qrToImageData(pngImage.data, qrData, opts);
+
+  qrToImageData(pngImage.data, qrData, opts);
 
   return pngImage;
 }
 
-function renderToDataURL(qrData, options, cb) {
+export function renderToDataURL(qrData: QRCode, options: RendererOptions, cb: function) {
   if (typeof cb === "undefined") {
     cb = options;
     options = undefined;
@@ -30,7 +32,7 @@ function renderToDataURL(qrData, options, cb) {
   });
 }
 
-function renderToBuffer(qrData, options, cb) {
+export function renderToBuffer(qrData: QRCode, options: RendererOptions, cb: function) {
   if (typeof cb === "undefined") {
     cb = options;
     options = undefined;
@@ -52,7 +54,7 @@ function renderToBuffer(qrData, options, cb) {
   png.pack();
 }
 
-function renderToFile(path, qrData, options, cb) {
+export function renderToFile(path: string, qrData: QRCode, options: RendererOptions, cb: function | undefined): void {
   if (typeof cb === "undefined") {
     cb = options;
     options = undefined;
@@ -72,7 +74,11 @@ function renderToFile(path, qrData, options, cb) {
   renderToFileStream(stream, qrData, options);
 }
 
-function renderToFileStream(stream, qrData, options) {
+export function renderToFileStream(
+  stream,
+  qrData: QRCode,
+  options: RendererOptions,
+): void {
   const png = render(qrData, options);
   png.pack().pipe(stream);
 }

@@ -1,6 +1,7 @@
-import { RendererUtils } from "./utils";
+import { getImageWidth, getOptions, qrToImageData } from "./utils";
+import { type QRCodeToDataURLOptionsJpegWebp as RendererOptions, type QRCode } from "qrcode";
 
-function clearCanvas(ctx, canvas, size) {
+function clearCanvas(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, size: number): void {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   if (!canvas.style) canvas.style = {};
@@ -10,7 +11,7 @@ function clearCanvas(ctx, canvas, size) {
   canvas.style.width = `${size}px`;
 }
 
-function getCanvasElement() {
+function getCanvasElement(): HTMLCanvasElement {
   try {
     return document.createElement("canvas");
   } catch (e) {
@@ -18,7 +19,7 @@ function getCanvasElement() {
   }
 }
 
-function render(qrData, canvas, options) {
+export function render(qrData, canvas: HTMLCanvasElement, options: RendererOptions): HTMLCanvasElement {
   let opts = options;
   let canvasEl = canvas;
 
@@ -31,20 +32,20 @@ function render(qrData, canvas, options) {
     canvasEl = getCanvasElement();
   }
 
-  opts = RendererUtils.getOptions(opts);
-  const size = RendererUtils.getImageWidth(qrData.modules.size, opts);
+  opts = getOptions(opts);
+  const size = getImageWidth(qrData.modules.size, opts);
 
   const ctx = canvasEl.getContext("2d");
   const image = ctx.createImageData(size, size);
-  RendererUtils.qrToImageData(image.data, qrData, opts);
 
+  qrToImageData(image.data, qrData, opts);
   clearCanvas(ctx, canvasEl, size);
   ctx.putImageData(image, 0, 0);
 
   return canvasEl;
 }
 
-function renderToDataURL(qrData, canvas, options) {
+export function renderToDataURL(qrData: QRCode, canvas: HTMLCanvasElement, options: RendererOptions): string {
   let opts = options;
 
   if (typeof opts === "undefined" && (!canvas || !canvas.getContext)) {

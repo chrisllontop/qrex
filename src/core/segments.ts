@@ -15,13 +15,25 @@ import { find_path } from 'dijkstrajs';
 
 export type Segment = {
   mode: Mode;
-  data: string;
   index?: number;
-  length: number;
+  length?: number;
+  data: string | Uint8Array;
+}
+
+export type Node = {
+  end?: number;
+  node: Segment;
+  lastCount: number;
 }
 
 export type NodeGraph = {
-  [string]: Segment[];
+  start: Node;
+  [key: string]: Node;
+}
+
+export type Graph = {
+  map: NodeGraph;
+  table: Record<string, Node>;
 }
 
 /**
@@ -156,6 +168,10 @@ function buildNodes(segs: Segment[]): Segment[] {
   for (let i = 0; i < segs.length; i++) {
     const seg = segs[i];
 
+    if (typeof seg.data !== 'string') {
+      seg.data = seg.data.toString();
+    }
+
     switch (seg.mode) {
       case Mode.NUMERIC:
         nodes.push([
@@ -206,9 +222,10 @@ function buildNodes(segs: Segment[]): Segment[] {
  * @param  {Number} version QR Code version
  * @return {Object}         Graph of all possible segments
  */
-function buildGraph(nodes: Segment[], version: number): NodeGraph {
+function buildGraph(nodes: Segment[], version: number): Graph {
   const table = {};
-  const graph = { start: {} };
+  const graph = { start: {} as Node };
+
   let prevNodeIds = ['start'];
 
   for (let i = 0; i < nodes.length; i++) {
@@ -314,6 +331,10 @@ export function fromArray(array: Segment[] | string[]): Segment[] {
     if (typeof seg === 'string') {
       acc.push(buildSingleSegment(seg, null));
     } else if (seg.data) {
+      if (typeof seg.data !== 'string') {
+        seg.data = seg.data.toString();
+      }
+
       acc.push(buildSingleSegment(seg.data, seg.mode));
     }
 
@@ -330,7 +351,7 @@ export function fromArray(array: Segment[] | string[]): Segment[] {
  * @return {Array}          Array of segments
  */
 export function fromString(data: string, version: number): Segment[] {
-  const segs = getSegmentsFromString(data, isKanjiModeEnabled());
+  const segs = getSegmentsFromString(data);
 
   const nodes = buildNodes(segs);
   const graph = buildGraph(nodes, version);
@@ -355,9 +376,7 @@ export function fromString(data: string, version: number): Segment[] {
  * @return {Array}       Array of segments
  */
 export function rawSplit(data: string): Segment[] {
-  return fromArray(
-    getSegmentsFromString(data, isKanjiModeEnabled()),
-  );
+  return fromArray(getSegmentsFromString(data));
 }
 
 export const Segments = {

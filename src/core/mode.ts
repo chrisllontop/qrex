@@ -10,25 +10,25 @@ export type Mode = {
 export const NUMERIC: Mode = {
   id: 'Numeric',
   bit: 1 << 0,
-  ccBits: [10, 12, 14],
+  ccBits: new Uint8Array([10, 12, 14]),
 };
 
 export const ALPHANUMERIC: Mode = {
   id: 'Alphanumeric',
   bit: 1 << 1,
-  ccBits: [9, 11, 13],
+  ccBits: new Uint8Array([9, 11, 13]),
 };
 
 export const BYTE: Mode = {
   id: 'Byte',
   bit: 1 << 2,
-  ccBits: [8, 16, 16],
+  ccBits: new Uint8Array([8, 16, 16]),
 };
 
 export const KANJI: Mode = {
   id: 'Kanji',
   bit: 1 << 3,
-  ccBits: [8, 10, 12],
+  ccBits: new Uint8Array([8, 10, 12]),
 };
 
 export const MIXED: Mode = {
@@ -86,7 +86,7 @@ export function toString(mode: Mode): string {
  * @returns {Boolean} True if valid mode, false otherwise
  */
 export function isValid(mode: Mode): boolean {
-  return mode?.bit && mode.ccBits;
+  return mode.bit && !!mode.ccBits;
 }
 
 /**
@@ -121,14 +121,14 @@ function fromString(modeStr: string): Mode {
  * @return {Mode}                     Encoding mode
  */
 export function from(value: Mode | string, defaultValue: Mode): Mode {
-  if (isValid(value)) {
-    return value;
-  }
-
-  try {
-    return fromString(value);
-  } catch (e) {
-    return defaultValue;
+  if (typeof value !== 'string') {
+    return isValid(value) ? value : defaultValue;
+  } else {
+    try {
+      return fromString(value);
+    } catch {
+      return defaultValue;
+    }
   }
 }
 

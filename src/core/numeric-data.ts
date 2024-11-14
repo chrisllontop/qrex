@@ -1,15 +1,23 @@
-import { type Mode, NUMERIC } from './mode';
+import { type Mode, NUMERIC } from "./mode";
+import { BitBuffer } from "./bit-buffer";
 
-function NumericData(data: Uint8Array) {
+class NumericData {
   mode: Mode;
   data: string;
 
-  this.mode = NUMERIC;
-  this.data = data.toString();
-}
+  getLength!: () => number;
+  getBitsLength!: () => number;
+  write!: (bitBuffer: BitBuffer) => void;
 
-NumericData.getBitsLength = function getBitsLength(length) {
-  return 10 * Math.floor(length / 3) + (length % 3 ? (length % 3) * 3 + 1 : 0);
+  constructor(data: string) {
+    this.data = data;
+    this.mode = NUMERIC;
+  }
+
+  static getBitsLength(length) {
+    return 10 * Math.floor(length / 3) + (length % 3 ? (length % 3) * 3 + 1 : 0);
+  }
+
 }
 
 NumericData.prototype.getLength = function getLength() {
@@ -20,7 +28,7 @@ NumericData.prototype.getBitsLength = function getBitsLength() {
   return NumericData.getBitsLength(this.data.length);
 }
 
-NumericData.prototype.write = function write(bitBuffer: Buffers): void {
+NumericData.prototype.write = function write(bitBuffer: BitBuffer): void {
   let i, group, value;
 
   // The input data string is divided into groups of three digits,

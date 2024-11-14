@@ -1,4 +1,6 @@
-const Patterns = {
+import { BitMatrix } from "./bit-matrix";
+
+export const Patterns = {
   PATTERN000: 0,
   PATTERN001: 1,
   PATTERN010: 2,
@@ -27,7 +29,7 @@ const PenaltyScores = {
  * @return {Boolean}         true if valid, false otherwise
  */
 export function isValid(mask: number): boolean {
-  return mask != null && mask !== '' && !isNaN(mask) && mask >= 0 && mask <= 7;
+  return mask != null && !isNaN(mask) && mask >= 0 && mask <= 7;
 }
 
 /**
@@ -38,7 +40,8 @@ export function isValid(mask: number): boolean {
  * @return {Number}                     Valid mask pattern or undefined
  */
 export function from(value: number | string): number {
-  return isValid(value) ? Number.parseInt(value, 10) : undefined;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
+  return isValid(numValue) ? numValue : undefined;
 }
 
 /**
@@ -195,7 +198,7 @@ function getMaskAt(maskPattern: number, i: number, j: number): boolean {
  * @param  {Number}    pattern Pattern reference number
  * @param  {BitMatrix} data    BitMatrix data
  */
-export function applyMask(pattern: number, data: Uint8Array): void {
+export function applyMask(pattern: number, data: BitMatrix): void {
   const size = data.size;
 
   for (let col = 0; col < size; col++) {
@@ -213,7 +216,7 @@ export function applyMask(pattern: number, data: Uint8Array): void {
  * @param setupFormatFunc
  * @return {Number} Mask pattern reference number
  */
-export function getBestMask(data: Uint8Array, setupFormatFunc): number {
+export function getBestMask(data: BitMatrix, setupFormatFunc): number {
   const numPatterns = Object.keys(Patterns).length;
   let bestPattern = 0;
   let lowerPenalty = Infinity;

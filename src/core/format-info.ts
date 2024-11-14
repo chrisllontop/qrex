@@ -1,4 +1,5 @@
-import { getBCHDigit } from './utils';
+import { getBCHDigit } from "./utils";
+import { type Mode } from "./mode";
 
 const G15 =
   (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0);
@@ -11,11 +12,11 @@ const G15_BCH = getBCHDigit(G15);
  * The format information is a 15-bit sequence containing 5 data bits,
  * with 10 error correction bits calculated using the (15, 5) BCH code.
  *
- * @param  {Number} errorCorrectionLevel Error correction level
+ * @param  {Mode} errorCorrectionLevel Error correction level
  * @param  {Number} mask                 Mask pattern
  * @return {Number}                      Encoded format information bits
  */
-export function getEncodedBits(errorCorrectionLevel: number, mask: number): number {
+export function getEncodedBits(errorCorrectionLevel: Mode, mask: number): number {
   const data = (errorCorrectionLevel.bit << 3) | mask;
   let d = data << 10;
 

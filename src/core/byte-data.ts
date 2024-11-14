@@ -1,11 +1,14 @@
 import { BYTE, type Mode } from "./mode";
+import { BitBuffer } from "./bit-buffer";
 
 export class ByteData {
   mode: Mode;
-  data: number[];
+  data: Uint8Array;
+
+  getBitsLength!: () => number;
 
   constructor(data: number[] | string) {
-    this.mode = Mode.BYTE;
+    this.mode = BYTE;
     if (typeof data === 'string') {
       this.data = new TextEncoder().encode(data);
     } else {
@@ -21,7 +24,7 @@ export class ByteData {
     return this.data.length;
   }
 
-  write(bitBuffer: Buffers): void {
+  write(bitBuffer: BitBuffer): void {
     for (let i = 0, l = this.data.length; i < l; i++) {
       bitBuffer.put(this.data[i], 8);
     }

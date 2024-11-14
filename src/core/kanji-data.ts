@@ -1,13 +1,16 @@
 import { KANJI, type Mode } from "./mode";
-import { fromSJIS } from "./utils";
+import { BitBuffer } from "./bit-buffer";
+import { toSJIS } from "./utils";
 
 export class KanjiData {
   mode: Mode;
-  data: number[];
+  data: string;
 
-  constructor(data: number[]) {
-    this.mode = KANJI;
+  getBitsLength!: () => number;
+
+  constructor(data: string) {
     this.data = data;
+    this.mode = KANJI;
   }
 
   static getBitsLength(length: number): number {
@@ -18,14 +21,14 @@ export class KanjiData {
     return this.data.length;
   }
 
-  write(bitBuffer: Buffers): void {
+  write(bitBuffer: BitBuffer): void {
     let i;
 
     // In the Shift JIS system, Kanji characters are represented by a two byte combination.
     // These byte values are shifted from the JIS X 0208 values.
     // JIS X 0208 gives details of the shift coded representation.
     for (i = 0; i < this.data.length; i++) {
-      let value = Utils.toSJIS(this.data[i]);
+      let value = toSJIS(this.data[i]);
 
       // For characters with Shift JIS values from 0x8140 to 0x9FFC:
       if (value >= 0x8140 && value <= 0x9ffc) {

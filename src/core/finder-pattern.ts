@@ -9,7 +9,7 @@ const FINDER_PATTERN_SIZE = 7;
  * @param  {Number} version QR Code version
  * @return {Array}          Array of coordinates
  */
-export function getPositions(version: number): number[] {
+export function getPositions(version: number): Array<number[]> {
   const size = getSymbolSize(version)
 
   return [

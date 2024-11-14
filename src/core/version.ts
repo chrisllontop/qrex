@@ -40,7 +40,7 @@ function getTotalBitsFromDataArray(segments: Segment[], version: number): number
 
   for (const data of segments) {
     const reservedBits = getReservedBitsCount(data.mode, version);
-    totalBits += reservedBits + data.getBitsLength();
+    totalBits += reservedBits + (data.length || 0);
   }
 
   return totalBits;
@@ -67,12 +67,18 @@ function getBestVersionForMixedData(segments: Segment[], errorCorrectionLevel: n
  * @param  {Number}        defaultValue Fallback value
  * @return {Number}                     QR Code version number
  */
-export function from(value: number | string, defaultValue: number): number {
-  if (isValid(value)) {
-    return Number.parseInt(value, 10);
+export function from({
+  value,
+  defaultValue = 0
+}: {
+  value: number | string;
+  defaultValue: number;
+}): number {
+  if (typeof value === 'string') {
+    value = Number.parseInt(value.toString(), 10);
   }
 
-  return defaultValue;
+  return isValid(value) ? value : defaultValue;
 }
 
 /**
@@ -141,11 +147,11 @@ export function getBestVersionForData(
 ): number {
   let seg;
 
-  const ecl = _from(errorCorrectionLevel, M);
+  const ecl = _from(errorCorrectionLevel.toString(), M);
 
   if (Array.isArray(data)) {
     if (data.length > 1) {
-      return getBestVersionForMixedData(data, ecl);
+      return getBestVersionForMixedData(data, ecl.bit);
     }
 
     if (data.length === 0) {
@@ -157,8 +163,9 @@ export function getBestVersionForData(
     seg = data;
   }
 
-  return getBestVersionForDataLength(seg.mode, seg.getLength(), ecl);
+  return getBestVersionForDataLength(seg.mode, seg.getLength(), ecl.bit);
 }
+// TODO: Dicuss whether 'ecl' is supposed to be a Mode type, and question the lackof a mode param
 
 /**
  * Returns version information with relative error correction bits
@@ -181,7 +188,7 @@ export function getEncodedBits(version: number): number {
     d ^= G18 << (getBCHDigit(d) - G18_BCH);
   }
 
-  return (version << 12) | dM;
+  return (version << 12) | d;
 }
 
 export const Version = {

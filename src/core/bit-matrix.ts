@@ -5,8 +5,8 @@
  */
 export class BitMatrix {
   size: number;
-  data: number[];
-  reservedBit: number[];
+  data: Uint8Array;
+  reservedBit: Array<boolean>;
 
   constructor(size: number) {
     if (!size || size < 1) {
@@ -15,7 +15,7 @@ export class BitMatrix {
 
     this.size = size;
     this.data = new Uint8Array(size * size);
-    this.reservedBit = new Uint8Array(size * size);
+    this.reservedBit = new Array(size * size).fill(false);
   }
 
   /**
@@ -27,7 +27,7 @@ export class BitMatrix {
    * @param {Boolean} value
    * @param {Boolean} reserved
    */
-  set(row: number, col: number, value: boolean, reserved: boolean): void {
+  set(row: number, col: number, value: number, reserved: boolean): void {
     const index = row * this.size + col;
     this.data[index] = value;
     if (reserved) this.reservedBit[index] = true;
@@ -40,7 +40,7 @@ export class BitMatrix {
    * @param  {Number}  col
    * @return {Boolean}
    */
-  get(row: number, col: number): boolean {
+  get(row: number, col: number): number {
     return this.data[row * this.size + col];
   }
 

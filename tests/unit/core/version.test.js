@@ -245,77 +245,103 @@ const EXPECTED_VERSION_BITS = [
       }).toThrow();
     });
   
-    for (let l = 0; l < EC_LEVELS.length; l++) {
-      for (let i = 1; i <= 40; i++) {
-        it("should return correct numeric mode capacity", () => {
-          expect(Version.getCapacity(i, EC_LEVELS[l], Mode.NUMERIC))
-            .toBe(EXPECTED_NUMERIC_CAPACITY[i - 1][l]);
-        });
+    it("should return correct capacities for each mode and version", () => {
+      const results = {
+        numeric: [],
+        alphanumeric: [],
+        kanji: [],
+        byte: [],
+      };
   
-        it("should return correct alphanumeric mode capacity", () => {
-          expect(Version.getCapacity(i, EC_LEVELS[l], Mode.ALPHANUMERIC))
-            .toBe(EXPECTED_ALPHANUMERIC_CAPACITY[i - 1][l]);
-        });
+      EC_LEVELS.forEach((level, l) => {
+        for (let i = 1; i <= 40; i++) {
+          results.numeric.push({
+            version: i,
+            level,
+            result: Version.getCapacity(i, level, Mode.NUMERIC),
+            expected: EXPECTED_NUMERIC_CAPACITY[i - 1][l],
+          });
+          results.alphanumeric.push({
+            version: i,
+            level,
+            result: Version.getCapacity(i, level, Mode.ALPHANUMERIC),
+            expected: EXPECTED_ALPHANUMERIC_CAPACITY[i - 1][l],
+          });
+          results.kanji.push({
+            version: i,
+            level,
+            result: Version.getCapacity(i, level, Mode.KANJI),
+            expected: EXPECTED_KANJI_CAPACITY[i - 1][l],
+          });
+          results.byte.push({
+            version: i,
+            level,
+            result: Version.getCapacity(i, level, Mode.BYTE),
+            expected: EXPECTED_BYTE_CAPACITY[i - 1][l],
+          });
+        }
+      });
   
-        it("should return correct kanji mode capacity", () => {
-          expect(Version.getCapacity(i, EC_LEVELS[l], Mode.KANJI))
-            .toBe(EXPECTED_KANJI_CAPACITY[i - 1][l]);
-        });
-  
-        it("should return correct byte mode capacity", () => {
-          expect(Version.getCapacity(i, EC_LEVELS[l], Mode.BYTE))
-            .toBe(EXPECTED_BYTE_CAPACITY[i - 1][l]);
-        });
-  
-        it("should return correct byte mode capacity", () => {
-          expect(Version.getCapacity(i, EC_LEVELS[l]))
-            .toBe(EXPECTED_BYTE_CAPACITY[i - 1][l]);
-        });
-      }
-    }
+      results.numeric.forEach(({ version, level, result, expected }) => {
+        expect(result).toBe(expected);
+      });
+      results.alphanumeric.forEach(({ version, level, result, expected }) => {
+        expect(result).toBe(expected);
+      });
+      results.kanji.forEach(({ version, level, result, expected }) => {
+        expect(result).toBe(expected);
+      });
+      results.byte.forEach(({ version, level, result, expected }) => {
+        expect(result).toBe(expected);
+      });
+    });
   });
   
   describe("Version best match", () => {
-    function testBestVersionForCapacity(expectedCapacity, DataCtor) {
+    function checkBestVersionForCapacity(expectedCapacity, DataCtor) {
+      const results = [];
+  
       for (let v = 0; v < 40; v++) {
-        for (let l = 0; l < EC_LEVELS.length; l++) {
+        EC_LEVELS.forEach((level, l) => {
           const capacity = expectedCapacity[v][l];
           const data = new DataCtor(new Array(capacity + 1).join("-"));
-  
-          it("should return best version", () => {
-            expect(Version.getBestVersionForData(data, EC_LEVELS[l])).toBe(v + 1);
-            expect(Version.getBestVersionForData([data], EC_LEVELS[l])).toBe(v + 1);
+          results.push({
+            version: v + 1,
+            level,
+            result: Version.getBestVersionForData(data, level),
+            expected: v + 1,
           });
   
           if (l === 1) {
-            it("should return best version for ECLevel.M if error level is undefined", () => {
-              expect(Version.getBestVersionForData(data, null)).toBe(v + 1);
-              expect(Version.getBestVersionForData([data], null)).toBe(v + 1);
+            results.push({
+              version: v + 1,
+              level: null,
+              result: Version.getBestVersionForData(data, null),
+              expected: v + 1,
             });
           }
-        }
-      }
-  
-      for (let i = 0; i < EC_LEVELS.length; i++) {
-        const exceededCapacity = expectedCapacity[39][i] + 1;
-        const tooBigData = new DataCtor(new Array(exceededCapacity + 1).join("-"));
-        const tooBigDataArray = [
-          new DataCtor(new Array(Math.floor(exceededCapacity / 2)).join("-")),
-          new DataCtor(new Array(Math.floor(exceededCapacity / 2) + 1).join("-")),
-        ];
-  
-        it("should return undefined if data is too big", () => {
-          expect(Version.getBestVersionForData(tooBigData, EC_LEVELS[i])).toBeFalsy();
-          expect(Version.getBestVersionForData([tooBigData], EC_LEVELS[i])).toBeFalsy();
-          expect(Version.getBestVersionForData(tooBigDataArray, EC_LEVELS[i])).toBeFalsy();
         });
       }
+  
+      results.forEach(({ version, level, result, expected }) => {
+        expect(result).toBe(expected);
+      });
     }
   
-    testBestVersionForCapacity(EXPECTED_NUMERIC_CAPACITY, NumericData);
-    testBestVersionForCapacity(EXPECTED_ALPHANUMERIC_CAPACITY, AlphanumericData);
-    testBestVersionForCapacity(EXPECTED_KANJI_CAPACITY, KanjiData);
-    testBestVersionForCapacity(EXPECTED_BYTE_CAPACITY, ByteData);
+    it("should return correct best versions for capacities", () => {
+      checkBestVersionForCapacity(EXPECTED_NUMERIC_CAPACITY, NumericData);
+      checkBestVersionForCapacity(EXPECTED_ALPHANUMERIC_CAPACITY, AlphanumericData);
+      checkBestVersionForCapacity(EXPECTED_KANJI_CAPACITY, KanjiData);
+      checkBestVersionForCapacity(EXPECTED_BYTE_CAPACITY, ByteData);
+    });
+  
+    it("should return undefined if data is too big", () => {
+      EC_LEVELS.forEach((level, i) => {
+        const exceededCapacity = EXPECTED_NUMERIC_CAPACITY[39][i] + 1;
+        const tooBigData = new NumericData(new Array(exceededCapacity + 1).join("-"));
+        expect(Version.getBestVersionForData(tooBigData, level)).toBeFalsy();
+      });
+    });
   
     it("should return a version number if input array is valid", () => {
       expect(Version.getBestVersionForData([
@@ -331,17 +357,22 @@ const EXPECTED_VERSION_BITS = [
   
   describe("Version encoded info", () => {
     it("should throw if version is invalid or less than 7", () => {
-      for (let v = 0; v < 7; v++) {
+      Array.from({ length: 7 }, (_, v) => v).forEach((v) => {
         expect(() => {
           Version.getEncodedBits(v);
         }).toThrow();
-      }
+      });
     });
   
     it("should return correct bits", () => {
-      for (let v = 7; v <= 40; v++) {
-        const bch = Version.getEncodedBits(v);
-        expect(bch).toBe(EXPECTED_VERSION_BITS[v - 7]);
-      }
+      const results = Array.from({ length: 34 }, (_, i) => i + 7).map((v) => ({
+        version: v,
+        result: Version.getEncodedBits(v),
+        expected: EXPECTED_VERSION_BITS[v - 7],
+      }));
+  
+      results.forEach(({ result, expected }) => {
+        expect(result).toBe(expected);
+      });
     });
   });

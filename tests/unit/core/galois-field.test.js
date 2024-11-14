@@ -10,11 +10,11 @@ describe("Galois Field", () => {
     expect(GF.mul(0, 1)).toBe(0);
   });
 
-  it("should return 0 if second param is 0", () => {
+  it("should return 0 if second parameter is 0 in multiplication", () => {
     expect(GF.mul(1, 0)).toBe(0);
   });
 
-  it("should return 0 if both params are 0", () => {
+  it("should return 0 if both parameters are 0 in multiplication", () => {
     expect(GF.mul(0, 0)).toBe(0);
   });
 });

@@ -11,15 +11,16 @@ const EXPECTED_FORMAT_BITS = [
 ];
 
 describe("Format encoded info", () => {
-  const levels = [ECLevel.L, ECLevel.M, ECLevel.Q, ECLevel.H];
-  const patterns = Object.keys(MaskPattern.Patterns).length;
+  it("should return correct bits for all levels and patterns", () => {
+    const levels = [ECLevel.L, ECLevel.M, ECLevel.Q, ECLevel.H];
+    const patterns = Object.keys(MaskPattern.Patterns).length;
 
-  for (let l = 0; l < levels.length; l++) {
-    for (let p = 0; p < patterns; p++) {
-      it(`should return correct bits for level ${l} and pattern ${p}`, () => {
-        const bch = FormatInfo.getEncodedBits(levels[l], p);
-        expect(bch).toBe(EXPECTED_FORMAT_BITS[l][p]);
-      });
-    }
-  }
+    const allResultsPass = levels.every((level, lIndex) =>
+      Array.from({ length: patterns }, (_, p) =>
+        FormatInfo.getEncodedBits(level, p) === EXPECTED_FORMAT_BITS[lIndex][p]
+      ).every(Boolean)
+    );
+
+    expect(allResultsPass).toBe(true);
+  });
 });

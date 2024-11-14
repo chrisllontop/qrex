@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {ECLevel} from "../../../src/core/error-correction-level";
+import { ECLevel } from "../../../src/core/error-correction-level";
 
 const EC_LEVELS = [ECLevel.L, ECLevel.M, ECLevel.Q, ECLevel.H];
 

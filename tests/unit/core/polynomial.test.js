@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import {Polynomial} from "../../../src/core/polynomial";
+import { Polynomial } from "../../../src/core/polynomial";
 
 describe("Generator Polynomial", () => {
   test("Should return an Uint8Array for degree 0", () => {

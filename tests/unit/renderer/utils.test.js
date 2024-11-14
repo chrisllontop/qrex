@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { RendererUtils } from "../../../src/renderer/utils";
 
 describe("Utils getOptions", () => {
@@ -45,7 +45,7 @@ describe("Utils getOptions", () => {
   it("should return correct colors value from strings", () => {
     expect(
       RendererUtils.getOptions({ color: { dark: "#fff", light: "#000000" } })
-        .color
+        .color,
     ).toEqual({
       dark: { r: 255, g: 255, b: 255, a: 255, hex: "#ffffff" },
       light: { r: 0, g: 0, b: 0, a: 255, hex: "#000000" },
@@ -54,7 +54,7 @@ describe("Utils getOptions", () => {
 
   it("should return correct colors value from numbers", () => {
     expect(
-      RendererUtils.getOptions({ color: { dark: 111, light: 999 } }).color
+      RendererUtils.getOptions({ color: { dark: 111, light: 999 } }).color,
     ).toEqual({
       dark: { r: 17, g: 17, b: 17, a: 255, hex: "#111111" },
       light: { r: 153, g: 153, b: 153, a: 255, hex: "#999999" },
@@ -83,13 +83,13 @@ describe("Utils getScale", () => {
 
   it("should calculate correct scale from width and margin", () => {
     expect(RendererUtils.getScale(symbolSize, { width: 50, margin: 2 })).toBe(
-      2
+      2,
     );
   });
 
   it("should return default scale if width is too small to contain the symbol", () => {
     expect(
-      RendererUtils.getScale(symbolSize, { width: 21, margin: 2, scale: 4 })
+      RendererUtils.getScale(symbolSize, { width: 21, margin: 2, scale: 4 }),
     ).toBe(4);
   });
 });
@@ -99,13 +99,13 @@ describe("Utils getImageWidth", () => {
 
   it("should return correct width value", () => {
     expect(
-      RendererUtils.getImageWidth(symbolSize, { scale: 5, margin: 0 })
+      RendererUtils.getImageWidth(symbolSize, { scale: 5, margin: 0 }),
     ).toBe(105);
   });
 
   it("should return specified width value", () => {
     expect(
-      RendererUtils.getImageWidth(symbolSize, { width: 250, margin: 2 })
+      RendererUtils.getImageWidth(symbolSize, { width: 250, margin: 2 }),
     ).toBe(250);
   });
 
@@ -115,7 +115,7 @@ describe("Utils getImageWidth", () => {
         width: 10,
         margin: 4,
         scale: 4,
-      })
+      }),
     ).toBe(116);
   });
 });
@@ -149,7 +149,7 @@ describe("Utils qrToImageData", () => {
 
   let imageData = [];
   const expectedImageSize = (sampleQrData.modules.size + margin * 2) * scale;
-  let expectedImageDataLength = (expectedImageSize ** 2) * 4;
+  let expectedImageDataLength = expectedImageSize ** 2 * 4;
 
   it("should return correct imageData length", () => {
     RendererUtils.qrToImageData(imageData, sampleQrData, opts);
@@ -158,7 +158,7 @@ describe("Utils qrToImageData", () => {
 
   imageData = [];
   opts.width = width;
-  expectedImageDataLength = (width ** 2) * 4;
+  expectedImageDataLength = width ** 2 * 4;
 
   it("should return correct imageData length when width is specified", () => {
     RendererUtils.qrToImageData(imageData, sampleQrData, opts);

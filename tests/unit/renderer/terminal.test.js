@@ -74,7 +74,7 @@ describe("TerminalRenderer render small", () => {
       str = RendererTerminal.render(
         sampleQrData,
         { margin: 10, scale: 1, small: true },
-        callback
+        callback,
       );
     }).not.toThrow();
   });

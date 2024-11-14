@@ -1,11 +1,11 @@
-import { describe, it, expect } from 'vitest';
-import { Mode } from '../../../src/core/mode';
-import { Segments } from '../../../src/core/segments';
-import  NumericData  from '../../../src/core/numeric-data';
-import { AlphanumericData } from '../../../src/core/alphanumeric-data';
-import { ByteData } from '../../../src/core/byte-data';
-import toSJIS from '../../../helper/to-sjis';
-import { CoreUtils } from '../../../src/core/utils';
+import { describe, it, expect } from "vitest";
+import { Mode } from "../../../src/core/mode";
+import { Segments } from "../../../src/core/segments";
+import NumericData from "../../../src/core/numeric-data";
+import { AlphanumericData } from "../../../src/core/alphanumeric-data";
+import { ByteData } from "../../../src/core/byte-data";
+import toSJIS from "../../../helper/to-sjis";
+import { CoreUtils } from "../../../src/core/utils";
 
 let testData = [
   {
@@ -160,19 +160,34 @@ testData = testData.concat(kanjiTestData);
 
 describe("Segments from array", () => {
   it("should return correct segment from array of string", () => {
-    expect(Segments.fromArray(["abcdef", "12345"])).toEqual([new ByteData("abcdef"), new NumericData("12345")]);
+    expect(Segments.fromArray(["abcdef", "12345"])).toEqual([
+      new ByteData("abcdef"),
+      new NumericData("12345"),
+    ]);
   });
 
   it("should return correct segment from array of objects", () => {
-    expect(Segments.fromArray([{ data: "abcdef", mode: Mode.BYTE }, { data: "12345", mode: Mode.NUMERIC }])).toEqual([new ByteData("abcdef"), new NumericData("12345")]);
+    expect(
+      Segments.fromArray([
+        { data: "abcdef", mode: Mode.BYTE },
+        { data: "12345", mode: Mode.NUMERIC },
+      ]),
+    ).toEqual([new ByteData("abcdef"), new NumericData("12345")]);
   });
 
   it("should return correct segment from array of objects if mode is specified as string", () => {
-    expect(Segments.fromArray([{ data: "abcdef", mode: "byte" }, { data: "12345", mode: "numeric" }])).toEqual([new ByteData("abcdef"), new NumericData("12345")]);
+    expect(
+      Segments.fromArray([
+        { data: "abcdef", mode: "byte" },
+        { data: "12345", mode: "numeric" },
+      ]),
+    ).toEqual([new ByteData("abcdef"), new NumericData("12345")]);
   });
 
   it("should return correct segment from array of objects if mode is not specified", () => {
-    expect(Segments.fromArray([{ data: "abcdef" }, { data: "12345" }])).toEqual([new ByteData("abcdef"), new NumericData("12345")]);
+    expect(Segments.fromArray([{ data: "abcdef" }, { data: "12345" }])).toEqual(
+      [new ByteData("abcdef"), new NumericData("12345")],
+    );
   });
 
   it("should return an empty array", () => {
@@ -182,30 +197,40 @@ describe("Segments from array", () => {
   it("should throw if segment cannot be encoded with specified mode", () => {
     expect(() => {
       Segments.fromArray([{ data: "ABCDE", mode: "numeric" }]);
-    }).toThrow("\"ABCDE\" cannot be encoded with mode Numeric.");
+    }).toThrow('"ABCDE" cannot be encoded with mode Numeric.');
   });
 
   it("should use Byte mode if kanji support is disabled", () => {
-    expect(Segments.fromArray([{ data: "０１２３", mode: Mode.KANJI }])).toEqual([new ByteData("０１２３")]);
+    expect(
+      Segments.fromArray([{ data: "０１２３", mode: Mode.KANJI }]),
+    ).toEqual([new ByteData("０１２３")]);
   });
 });
 
 describe("Segments optimization", () => {
   it("should use Byte mode if Kanji support is disabled", () => {
-    expect(Segments.fromString("乂ЁЖ", 1)).toEqual(Segments.fromArray([{ data: "乂ЁЖ", mode: "byte" }]));
+    expect(Segments.fromString("乂ЁЖ", 1)).toEqual(
+      Segments.fromArray([{ data: "乂ЁЖ", mode: "byte" }]),
+    );
   });
 
   it("should match Segments from test data", () => {
     CoreUtils.setToSJISFunction(toSJIS);
     for (const data of testData) {
-      expect(Segments.fromString(data.input, 1)).toEqual(Segments.fromArray(data.result));
-    };
+      expect(Segments.fromString(data.input, 1)).toEqual(
+        Segments.fromArray(data.result),
+      );
+    }
   });
 });
 
 describe("Segments raw split", () => {
   it("should split string into correct segments", () => {
-    const splitted = [new ByteData("abc"), new AlphanumericData("DEF"), new NumericData("123")];
+    const splitted = [
+      new ByteData("abc"),
+      new AlphanumericData("DEF"),
+      new NumericData("123"),
+    ];
     expect(Segments.rawSplit("abcDEF123")).toEqual(splitted);
   });
 });

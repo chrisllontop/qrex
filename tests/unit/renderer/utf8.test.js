@@ -49,7 +49,7 @@ describe("RendererUtf8 renderToFile", () => {
       expect(fsStub).toHaveBeenCalledWith(
         fileName,
         expect.any(String),
-        expect.any(Function)
+        expect.any(Function),
       );
     });
 
@@ -69,9 +69,9 @@ describe("RendererUtf8 renderToFile", () => {
         expect(fsStub).toHaveBeenCalledWith(
           fileName,
           expect.any(String),
-          expect.any(Function)
+          expect.any(Function),
         );
-      }
+      },
     );
 
     fsStub.mockReset();

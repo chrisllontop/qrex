@@ -77,7 +77,7 @@ describe("PNG renderToDataURL", () => {
         (err, url) => {
           if (err) reject(err);
           else resolve(url);
-        }
+        },
       );
     });
 
@@ -133,7 +133,7 @@ describe("PNG renderToFile", () => {
           } catch (e) {
             reject(e);
           }
-        }
+        },
       );
     });
 

@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { Regex } from '../../../src/core/regex';
+import { describe, it, expect } from "vitest";
+import { Regex } from "../../../src/core/regex";
 
 describe("Regex", () => {
   it("should export a regex for NUMERIC", () => {

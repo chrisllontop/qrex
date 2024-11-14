@@ -44,5 +44,5 @@ describe("Numeric Data", () => {
 
       expect(bitBuffer.buffer).toEqual(data.dataBit);
     });
-  };
+  }
 });

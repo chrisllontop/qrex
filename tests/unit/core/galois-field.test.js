@@ -7,11 +7,13 @@ describe("Galois Field", () => {
   });
 
   it("log and exp should be the inverse of each other for values 1 to 254", () => {
-    const logExpResults = Array.from({ length: 254 }, (_, i) => i + 1).map((i) => ({
-      value: i,
-      logExpResult: GF.log(GF.exp(i)),
-      expLogResult: GF.exp(GF.log(i)),
-    }));
+    const logExpResults = Array.from({ length: 254 }, (_, i) => i + 1).map(
+      (i) => ({
+        value: i,
+        logExpResult: GF.log(GF.exp(i)),
+        expLogResult: GF.exp(GF.log(i)),
+      }),
+    );
 
     for (const { value, logExpResult, expLogResult } of logExpResults) {
       expect(logExpResult).toBe(value);
@@ -32,11 +34,13 @@ describe("Galois Field", () => {
   });
 
   it("Multiplication should be commutative for values 1 to 254", () => {
-    const mulResults = Array.from({ length: 254 }, (_, j) => j + 1).map((j) => ({
-      value: j,
-      mulResult: GF.mul(j, 255 - j),
-      commutativeResult: GF.mul(255 - j, j),
-    }));
+    const mulResults = Array.from({ length: 254 }, (_, j) => j + 1).map(
+      (j) => ({
+        value: j,
+        mulResult: GF.mul(j, 255 - j),
+        commutativeResult: GF.mul(255 - j, j),
+      }),
+    );
 
     for (const { mulResult, commutativeResult } of mulResults) {
       expect(mulResult).toBe(commutativeResult);

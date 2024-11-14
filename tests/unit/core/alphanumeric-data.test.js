@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { BitBuffer } from "../../../src/core/bit-buffer";
+import { describe, expect, it } from "vitest";
 import { AlphanumericData } from "../../../src/core/alphanumeric-data";
+import { BitBuffer } from "../../../src/core/bit-buffer";
 import { Mode } from "../../../src/core/mode";
 
 const testData = [
@@ -37,6 +37,6 @@ describe("Alphanumeric Data", () => {
       alphanumericData.write(bitBuffer);
 
       expect(bitBuffer.buffer).toEqual(data.dataBit);
-    };
+    }
   });
 });

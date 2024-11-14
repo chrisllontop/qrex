@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {Mode} from "../../../src/core/mode";
+import { Mode } from "../../../src/core/mode";
 
 describe("Mode bits", () => {
   const EXPECTED_BITS = {
@@ -30,46 +30,46 @@ describe("Char count bits", () => {
   it("Char count indicator for versions", () => {
     for (let v = 1; v < 10; v++) {
       expect(Mode.getCharCountIndicator(Mode.NUMERIC, v)).toBe(
-        EXPECTED_BITS.numeric[0]
+        EXPECTED_BITS.numeric[0],
       );
       expect(Mode.getCharCountIndicator(Mode.ALPHANUMERIC, v)).toBe(
-        EXPECTED_BITS.alphanumeric[0]
+        EXPECTED_BITS.alphanumeric[0],
       );
       expect(Mode.getCharCountIndicator(Mode.BYTE, v)).toBe(
-        EXPECTED_BITS.byte[0]
+        EXPECTED_BITS.byte[0],
       );
       expect(Mode.getCharCountIndicator(Mode.KANJI, v)).toBe(
-        EXPECTED_BITS.kanji[0]
+        EXPECTED_BITS.kanji[0],
       );
     }
 
     for (let v = 10; v < 27; v++) {
       expect(Mode.getCharCountIndicator(Mode.NUMERIC, v)).toBe(
-        EXPECTED_BITS.numeric[1]
+        EXPECTED_BITS.numeric[1],
       );
       expect(Mode.getCharCountIndicator(Mode.ALPHANUMERIC, v)).toBe(
-        EXPECTED_BITS.alphanumeric[1]
+        EXPECTED_BITS.alphanumeric[1],
       );
       expect(Mode.getCharCountIndicator(Mode.BYTE, v)).toBe(
-        EXPECTED_BITS.byte[1]
+        EXPECTED_BITS.byte[1],
       );
       expect(Mode.getCharCountIndicator(Mode.KANJI, v)).toBe(
-        EXPECTED_BITS.kanji[1]
+        EXPECTED_BITS.kanji[1],
       );
     }
 
     for (let v = 27; v <= 40; v++) {
       expect(Mode.getCharCountIndicator(Mode.NUMERIC, v)).toBe(
-        EXPECTED_BITS.numeric[2]
+        EXPECTED_BITS.numeric[2],
       );
       expect(Mode.getCharCountIndicator(Mode.ALPHANUMERIC, v)).toBe(
-        EXPECTED_BITS.alphanumeric[2]
+        EXPECTED_BITS.alphanumeric[2],
       );
       expect(Mode.getCharCountIndicator(Mode.BYTE, v)).toBe(
-        EXPECTED_BITS.byte[2]
+        EXPECTED_BITS.byte[2],
       );
       expect(Mode.getCharCountIndicator(Mode.KANJI, v)).toBe(
-        EXPECTED_BITS.kanji[2]
+        EXPECTED_BITS.kanji[2],
       );
     }
   });
@@ -82,21 +82,21 @@ describe("Char count bits", () => {
 
 describe("Best mode", () => {
   const EXPECTED_MODE = {
-    "12345": Mode.NUMERIC,
-    "abcde": Mode.BYTE,
+    12345: Mode.NUMERIC,
+    abcde: Mode.BYTE,
     "1234a": Mode.BYTE,
-    "ABCDa": Mode.BYTE,
-    "ABCDE": Mode.ALPHANUMERIC,
+    ABCDa: Mode.BYTE,
+    ABCDE: Mode.ALPHANUMERIC,
     "12ABC": Mode.ALPHANUMERIC,
-    "乂ЁЖぞβ": Mode.KANJI,
-    "ΑΒΓψωЮЯабв": Mode.KANJI,
-    "皿a晒三": Mode.BYTE,
+    乂ЁЖぞβ: Mode.KANJI,
+    ΑΒΓψωЮЯабв: Mode.KANJI,
+    皿a晒三: Mode.BYTE,
   };
 
   it("Best mode for data", () => {
     for (const data of Object.keys(EXPECTED_MODE)) {
       expect(Mode.getBestModeForData(data)).toBe(EXPECTED_MODE[data]);
-    };
+    }
   });
 });
 
@@ -124,11 +124,11 @@ describe("From value", () => {
   ];
 
   it("From name or mode", () => {
-    for (const { name, mode } of modes)  {
+    for (const { name, mode } of modes) {
       expect(Mode.from(name)).toBe(mode);
       expect(Mode.from(name.toUpperCase())).toBe(mode);
       expect(Mode.from(mode)).toBe(mode);
-    };
+    }
 
     expect(Mode.from("", Mode.NUMERIC)).toBe(Mode.NUMERIC);
     expect(Mode.from(null, Mode.NUMERIC)).toBe(Mode.NUMERIC);

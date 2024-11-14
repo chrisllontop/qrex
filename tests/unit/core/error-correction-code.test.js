@@ -12,7 +12,7 @@ describe("Error Correction Codewords", () => {
     for (let v = 1; v <= 40; v++) {
       const totalCodewords = CoreUtils.getSymbolTotalCodewords(v);
       const reservedByte = Math.ceil(
-        (Mode.getCharCountIndicator(Mode.BYTE, v) + 4) / 8
+        (Mode.getCharCountIndicator(Mode.BYTE, v) + 4) / 8,
       );
 
       for (let l = 0; l < levels.length; l++) {
@@ -22,7 +22,7 @@ describe("Error Correction Codewords", () => {
         const expectedCodewords = totalCodewords - dataCodewords;
 
         expect(ECCode.getTotalCodewordsCount(v, levels[l])).toBe(
-          expectedCodewords
+          expectedCodewords,
         );
       }
     }

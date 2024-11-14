@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from "vitest";
-import { toFileStream } from "../../src/index.js";
+import { describe, expect, it, vi } from "vitest";
+import { toFileStream } from "../../src";
 import StreamMock from "../mocks/writable-stream";
 
 const defaultOptions = {
@@ -9,13 +9,13 @@ const defaultOptions = {
 describe("toFileStream", () => {
   it("should throw if stream is not provided", () => {
     expect(() => toFileStream("some text")).toThrow(
-      "Too few arguments provided"
+      "Too few arguments provided",
     );
   });
 
   it("should throw if text is not provided", () => {
     expect(() => toFileStream(new StreamMock())).toThrow(
-      "Too few arguments provided"
+      "Too few arguments provided",
     );
   });
 

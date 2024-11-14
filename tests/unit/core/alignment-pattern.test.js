@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { AlignmentPattern as pattern } from "../../../src/core/alignment-pattern";
 
 /**
@@ -62,15 +62,15 @@ describe("Alignment pattern tests", () => {
     for (let i = 1; i <= 40; i++) {
       const pos = pattern.getPositions(i);
       const expectedPos = EXPECTED_POSITION_TABLE[i - 1];
-      const expectedLength = ((expectedPos.length ** 2) || 3) - 3;
+      const expectedLength = (expectedPos.length ** 2 || 3) - 3;
 
       expect(pos.length).toBe(expectedLength);
 
       for (const position of pos) {
         for (const coord of position) {
           expect(expectedPos.includes(coord)).toBe(true);
-        };
-      };
+        }
+      }
     }
   });
 });

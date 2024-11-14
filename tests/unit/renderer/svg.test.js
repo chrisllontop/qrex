@@ -30,7 +30,7 @@ function testSvgFragment(svgFragment, expectedTags) {
           reject(e);
         },
       },
-      { decodeEntities: true }
+      { decodeEntities: true },
     );
 
     parser.write(svgFragment);
@@ -84,7 +84,7 @@ describe("SvgRenderer", () => {
             light: "#ffffff80",
           },
         },
-        expectedTags
+        expectedTags,
       );
     });
 
@@ -113,7 +113,7 @@ describe("SvgRenderer", () => {
             dark: "#00000080",
           },
         },
-        expectedTags
+        expectedTags,
       );
     });
 
@@ -165,7 +165,7 @@ describe("SvgRenderer", () => {
         expect(writeFileMock).toHaveBeenCalledWith(
           fileName,
           expect.any(String),
-          expect.any(Function)
+          expect.any(Function),
         );
       });
     });
@@ -184,15 +184,15 @@ describe("SvgRenderer", () => {
           expect(writeFileMock).toHaveBeenCalledWith(
             fileName,
             expect.any(String),
-            expect.any(Function)
+            expect.any(Function),
           );
-        }
+        },
       );
     });
 
     it("should fail if an error occurs during file save", async () => {
       const writeFileMock = vi.fn((file, content, callback) =>
-        callback(new Error("File error"))
+        callback(new Error("File error")),
       );
 
       vi.spyOn(fs, "writeFile").mockImplementation(writeFileMock);

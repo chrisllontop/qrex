@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeAll, afterAll } from "vitest";
-import { toDataURL } from "../../src/index.js";
-import { toDataURL as toDataURLBrowser } from "../../src/browser.js";
-import { removeNativePromise, restoreNativePromise } from "../helpers.js";
 import { createCanvas } from "canvas";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { toDataURL } from "../../src";
+import { toDataURL as toDataURLBrowser } from "../../src/browser";
+import { removeNativePromise, restoreNativePromise } from "../helpers";
 
 const defaultOptions = {
   maskPattern: 0,
@@ -34,13 +34,13 @@ describe("toDataURL - no promise available", () => {
 
   it("should reject if a callback is not provided (browser)", async () => {
     await expect(toDataURLBrowser("some text")).rejects.toThrow(
-      "bad maskPattern:undefined"
+      "bad maskPattern:undefined",
     );
   });
 
   it("should reject if a callback is not a function (browser)", async () => {
     await expect(toDataURLBrowser("some text", {})).rejects.toThrow(
-      "bad maskPattern:undefined"
+      "bad maskPattern:undefined",
     );
   });
 });
@@ -67,7 +67,7 @@ describe("toDataURL - image/png", () => {
 
   it("should throw if no arguments are provided", async () => {
     await expect(() => toDataURL()).toThrow(
-      "String required as first argument"
+      "String required as first argument",
     );
   });
 
@@ -77,7 +77,7 @@ describe("toDataURL - image/png", () => {
         maskPattern: 0,
         errorCorrectionLevel: "L",
         type: "image/png",
-      })
+      }),
     ).resolves.toBe(expectedDataURL);
   });
 
@@ -93,7 +93,7 @@ describe("toDataURL - image/png", () => {
       (err, url) => {
         expect(err).not.toBeNull();
         expect(url).toBeUndefined();
-      }
+      },
     );
   });
 
@@ -157,7 +157,7 @@ describe("Canvas toDataURL - image/png", () => {
 
   it("should throw if text is not provided", () => {
     expect(() => toDataURLBrowser(() => {})).toThrow(
-      "Too few arguments provided"
+      "Too few arguments provided",
     );
   });
 
@@ -182,7 +182,7 @@ describe("Canvas toDataURL - image/png", () => {
         version: 1,
         errorCorrectionLevel: "H",
         type: "image/png",
-      })
+      }),
     ).rejects.toThrow();
   });
 
@@ -216,7 +216,7 @@ describe("Canvas toDataURL - image/png", () => {
         version: 1,
         errorCorrectionLevel: "H",
         type: "image/png",
-      })
+      }),
     ).rejects.toThrow();
   });
 

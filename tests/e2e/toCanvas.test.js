@@ -1,7 +1,8 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { Canvas, createCanvas } from "canvas";
-import { toCanvas } from "../../src/index.js";
-import { removeNativePromise, restoreNativePromise } from "../helpers.js";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { toCanvas } from "../../src";
+import { removeNativePromise, restoreNativePromise } from "../helpers";
+
 const defaultOptions = {
   maskPattern: 0,
 };
@@ -153,7 +154,7 @@ describe("toCanvas Function Tests", () => {
             expect(err).toBeNull();
             expect(canvas).toBeInstanceOf(Canvas);
             resolve();
-          }
+          },
         );
       });
     });

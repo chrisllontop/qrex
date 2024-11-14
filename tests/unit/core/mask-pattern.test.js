@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import {BitMatrix} from "../../../src/core/bit-matrix";
-import {MaskPattern} from "../../../src/core/mask-pattern";
+import { BitMatrix } from "../../../src/core/bit-matrix";
+import { MaskPattern } from "../../../src/core/mask-pattern";
 
 describe("Mask pattern - Pattern references", () => {
   it("Should return 8 patterns", () => {
@@ -10,45 +10,44 @@ describe("Mask pattern - Pattern references", () => {
 });
 
 const expectedPattern000 = [
-    1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0,
-    1, 0, 1, 0, 0, 1, 0, 1, 0, 1,
-  ];
-  
-  const expectedPattern001 = [
-    1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1,
-    1, 1, 1, 1, 0, 0, 0, 0, 0, 0,
-  ];
-  
-  const expectedPattern010 = [
-    1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0,
-    0, 1, 0, 0, 1, 0, 0, 1, 0, 0,
-  ];
-  
-  const expectedPattern011 = [
-    1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0,
-    1, 0, 0, 1, 0, 1, 0, 0, 1, 0,
-  ];
-  
-  const expectedPattern100 = [
-    1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1,
-    1, 0, 0, 0, 1, 1, 1, 0, 0, 0,
-  ];
-  
-  const expectedPattern101 = [
-    1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0,
-    0, 1, 0, 0, 1, 0, 0, 0, 0, 0,
-  ];
-  
-  const expectedPattern110 = [
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0,
-    1, 1, 0, 1, 1, 0, 0, 0, 1, 1,
-  ];
-  
-  const expectedPattern111 = [
-    1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1,
-    1, 0, 0, 0, 0, 1, 1, 1, 0, 0,
-  ];
-  
+  1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0,
+  1, 0, 1, 0, 0, 1, 0, 1, 0, 1,
+];
+
+const expectedPattern001 = [
+  1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1,
+  1, 1, 1, 1, 0, 0, 0, 0, 0, 0,
+];
+
+const expectedPattern010 = [
+  1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0,
+  0, 1, 0, 0, 1, 0, 0, 1, 0, 0,
+];
+
+const expectedPattern011 = [
+  1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0,
+  1, 0, 0, 1, 0, 1, 0, 0, 1, 0,
+];
+
+const expectedPattern100 = [
+  1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1,
+  1, 0, 0, 0, 1, 1, 1, 0, 0, 0,
+];
+
+const expectedPattern101 = [
+  1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0,
+  0, 1, 0, 0, 1, 0, 0, 0, 0, 0,
+];
+
+const expectedPattern110 = [
+  1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0,
+  1, 1, 0, 1, 1, 0, 0, 0, 1, 1,
+];
+
+const expectedPattern111 = [
+  1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1,
+  1, 0, 0, 0, 0, 1, 1, 1, 0, 0,
+];
 
 describe("MaskPattern validity", () => {
   it("Should return false if no input", () => {
@@ -125,12 +124,12 @@ describe("Mask pattern - Penalty calculations", () => {
   it("Penalty N1", () => {
     let matrix = new BitMatrix(11);
     matrix.data = [
-        1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1,
-        1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1,
-        1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1,
-        0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1,
-      ];
+      1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1,
+      1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1,
+      0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1,
+    ];
     expect(MaskPattern.getPenaltyN1(matrix)).toBe(59);
 
     matrix = new BitMatrix(6);
@@ -140,7 +139,6 @@ describe("Mask pattern - Penalty calculations", () => {
     matrix.data = expectedPattern001;
     expect(MaskPattern.getPenaltyN1(matrix)).toBe(24);
 
-    
     matrix.data = expectedPattern010;
     expect(MaskPattern.getPenaltyN1(matrix)).toBe(24);
 

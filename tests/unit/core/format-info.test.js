@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
-import {FormatInfo} from "../../../src/core/format-info";
-import {ECLevel} from "../../../src/core/error-correction-level";
-import {MaskPattern} from "../../../src/core/mask-pattern";
+import { describe, expect, it } from "vitest";
+import { ECLevel } from "../../../src/core/error-correction-level";
+import { FormatInfo } from "../../../src/core/format-info";
+import { MaskPattern } from "../../../src/core/mask-pattern";
 
 const EXPECTED_FORMAT_BITS = [
   [0x77c4, 0x72f3, 0x7daa, 0x789d, 0x662f, 0x6318, 0x6c41, 0x6976],
@@ -16,9 +16,12 @@ describe("Format encoded info", () => {
     const patterns = Object.keys(MaskPattern.Patterns).length;
 
     const allResultsPass = levels.every((level, lIndex) =>
-      Array.from({ length: patterns }, (_, p) =>
-        FormatInfo.getEncodedBits(level, p) === EXPECTED_FORMAT_BITS[lIndex][p]
-      ).every(Boolean)
+      Array.from(
+        { length: patterns },
+        (_, p) =>
+          FormatInfo.getEncodedBits(level, p) ===
+          EXPECTED_FORMAT_BITS[lIndex][p],
+      ).every(Boolean),
     );
 
     expect(allResultsPass).toBe(true);

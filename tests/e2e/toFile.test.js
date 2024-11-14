@@ -1,10 +1,10 @@
-import { describe, it, expect, beforeAll, afterAll, vi } from "vitest";
 import fs from "node:fs";
-import path from "node:path";
 import os from "node:os";
-import { toFile } from "../../src/index.js";
-import { removeNativePromise, restoreNativePromise } from "../helpers.js";
-import StreamMock from "../mocks/writable-stream.js";
+import path from "node:path";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+import { toFile } from "../../src";
+import { removeNativePromise, restoreNativePromise } from "../helpers";
+import StreamMock from "../mocks/writable-stream";
 
 const defaultOptions = {
   maskPattern: 0,

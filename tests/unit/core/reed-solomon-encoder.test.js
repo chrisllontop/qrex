@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { ReedSolomonEncoder as RS } from '../../../src/core/reed-solomon-encoder';
+import { describe, it, expect } from "vitest";
+import { ReedSolomonEncoder as RS } from "../../../src/core/reed-solomon-encoder";
 
 describe("Reed-Solomon encoder", () => {
   it("Encoder not initialized", () => {

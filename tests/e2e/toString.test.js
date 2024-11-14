@@ -1,9 +1,9 @@
-import { describe, it, expect, vi, afterEach, beforeEach } from "vitest";
-import { toString } from "../../src/index.js";
-import { toString as toStringBrowser } from "../../src/browser.js";
-import { removeNativePromise, restoreNativePromise } from "../helpers.js";
-import path from "node:path";
 import fs from "node:fs";
+import path from "node:path";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { toString } from "../../src";
+import { toString as toStringBrowser } from "../../src/browser";
+import { removeNativePromise, restoreNativePromise } from "../helpers";
 
 const baseOptions = {
   maskPattern: 0,
@@ -75,7 +75,7 @@ describe("toString", () => {
     const str = await toString(
       "some text",
       { errorCorrectionLevel: "L" },
-      baseOptions
+      baseOptions,
     );
     expect(typeof str).toBe("string");
   });
@@ -112,7 +112,7 @@ describe("toString (browser)", () => {
 describe("toString svg", () => {
   const file = path.join(__dirname, "/svgtag.expected.out");
 
-  it("should return an error for invalid version with callback", (done) => {
+  it("should return an error for invalid version with callback", () => {
     toString(
       "http://www.google.com",
       {
@@ -123,7 +123,7 @@ describe("toString svg", () => {
       (err, code) => {
         expect(err).toBeTruthy();
         expect(code).toBeUndefined();
-      }
+      },
     );
   });
 
@@ -144,7 +144,7 @@ describe("toString svg", () => {
           } else {
             resolve(code);
           }
-        }
+        },
       );
     });
 
@@ -160,7 +160,7 @@ describe("toString svg", () => {
         version: 1,
         errorCorrectionLevel: "H",
         type: "svg",
-      })
+      }),
     ).rejects.toThrow();
   });
 
@@ -199,7 +199,7 @@ describe("toString browser svg", () => {
           const normalizedExpected = expectedSvg.replace(/\s+/g, "");
           expect(normalizedCode).toBe(normalizedExpected);
           resolve();
-        }
+        },
       );
     });
 
@@ -250,7 +250,6 @@ describe("QRCode.toString utf8", () => {
 
   it("should output a valid symbol with medium error correction level", async () => {
     const code = await toString("http://www.google.com", baseOptions);
-    console.log("hey zelalem", code);
     expect(code).toEqual(expectedUtf8);
   });
 
@@ -286,7 +285,7 @@ describe("QRCode.toString utf8", () => {
 describe("QRCode.toString terminal", () => {
   const expectedTerminal = fs.readFileSync(
     path.join(__dirname, "/terminal.expected.out"),
-    "utf8"
+    "utf8",
   );
 
   it("should output a valid terminal symbol", async () => {
@@ -308,7 +307,7 @@ describe("QRCode.toString terminal", () => {
         } else {
           throw new Error("QR code output is undefined");
         }
-      }
+      },
     );
 
     try {

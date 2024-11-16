@@ -1,5 +1,5 @@
 import { getBCHDigit } from "./utils";
-import { type Mode } from "./mode";
+import { type ErrorCorrectionLevel } from "qrcode";
 
 const G15 =
   (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0);
@@ -16,8 +16,10 @@ const G15_BCH = getBCHDigit(G15);
  * @param  {Number} mask                 Mask pattern
  * @return {Number}                      Encoded format information bits
  */
-export function getEncodedBits(errorCorrectionLevel: Mode, mask: number): number {
-  const data = (errorCorrectionLevel.bit << 3) | mask;
+export function getEncodedBits(errorCorrectionLevel: ErrorCorrectionLevel | string, mask: number): number {
+  const value = typeof errorCorrectionLevel === 'string' ? parseInt(errorCorrectionLevel) : errorCorrectionLevel.bit;
+
+  const data = (value << 3) | mask;
   let d = data << 10;
 
   while (getBCHDigit(d) - G15_BCH >= 0) {

@@ -1,4 +1,5 @@
-import { L, M, Q, H } from './error-correction-level';
+import { L, M, Q, H } from "./error-correction-level";
+import { type ErrorCorrectionLevel } from "qrcode";
 
 const EC_BLOCKS_TABLE: number[] = [
   // L  M  Q  H
@@ -37,16 +38,16 @@ const EC_CODEWORDS_TABLE: number[] = [
  */
 export function getBlocksCount(
   version: number,
-  errorCorrectionLevel: number,
+  errorCorrectionLevel: ErrorCorrectionLevel,
 ): number | undefined {
   switch (errorCorrectionLevel) {
-    case L.bit:
+    case L:
       return EC_BLOCKS_TABLE[(version - 1) * 4];
-    case M.bit:
+    case M:
       return EC_BLOCKS_TABLE[(version - 1) * 4 + 1];
-    case Q.bit:
+    case Q:
       return EC_BLOCKS_TABLE[(version - 1) * 4 + 2];
-    case H.bit:
+    case H:
       return EC_BLOCKS_TABLE[(version - 1) * 4 + 3];
     default:
       return undefined;
@@ -61,30 +62,18 @@ export function getBlocksCount(
  * @param  {Number} errorCorrectionLevel Error correction level
  * @return {Number}                      Number of error correction codewords
  */
-<<<<<<< HEAD
-function getTotalCodewordsCount(version, errorCorrectionLevel) {
-  switch (errorCorrectionLevel) {
-    case ECLevel.L:
-      return EC_CODEWORDS_TABLE[(version - 1) * 4];
-    case ECLevel.M:
-      return EC_CODEWORDS_TABLE[(version - 1) * 4 + 1];
-    case ECLevel.Q:
-      return EC_CODEWORDS_TABLE[(version - 1) * 4 + 2];
-    case ECLevel.H:
-=======
 export function getTotalCodewordsCount(
   version: number,
-  errorCorrectionLevel: number,
+  errorCorrectionLevel: ErrorCorrectionLevel,
 ): number | undefined {
   switch (errorCorrectionLevel) {
-    case L.bit:
+    case L:
       return EC_CODEWORDS_TABLE[(version - 1) * 4];
-    case M.bit:
+    case M:
       return EC_CODEWORDS_TABLE[(version - 1) * 4 + 1];
-    case Q.bit:
+    case Q:
       return EC_CODEWORDS_TABLE[(version - 1) * 4 + 2];
-    case H.bit:
->>>>>>> efb7136 (Iterative typing phase one)
+    case H:
       return EC_CODEWORDS_TABLE[(version - 1) * 4 + 3];
     default:
       return undefined;

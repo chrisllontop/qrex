@@ -1,39 +1,39 @@
-import { Regex } from "./regex";
-import { VersionCheck } from "./version-check";
+import { isValid as _isValid } from './version-check'
+import { testNumeric, testAlphanumeric, testKanji } from './regex'
+import { type Mode } from "qrcode";
 
-export type Mode = {
-  id?: string;
-  bit: number;
-  ccBits?: Uint8Array;
-};
+const BITS_NUMERIC: Readonly<number[]> = [10, 12, 14];
+const BITS_BYTE: Readonly<number[]> = [8, 16, 16];
+const BITS_KANJI: Readonly<number[]> = [8, 10, 12];
+const BITS_ALPHANUMERIC: Readonly<number[]> = [9, 11, 13];
+const BITS_MIXED: Readonly<number[]> = [];
 
 export const NUMERIC: Mode = {
   id: 'Numeric',
   bit: 1 << 0,
-  ccBits: new Uint8Array([10, 12, 14]),
+  ccBits: BITS_NUMERIC
 };
 
 export const ALPHANUMERIC: Mode = {
   id: 'Alphanumeric',
   bit: 1 << 1,
-  ccBits: new Uint8Array([9, 11, 13]),
+  ccBits: BITS_ALPHANUMERIC
 };
 
 export const BYTE: Mode = {
   id: 'Byte',
   bit: 1 << 2,
-  ccBits: new Uint8Array([8, 16, 16]),
+  ccBits: BITS_BYTE
 };
 
 export const KANJI: Mode = {
   id: 'Kanji',
   bit: 1 << 3,
-  ccBits: new Uint8Array([8, 10, 12]),
+  ccBits: BITS_KANJI
 };
 
-export const MIXED: Mode = {
-  bit: -1,
-};
+// TODO: Implement MIXED type
+
 
 /**
  * Returns the number of bits needed to store the data length

@@ -1,4 +1,4 @@
-import { type Mode, NUMERIC, ALPHANUMERIC, BYTE, KANJI, getCharCountIndicator, getBestModeForData, from, toString } from './mode';
+import { NUMERIC, ALPHANUMERIC, BYTE, KANJI, getCharCountIndicator, getBestModeForData, from, toString } from './mode';
 import NumericData from './numeric-data';
 import { AlphanumericData } from './alphanumeric-data';
 import { ByteData } from './byte-data';
@@ -12,12 +12,13 @@ import {
 } from './regex';
 import { isKanjiModeEnabled } from './utils';
 import { find_path } from 'dijkstrajs';
+import { type Mode, type ModeId } from 'qrcode';
 
 export type Segment = {
-  mode: Mode;
+  data: any;
+  length?: any;
   index?: number;
-  length?: number;
-  data: string | Uint8Array;
+  mode: Mode<ModeId>;
 }
 
 export type Node = {
@@ -326,7 +327,7 @@ function buildSingleSegment(data: string, modesHint: Mode | string): Segment {
  * @param  {Array} array Array of objects with segments data
  * @return {Array}       Array of Segments
  */
-export function fromArray(array: Segment[] | string[]): Segment[] {
+export function fromArray(array: Segment[] | number[]): Segment[] {
   return array.reduce((acc: Segment[], seg: Segment) => {
     if (typeof seg === 'string') {
       acc.push(buildSingleSegment(seg, null));

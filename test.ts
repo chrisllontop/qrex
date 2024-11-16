@@ -16,7 +16,7 @@ spawn(
     "node_modules/.bin/tap",
     "--cov",
     "--100",
-    process.argv[2] || "test/**/*.test.js",
+    process.argv[2] || "test/**/*.test.ts",
   ],
   opt,
 );

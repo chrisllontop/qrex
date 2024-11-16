@@ -1,4 +1,4 @@
-import { type QRCodeToDataURLOptionsJpegWebp as RendererOptions, type QRCode } from "qrcode";
+import { type QRCodeToStringOptionsTerminal as QRCodeOptions, type QRCode } from "qrcode";
 
 const backgroundWhite = "\x1b[47m";
 const backgroundBlack = "\x1b[40m";
@@ -34,7 +34,7 @@ const createPalette = (
  * @param {number} y
  * @return {'0' | '1' | '2'}
  */
-const mkCodePixel = (modules: boolean[][], size: number, x: number, y: number): string => {
+const mkCodePixel = (modules: Uint8Array, size: number, x: number, y: number): string => {
   const sizePlus = size + 1;
   if (x >= sizePlus || y >= sizePlus || y < -1 || x < -1) return "0";
   if (x >= size || y >= size || y < 0 || x < 0) return "1";
@@ -50,11 +50,11 @@ const mkCodePixel = (modules: boolean[][], size: number, x: number, y: number): 
  * @param {number} y
  * @return {keyof palette}
  */
-const mkCode = (modules: boolean[][], size: number, x: number, y: number): number => (
+const mkCode = (modules: Uint8Array, size: number, x: number, y: number): string => (
   mkCodePixel(modules, size, x, y) + mkCodePixel(modules, size, x, y + 1)
 );
 
-export function render(qrData: QRCode, options: RenderOptions, cb: function) {
+export function render(qrData: QRCode, options: QRCodeOptions, cb: Function): string {
   const size = qrData.modules.size;
   const data = qrData.modules.data;
 

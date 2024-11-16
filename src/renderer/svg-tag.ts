@@ -1,86 +1,92 @@
 import { type QRCode } from "qrcode";
 import { type RGBAValue, getOptions } from "./utils";
+import { type ExtendedRendererOptions as RendererOptions } from "./utils";
 
-function getColorAttrib(color: RGBAValue, attrib: string): string {
-  const alpha = color.a / 255;
-  const str = `${attrib}="${color.hex}"`;
+class SvgTagRenderer {
 
-  return alpha < 1
-    ? `${str} ${attrib}-opacity="${alpha.toFixed(2).slice(1)}"`
-    : str;
-}
+  getColorAttrib(color: RGBAValue, attrib: string): string {
+    const alpha = color.a / 255;
+    const str = `${attrib}="${color.hex}"`;
 
-function svgCmd(cmd: string, x: number, y: number): string {
-  let str = cmd + x;
-  if (typeof y !== "undefined") str += ` ${y}`;
+    return alpha < 1
+      ? `${str} ${attrib}-opacity="${alpha.toFixed(2).slice(1)}"`
+      : str;
+  }
 
-  return str;
-}
+  svgCmd(cmd: string, x: number, y?: number): string {
+    let str = cmd + x;
+    if (typeof y !== "undefined") str += ` ${y}`;
 
-function qrToPath(data: Array<boolean>, size: number, margin: number) {
-  let path = "";
-  let moveBy = 0;
-  let newRow = false;
-  let lineLength = 0;
+    return str;
+  }
 
-  for (let i = 0; i < data.length; i++) {
-    const col = Math.floor(i % size);
-    const row = Math.floor(i / size);
+  qrToPath(data: Uint8Array, size: number, margin: number) {
+    let path = "";
+    let moveBy = 0;
+    let newRow = false;
+    let lineLength = 0;
 
-    if (!col && !newRow) newRow = true;
+    for (let i = 0; i < data.length; i++) {
+      const col = Math.floor(i % size);
+      const row = Math.floor(i / size);
 
-    if (data[i]) {
-      lineLength++;
+      if (!col && !newRow) newRow = true;
 
-      if (!(i > 0 && col > 0 && data[i - 1])) {
-        path += newRow
-          ? svgCmd("M", col + margin, 0.5 + row + margin)
-          : svgCmd("m", moveBy, 0);
+      if (data[i]) {
+        lineLength++;
 
-        moveBy = 0;
-        newRow = false;
+        if (!(i > 0 && col > 0 && data[i - 1])) {
+          path += newRow
+            ? this.svgCmd("M", col + margin, 0.5 + row + margin)
+            : this.svgCmd("m", moveBy, 0);
+
+          moveBy = 0;
+          newRow = false;
+        }
+
+        if (!(col + 1 < size && data[i + 1])) {
+          path += this.svgCmd("h", lineLength);
+          lineLength = 0;
+        }
+      } else {
+        moveBy++;
       }
-
-      if (!(col + 1 < size && data[i + 1])) {
-        path += svgCmd("h", lineLength);
-        lineLength = 0;
-      }
-    } else {
-      moveBy++;
     }
+
+    return path;
   }
 
-  return path;
-}
+  render(qrData: QRCode, options: RendererOptions, cb?: Function): string {
+    const opts = getOptions(options);
+    const size = qrData.modules.size;
+    const data = qrData.modules.data;
+    const qrcodesize = size + opts.margin * 2;
 
-export function render(qrData: QRCode, options: RendererOptions, cb: function): string {
-  const opts = getOptions(options);
-  const size = qrData.modules.size;
-  const data = qrData.modules.data;
-  const qrcodesize = size + opts.margin * 2;
+    const bg = !opts.color.light.a
+      ? ""
+      : `< path ${this.getColorAttrib(opts.color.light, "fill")
+      } d = "M0 0h${qrcodesize}v${qrcodesize}H0z" /> `;
 
-  const bg = !opts.color.light.a
-    ? ""
-    : `<path ${getColorAttrib(opts.color.light, "fill")} d="M0 0h${qrcodesize}v${qrcodesize}H0z"/>`;
+    const path =
+      `< path ${this.getColorAttrib(opts.color.dark, "stroke")} d = "${this.qrToPath(data, size, opts.margin)}" /> `;
 
-  const path = `<path ${getColorAttrib(opts.color.dark, "stroke")} d="${qrToPath(data, size, opts.margin)}"/>`;
+    const viewBox = `viewBox = "0 0 ${qrcodesize} ${qrcodesize}"`;
 
-  const viewBox = `viewBox="0 0 ${qrcodesize} ${qrcodesize}"`;
+    const width = !opts.width
+      ? ""
+      : `width = "${opts.width}" height = "${opts.width}" `;
 
-  const width = !opts.width
-    ? ""
-    : `width="${opts.width}" height="${opts.width}" `;
+    const svgTag =
+      `< svg xmlns = "http://www.w3.org/2000/svg" ${width}${viewBox} shape - rendering="crispEdges" > ${bg}${path} </svg>
+        `;
 
-  const svgTag = `<svg xmlns="http://www.w3.org/2000/svg" ${width}${viewBox} shape-rendering="crispEdges">${bg}${path}</svg>
-`;
+    if (typeof cb === "function") {
+      cb(null, svgTag);
+    }
 
-  if (typeof cb === "function") {
-    cb(null, svgTag);
+    return svgTag;
   }
 
-  return svgTag;
 }
 
-export const RendererSvgTag = {
-  render,
-};
+export default new SvgTagRenderer;

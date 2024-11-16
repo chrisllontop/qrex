@@ -1,11 +1,11 @@
-import { type Mode } from "./mode";
+import { type ErrorCorrectionLevel } from "qrcode";
 
-export const L: Mode = { bit: 1 };
-export const M: Mode = { bit: 0 };
-export const Q: Mode = { bit: 3 };
-export const H: Mode = { bit: 2 };
+export const L: ErrorCorrectionLevel = { bit: 1 };
+export const M: ErrorCorrectionLevel = { bit: 0 };
+export const Q: ErrorCorrectionLevel = { bit: 3 };
+export const H: ErrorCorrectionLevel = { bit: 2 };
 
-function fromString(errStr: string): Mode {
+function fromString(errStr: string): ErrorCorrectionLevel {
   const lcStr = errStr.toLowerCase()
 
   switch (lcStr) {
@@ -30,13 +30,13 @@ function fromString(errStr: string): Mode {
   }
 }
 
-export function isValid(level: Mode): boolean {
+export function isValid(level: ErrorCorrectionLevel): boolean {
   return (
     level && typeof level.bit !== 'undefined' && level.bit >= 0 && level.bit < 4
   );
 }
 
-export function from(value: Mode | string, defaultValue: Mode): Mode {
+export function from(value: ErrorCorrectionLevel | string, defaultValue: ErrorCorrectionLevel): ErrorCorrectionLevel {
   if (typeof value !== 'string') {
     return isValid(value) ? value : defaultValue;
   } else {

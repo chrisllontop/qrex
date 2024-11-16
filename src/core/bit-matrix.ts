@@ -7,7 +7,7 @@ import { type BitMatrix as BMatrix } from "qrcode";
 export class BitMatrix implements BMatrix {
   size: number;
   data: Uint8Array;
-  reservedBit: Array<boolean>;
+  reservedBit: Uint8Array;
 
   constructor(size: number) {
     if (!size || size < 1) {
@@ -16,7 +16,7 @@ export class BitMatrix implements BMatrix {
 
     this.size = size;
     this.data = new Uint8Array(size * size);
-    this.reservedBit = new Array(size * size).fill(false);
+    this.reservedBit = new Uint8Array(size * size);
   }
 
   /**
@@ -31,7 +31,7 @@ export class BitMatrix implements BMatrix {
   set(row: number, col: number, value: number, reserved: boolean): void {
     const index = row * this.size + col;
     this.data[index] = value;
-    if (reserved) this.reservedBit[index] = true;
+    if (reserved) this.reservedBit[index] = 1;
   }
 
   /**
@@ -53,7 +53,7 @@ export class BitMatrix implements BMatrix {
    * @param {Number}  col
    * @param {Boolean} value
    */
-  xor(row: number, col: number, value: boolean): void {
+  xor(row: number, col: number, value: number): void {
     this.data[row * this.size + col] ^= value;
   }
 
@@ -64,7 +64,7 @@ export class BitMatrix implements BMatrix {
    * @param {Number}   col
    * @return {Boolean}
    */
-  isReserved(row: number, col: number): boolean {
+  isReserved(row: number, col: number): number {
     return this.reservedBit[row * this.size + col];
   }
 }

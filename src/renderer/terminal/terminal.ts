@@ -1,6 +1,6 @@
-import { type QRCodeToDataURLOptionsJpegWebp as RendererOptions, type QRCode } from "qrcode";
+import { type QRCodeToStringOptionsTerminal as QRCodeOptions, type QRCode } from "qrcode";
 
-export function render(qrData: QRCode, options: RendererOptions, cb: function): string {
+export function render(qrData: QRCode, options: QRCodeOptions, cb: Function): string {
   const size = qrData.modules.size;
   const data = qrData.modules.data;
 

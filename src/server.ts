@@ -1,18 +1,20 @@
 import canPromise from "./can-promise";
-import { QRCode } from "./core/qrcode";
-import { RendererPng } from "./renderer/png";
-import { RendererSvg } from "./renderer/svg";
-import { RendererTerminal } from "./renderer/terminal";
-import { RendererUtf8 } from "./renderer/utf8";
+import * as QRCode from "./core/qrcode";
+import PngRenderer from "./renderer/png";
+import Utf8Renderer from "./renderer/utf8";
+import TerminalRenderer from "./renderer/terminal";
+import SvgRenderer from "./renderer/svg";
+import { type Stream } from "stream";
+import { type ExtendedRendererOptions as RendererOptions, type Renderer } from "./renderer/utils";
 
-import { toCanvas as browserToCanvas } from "./browser";
+// export type Renderer = PngRenderer | Utf8Renderer | TerminalRenderer | SvgRenderer;
 
 export type Parameters = {
-  cb: function;
-  opts: Object;
-}
+  cb: Function;
+  opts: RendererOptions;
+};
 
-function checkParams(text: string | undefined, opts: Object, cb: function | undefined): Parameters {
+function checkParams(text: string | undefined, opts: RendererOptions, cb?: Function): Parameters {
   if (typeof text === "undefined") {
     throw new Error("String required as first argument");
   }
@@ -40,7 +42,7 @@ function getTypeFromFilename(path: string): string {
   return path.slice(((path.lastIndexOf(".") - 1) >>> 0) + 2).toLowerCase();
 }
 
-function getRendererFromType(type: string) {
+function getRendererFromType(type: string): Renderer {
   switch (type) {
     case "svg":
       return RendererSvg;
@@ -53,7 +55,7 @@ function getRendererFromType(type: string) {
   }
 }
 
-function getStringRendererFromType(type: string) {
+function getStringRendererFromType(type: string): Renderer {
   switch (type) {
     case "svg":
       return RendererSvg;
@@ -65,7 +67,7 @@ function getStringRendererFromType(type: string) {
   }
 }
 
-function render(renderFunc: function, text: string, params: Parameters) {
+function render(renderFunc: Function, text: string, params: Parameters) {
   if (!params.cb) {
     return new Promise((resolve, reject) => {
       try {
@@ -91,26 +93,26 @@ export const create = QRCode.create;
 
 export const toCanvas = browserToCanvas;
 
-export function toString(text: string, opts: Object, cb: function) {
+export function toString(text: string, opts: RendererOptions, cb: Function) {
   const params = checkParams(text, opts, cb);
   const type = params.opts ? params.opts.type : undefined;
   const renderer = getStringRendererFromType(type);
   return render(renderer.render, text, params);
 }
 
-export function toDataURL(text: string, opts: Object, cb: function) {
+export function toDataURL(text: string, opts: RendererOptions, cb: Function) {
   const params = checkParams(text, opts, cb);
   const renderer = getRendererFromType(params.opts.type);
   return render(renderer.renderToDataURL, text, params);
 }
 
-export function toBuffer(text: string, opts: Object, cb: function) {
+export function toBuffer(text: string, opts: RendererOptions, cb: Function) {
   const params = checkParams(text, opts, cb);
   const renderer = getRendererFromType(params.opts.type);
   return render(renderer.renderToBuffer, text, params);
 }
 
-export function toFile(path: string, text: string, opts: Object, cb: function) {
+export function toFile(path: string, text: string, opts: RendererOptions, cb: Function) {
   if (
     typeof path !== "string" ||
     !(typeof text === "string" || typeof text === "object")
@@ -130,7 +132,7 @@ export function toFile(path: string, text: string, opts: Object, cb: function) {
   return render(renderToFile, text, params);
 }
 
-export function toFileStream(stream, text: string, opts: Object) {
+export function toFileStream(stream: Stream, text: string, opts: RendererOptions) {
   if (arguments.length < 2) {
     throw new Error("Too few arguments provided");
   }

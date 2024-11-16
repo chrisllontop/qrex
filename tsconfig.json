@@ -15,7 +15,8 @@
       ]
     },
     "lib": [
-      "esnext"
+      "esnext",
+      "dom"
     ],
     "types": [
       "node"

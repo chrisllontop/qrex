@@ -1,5 +1,6 @@
-import { BYTE, type Mode } from "./mode";
+import { BYTE } from "./mode";
 import { BitBuffer } from "./bit-buffer";
+import { type Mode } from "qrcode";
 
 export class ByteData {
   mode: Mode;

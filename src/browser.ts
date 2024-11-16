@@ -1,23 +1,14 @@
-import canPromise from "./can-promise";
-import { QRCode } from "./core/qrcode";
-import { RendererCanvas } from "./renderer/canvas";
-import { RendererSvgTag } from "./renderer/svg-tag.js";
-
-<<<<<<< HEAD:src/browser.js
-function renderCanvas(renderFunc, canvas, text, opts, cb) {
-  const args = [].slice.call(arguments, 1);
-  const argsNum = args.length;
-  const isLastArgCb = typeof args[argsNum - 1] === "function";
-=======
+import canPromise from './can-promise'
 import { create as qrCodeCreate } from './core/qrcode'
 import { render as canvasRender, renderToDataURL } from './renderer/canvas'
-import { render as svgTagRender } from './renderer/svg-tag'
+import SvgTagRenderer from './renderer/svg-tag'
 
-function renderCanvas(renderFunc: function, canvas: HTMLCanvasElement, text: string, opts: Object, cb: function | undefined) {
+import { type QRCodeOptions } from "qrcode"
+
+function renderCanvas(renderFunc: Function, canvas?: HTMLCanvasElement, text?: string, opts?: QRCodeOptions, cb?: Function): Promise<any> {
   const args = [].slice.call(arguments, 1)
   const argsNum = args.length
   const isLastArgCb = typeof args[argsNum - 1] === 'function'
->>>>>>> 7f3a634 (Modify source extensions to ts):src/browser.ts
 
   if (!isLastArgCb && !canPromise()) {
     throw new Error("Callback required as last argument");
@@ -82,6 +73,4 @@ export const toDataURL = renderCanvas.bind(
   RendererCanvas.renderToDataURL,
 );
 
-export const toString = renderCanvas.bind(null, (data, _, opts) =>
-  RendererSvgTag.render(data, opts),
-);
+export const toString = renderCanvas.bind(null, (data, _, opts) => SvgTagRenderer.render(data, opts));

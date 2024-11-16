@@ -1,5 +1,6 @@
-import { type Mode, NUMERIC } from "./mode";
+import { NUMERIC } from "./mode";
 import { BitBuffer } from "./bit-buffer";
+import { type Mode } from "qrcode";
 
 class NumericData {
   mode: Mode;

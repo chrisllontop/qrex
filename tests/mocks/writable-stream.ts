@@ -5,24 +5,24 @@ function WritableStream() {
   stream.Writable.call(this);
   this.forceError = false;
 
-  this.once("finish", function () {
+  this.once("finish", () => {
     this.close();
   });
 }
 
 util.inherits(WritableStream, stream.Writable);
 
-WritableStream.prototype._write = function (data, encoding, cb) {
+WritableStream.prototype._write = (data, encoding, cb) => {
   if (this.forceError) this.emit("error", new Error("Fake error"));
   cb(this.forceError || null);
 };
 
-WritableStream.prototype.close = function (cb) {
+WritableStream.prototype.close = (cb) => {
   this.emit("close");
   if (cb) cb();
 };
 
-WritableStream.prototype.forceErrorOnWrite = function () {
+WritableStream.prototype.forceErrorOnWrite = () => {
   this.forceError = true;
   return this;
 };

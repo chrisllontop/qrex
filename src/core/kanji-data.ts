@@ -1,6 +1,7 @@
-import { KANJI, type Mode } from "./mode";
+import { KANJI } from "./mode";
 import { BitBuffer } from "./bit-buffer";
 import { toSJIS } from "./utils";
+import { type Mode } from "qrcode";
 
 export class KanjiData {
   mode: Mode;

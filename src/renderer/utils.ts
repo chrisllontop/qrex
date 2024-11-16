@@ -1,4 +1,16 @@
 import { type QRCodeToDataURLOptionsJpegWebp as RendererOptions, type QRCode } from "qrcode";
+import { type Stream } from "stream";
+import { type QRCodeToStringOptionsTerminal as QRCodeOptions } from "qrcode";
+
+export type Modify<T, R> = Omit<T, keyof R> & R;
+
+export type Renderer = {
+  render: (qrData: QRCode, options: ExtendedRendererOptions | QRCodeOptions, cb?: Function) => string;
+  renderToDataURL?: (qrData: QRCode, options: ExtendedRendererOptions, cb: Function) => void;
+  renderToBuffer?: (qrData: QRCode, options: ExtendedRendererOptions, cb: Function) => void;
+  renderToFileStream?: (stream: Stream, qrData: QRCode, options: ExtendedRendererOptions) => void;
+  renderToFile?: (path: string, qrData: QRCode, options: ExtendedRendererOptions, cb?: Function) => void;
+}
 
 export type RGBAValue = {
   r: number;
@@ -6,7 +18,16 @@ export type RGBAValue = {
   b: number;
   a: number;
   hex: string;
-}
+};
+
+export type Palette = {
+  light: RGBAValue;
+  dark: RGBAValue;
+};
+
+export type ExtendedRendererOptions = Modify<RendererOptions, {
+  color: Palette;
+}>;
 
 function hex2rgba(hex: number | string): RGBAValue {
   if (typeof hex === "number") {
@@ -22,7 +43,7 @@ function hex2rgba(hex: number | string): RGBAValue {
     throw new Error(`Invalid hex color: ${hex}`);
   }
 
-  // Convert from short to long form (fff -> ffffff)
+  // Convert from short to long form (fff -> ffffff
   if (hexCode.length === 3 || hexCode.length === 4) {
     hexCode = Array.prototype.concat.apply(
       [],
@@ -44,7 +65,7 @@ function hex2rgba(hex: number | string): RGBAValue {
   };
 }
 
-export function getOptions(options: RendererOptions | undefined): RendererOptions {
+export function getOptions(options: ExtendedRendererOptions | undefined): ExtendedRendererOptions {
   if (!options) options = {};
   if (!options.color) options.color = {};
 
@@ -64,26 +85,26 @@ export function getOptions(options: RendererOptions | undefined): RendererOption
     scale: width ? 4 : scale,
     margin: margin,
     color: {
-      dark: hex2rgba(options.color.dark || "#000000ff"),
-      light: hex2rgba(options.color.light || "#ffffffff"),
+      dark: hex2rgba(options.color.dark.hex || "#000000ff"),
+      light: hex2rgba(options.color.light.hex || "#ffffffff"),
     },
     type: options.type,
     rendererOpts: options.rendererOpts || {},
   };
 }
 
-export function getScale(qrSize: number, opts: RendererOptions): number {
+export function getScale(qrSize: number, opts: ExtendedRendererOptions): number {
   return opts.width && opts.width >= qrSize + opts.margin * 2
     ? opts.width / (qrSize + opts.margin * 2)
     : opts.scale;
 }
 
-export function getImageWidth(qrSize: number, opts: RendererOptions): number {
+export function getImageWidth(qrSize: number, opts: ExtendedRendererOptions): number {
   const scale = getScale(qrSize, opts);
   return Math.floor((qrSize + opts.margin * 2) * scale);
 }
 
-export function qrToImageData(imgData: Array<number>, qr: QRCode, opts: RendererOptions) {
+export function qrToImageData(imgData: Uint8ClampedArray, qr: QRCode, opts: ExtendedRendererOptions) {
   const size = qr.modules.size;
   const data = qr.modules.data;
   const scale = getScale(size, opts);

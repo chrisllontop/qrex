@@ -1,6 +1,7 @@
 import { BitMatrix } from "./bit-matrix";
+import { type QRCodeMaskPattern } from "qrcode";
 
-export const Patterns = {
+export const Patterns: Record<string, QRCodeMaskPattern> = {
   PATTERN000: 0,
   PATTERN001: 1,
   PATTERN010: 2,
@@ -28,7 +29,7 @@ const PenaltyScores = {
  * @param  {Number}  mask    Mask pattern
  * @return {Boolean}         true if valid, false otherwise
  */
-export function isValid(mask: number): boolean {
+export function isValid(mask: QRCodeMaskPattern): boolean {
   return mask != null && !isNaN(mask) && mask >= 0 && mask <= 7;
 }
 
@@ -39,9 +40,9 @@ export function isValid(mask: number): boolean {
  * @param  {Number|String} value        Mask pattern value
  * @return {Number}                     Valid mask pattern or undefined
  */
-export function from(value: number | string): number {
+export function from(value: QRCodeMaskPattern | string): number {
   const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
-  return isValid(numValue) ? numValue : undefined;
+  return isValid(numValue as QRCodeMaskPattern) ? numValue : undefined;
 }
 
 /**
@@ -168,24 +169,24 @@ export function getPenaltyN4(data): number {
  * @param  {Number} j           Column
  * @return {Boolean}            Mask value
  */
-function getMaskAt(maskPattern: number, i: number, j: number): boolean {
+function getMaskAt(maskPattern: QRCodeMaskPattern, i: number, j: number): number {
   switch (maskPattern) {
     case Patterns.PATTERN000:
-      return (i + j) % 2 === 0;
+      return (i + j) % 2;
     case Patterns.PATTERN001:
-      return i % 2 === 0;
+      return i % 2;
     case Patterns.PATTERN010:
-      return j % 3 === 0;
+      return j % 3;
     case Patterns.PATTERN011:
-      return (i + j) % 3 === 0;
+      return (i + j) % 3;
     case Patterns.PATTERN100:
-      return (Math.floor(i / 2) + Math.floor(j / 3)) % 2 === 0;
+      return (Math.floor(i / 2) + Math.floor(j / 3)) % 2;
     case Patterns.PATTERN101:
-      return ((i * j) % 2) + ((i * j) % 3) === 0;
+      return ((i * j) % 2) + ((i * j) % 3);
     case Patterns.PATTERN110:
-      return (((i * j) % 2) + ((i * j) % 3)) % 2 === 0;
+      return (((i * j) % 2) + ((i * j) % 3)) % 2;
     case Patterns.PATTERN111:
-      return (((i * j) % 3) + ((i + j) % 2)) % 2 === 0;
+      return (((i * j) % 3) + ((i + j) % 2)) % 2;
 
     default:
       throw new Error(`bad maskPattern:${maskPattern}`);
@@ -198,7 +199,7 @@ function getMaskAt(maskPattern: number, i: number, j: number): boolean {
  * @param  {Number}    pattern Pattern reference number
  * @param  {BitMatrix} data    BitMatrix data
  */
-export function applyMask(pattern: number, data: BitMatrix): void {
+export function applyMask(pattern: QRCodeMaskPattern, data: BitMatrix): void {
   const size = data.size;
 
   for (let col = 0; col < size; col++) {
@@ -216,14 +217,16 @@ export function applyMask(pattern: number, data: BitMatrix): void {
  * @param setupFormatFunc
  * @return {Number} Mask pattern reference number
  */
-export function getBestMask(data: BitMatrix, setupFormatFunc): number {
+export function getBestMask(data: BitMatrix, setupFormatFunc: Function): QRCodeMaskPattern {
   const numPatterns = Object.keys(Patterns).length;
-  let bestPattern = 0;
+  let bestPattern;
   let lowerPenalty = Infinity;
 
   for (let p = 0; p < numPatterns; p++) {
-    setupFormatFunc(p);
-    applyMask(p, data);
+    const mask = Object.values(Patterns)[p];
+
+    setupFormatFunc(mask);
+    applyMask(mask, data);
 
     // Calculate penalty
     const penalty =
@@ -233,11 +236,11 @@ export function getBestMask(data: BitMatrix, setupFormatFunc): number {
       getPenaltyN4(data);
 
     // Undo previously applied mask
-    applyMask(p, data);
+    applyMask(mask, data);
 
     if (penalty < lowerPenalty) {
       lowerPenalty = penalty;
-      bestPattern = p;
+      bestPattern = mask;
     }
   }
 

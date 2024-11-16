@@ -1,6 +1,6 @@
-import { type Mode, ALPHANUMERIC } from "./mode";
+import { ALPHANUMERIC } from "./mode";
 import { BitBuffer } from "./bit-buffer";
-
+import { type Mode } from "qrcode";
 /**
  * Array of characters available in alphanumeric mode
  *

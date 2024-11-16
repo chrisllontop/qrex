@@ -1,10 +1,11 @@
 import { getImageWidth, getOptions, qrToImageData } from "./utils";
-import { type QRCodeToDataURLOptionsJpegWebp as RendererOptions, type QRCode } from "qrcode";
+import { type QRCode } from "qrcode";
+import { type ExtendedRendererOptions as RendererOptions } from "./utils";
 
 function clearCanvas(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, size: number): void {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  if (!canvas.style) canvas.style = {};
+  // if (!canvas.style) canvas.style = {};
   canvas.height = size;
   canvas.width = size;
   canvas.style.height = `${size}px`;
@@ -19,7 +20,7 @@ function getCanvasElement(): HTMLCanvasElement {
   }
 }
 
-export function render(qrData, canvas: HTMLCanvasElement, options: RendererOptions): HTMLCanvasElement {
+export function render(qrData: QRCode, canvas: HTMLCanvasElement, options: RendererOptions): HTMLCanvasElement {
   let opts = options;
   let canvasEl = canvas;
 

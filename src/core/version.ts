@@ -1,9 +1,10 @@
 import { getBCHDigit, getSymbolTotalCodewords } from './utils';
 import { getTotalCodewordsCount } from './error-correction-code';
 import { from as _from, M } from './error-correction-level';
-import { type Mode, getCharCountIndicator, MIXED, BYTE, NUMERIC, ALPHANUMERIC, KANJI } from './mode';
+import { getCharCountIndicator, BYTE, NUMERIC, ALPHANUMERIC, KANJI } from './mode';
 import { isValid } from './version-check';
 import { type Segment } from './segments';
+import { type Mode, type ErrorCorrectionLevel } from 'qrcode';
 
 // Generator polynomial used to encode version information
 const G18 =
@@ -18,7 +19,7 @@ const G18 =
 
 const G18_BCH = getBCHDigit(G18);
 
-function getBestVersionForDataLength(mode: Mode, length: number, errorCorrectionLevel: number): number | undefined {
+function getBestVersionForDataLength(mode: Mode, length: number, errorCorrectionLevel: ErrorCorrectionLevel): number | undefined {
   for (let currentVersion = 1; currentVersion <= 40; currentVersion++) {
     if (
       length <= getCapacity(currentVersion, errorCorrectionLevel, mode)
@@ -46,11 +47,16 @@ function getTotalBitsFromDataArray(segments: Segment[], version: number): number
   return totalBits;
 }
 
-function getBestVersionForMixedData(segments: Segment[], errorCorrectionLevel: number): number | undefined {
+function getBestVersionForMixedData(segments: Segment[], errorCorrectionLevel: ErrorCorrectionLevel): number | undefined {
   for (let currentVersion = 1; currentVersion <= 40; currentVersion++) {
     const length = getTotalBitsFromDataArray(segments, currentVersion);
     if (
+<<<<<<< HEAD
       length <= getCapacity(currentVersion, errorCorrectionLevel, Mode.MIXED)
+=======
+      length <=
+      getCapacity(currentVersion, errorCorrectionLevel, BYTE) // TODO: Implement MIXED type
+>>>>>>> 442a9de (Remodel renderers as classes)
     ) {
       return currentVersion;
     }
@@ -67,13 +73,7 @@ function getBestVersionForMixedData(segments: Segment[], errorCorrectionLevel: n
  * @param  {Number}        defaultValue Fallback value
  * @return {Number}                     QR Code version number
  */
-export function from({
-  value,
-  defaultValue = 0
-}: {
-  value: number | string;
-  defaultValue: number;
-}): number {
+export function from(value: number | string, defaultValue?: number): number {
   if (typeof value === 'string') {
     value = Number.parseInt(value.toString(), 10);
   }
@@ -92,7 +92,7 @@ export function from({
  */
 export function getCapacity(
   version: number,
-  errorCorrectionLevel: number,
+  errorCorrectionLevel: ErrorCorrectionLevel,
   mode: Mode,
 ): number {
   if (!isValid(version)) {
@@ -114,7 +114,7 @@ export function getCapacity(
   // Total number of data codewords
   const dataTotalCodewordsBits = (totalCodewords - ecTotalCodewords) * 8;
 
-  if (mode === MIXED) return dataTotalCodewordsBits;
+  if (mode.bit === -1) return dataTotalCodewordsBits;
 
   const usableBits =
     dataTotalCodewordsBits - getReservedBitsCount(mode, version);
@@ -143,7 +143,7 @@ export function getCapacity(
  */
 export function getBestVersionForData(
   data: Segment,
-  errorCorrectionLevel: number,
+  errorCorrectionLevel: ErrorCorrectionLevel,
 ): number {
   let seg;
 
@@ -151,7 +151,7 @@ export function getBestVersionForData(
 
   if (Array.isArray(data)) {
     if (data.length > 1) {
-      return getBestVersionForMixedData(data, ecl.bit);
+      return getBestVersionForMixedData(data, ecl);
     }
 
     if (data.length === 0) {
@@ -163,7 +163,7 @@ export function getBestVersionForData(
     seg = data;
   }
 
-  return getBestVersionForDataLength(seg.mode, seg.getLength(), ecl.bit);
+  return getBestVersionForDataLength(seg.mode, seg.getLength(), ecl);
 }
 // TODO: Dicuss whether 'ecl' is supposed to be a Mode type, and question the lackof a mode param
 

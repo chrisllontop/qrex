@@ -1,5 +1,5 @@
-const spawn = require("node:child_process").spawn;
-const path = require("node:path");
+import spawn from "node:spawn";
+import path from "node:path";
 
 const opt = {
   cwd: __dirname,
@@ -16,6 +16,7 @@ spawn(
     "node_modules/.bin/tap",
     "--cov",
     "--100",
+    "--typescript"
     process.argv[2] || "test/**/*.test.ts",
   ],
   opt,

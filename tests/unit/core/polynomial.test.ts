@@ -1,7 +1,9 @@
-const test = require("tap").test;
-const Poly = require("core/polynomial");
+import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
-test("Generator polynomial", function (t) {
+import { test } from "tap";
+import Poly from "core/polynomial";
+
+test("Generator polynomial", (t: AssertionHandler) => {
   const result = Poly.generateECPolynomial(0);
   t.ok(result instanceof Uint8Array, "Should return an Uint8Array");
   t.deepEqual(
@@ -21,7 +23,7 @@ test("Generator polynomial", function (t) {
   t.end();
 });
 
-test("Polynomial", function (t) {
+test("Polynomial", (t: AssertionHandler) => {
   const p1 = [0, 1, 2, 3, 4];
   const p2 = [5, 6];
 

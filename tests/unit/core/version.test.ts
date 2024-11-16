@@ -1,16 +1,19 @@
-const test = require("tap").test;
-const Version = require("core/version");
-const VersionCheck = require("core/version-check");
-const ECLevel = require("core/error-correction-level");
-const Mode = require("core/mode");
-const NumericData = require("core/numeric-data");
-const AlphanumericData = require("core/alphanumeric-data");
-const KanjiData = require("core/kanji-data");
-const ByteData = require("core/byte-data");
+import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
+
+import { test } from "tap";
+import BitBuffer from "core/bit-buffer";
+import KanjiData from "core/kanji-data";
+import NumericData from "core/numeric-data";
+import AlphanumericData from "core/alphanumeric-data";
+import Version from "core/version";
+import VersionCheck from "core/version-check";
+import ECLevel from "core/error-correction-level";
+import ByteData from "core/byte-data";
+import Mode from "core/mode";
 
 const EC_LEVELS = [ECLevel.L, ECLevel.M, ECLevel.Q, ECLevel.H];
 
-const EXPECTED_NUMERIC_CAPACITY = [
+const EXPECTED_NUMERIC_CAPACITY: Array<number[]> = [
   [41, 34, 27, 17],
   [77, 63, 48, 34],
   [127, 101, 77, 58],
@@ -53,7 +56,7 @@ const EXPECTED_NUMERIC_CAPACITY = [
   [7089, 5596, 3993, 3057],
 ];
 
-const EXPECTED_ALPHANUMERIC_CAPACITY = [
+const EXPECTED_ALPHANUMERIC_CAPACITY: Array<number[]> = [
   [25, 20, 16, 10],
   [47, 38, 29, 20],
   [77, 61, 47, 35],
@@ -96,7 +99,7 @@ const EXPECTED_ALPHANUMERIC_CAPACITY = [
   [4296, 3391, 2420, 1852],
 ];
 
-const EXPECTED_KANJI_CAPACITY = [
+const EXPECTED_KANJI_CAPACITY: Array<number[]> = [
   [10, 8, 7, 4],
   [20, 16, 12, 8],
   [32, 26, 20, 15],
@@ -139,7 +142,7 @@ const EXPECTED_KANJI_CAPACITY = [
   [1817, 1435, 1024, 784],
 ];
 
-const EXPECTED_BYTE_CAPACITY = [
+const EXPECTED_BYTE_CAPACITY: Array<number[]> = [
   [17, 14, 11, 7],
   [32, 26, 20, 14],
   [53, 42, 32, 24],
@@ -182,7 +185,7 @@ const EXPECTED_BYTE_CAPACITY = [
   [2953, 2331, 1663, 1273],
 ];
 
-const EXPECTED_VERSION_BITS = [
+const EXPECTED_VERSION_BITS: Array<number[]> = [
   0x07c94, 0x085bc, 0x09a99, 0x0a4d3, 0x0bbf6, 0x0c762, 0x0d847, 0x0e60d,
   0x0f928, 0x10b78, 0x1145d, 0x12a17, 0x13532, 0x149a6, 0x15683, 0x168c9,
   0x177ec, 0x18ec4, 0x191e1, 0x1afab, 0x1b08e, 0x1cc1a, 0x1d33f, 0x1ed75,
@@ -190,7 +193,7 @@ const EXPECTED_VERSION_BITS = [
   0x27541, 0x28c69,
 ];
 
-test("Version validity", function (t) {
+test("Version validity", (t: AssertionHandler) => {
   t.notOk(VersionCheck.isValid(), "Should return false if no input");
   t.notOk(
     VersionCheck.isValid(""),
@@ -208,7 +211,7 @@ test("Version validity", function (t) {
   t.end();
 });
 
-test("Version from value", function (t) {
+test("Version from value", (t: AssertionHandler) => {
   t.equal(Version.from(5), 5, "Should return correct version from a number");
   t.equal(Version.from("5"), 5, "Should return correct version from a string");
   t.equal(
@@ -225,17 +228,17 @@ test("Version from value", function (t) {
   t.end();
 });
 
-test("Version capacity", function (t) {
-  t.throws(function () {
+test("Version capacity", (t: AssertionHandler) => {
+  t.throws(() => {
     Version.getCapacity();
   }, "Should throw if version is undefined");
-  t.throws(function () {
+  t.throws(() => {
     Version.getCapacity("");
   }, "Should throw if version is not a number");
-  t.throws(function () {
+  t.throws(() => {
     Version.getCapacity(0);
   }, "Should throw if version is not in range");
-  t.throws(function () {
+  t.throws(() => {
     Version.getCapacity(41);
   }, "Should throw if version is not in range");
 
@@ -276,7 +279,7 @@ test("Version capacity", function (t) {
   t.end();
 });
 
-test("Version best match", function (t) {
+test("Version best match", (t: AssertionHandler) => {
   function testBestVersionForCapacity(expectedCapacity, DataCtor) {
     for (let v = 0; v < 40; v++) {
       for (let l = 0; l < EC_LEVELS.length; l++) {
@@ -356,11 +359,11 @@ test("Version best match", function (t) {
   t.end();
 });
 
-test("Version encoded info", function (t) {
+test("Version encoded info", (t: AssertionHandler) => {
   let v;
 
   for (v = 0; v < 7; v++) {
-    t.throws(function () {
+    t.throws(() => {
       Version.getEncodedBits(v);
     }, "Should throw if version is invalid or less than 7");
   }

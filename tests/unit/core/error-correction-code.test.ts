@@ -1,11 +1,14 @@
-const test = require("tap").test;
-const Utils = require("core/utils");
-const Version = require("core/version");
-const ECLevel = require("core/error-correction-level");
-const ECCode = require("core/error-correction-code");
-const Mode = require("core/mode");
+import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
-test("Error correction codewords", function (t) {
+import { test } from "tap";
+import BitBuffer from "core/bit-buffer";
+import Utils from "core/utils";
+import Version from "core/version";
+import ECLevel from "core/error-correction-level";
+import ECCode from "core/error-correction-code";
+import Mode from "core/mode";
+
+test("Error correction codewords", (t: AssertionHandler) => {
   const levels = [ECLevel.L, ECLevel.M, ECLevel.Q, ECLevel.H];
 
   for (let v = 1; v <= 40; v++) {
@@ -37,7 +40,7 @@ test("Error correction codewords", function (t) {
   t.end();
 });
 
-test("Error correction blocks", function (t) {
+test("Error correction blocks", (t: AssertionHandler) => {
   const levels = [ECLevel.L, ECLevel.M, ECLevel.Q, ECLevel.H];
 
   for (let v = 1; v <= 40; v++) {

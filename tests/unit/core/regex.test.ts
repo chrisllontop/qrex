@@ -1,7 +1,9 @@
-const test = require("tap").test;
-const Regex = require("core/regex");
+import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
-test("Regex", function (t) {
+import { test } from "tap";
+import Regex from "core/regex";
+
+test("Regex", (t: AssertionHandler) => {
   t.ok(Regex.NUMERIC instanceof RegExp, "Should export a regex for NUMERIC");
 
   t.ok(
@@ -21,7 +23,7 @@ test("Regex", function (t) {
   t.end();
 });
 
-test("Regex test", function (t) {
+test("Regex test", (t: AssertionHandler) => {
   t.ok(Regex.testNumeric("123456"), "Should return true if is a number");
   t.notOk(
     Regex.testNumeric("a12345"),

@@ -1,7 +1,9 @@
-const test = require("tap").test;
-const BitBuffer = require("core/bit-buffer");
+import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
-test("Bit Buffer", function (t) {
+import { test } from "tap";
+import BitBuffer from "core/bit-buffer";
+
+test("Bit Buffer", (t: AssertionHandler) => {
   const testData = 0x41; // 'A'
   const expectedDataBits = [
     false,

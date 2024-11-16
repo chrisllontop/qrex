@@ -1,9 +1,11 @@
-const test = require("tap").test;
-const BitBuffer = require("core/bit-buffer");
-const ByteData = require("core/byte-data");
-const Mode = require("core/mode");
+import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
-test("Byte Data: String Input", function (t) {
+import { test } from "tap";
+import BitBuffer from "core/bit-buffer";
+import ByteData from "core/byte-data";
+import Mode from "core/mode";
+
+test("Byte Data: String Input", (t: AssertionHandler) => {
   const text = "1234";
   const textBitLength = 32;
   const textByte = [49, 50, 51, 52]; // 1, 2, 3, 4
@@ -37,7 +39,7 @@ test("Byte Data: String Input", function (t) {
   t.end();
 });
 
-test("Byte Data: Byte Input", function (t) {
+test("Byte Data: Byte Input", (t: AssertionHandler) => {
   const bytes = new Uint8ClampedArray([1, 231, 32, 22]);
 
   const byteData = new ByteData(bytes);

@@ -1,9 +1,11 @@
-const test = require("tap").test;
-const { Canvas, createCanvas } = require("canvas");
-const QRCode = require("src");
-const Helpers = require("test/helpers");
+import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
-test("toCanvas - no promise available", (t) => {
+import { test } from "tap";
+import { Canvas, createCanvas } from "canvas";
+import QRCode from "src";
+import Helpers from "test/helpers";
+
+test("toCanvas - no promise available", (t: AssertionHandler) => {
   Helpers.removeNativePromise();
 
   // Mock document object
@@ -38,10 +40,10 @@ test("toCanvas - no promise available", (t) => {
   Helpers.restoreNativePromise();
 });
 
-test("toCanvas", (t) => {
+test("toCanvas", (t: AssertionHandler) => {
   // Mock document object
   global.document = {
-    createElement: (el) => {
+    createElement: (el: string) => {
       if (el === "canvas") {
         return createCanvas(200, 200);
       }
@@ -54,7 +56,7 @@ test("toCanvas", (t) => {
     QRCode.toCanvas();
   }, "Should throw if no arguments are provided");
 
-  QRCode.toCanvas("some text", (err, canvasEl) => {
+  QRCode.toCanvas("some text", (err: Error, canvasEl: HTMLCanvasElement) => {
     t.ok(!err, "There should be no error");
     t.ok(canvasEl instanceof Canvas, "Should return a new canvas object");
   });
@@ -64,13 +66,13 @@ test("toCanvas", (t) => {
     {
       errorCorrectionLevel: "H",
     },
-    (err, canvasEl) => {
+    (err: Error, canvasEl: HTMLCanvasElement) => {
       t.ok(!err, "There should be no error");
       t.ok(canvasEl instanceof Canvas, "Should return a new canvas object");
     },
   );
 
-  QRCode.toCanvas("some text").then((canvasEl) => {
+  QRCode.toCanvas("some text").then((canvasEl: ) => {
     t.ok(
       canvasEl instanceof Canvas,
       "Should return a new canvas object (promise)",
@@ -79,7 +81,7 @@ test("toCanvas", (t) => {
 
   QRCode.toCanvas("some text", {
     errorCorrectionLevel: "H",
-  }).then(function(canvasEl) {
+  }).then((canvasEl: HTMLCanvasElement) => {
     t.ok(
       canvasEl instanceof Canvas,
       "Should return a new canvas object (promise)",
@@ -94,7 +96,7 @@ test("toCanvas with specified canvas element", (t) => {
 
   t.plan(6);
 
-  QRCode.toCanvas(canvasEl, "some text", (err, canvasEl) => {
+  QRCode.toCanvas(canvasEl, "some text", (err: Error, canvasEl: HTMLCanvasElement) => {
     t.ok(!err, "There should be no error");
     t.ok(canvasEl instanceof Canvas, "Should return a new canvas object");
   });
@@ -105,13 +107,13 @@ test("toCanvas with specified canvas element", (t) => {
     {
       errorCorrectionLevel: "H",
     },
-    function(err, canvasEl) {
+    (err: Error, canvasEl: HTMLCanvasElement) => {
       t.ok(!err, "There should be no error");
       t.ok(canvasEl instanceof Canvas, "Should return a new canvas object");
     },
   );
 
-  QRCode.toCanvas(canvasEl, "some text").then((canvasEl) => {
+  QRCode.toCanvas(canvasEl, "some text").then((canvasEl: HTMLCanvasElement) => {
     t.ok(
       canvasEl instanceof Canvas,
       "Should return a new canvas object (promise)",
@@ -120,7 +122,7 @@ test("toCanvas with specified canvas element", (t) => {
 
   QRCode.toCanvas(canvasEl, "some text", {
     errorCorrectionLevel: "H",
-  }).then(function(canvasEl) {
+  }).then((canvasEl: HTMLCanvasElement) => {
     t.ok(
       canvasEl instanceof Canvas,
       "Should return a new canvas object (promise)",

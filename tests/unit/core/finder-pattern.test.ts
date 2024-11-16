@@ -1,7 +1,9 @@
-const test = require("tap").test;
-const pattern = require("core/finder-pattern");
+import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
-test("Finder pattern", function (t) {
+import { test } from "tap";
+import pattern from "core/finder-pattern";
+
+test("Finder pattern", (t: AssertionHandler) => {
   for (let i = 1; i <= 40; i++) {
     t.equal(
       pattern.getPositions(i).length,

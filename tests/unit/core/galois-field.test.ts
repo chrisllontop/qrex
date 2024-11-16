@@ -1,8 +1,10 @@
-const test = require("tap").test;
-const GF = require("core/galois-field");
+import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
-test("Galois Field", function (t) {
-  t.throw(function () {
+import { test } from "tap";
+import GF from "core/galois-field";
+
+test("Galois Field", (t: AssertionHandler) => {
+  t.throw(() => {
     GF.log(0);
   }, "Should throw for log(n) with n < 1");
 

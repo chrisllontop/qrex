@@ -1,11 +1,13 @@
-const test = require("tap").test;
-const RS = require("core/reed-solomon-encoder");
+import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
-test("Reed-Solomon encoder", function (t) {
+import { test } from "tap";
+import RS from "core/reed-solomon-encoder";
+
+test("Reed-Solomon encoder", (t: AssertionHandler) => {
   let enc = new RS();
 
   t.notOk(enc.genPoly, "Should have an undefined generator polynomial");
-  t.throw(function () {
+  t.throw(() => {
     enc.encode([]);
   }, "Should throw if generator polynomial is undefined");
 

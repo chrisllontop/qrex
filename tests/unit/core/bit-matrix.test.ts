@@ -1,12 +1,14 @@
-const test = require("tap").test;
-const BitMatrix = require("core/bit-matrix");
+import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
-test("Bit Matrix", function (t) {
-  t.throw(function () {
-    BitMatrix(0);
+import { test } from "tap";
+import BitMatrix from "core/bit-matrix";
+
+test("Bit Matrix", (t: AssertionHandler) => {
+  t.throw(() => {
+    new BitMatrix(0);
   }, "Should throw if size is 0");
-  t.throw(function () {
-    BitMatrix(-1);
+  t.throw(() => {
+    new BitMatrix(-1);
   }, "Should throw if size less than 0");
 
   const bm = new BitMatrix(2);

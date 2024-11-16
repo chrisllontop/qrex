@@ -1,7 +1,7 @@
-const stream = require("stream");
-const util = require("util");
+import stream from "stream";
+import util from "util";
 
-function WritableStream() {
+function WritableStream(): void {
   stream.Writable.call(this);
   this.forceError = false;
 
@@ -12,12 +12,12 @@ function WritableStream() {
 
 util.inherits(WritableStream, stream.Writable);
 
-WritableStream.prototype._write = (data, encoding, cb) => {
+WritableStream.prototype._write = (data: string, encoding: string, cb: Function) => {
   if (this.forceError) this.emit("error", new Error("Fake error"));
   cb(this.forceError || null);
 };
 
-WritableStream.prototype.close = (cb) => {
+WritableStream.prototype.close = (cb: Function) => {
   this.emit("close");
   if (cb) cb();
 };
@@ -27,4 +27,4 @@ WritableStream.prototype.forceErrorOnWrite = () => {
   return this;
 };
 
-module.exports = WritableStream;
+export WritableStream;

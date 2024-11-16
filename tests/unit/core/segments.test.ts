@@ -7,7 +7,12 @@ import NumericData from "../../../src/core/numeric-data";
 import { Segments } from "../../../src/core/segments";
 import { CoreUtils } from "../../../src/core/utils";
 
-let testData = [
+type MockData = {
+  input: string;
+  result: Array<Mode>;
+}
+
+let testData: Array<MockData> = [
   {
     input: "1A1",
     result: [{ data: "1A1", mode: Mode.ALPHANUMERIC }],
@@ -131,7 +136,7 @@ let testData = [
   },
 ];
 
-const kanjiTestData = [
+const kanjiTestData: Array<MockData> = [
   {
     input: "乂ЁЖぞβ",
     result: [{ data: "乂ЁЖぞβ", mode: Mode.KANJI }],

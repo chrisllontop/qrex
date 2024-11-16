@@ -1,41 +1,43 @@
-const test = require("tap").test;
-const QRCode = require("src");
-const QRCodeBrowser = require("src/browser");
-const { createCanvas } = require("canvas");
-const Helpers = require("test/helpers");
+import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
-test("toDataURL - no promise available", function(t) {
+import { test } from "tap";
+import QRCode from "src";
+import QRCodeBrowser from "src/browser";
+import Helpers from "test/helpers";
+import { createCanvas } from "canvas";
+
+test("toDataURL - no promise available", (t: AssertionHandler) => {
   Helpers.removeNativePromise();
 
-  t.throw(function() {
+  t.throw(() => {
     QRCode.toDataURL();
   }, "Should throw if no arguments are provided");
 
-  t.throw(function() {
+  t.throw(() => {
     QRCode.toDataURL(function() { });
   }, "Should throw if text is not provided");
 
-  t.throw(function() {
+  t.throw(() => {
     QRCode.toDataURL("some text");
   }, "Should throw if a callback is not provided");
 
-  t.throw(function() {
+  t.throw(() => {
     QRCode.toDataURL("some text", {});
   }, "Should throw if a callback is not a function");
 
-  t.throw(function() {
+  t.throw(() => {
     QRCodeBrowser.toDataURL();
   }, "Should throw if no arguments are provided (browser)");
 
-  t.throw(function() {
+  t.throw(() => {
     QRCodeBrowser.toDataURL(function() { });
   }, "Should throw if text is not provided (browser)");
 
-  t.throw(function() {
+  t.throw(() => {
     QRCodeBrowser.toDataURL("some text");
   }, "Should throw if a callback is not provided (browser)");
 
-  t.throw(function() {
+  t.throw(() => {
     QRCodeBrowser.toDataURL("some text", {});
   }, "Should throw if a callback is not a function (browser)");
 
@@ -44,7 +46,7 @@ test("toDataURL - no promise available", function(t) {
   Helpers.restoreNativePromise();
 });
 
-test("toDataURL - image/png", function(t) {
+test("toDataURL - image/png", (t: AssertionHandler) => {
   const expectedDataURL = [
     "data:image/png;base64,",
     "iVBORw0KGgoAAAANSUhEUgAAAHQAAAB0CAYAAABUmhYnAAAAAklEQVR4AewaftIAAAKzSU",
@@ -66,7 +68,7 @@ test("toDataURL - image/png", function(t) {
 
   t.plan(8);
 
-  t.throw(function() {
+  t.throw(() => {
     QRCode.toDataURL();
   }, "Should throw if no arguments are provided");
 
@@ -76,7 +78,7 @@ test("toDataURL - image/png", function(t) {
       errorCorrectionLevel: "L",
       type: "image/png",
     },
-    function(err, url) {
+    (err: Error, url: string) => {
       t.ok(!err, "there should be no error " + err);
       t.equals(
         url,
@@ -93,7 +95,7 @@ test("toDataURL - image/png", function(t) {
       errorCorrectionLevel: "H",
       type: "image/png",
     },
-    function(err, url) {
+    (err: Error, url: string) => {
       t.ok(err, "there should be an error ");
       t.notOk(url, "url should be null");
     },
@@ -108,7 +110,7 @@ test("toDataURL - image/png", function(t) {
   QRCode.toDataURL("i am a pony!", {
     errorCorrectionLevel: "L",
     type: "image/png",
-  }).then(function(url) {
+  }).then((url: string) => {
     t.equals(
       url,
       expectedDataURL,
@@ -120,12 +122,12 @@ test("toDataURL - image/png", function(t) {
     version: 1, // force version=1 to trigger an error
     errorCorrectionLevel: "H",
     type: "image/png",
-  }).catch(function(err) {
+  }).catch((err: Error) => {
     t.ok(err, "there should be an error (promise)");
   });
 });
 
-test("Canvas toDataURL - image/png", function(t) {
+test("Canvas toDataURL - image/png", (t: AssertionHandler) => {
   const expectedDataURL = [
     "data:image/png;base64,",
     "iVBORw0KGgoAAAANSUhEUgAAAIQAAACECAYAAABRRIOnAAAABmJLR0QA/wD/AP+gvaeTAA",
@@ -148,11 +150,11 @@ test("Canvas toDataURL - image/png", function(t) {
 
   t.plan(11);
 
-  t.throw(function() {
+  t.throw(() => {
     QRCodeBrowser.toDataURL();
   }, "Should throw if no arguments are provided");
 
-  t.throw(function() {
+  t.throw(() => {
     QRCodeBrowser.toDataURL(function() { });
   }, "Should throw if text is not provided");
 
@@ -164,7 +166,7 @@ test("Canvas toDataURL - image/png", function(t) {
       errorCorrectionLevel: "H",
       type: "image/png",
     },
-    function(err, url) {
+    (err: Error, url: string) => {
       t.ok(!err, "there should be no error " + err);
       t.equals(
         url,
@@ -182,7 +184,7 @@ test("Canvas toDataURL - image/png", function(t) {
       errorCorrectionLevel: "H",
       type: "image/png",
     },
-    function(err, url) {
+    (err: Error, url: string) => {
       t.ok(err, "there should be an error ");
       t.notOk(url, "url should be null");
     },
@@ -191,7 +193,7 @@ test("Canvas toDataURL - image/png", function(t) {
   QRCodeBrowser.toDataURL(canvas, "i am a pony!", {
     errorCorrectionLevel: "H",
     type: "image/png",
-  }).then(function(url) {
+  }).then((url: string) => {
     t.equals(
       url,
       expectedDataURL,
@@ -203,13 +205,13 @@ test("Canvas toDataURL - image/png", function(t) {
     version: 1, // force version=1 to trigger an error
     errorCorrectionLevel: "H",
     type: "image/png",
-  }).catch(function(err) {
+  }).catch((err: Error) => {
     t.ok(err, "there should be an error (promise)");
   });
 
   // Mock document object
   global.document = {
-    createElement: function(el) {
+    createElement: (el: string) => {
       if (el === "canvas") {
         return createCanvas(200, 200);
       }
@@ -222,7 +224,7 @@ test("Canvas toDataURL - image/png", function(t) {
       errorCorrectionLevel: "H",
       type: "image/png",
     },
-    function(err, url) {
+    (err: Error, url: string) => {
       t.ok(!err, "there should be no error " + err);
       t.equals(
         url,
@@ -235,7 +237,7 @@ test("Canvas toDataURL - image/png", function(t) {
   QRCodeBrowser.toDataURL("i am a pony!", {
     errorCorrectionLevel: "H",
     type: "image/png",
-  }).then(function(url) {
+  }).then((url: string) => {
     t.equals(
       url,
       expectedDataURL,

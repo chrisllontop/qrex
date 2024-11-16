@@ -1,14 +1,16 @@
-const test = require("tap").test;
-const sinon = require("sinon");
-const QRCode = require("src");
-const StreamMock = require("../mocks/writable-stream");
+import { type DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
-test("toFileStream png", function (t) {
-  t.throw(function () {
+import { test } from "tap";
+import sinon from "sinon";
+import QRCode from "src";
+import StreamMock from "test/mocks/writable-stream";
+
+test("toFileStream png", (t: AssertionHandler) {
+  t.throw(() => {
     QRCode.toFileStream("some text");
   }, "Should throw if stream is not provided");
 
-  t.throw(function () {
+  t.throw(() => {
     QRCode.toFileStream(new StreamMock());
   }, "Should throw if text is not provided");
 
@@ -27,25 +29,25 @@ test("toFileStream png", function (t) {
   t.end();
 });
 
-test("toFileStream png with write error", function (t) {
+test("toFileStream png with write error", (t: AssertionHandler) {
   const fstreamErr = new StreamMock().forceErrorOnWrite();
   QRCode.toFileStream(fstreamErr, "i am a pony!");
 
   t.plan(2);
 
-  fstreamErr.on("error", function (e) {
-    t.ok(e, "Should return an error");
+  fstreamErr.on("error", (err: Error) => {
+    t.ok(err, "Should return an error");
   });
 });
 
-test("toFileStream png with qrcode error", function (t) {
+test("toFileStream png with qrcode error", (t: AssertionHandler) => {
   const fstreamErr = new StreamMock();
   const bigString = Array(200).join("i am a pony!");
 
   t.plan(2);
 
-  fstreamErr.on("error", function (e) {
-    t.ok(e, "Should return an error");
+  fstreamErr.on("error", (err: Error) => {
+    t.ok(err, "Should return an error");
   });
 
   QRCode.toFileStream(fstreamErr, bigString);

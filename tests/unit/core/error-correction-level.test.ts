@@ -1,9 +1,11 @@
-const test = require("tap").test;
-const ECLevel = require("core/error-correction-level");
+import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
+
+import { test } from "tap";
+import ECLevel from "core/error-correction-level";
 
 const EC_LEVELS = [ECLevel.L, ECLevel.M, ECLevel.Q, ECLevel.H];
 
-test("Error level from input value", function (t) {
+test("Error level from input value", (t: AssertionHandler) => {
   const values = [
     ["l", "low"],
     ["m", "medium"],
@@ -37,7 +39,7 @@ test("Error level from input value", function (t) {
   t.end();
 });
 
-test("Error level validity", function (t) {
+test("Error level validity", (t: AssertionHandler) => {
   for (let l = 0; l < EC_LEVELS.length; l++) {
     t.ok(
       ECLevel.isValid(EC_LEVELS[l]),

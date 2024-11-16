@@ -7,7 +7,7 @@ import { AlignmentPattern as pattern } from "../../../src/core/alignment-pattern
  *
  * @type {Array}
  */
-const EXPECTED_POSITION_TABLE = [
+const EXPECTED_POSITION_TABLE: Array<number[]> = [
   [],
   [6, 18],
   [6, 22],

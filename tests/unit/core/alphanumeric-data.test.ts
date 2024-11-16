@@ -1,9 +1,18 @@
-const test = require("tap").test;
-const BitBuffer = require("core/bit-buffer");
-const AlphanumericData = require("core/alphanumeric-data");
-const Mode = require("core/mode");
+import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
-const testData = [
+import { test } from "test";
+import Mode from "core/mode";
+import BitBuffer from "core/bit-buffer";
+import AlphaNumericData from "core/alphanumeric-data";
+
+type MockMode = {
+  data: string;
+  length: number;
+  bitLength: number;
+  dataBit: Array<number>;
+}
+
+const testData: Array<MockMode> = [
   {
     data: "A",
     length: 1,
@@ -24,8 +33,8 @@ const testData = [
   },
 ];
 
-test("Alphanumeric Data", function (t) {
-  testData.forEach(function (data) {
+test("Alphanumeric Data", (t: AsssertionHandler) => {
+  testData.forEach((data: MockMode) => {
     const alphanumericData = new AlphanumericData(data.data);
 
     t.equal(

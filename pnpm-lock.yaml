@@ -51,6 +51,9 @@ importers:
       '@types/react-dom':
         specifier: ^18.3.1
         version: 18.3.1
+      '@types/tap':
+        specifier: ^15.0.12
+        version: 15.0.12
       babel-loader:
         specifier: ^9.2.1
         version: 9.2.1(@babel/core@7.26.0)(webpack@5.96.1)
@@ -1184,6 +1187,9 @@ packages:
 
   '@types/sockjs@0.3.36':
     resolution: {integrity: sha512-MK9V6NzAS1+Ud7JV9lJLFqW85VbC9dq3LmwZCuBe4wBDgKC0Kj/jd8Xl+nSviU+Qc3+m7umHHyHg//2KSa0a0Q==}
+
+  '@types/tap@15.0.12':
+    resolution: {integrity: sha512-QuVlxQEBOBASkirrwp0ciwO9stIzOdRMHyaYYsexeVSAYwR4sq+YIYaQbVaYXSXi8+yPf22ZZNieRCB8KAJrTA==}
 
   '@types/ws@8.5.13':
     resolution: {integrity: sha512-osM/gWBTPKgHV8XkTunnegTRIsvF6owmf5w+JtAfOw472dptdm0dlGv4xCt6GwQRcC2XVOvvRE/0bAoQcL2QkA==}
@@ -4353,6 +4359,10 @@ snapshots:
       '@types/send': 0.17.4
 
   '@types/sockjs@0.3.36':
+    dependencies:
+      '@types/node': 16.18.119
+
+  '@types/tap@15.0.12':
     dependencies:
       '@types/node': 16.18.119
 

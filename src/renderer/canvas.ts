@@ -24,11 +24,6 @@ export function render(qrData: QRCode, canvas: HTMLCanvasElement, options: Rende
   let opts = options;
   let canvasEl = canvas;
 
-  if (typeof opts === "undefined" && (!canvas || !canvas.getContext)) {
-    opts = canvas;
-    canvas = undefined;
-  }
-
   if (!canvas) {
     canvasEl = getCanvasElement();
   }
@@ -49,17 +44,10 @@ export function render(qrData: QRCode, canvas: HTMLCanvasElement, options: Rende
 export function renderToDataURL(qrData: QRCode, canvas: HTMLCanvasElement, options: RendererOptions): string {
   let opts = options;
 
-  if (typeof opts === "undefined" && (!canvas || !canvas.getContext)) {
-    opts = canvas;
-    canvas = undefined;
-  }
-
-  if (!opts) opts = {};
-
   const canvasEl = render(qrData, canvas, opts);
 
   const type = opts.type || "image/png";
-  const rendererOpts = opts.rendererOpts || {};
+  const rendererOpts = opts.rendererOpts;
 
   return canvasEl.toDataURL(type, rendererOpts.quality);
 }

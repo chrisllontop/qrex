@@ -7,31 +7,12 @@ import SvgRenderer from "./renderer/svg";
 import { type Stream } from "stream";
 import { type ExtendedRendererOptions as RendererOptions, type Renderer } from "./renderer/utils";
 
-// export type Renderer = PngRenderer | Utf8Renderer | TerminalRenderer | SvgRenderer;
-
 export type Parameters = {
   cb: Function;
   opts: RendererOptions;
 };
 
-function checkParams(text: string | undefined, opts: RendererOptions, cb?: Function): Parameters {
-  if (typeof text === "undefined") {
-    throw new Error("String required as first argument");
-  }
-
-  if (typeof cb === "undefined") {
-    cb = opts;
-    opts = {};
-  }
-
-  if (typeof cb !== "function") {
-    if (!canPromise()) {
-      throw new Error("Callback required as last argument");
-    }
-    opts = cb || {};
-    cb = null;
-  }
-
+function checkParams(text: string, opts: RendererOptions, cb?: Function): Parameters {
   return {
     opts: opts,
     cb: cb,

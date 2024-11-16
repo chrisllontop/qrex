@@ -23,11 +23,6 @@ class PngRenderer implements Renderer {
   }
 
   renderToDataURL(qrData: QRCode, options: RendererOptions, cb: Function): void {
-    if (typeof cb === "undefined") {
-      cb = options;
-      options = undefined;
-    }
-
     this.renderToBuffer(qrData, options, (err, output) => {
       if (err) cb(err);
       let url = "data:image/png;base64,";
@@ -37,11 +32,6 @@ class PngRenderer implements Renderer {
   }
 
   renderToBuffer(qrData: QRCode, options: RendererOptions, cb: Function): void {
-    if (typeof cb === "undefined") {
-      cb = options;
-      options = undefined;
-    }
-
     const png = this.render(qrData, options);
     const buffer = [];
 
@@ -58,11 +48,6 @@ class PngRenderer implements Renderer {
   }
 
   renderToFile(path: string, qrData: QRCode, options: RendererOptions, cb: Function): void {
-    if (typeof cb === "undefined") {
-      cb = options;
-      options = undefined;
-    }
-
     let called = false;
     const done = (...args) => {
       if (called) return;

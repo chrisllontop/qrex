@@ -69,12 +69,8 @@ class Utf8Renderer implements Renderer {
   }
 
   renderToFile(path: string, qrData: QRCode, options: RendererOptions, cb?: Function): void {
-    if (typeof cb === "undefined") {
-      cb = options;
-      options = undefined;
-    }
     const utf8 = this.render(qrData, options);
-    fs.writeFile(path, utf8, cb);
+    fs.writeFile(path, utf8, () => cb());
   }
 
 }

@@ -1,4 +1,5 @@
 import { type QRCodeToStringOptionsTerminal as QRCodeOptions, type QRCode } from "qrcode";
+import { type Modify } from "../utils";
 
 const backgroundWhite = "\x1b[47m";
 const backgroundBlack = "\x1b[40m";
@@ -7,6 +8,10 @@ const foregroundBlack = "\x1b[30m";
 const reset = "\x1b[0m";
 const lineSetupNormal = backgroundWhite + foregroundBlack; // setup colors
 const lineSetupInverse = backgroundBlack + foregroundWhite; // setup colors
+
+export type ExtendedQRCodeOptions = Modify<QRCodeOptions, {
+  inverse?: boolean;
+}>;
 
 const createPalette = (
   lineSetup: string,
@@ -54,7 +59,7 @@ const mkCode = (modules: Uint8Array, size: number, x: number, y: number): string
   mkCodePixel(modules, size, x, y) + mkCodePixel(modules, size, x, y + 1)
 );
 
-export function render(qrData: QRCode, options: QRCodeOptions, cb: Function): string {
+export function render(qrData: QRCode, options: ExtendedQRCodeOptions, cb: Function): string {
   const size = qrData.modules.size;
   const data = qrData.modules.data;
 

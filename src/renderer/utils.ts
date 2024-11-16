@@ -27,6 +27,7 @@ export type Palette = {
 
 export type ExtendedRendererOptions = Modify<RendererOptions, {
   color: Palette;
+  rendererOpts?: { quality: number; width: number; height: number; };
 }>;
 
 function hex2rgba(hex: number | string): RGBAValue {
@@ -65,10 +66,7 @@ function hex2rgba(hex: number | string): RGBAValue {
   };
 }
 
-export function getOptions(options: ExtendedRendererOptions | undefined): ExtendedRendererOptions {
-  if (!options) options = {};
-  if (!options.color) options.color = {};
-
+export function getOptions(options: ExtendedRendererOptions): ExtendedRendererOptions {
   const margin =
     typeof options.margin === "undefined" ||
       options.margin === null ||
@@ -89,7 +87,7 @@ export function getOptions(options: ExtendedRendererOptions | undefined): Extend
       light: hex2rgba(options.color.light.hex || "#ffffffff"),
     },
     type: options.type,
-    rendererOpts: options.rendererOpts || {},
+    rendererOpts: options.rendererOpts,
   };
 }
 

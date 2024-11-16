@@ -14,6 +14,8 @@ import { getEncodedBits as _getEncodedBits } from './format-info'
 import { getCharCountIndicator } from './mode'
 import { type Segment, fromArray, rawSplit, fromString } from './segments'
 import { type QRCode, type QRCodeOptions, type ErrorCorrectionLevel, type QRCodeMaskPattern } from "qrcode"
+
+
 /**
  * Add finder patterns bits to matrix
  *
@@ -475,7 +477,7 @@ Minimum version required to store current data is: ${bestVersion}.
  * @param {String} options.errorCorrectionLevel Error correction level
  * @param {Function} options.toSJISFunc         Helper func to convert utf8 to sjis
  */
-export function create(data: string | Array<number>, options: QRCodeOptions): QRCode {
+export function create(data: string, options: QRCodeOptions): QRCode {
   if (data === '' || data === null) {
     throw new Error('No input text')
   }

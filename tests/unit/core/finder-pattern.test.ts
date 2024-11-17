@@ -1,7 +1,7 @@
 import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
 import { test } from "tap";
-import pattern from "core/finder-pattern";
+import pattern from "../../../src/core/finder-pattern.js";
 
 test("Finder pattern", (t: AssertionHandler) => {
   for (let i = 1; i <= 40; i++) {

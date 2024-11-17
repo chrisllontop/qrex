@@ -1,8 +1,8 @@
 import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
 import { test } from "tap";
-import BitMatrix from "core/bit-matrix";
-import MaskPattern from "core/mask-pattern";
+import BitMatrix from "../../../src/core/bit-matrix.js";
+import MaskPattern from "../../../src/corec/mask-pattern.js";
 
 test("Mask pattern - Pattern references", (t: AssertionHandler) => {
   const patternsCount = Object.keys(MaskPattern.Patterns).length;
@@ -295,7 +295,7 @@ test("Mask pattern - Penalty N4", (t: AssertionHandler) => {
   t.end();
 });
 
-test("Mask pattern - Best mask", (t: AssertionHandler) {
+test("Mask pattern - Best mask", (t: AssertionHandler) => {
   const matrix = new BitMatrix(11);
   matrix.data = [
     0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0,

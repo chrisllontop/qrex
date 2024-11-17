@@ -1,7 +1,7 @@
 import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
 import { test } from "tap";
-import RS from "core/reed-solomon-encoder";
+import RS from "../../../src/core/reed-solomon-encoder.js";
 
 test("Reed-Solomon encoder", (t: AssertionHandler) => {
   let enc = new RS();

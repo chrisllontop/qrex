@@ -2,10 +2,10 @@ import { type DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
 import { test } from "tap";
 import sinon from "sinon";
-import QRCode from "src";
-import StreamMock from "test/mocks/writable-stream";
+import StreamMock from "../mocks/writable-stream.js";
+import * as QRCode from "../../src/core/qrcode.js";
 
-test("toFileStream png", (t: AssertionHandler) {
+test("toFileStream png", (t: AssertionHandler) => {
   t.throw(() => {
     QRCode.toFileStream("some text");
   }, "Should throw if stream is not provided");
@@ -29,7 +29,7 @@ test("toFileStream png", (t: AssertionHandler) {
   t.end();
 });
 
-test("toFileStream png with write error", (t: AssertionHandler) {
+test("toFileStream png with write error", (t: AssertionHandler) => {
   const fstreamErr = new StreamMock().forceErrorOnWrite();
   QRCode.toFileStream(fstreamErr, "i am a pony!");
 

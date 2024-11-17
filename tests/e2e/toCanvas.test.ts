@@ -2,15 +2,15 @@ import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
 import { test } from "tap";
 import { Canvas, createCanvas } from "canvas";
-import QRCode from "src";
-import Helpers from "test/helpers";
+import * as QRCode from "../../src/core/qrcode.js";
+import { restoreNativePromise, removeNativePromise } from "../helpers.js";
 
 test("toCanvas - no promise available", (t: AssertionHandler) => {
-  Helpers.removeNativePromise();
+  removeNativePromise();
 
   // Mock document object
   global.document = {
-    createElement: (el) => {
+    createElement: (el: string) => {
       if (el === "canvas") {
         return createCanvas(200, 200);
       }
@@ -18,26 +18,26 @@ test("toCanvas - no promise available", (t: AssertionHandler) => {
   };
   const canvasEl = createCanvas(200, 200);
 
-  t.throw(() => {
+  t.throws(() => {
     QRCode.toCanvas();
   }, "Should throw if no arguments are provided");
 
-  t.throw(() => {
+  t.throws(() => {
     QRCode.toCanvas("some text");
   }, "Should throw if a callback is not provided");
 
-  t.throw(() => {
+  t.throws(() => {
     QRCode.toCanvas(canvasEl, "some text");
   }, "Should throw if a callback is not provided");
 
-  t.throw(() => {
+  t.throws(() => {
     QRCode.toCanvas(canvasEl, "some text", {});
   }, "Should throw if callback is not a function");
 
   t.end();
 
   global.document = undefined;
-  Helpers.restoreNativePromise();
+  restoreNativePromise();
 });
 
 test("toCanvas", (t: AssertionHandler) => {
@@ -72,7 +72,7 @@ test("toCanvas", (t: AssertionHandler) => {
     },
   );
 
-  QRCode.toCanvas("some text").then((canvasEl: ) => {
+  QRCode.toCanvas("some text").then((canvasEl: HTMLCanvasElement) => {
     t.ok(
       canvasEl instanceof Canvas,
       "Should return a new canvas object (promise)",

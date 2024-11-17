@@ -1,20 +1,21 @@
-import { getSymbolTotalCodewords, getSymbolSize, setToSJISFunction } from './utils'
-import { M, from } from './error-correction-level'
-import { BitBuffer } from './bit-buffer'
-import { BitMatrix } from './bit-matrix'
-import { ByteData } from './byte-data'
+import type { Segment } from "./segments.js";
+import type { QRCode, QRCodeOptions, ErrorCorrectionLevel, QRCodeMaskPattern } from "qrcode";
 
-import { getPositions } from './alignment-pattern'
-import { getPositions as _getPositions } from './finder-pattern'
-import { getBestMask, applyMask, from as _from } from './mask-pattern'
-import { getTotalCodewordsCount, getBlocksCount } from './error-correction-code'
-import { ReedSolomonEncoder } from './reed-solomon-encoder'
-import { getEncodedBits, getBestVersionForData, from as __from } from './version'
-import { getEncodedBits as _getEncodedBits } from './format-info'
-import { getCharCountIndicator } from './mode'
-import { type Segment, fromArray, rawSplit, fromString } from './segments'
-import { type QRCode, type QRCodeOptions, type ErrorCorrectionLevel, type QRCodeMaskPattern } from "qrcode"
+import { fromArray, rawSplit, fromString } from "./segments.js";
+import { getSymbolTotalCodewords, getSymbolSize, setToSJISFunction } from "./utils.js";
+import { M, from } from "./error-correction-level.js"
+import { BitBuffer } from "./bit-buffer.js";
+import { BitMatrix } from "./bit-matrix.js";
+import { ByteData } from "./byte-data.js";
 
+import { getPositions } from "./alignment-pattern.js";
+import { getPositions as _getPositions } from "./finder-pattern.js";
+import { getBestMask, applyMask, from as _from } from "./mask-pattern.js";
+import { getTotalCodewordsCount, getBlocksCount } from "./error-correction-code.js";
+import { ReedSolomonEncoder } from "./reed-solomon-encoder.js";
+import { getEncodedBits, getBestVersionForData, from as __from } from "./version.js";
+import { getEncodedBits as _getEncodedBits } from "./format-info.js";
+import { getCharCountIndicator } from "./mode.js";
 
 /**
  * Add finder patterns bits to matrix

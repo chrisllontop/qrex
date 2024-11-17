@@ -1,7 +1,8 @@
-import { KANJI } from "./mode";
-import { BitBuffer } from "./bit-buffer";
-import { toSJIS } from "./utils";
-import { type Mode } from "qrcode";
+import type { Mode } from "qrcode";
+
+import { KANJI } from "./mode.js";
+import { BitBuffer } from "./bit-buffer.js";
+import { toSJIS } from "./utils.js";
 
 export class KanjiData {
   mode: Mode;

@@ -1,7 +1,7 @@
 import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
 import { test } from "tap";
-import BitBuffer from "core/bit-buffer";
+import BitBuffer from "../../../src/core/bit-buffer.js";
 
 test("Bit Buffer", (t: AssertionHandler) => {
   const testData = 0x41; // 'A'

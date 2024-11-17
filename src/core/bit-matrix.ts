@@ -1,4 +1,4 @@
-import { type BitMatrix as BMatrix } from "qrcode";
+import type { BitMatrix as BMatrix } from "qrcode";
 /**
  * Helper class to handle QR Code symbol modules
  *

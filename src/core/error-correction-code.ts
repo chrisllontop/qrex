@@ -1,5 +1,6 @@
-import { L, M, Q, H } from "./error-correction-level";
-import { type ErrorCorrectionLevel } from "qrcode";
+import type { ErrorCorrectionLevel } from "qrcode";
+
+import { L, M, Q, H } from "./error-correction-level.js";
 
 const EC_BLOCKS_TABLE: number[] = [
   // L  M  Q  H

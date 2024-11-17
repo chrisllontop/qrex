@@ -1,6 +1,7 @@
-import { ALPHANUMERIC } from "./mode";
-import { BitBuffer } from "./bit-buffer";
-import { type Mode } from "qrcode";
+import type { Mode } from "qrcode";
+
+import { ALPHANUMERIC } from "./mode.js";
+import { BitBuffer } from "./bit-buffer.js";
 /**
  * Array of characters available in alphanumeric mode
  *

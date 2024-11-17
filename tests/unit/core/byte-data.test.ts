@@ -1,9 +1,9 @@
 import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
 import { test } from "tap";
-import BitBuffer from "core/bit-buffer";
-import ByteData from "core/byte-data";
-import Mode from "core/mode";
+import BitBuffer from "../../../src/core/bit-buffer.js";
+import ByteData from "../../../src/core/byte-data.js";
+import Mode from "../../../src/core/mode.js";
 
 test("Byte Data: String Input", (t: AssertionHandler) => {
   const text = "1234";

@@ -1,10 +1,10 @@
-import { getBCHDigit, getSymbolTotalCodewords } from './utils';
-import { getTotalCodewordsCount } from './error-correction-code';
-import { from as _from, M } from './error-correction-level';
-import { getCharCountIndicator, BYTE, NUMERIC, ALPHANUMERIC, KANJI } from './mode';
-import { isValid } from './version-check';
-import { type Segment } from './segments';
-import { type Mode, type ErrorCorrectionLevel } from 'qrcode';
+import { getBCHDigit, getSymbolTotalCodewords } from './utils.js'
+import { getTotalCodewordsCount } from './error-correction-code.js'
+import { from as _from, M } from './error-correction-level.js'
+import { getCharCountIndicator, BYTE, NUMERIC, ALPHANUMERIC, KANJI } from './mode.js'
+import { isValid } from './version-check.js'
+import { type Segment } from './segments.js'
+import { type Mode, type ErrorCorrectionLevel } from 'qrcode.js'
 
 // Generator polynomial used to encode version information
 const G18 =

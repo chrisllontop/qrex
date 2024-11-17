@@ -1,8 +1,8 @@
-import { type QRCode } from "qrcode";
-import { type ExtendedRendererOptions as RendererOptions, type Renderer } from "./utils";
+import type { QRCode } from "qrcode";
+import type { ExtendedRendererOptions as RendererOptions, Renderer } from "./utils.js";
 
-import SvgTagRenderer from './svg-tag'
-import fs from 'fs'
+import SvgTagRenderer from "./svg-tag.js";
+import * as fs from "node:fs";
 
 class SvgRenderer implements Renderer {
 

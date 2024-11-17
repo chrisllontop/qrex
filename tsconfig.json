@@ -1,17 +1,17 @@
 {
   "compilerOptions": {
-    "allowJs": true,
+    "allowJs": false,
     "checkJs": false,
     "strict": false,
-    "target": "es6",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "target": "es5",
+    "module": "ES2020",
     "outDir": "./dist",
+    "moduleResolution": "node",
     "rootDir": "./src",
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "src/*"
+      "@core/*": [
+        "src/core/*"
       ]
     },
     "lib": [
@@ -22,7 +22,7 @@
       "node"
     ],
     "skipLibCheck": true,
-    "esModuleInterop": true,
+    "esModuleInterop": false,
     "noImplicitAny": false,
     "allowSyntheticDefaultImports": true,
     "ignoreDeprecations": "5.0",
@@ -40,5 +40,10 @@
     "node_modules",
     "build",
     "dist"
-  ]
+  ],
+  "ts-node": {
+    "esm": true,
+    "transpileOnly": true,
+    "experimentalSpecifierResolution": "node"
+  }
 }

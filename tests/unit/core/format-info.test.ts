@@ -1,9 +1,9 @@
 import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
 import { test } from "tap";
-import FormatInfo from "core/format-info";
-import MaskPattern from "core/mask-pattern";
-import ECLevel from "core/error-correction-level";
+import FormatInfo from "../../../src/core/format-info.js";
+import MaskPattern from "../../../src/core/mask-pattern.js";
+import ECLevel from "../../../src/core/error-correction-level.js";
 
 const EXPECTED_FORMAT_BITS: Array<number[]> = [
   [0x77c4, 0x72f3, 0x7daa, 0x789d, 0x662f, 0x6318, 0x6c41, 0x6976],
@@ -12,7 +12,7 @@ const EXPECTED_FORMAT_BITS: Array<number[]> = [
   [0x1689, 0x13be, 0x1ce7, 0x19d0, 0x0762, 0x0255, 0x0d0c, 0x083b],
 ];
 
-test("Format encoded info", (t: AssertionHandler) {
+test("Format encoded info", (t: AssertionHandler) => {
   const levels = [ECLevel.L, ECLevel.M, ECLevel.Q, ECLevel.H];
   const patterns = Object.keys(MaskPattern.Patterns).length;
 

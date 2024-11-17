@@ -1,13 +1,13 @@
 import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
 import { test } from "tap";
-import QRCode from "src";
-import QRCodeBrowser from "src/browser";
-import Helpers from "test/helpers";
 import { createCanvas } from "canvas";
+import * as QRCodeBrowser from "../../src/browser.js";
+import * as QRCode from "../../src/core/qrcode.js";
+import { restoreNativePromise, removeNativePromise } from "../helpers.js";
 
 test("toDataURL - no promise available", (t: AssertionHandler) => {
-  Helpers.removeNativePromise();
+  removeNativePromise();
 
   t.throw(() => {
     QRCode.toDataURL();
@@ -43,7 +43,7 @@ test("toDataURL - no promise available", (t: AssertionHandler) => {
 
   t.end();
 
-  Helpers.restoreNativePromise();
+  restoreNativePromise();
 });
 
 test("toDataURL - image/png", (t: AssertionHandler) => {

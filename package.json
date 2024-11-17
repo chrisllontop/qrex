@@ -1,5 +1,6 @@
 {
   "name": "qrex",
+  "type": "module",
   "description": "QR-Code / 2D Barcode api with both server side and client side support using canvas",
   "version": "0.1.0",
   "author": "Christian Llontop <me@chrisllontop.com>",
@@ -45,7 +46,10 @@
   "dependencies": {
     "@types/qrcode": "^1.5.5",
     "dijkstrajs": "^1.0.1",
+    "esm": "^3.2.25",
     "pngjs": "^5.0.0",
+    "sinon": "^19.0.2",
+    "tap": "^21.0.1",
     "yargs": "^15.3.1"
   },
   "devDependencies": {
@@ -62,6 +66,10 @@
     "@types/tap": "^15.0.12",
     "babel-loader": "^9.2.1",
     "canvas": "^2.8.0",
+    "util": "0.0.4",
+    "colors": "^1.4.0",
+    "cross-env": "^7.0.3",
+    "esmock": "^2.6.9",
     "htmlparser2": "^4.1.0",
     "terser-webpack-plugin": "^5.3.10",
     "ts-node": "^10.9.2",
@@ -75,5 +83,14 @@
   "engines": {
     "node": ">=20.0.0"
   },
-  "packageManager": "pnpm@9.10.0+sha512.73a29afa36a0d092ece5271de5177ecbf8318d454ecd701343131b8ebc0c1a91c487da46ab77c8e596d6acf1461e3594ced4becedf8921b074fbd8653ed7051c"
+  "packageManager": "pnpm@9.10.0+sha512.73a29afa36a0d092ece5271de5177ecbf8318d454ecd701343131b8ebc0c1a91c487da46ab77c8e596d6acf1461e3594ced4becedf8921b074fbd8653ed7051c",
+  "tap": {
+    "node-arg": [
+      "--loader=ts-node/esm",
+      "--loader=esmock"
+    ],
+    "plugin": [
+      "!@tapjs/typescript"
+    ]
+  }
 }

@@ -1,18 +1,19 @@
-import { NUMERIC, ALPHANUMERIC, BYTE, KANJI, getCharCountIndicator, getBestModeForData, from, toString } from './mode';
-import NumericData from './numeric-data';
-import { AlphanumericData } from './alphanumeric-data';
-import { ByteData } from './byte-data';
-import { KanjiData } from './kanji-data';
+import type { Mode, ModeId } from "qrcode";
+
+import * as dijk from "dijkstrajs";
+import { NUMERIC, ALPHANUMERIC, BYTE, KANJI, getCharCountIndicator, getBestModeForData, from, toString } from "./mode.js";
+import { isKanjiModeEnabled } from './utils.js'
+import { AlphanumericData } from "./alphanumeric-data.js";
+import { ByteData } from "./byte-data.js";
+import { KanjiData } from "./kanji-data.js";
+import NumericData from "./numeric-data.js";
 import {
   NUMERIC as _NUMERIC,
   ALPHANUMERIC as _ALPHANUMERIC,
   BYTE as _BYTE,
   KANJI as _KANJI,
   BYTE_KANJI
-} from './regex';
-import { isKanjiModeEnabled } from './utils';
-import { find_path } from 'dijkstrajs';
-import { type Mode, type ModeId } from 'qrcode';
+} from "./regex.js";
 
 export type Segment = {
   data: any;

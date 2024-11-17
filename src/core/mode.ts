@@ -1,6 +1,7 @@
-import { isValid as _isValid } from './version-check'
-import { testNumeric, testAlphanumeric, testKanji } from './regex'
-import { type Mode } from "qrcode";
+import type { Mode } from "qrcode";
+
+import { isValid as _isValid } from "./version-check.js";
+import { testNumeric, testAlphanumeric, testKanji } from "./regex.js";
 
 const BITS_NUMERIC: Readonly<number[]> = [10, 12, 14];
 const BITS_BYTE: Readonly<number[]> = [8, 16, 16];

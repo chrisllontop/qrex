@@ -1,11 +1,11 @@
 import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
 import { test } from "tap";
-import BitBuffer from "core/bit-buffer";
-import KanjiData from "core/kanji-data";
-import Mode from "core/mode";
-import toSJIS from "helper/to-sjis";
-import Utils from "core/utils";
+import BitBuffer from "../../../src/core/bit-buffer.js";
+import KanjiData from "../../../src/core/kanji-data.js";
+import Mode from "../../../src/core/mode.js";
+import toSJIS from "../../../helper/to-sjis.js";
+import Utils from "../../../src/core/utils.js";
 
 Utils.setToSJISFunction(toSJIS);
 

@@ -1,12 +1,14 @@
-const test = require("tap").test;
-const sinon = require("sinon");
-const fs = require("fs");
-const QRCode = require("core/qrcode");
-const PngRenderer = require("renderer/png");
-const PNG = require("pngjs").PNG;
-const StreamMock = require("../../mocks/writable-stream");
+import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
-test("PNG renderer interface", function (t) {
+import { test } from "tap";
+import { PNG } from "pngjs";
+import sinon from "sinon";
+import * as fs from "node:fs";
+import QRCode from "../../../src/core/qrcode.js";
+import PngRenderer from "../../../src/renderer/png.js";
+import StreamMock from "../../mocks/writable-stream.js";
+
+test("PNG renderer interface", (t: AssertionHandler) => {
   t.type(PngRenderer.render, "function", "Should have render function");
 
   t.type(
@@ -30,11 +32,11 @@ test("PNG renderer interface", function (t) {
   t.end();
 });
 
-test("PNG render", function (t) {
+test("PNG render", (t: AssertionHandler) => {
   const sampleQrData = QRCode.create("sample text", { version: 2 });
   let png;
 
-  t.notThrow(function () {
+  t.notThrow(() => {
     png = PngRenderer.render(sampleQrData);
   }, "Should not throw with only qrData param");
 
@@ -45,7 +47,7 @@ test("PNG render", function (t) {
   // modules: 25, margins: 4 * 2, scale: 4
   t.equal(png.width, (25 + 4 * 2) * 4, "Should have correct size");
 
-  t.notThrow(function () {
+  t.notThrow(() => {
     png = PngRenderer.render(sampleQrData, {
       margin: 10,
       scale: 1,
@@ -60,12 +62,12 @@ test("PNG render", function (t) {
   t.end();
 });
 
-test("PNG renderToDataURL", function (t) {
+test("PNG renderToDataURL", (t: AssertionHandler) => {
   const sampleQrData = QRCode.create("sample text", { version: 2 });
 
   t.plan(6);
 
-  PngRenderer.renderToDataURL(sampleQrData, function (err, url) {
+  PngRenderer.renderToDataURL(sampleQrData, (err: Error, url: string) => {
     t.ok(!err, "Should not generate errors with only qrData param");
 
     t.type(url, "string", "Should return a string");
@@ -74,7 +76,7 @@ test("PNG renderToDataURL", function (t) {
   PngRenderer.renderToDataURL(
     sampleQrData,
     { margin: 10, scale: 1 },
-    function (err, url) {
+    (err: Error, url: string) => {
       t.ok(!err, "Should not generate errors with options param");
 
       t.type(url, "string", "Should return a string");
@@ -91,7 +93,7 @@ test("PNG renderToDataURL", function (t) {
   );
 });
 
-test("PNG renderToFile", function (t) {
+test("PNG renderToFile", (t: AssertionHandler) => {
   const sampleQrData = QRCode.create("sample text", { version: 2 });
   const fileName = "qrimage.png";
   let fsStub = sinon.stub(fs, "createWriteStream");
@@ -99,7 +101,7 @@ test("PNG renderToFile", function (t) {
 
   t.plan(5);
 
-  PngRenderer.renderToFile(fileName, sampleQrData, function (err) {
+  PngRenderer.renderToFile(fileName, sampleQrData, (err: Error) => {
     t.ok(!err, "Should not generate errors with only qrData param");
 
     t.equal(
@@ -116,7 +118,7 @@ test("PNG renderToFile", function (t) {
       margin: 10,
       scale: 1,
     },
-    function (err) {
+    (err: Error) => {
       t.ok(!err, "Should not generate errors with options param");
 
       t.equal(
@@ -131,21 +133,21 @@ test("PNG renderToFile", function (t) {
   fsStub = sinon.stub(fs, "createWriteStream");
   fsStub.returns(new StreamMock().forceErrorOnWrite());
 
-  PngRenderer.renderToFile(fileName, sampleQrData, function (err) {
+  PngRenderer.renderToFile(fileName, sampleQrData, function(err) {
     t.ok(err, "Should fail if error occurs during save");
   });
 
   fsStub.restore();
 });
 
-test("PNG renderToFileStream", function (t) {
+test("PNG renderToFileStream", (t: AssertionHandler) => {
   const sampleQrData = QRCode.create("sample text", { version: 2 });
 
-  t.notThrow(function () {
+  t.notThrow(() => {
     PngRenderer.renderToFileStream(new StreamMock(), sampleQrData);
   }, "Should not throw with only qrData param");
 
-  t.notThrow(function () {
+  t.notThrow(() => {
     PngRenderer.renderToFileStream(new StreamMock(), sampleQrData, {
       margin: 10,
       scale: 1,

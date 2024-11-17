@@ -1,5 +1,6 @@
-import { BitMatrix } from "./bit-matrix";
-import { type QRCodeMaskPattern } from "qrcode";
+import type { QRCodeMaskPattern } from "qrcode";
+
+import { BitMatrix } from "./bit-matrix.js";
 
 export const Patterns: Record<string, QRCodeMaskPattern> = {
   PATTERN000: 0,

@@ -7,10 +7,16 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": ["node_modules", "test", "dist", "coverage", "*.json"]
+    "ignore": [
+      "node_modules",
+      "test",
+      "dist",
+      "coverage",
+      "*.json"
+    ]
   },
   "formatter": {
-    "enabled": true,
+    "enabled": false,
     "indentStyle": "space"
   },
   "organizeImports": {

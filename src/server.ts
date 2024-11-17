@@ -1,11 +1,12 @@
-import canPromise from "./can-promise";
-import * as QRCode from "./core/qrcode";
-import PngRenderer from "./renderer/png";
-import Utf8Renderer from "./renderer/utf8";
-import TerminalRenderer from "./renderer/terminal";
-import SvgRenderer from "./renderer/svg";
-import { type Stream } from "stream";
-import { type ExtendedRendererOptions as RendererOptions, type Renderer } from "./renderer/utils";
+import type { Stream } from "stream";
+import type { ExtendedRendererOptions as RendererOptions, Renderer } from "./renderer/utils";
+
+import canPromise from "./can-promise.js";
+import * as QRCode from "./core/qrcode.js";
+import PngRenderer from "./renderer/png.js";
+import Utf8Renderer from "./renderer/utf8.js";
+import TerminalRenderer from "./renderer/terminal.js";
+import SvgRenderer from "./renderer/svg.js";
 
 export type Parameters = {
   cb: Function;

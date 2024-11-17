@@ -1,6 +1,9 @@
-import { type QRCodeToDataURLOptionsJpegWebp as RendererOptions, type QRCode } from "qrcode";
-import { type Stream } from "stream";
-import { type QRCodeToStringOptionsTerminal as QRCodeOptions } from "qrcode";
+import type {
+  QRCode,
+  QRCodeToStringOptionsTerminal as QRCodeOptions,
+  QRCodeToDataURLOptionsJpegWebp as RendererOptions,
+} from "qrcode";
+import type { Stream } from "stream";
 
 export type Modify<T, R> = Omit<T, keyof R> & R;
 

@@ -1,22 +1,24 @@
-const test = require("tap").test;
-const QRCode = require("core/qrcode");
-const TerminalRenderer = require("renderer/terminal");
+import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
-test("TerminalRenderer interface", function (t) {
+import { test } from "tap";
+import QRCode from "@core/qrcode";
+import TerminalRenderer from "../../../src/renderer/terminal.js";
+
+test("TerminalRenderer interface", (t: AssertionHandler) => {
   t.type(TerminalRenderer.render, "function", "Should have render function");
 
   t.end();
 });
 
-test("TerminalRenderer render big", function (t) {
+test("TerminalRenderer render big", (t: AssertionHandler) => {
   const sampleQrData = QRCode.create("sample text", { version: 2 });
   let str;
 
-  t.notThrow(function () {
+  t.notThrow(() => {
     str = TerminalRenderer.render(sampleQrData);
   }, "Should not throw with only qrData param");
 
-  t.notThrow(function () {
+  t.notThrow(() => {
     str = TerminalRenderer.render(sampleQrData, {
       margin: 10,
       scale: 1,
@@ -25,7 +27,7 @@ test("TerminalRenderer render big", function (t) {
 
   t.type(str, "string", "Should return a string");
 
-  t.notThrow(function () {
+  t.notThrow(() => {
     str = TerminalRenderer.render(sampleQrData, { inverse: true });
   }, "Should not throw with inverse options");
 
@@ -34,19 +36,19 @@ test("TerminalRenderer render big", function (t) {
   t.end();
 });
 
-test("TerminalRenderer render small", function (t) {
+test("TerminalRenderer render small", (t: AssertionHandler) => {
   const sampleQrData = QRCode.create("sample text", { version: 2 });
   let str;
   let calledCallback = false;
-  const callback = function () {
+  const callback = function() {
     calledCallback = true;
   };
 
-  t.notThrow(function () {
+  t.notThrow(() => {
     str = TerminalRenderer.render(sampleQrData);
   }, "Should not throw with only qrData param");
 
-  t.notThrow(function () {
+  t.notThrow(() => {
     str = TerminalRenderer.render(sampleQrData, {
       margin: 10,
       scale: 1,
@@ -54,7 +56,7 @@ test("TerminalRenderer render small", function (t) {
     });
   }, "Should not throw with options param and without callback");
 
-  t.notThrow(function () {
+  t.notThrow(() => {
     str = TerminalRenderer.render(
       sampleQrData,
       {
@@ -70,7 +72,7 @@ test("TerminalRenderer render small", function (t) {
 
   t.equal(calledCallback, true, "string", "Should call a callback");
 
-  t.notThrow(function () {
+  t.notThrow(() => {
     str = TerminalRenderer.render(sampleQrData, { small: true, inverse: true });
   }, "Should not throw with inverse options");
 

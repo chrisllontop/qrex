@@ -1,9 +1,10 @@
-import fs from "fs";
+import type { QRCode } from "qrcode";
+import type { Stream } from "stream";
+import type { ExtendedRendererOptions as RendererOptions, Renderer } from "./utils.js";
+
+import * as fs from "node:fs";
 import { PNG } from "pngjs";
-import { getOptions, getImageWidth, qrToImageData } from "./utils";
-import { type QRCode } from "qrcode";
-import { type Stream } from "stream";
-import { type ExtendedRendererOptions as RendererOptions, type Renderer } from "./utils";
+import { getOptions, getImageWidth, qrToImageData } from "./utils.js";
 
 class PngRenderer implements Renderer {
 

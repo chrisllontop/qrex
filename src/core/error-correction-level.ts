@@ -1,4 +1,4 @@
-import { type ErrorCorrectionLevel } from "qrcode";
+import type { ErrorCorrectionLevel } from "qrcode";
 
 export const L: ErrorCorrectionLevel = { bit: 1 };
 export const M: ErrorCorrectionLevel = { bit: 0 };

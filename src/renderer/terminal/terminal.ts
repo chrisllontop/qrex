@@ -1,4 +1,4 @@
-import { type QRCodeToStringOptionsTerminal as QRCodeOptions, type QRCode } from "qrcode";
+import type { QRCodeToStringOptionsTerminal as QRCodeOptions, QRCode } from "qrcode";
 
 export function render(qrData: QRCode, options: QRCodeOptions, cb: Function): string {
   const size = qrData.modules.size;

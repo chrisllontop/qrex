@@ -1,7 +1,7 @@
 import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
 import { test } from "tap";
-import Mode from "core/mode";
+import Mode from "../../../src/core/mode.js";
 
 test("Mode bits", (t: AssertionHandler) => {
   const EXPECTED_BITS = {
@@ -94,7 +94,7 @@ test("Best mode", (t: AssertionHandler) => {
     皿a晒三: Mode.BYTE,
   };
 
-  Object.keys(EXPECTED_MODE).forEach((data: string) {
+  Object.keys(EXPECTED_MODE).forEach((data: string) => {
     t.equal(
       Mode.getBestModeForData(data),
       EXPECTED_MODE[data],

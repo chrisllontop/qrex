@@ -1,6 +1,7 @@
-import { NUMERIC } from "./mode";
-import { BitBuffer } from "./bit-buffer";
-import { type Mode } from "qrcode";
+import type { Mode } from "qrcode";
+
+import { NUMERIC } from "./mode.js";
+import { BitBuffer } from "./bit-buffer.js";
 
 class NumericData {
   mode: Mode;

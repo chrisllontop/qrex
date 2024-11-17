@@ -1,25 +1,28 @@
-const test = require("tap").test;
-const sinon = require("sinon");
-const fs = require("fs");
-const htmlparser = require("htmlparser2");
-const QRCode = require("core/qrcode");
-const SvgRenderer = require("renderer/svg");
+import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
+import type { ExtendedRendererOptions as RendererOptions } from "core/utils";
 
-function getExpectedViewbox(size, margin) {
+import fs from "fs";
+import { test } from "tap";
+import sinon from "sinon";
+import htmlparser from "htmlparser2";
+import QRCode from "../../../src/core/qrcode.js";
+import SvgRenderer from "../../../src/renderer/svg.js";
+
+function getExpectedViewbox(size: number, margin: number): string {
   const expectedQrCodeSize = size + margin * 2;
   return "0 0 " + expectedQrCodeSize + " " + expectedQrCodeSize;
 }
 
-function testSvgFragment(t, svgFragment, expectedTags) {
-  return new Promise(function (resolve, reject) {
+function testSvgFragment(t: AssertionHandler, svgFragment: string, expectedTags: Array<string>): Promise<undefined, Error> {
+  return new Promise((resolve: Promise.resolve, reject: Promise.reject) => {
     const parser = new htmlparser.Parser(
       {
-        onopentag: function (name, attribs) {
+        onopentag: (name: string, attribs: Array<string>) => {
           const tag = expectedTags.shift();
 
           t.equal(tag.name, name, "Should have a " + tag.name + " tag");
 
-          tag.attribs.forEach(function (attr) {
+          tag.attribs.forEach(function(attr) {
             t.equal(
               attribs[attr.name],
               attr.value.toString(),
@@ -28,11 +31,11 @@ function testSvgFragment(t, svgFragment, expectedTags) {
           });
         },
 
-        onend: function () {
+        onend: () => {
           resolve();
         },
 
-        onerror: function (e) {
+        onerror: (e: Error) => {
           reject(e);
         },
       },
@@ -44,12 +47,12 @@ function testSvgFragment(t, svgFragment, expectedTags) {
   });
 }
 
-function buildTest(t, data, opts, expectedTags) {
+function buildTest(t: AssertionHandler, data: string, opts: RendererOptions, expectedTags: Array<string>): Promise<undefined, Error> {
   const svg = SvgRenderer.render(data, opts);
   return testSvgFragment(t, svg, expectedTags.slice());
 }
 
-test("svgrender interface", function (t) {
+test("svgrender interface", (t: AssertionHandler) => {
   t.type(SvgRenderer.render, "function", "Should have render function");
 
   t.type(
@@ -61,7 +64,7 @@ test("svgrender interface", function (t) {
   t.end();
 });
 
-test("Svg render", function (t) {
+test("Svg render", (t: AssertionHandler) => {
   const tests = [];
 
   const data = QRCode.create("sample text", { version: 2 });
@@ -152,19 +155,19 @@ test("Svg render", function (t) {
     ]),
   );
 
-  Promise.all(tests).then(function () {
+  Promise.all(tests).then(() => {
     t.end();
   });
 });
 
-test("Svg renderToFile", function (t) {
+test("Svg renderToFile", (t: AssertionHandler) => {
   const sampleQrData = QRCode.create("sample text", { version: 2 });
   const fileName = "qrimage.svg";
   let fsStub = sinon.stub(fs, "writeFile").callsArg(2);
 
   t.plan(5);
 
-  SvgRenderer.renderToFile(fileName, sampleQrData, function (err) {
+  SvgRenderer.renderToFile(fileName, sampleQrData, (err: Error) => {
     t.ok(!err, "Should not generate errors with only qrData param");
 
     t.equal(
@@ -181,7 +184,7 @@ test("Svg renderToFile", function (t) {
       margin: 10,
       scale: 1,
     },
-    function (err) {
+    (err: Error) => {
       t.ok(!err, "Should not generate errors with options param");
 
       t.equal(
@@ -195,7 +198,7 @@ test("Svg renderToFile", function (t) {
   fsStub.restore();
   fsStub = sinon.stub(fs, "writeFile").callsArgWith(2, new Error());
 
-  SvgRenderer.renderToFile(fileName, sampleQrData, function (err) {
+  SvgRenderer.renderToFile(fileName, sampleQrData, (err: Error) => {
     t.ok(err, "Should fail if error occurs during save");
   });
 

@@ -1,7 +1,7 @@
 import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
 import { test } from "tap";
-import ECLevel from "core/error-correction-level";
+import ECLevel from "../../../src/core/error-correction-level.js";
 
 const EC_LEVELS = [ECLevel.L, ECLevel.M, ECLevel.Q, ECLevel.H];
 

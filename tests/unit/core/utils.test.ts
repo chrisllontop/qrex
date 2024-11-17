@@ -1,8 +1,7 @@
 import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
 import { test } from "tap";
-import Utils from "core/utils";
-
+import Utils from "../../../src/core/utils.js";
 
 /**
  * QR Code sizes. Each element refers to a version
@@ -64,7 +63,7 @@ test("BCH Digit", (t: AssertionHandler) => {
   t.end();
 });
 
-test("Set/Get SJIS function", (t: Assertion) {
+test("Set/Get SJIS function", (t: AssertionHandler) => {
   t.throw(() => {
     Utils.setToSJISFunction();
   }, "Should throw if param is not a function");
@@ -74,7 +73,7 @@ test("Set/Get SJIS function", (t: Assertion) {
     'Kanji mode should be disabled if "toSJIS" function is not set',
   );
 
-  const testFunc = testFunc(c: string) => {
+  const testFunc = (c: string) => {
     return "test_" + c;
   };
 

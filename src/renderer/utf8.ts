@@ -1,7 +1,8 @@
-import fs from 'fs';
-import { getOptions } from "./utils";
-import { type QRCode } from "qrcode";
-import { type ExtendedRendererOptions as RendererOptions, type Renderer } from "./utils";
+import type { ExtendedRendererOptions as RendererOptions, Renderer } from "./utils.js";
+import type { QRCode } from "qrcode";
+
+import * as fs from "node:fs";
+import { getOptions } from "./utils.js";
 
 const BLOCK_CHAR = {
   WW: " ",
@@ -19,7 +20,7 @@ const INVERTED_BLOCK_CHAR = {
   WB: "▀",
 };
 
-function getBlockChar(top: number, bottom: number, blocks: BlockCharacters) {
+function getBlockChar(top: number, bottom: number, blocks: BlockCharacters): string {
   if (top && bottom) return blocks.BB;
   if (top && !bottom) return blocks.BW;
   if (!top && bottom) return blocks.WB;

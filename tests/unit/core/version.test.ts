@@ -1,15 +1,15 @@
 import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
 import { test } from "tap";
-import BitBuffer from "core/bit-buffer";
-import KanjiData from "core/kanji-data";
-import NumericData from "core/numeric-data";
-import AlphanumericData from "core/alphanumeric-data";
-import Version from "core/version";
-import VersionCheck from "core/version-check";
-import ECLevel from "core/error-correction-level";
-import ByteData from "core/byte-data";
-import Mode from "core/mode";
+import BitBuffer from "../../../src/core/bit-buffer.js";
+import KanjiData from "../../../src/core/kanji-data.js";
+import NumericData from "../../../src/core/numeric-data.js";
+import AlphanumericData from "../../../src/core/alphanumeric-data.js";
+import Version from "../../../src/core/version.js";
+import VersionCheck from "../../../src/core/version-check.js";
+import ECLevel from "../../../src/core/error-correction-level.js";
+import ByteData from "../../../src/core/byte-data.js";
+import Mode from "../../../src/core/mode.js";
 
 const EC_LEVELS = [ECLevel.L, ECLevel.M, ECLevel.Q, ECLevel.H];
 

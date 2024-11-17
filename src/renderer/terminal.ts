@@ -1,7 +1,8 @@
-import { type QRCodeToStringOptionsTerminal as QRCodeOptions, type QRCode } from "qrcode";
-import { type Renderer } from "./utils";
-import * as small from "./terminal/terminal-small";
-import * as big from "./terminal/terminal";
+import type { QRCodeToStringOptionsTerminal as QRCodeOptions, QRCode } from "qrcode";
+import type { Renderer } from "./utils.js";
+
+import * as small from "./terminal/terminal-small.js";
+import * as big from "./terminal/terminal.js";
 
 class TerminalRenderer implements Renderer {
 

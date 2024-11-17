@@ -1,13 +1,14 @@
 import { type DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
 import { test } from "tap";
-import fs from "fs";
-import browser from "src/browser";
-import QRCode from "src";
-import Helpers from "test/helpers";
+import * as fs from "node:fs";
+import Helpers from "../helpers.js";
+import * as QRCode from "../../src/core/qrcode.js";
+import * as QRCodeBrowser from "../../src/browser.js";
+import { restoreNativePromise, removeNativePromise } from "../helpers.js";
 
 test("toString - no promise available", (t: AssertionHandler) => {
-  Helpers.removeNativePromise();
+  removeNativePromise();
 
   t.throw(() => {
     QRCode.toString();
@@ -26,16 +27,16 @@ test("toString - no promise available", (t: AssertionHandler) => {
   }, "Should throw if text is not provided (browser)");
 
   t.throw(() => {
-    browser.toString("some text");
+    QRCodeBrowser.toString("some text");
   }, "Should throw if a callback is not provided (browser)");
 
   t.throw(() => {
-    browser.toString("some text", {});
+    QRCodeBrowser.toString("some text", {});
   }, "Should throw if a callback is not a function (browser)");
 
   t.end();
 
-  Helpers.restoreNativePromise();
+  restoreNativePromise();
 });
 
 test("toString", (t: AssertionHandler) => {
@@ -88,7 +89,7 @@ test("toString (browser)", (t: AssertionHandler) => {
     });
 });
 
-test("toString svg", (t: AssertionHandler) {
+test("toString svg", (t: AssertionHandler) => {
   const file = path.join(__dirname, "/svgtag.expected.out");
   t.plan(6);
 
@@ -125,7 +126,7 @@ test("toString svg", (t: AssertionHandler) {
     version: 1, // force version=1 to trigger an error
     errorCorrectionLevel: "H",
     type: "svg",
-  }).catch((err: Error) {
+  }).catch((err: Error) => {
     t.ok(err, "there should be an error (promise)");
   });
 
@@ -135,7 +136,7 @@ test("toString svg", (t: AssertionHandler) {
     QRCode.toString("http://www.google.com", {
       errorCorrectionLevel: "H",
       type: "svg",
-    }).then((code: string) {
+    }).then((code: string) => {
       t.equal(code, expectedSvg, "should output a valid svg (promise)");
     });
   });
@@ -202,7 +203,7 @@ test("toString utf8", (t: AssertionHandler) => {
       errorCorrectionLevel: "H",
       type: "utf8",
     },
-    (err: Error, code: string | null) {
+    (err: Error, code: string | null) => {
       t.ok(err, "there should be an error ");
       t.notOk(code, "string should be null");
     },
@@ -244,7 +245,7 @@ test("toString utf8", (t: AssertionHandler) => {
     t.equal(code, expectedUtf8, "should output a valid symbol (promise)");
   });
 
-  QRCode.toString("http://www.google.com").then((code: string) {
+  QRCode.toString("http://www.google.com").then((code: string) => {
     t.equal(
       code,
       expectedUtf8,

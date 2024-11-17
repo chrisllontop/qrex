@@ -1,7 +1,9 @@
-const test = require("tap").test;
-const Utils = require("renderer/utils");
+import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
-test("Utils getOptions", function (t) {
+import { test } from "tap";
+import Utils from "../../../src/renderer/utils.js";
+
+test("Utils getOptions", (t: AssertionHandler) => {
   const defaultOptions = {
     width: undefined,
     scale: 4,
@@ -70,18 +72,18 @@ test("Utils getOptions", function (t) {
     "Should return correct colors value from numbers",
   );
 
-  t.throw(function () {
+  t.throw(() => {
     Utils.getOptions({ color: { dark: true } });
   }, "Should throw if color is not a string");
 
-  t.throw(function () {
+  t.throw(() => {
     Utils.getOptions({ color: { dark: "#aa" } });
   }, "Should throw if color is not in a valid hex format");
 
   t.end();
 });
 
-test("Utils getScale", function (t) {
+test("Utils getScale", (t: AssertionHandler) => {
   const symbolSize = 21;
 
   t.equal(
@@ -105,7 +107,7 @@ test("Utils getScale", function (t) {
   t.end();
 });
 
-test("Utils getImageWidth", function (t) {
+test("Utils getImageWidth", (t: AssertionHandler) => {
   const symbolSize = 21;
 
   t.equal(
@@ -129,7 +131,7 @@ test("Utils getImageWidth", function (t) {
   t.end();
 });
 
-test("Utils qrToImageData", function (t) {
+test("Utils qrToImageData", (t: AssertionHandler) => {
   t.ok(Utils.qrToImageData, "qrToImageData should be defined");
 
   const sampleQrData = {

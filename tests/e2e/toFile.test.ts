@@ -1,16 +1,16 @@
 import { type DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
 import { test } from "tap";
-import fs from "fs";
-import path from "node:path";
-import os from "os";
 import sinon from "sinon";
-import QRCode from "src";
-import Helpers from "test/helpers";
-import StreamMock from "test/mocks/writable-stream";
+import * as fs from "node:fs";
+import * as path from "node:path";
+import * as os from "node:os";
+import * as QRCode from "../../src/core/qrcode.js";
+import StreamMock from "../mocks/writable-stream.js";
+import { restoreNativePromise, removeNativePromise } from "../helpers.js";
 
 test("toFile - no promise available", (t: AssertionHandler) => {
-  Helpers.removeNativePromise();
+  removeNativePromise();
   const fileName = path.join(os.tmpdir(), "qrimage.png");
 
   t.throw(() => {
@@ -23,7 +23,7 @@ test("toFile - no promise available", (t: AssertionHandler) => {
 
   t.end();
 
-  Helpers.restoreNativePromise();
+  restoreNativePromise();
 });
 
 test("toFile", (t: AssertionHandler) => {

@@ -1,10 +1,10 @@
 import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
 import { test } from "tap";
-import ECLevel from "core/error-correction-level";
-import Version from "core/version";
-import QRCode from "core/qrcode";
-import toSJIS from "helper/to-sjis";
+import ECLevel from "../../../src/core/error-correction-level.js";
+import Version from "../../../src/core/version.js";
+import QRCode from "../../../src/core/qrcode.js";
+import toSJIS from "../../../helper/to-sjis.js";
 
 test("QRCode interface", (t: AssertionHandler) => {
   t.type(QRCode.create, "function", 'Should have "create" function');

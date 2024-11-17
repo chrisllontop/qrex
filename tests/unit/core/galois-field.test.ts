@@ -1,7 +1,7 @@
 import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
 import { test } from "tap";
-import GF from "core/galois-field";
+import GF from "../../../src/core/galois-field.js";
 
 test("Galois Field", (t: AssertionHandler) => {
   t.throw(() => {

@@ -1,7 +1,9 @@
-const test = require("tap").test;
-const toSJIS = require("helper/to-sjis");
+import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
-test("SJIS from char", function (t) {
+import { test } from "tap";
+import toSJIS from "../../../helper/to-sjis.js";
+
+test("SJIS from char", (t: AssertionHandler) => {
   t.notOk(toSJIS(""), "Should return undefined if character is invalid");
 
   t.notOk(toSJIS("A"), "Should return undefined if character is not a kanji");

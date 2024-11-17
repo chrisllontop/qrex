@@ -1,7 +1,7 @@
 import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
 import { test } from "tap";
-import BitMatrix from "core/bit-matrix";
+import BitMatrix from "../../../src/core/bit-matrix.js";
 
 test("Bit Matrix", (t: AssertionHandler) => {
   t.throw(() => {

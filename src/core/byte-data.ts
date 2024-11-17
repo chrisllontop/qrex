@@ -1,6 +1,7 @@
-import { BYTE } from "./mode";
-import { BitBuffer } from "./bit-buffer";
-import { type Mode } from "qrcode";
+import type { Mode } from "qrcode";
+
+import { BYTE } from "./mode.js";
+import { BitBuffer } from "./bit-buffer.js";
 
 export class ByteData {
   mode: Mode;

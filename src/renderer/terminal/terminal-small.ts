@@ -1,5 +1,5 @@
-import { type QRCodeToStringOptionsTerminal as QRCodeOptions, type QRCode } from "qrcode";
-import { type Modify } from "../utils";
+import type { QRCodeToStringOptionsTerminal as QRCodeOptions, QRCode } from "qrcode";
+import type { Modify } from "../utils.js";
 
 const backgroundWhite = "\x1b[47m";
 const backgroundBlack = "\x1b[40m";

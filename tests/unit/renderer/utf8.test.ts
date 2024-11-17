@@ -1,24 +1,27 @@
-const test = require("tap").test;
-const sinon = require("sinon");
-const fs = require("fs");
-const QRCode = require("core/qrcode");
-const Utf8Renderer = require("renderer/utf8");
+import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
-test("Utf8Renderer interface", function (t) {
+import { test } from "tap";
+import sinon from "sinon";
+import * as fs from "node:fs";
+import QRCode from "./../../src/core/qrcode.js";
+import Utf8Renderer from "../../../src/renderer/utf8.js";
+import Utils from "../../../src/renderer/utils.js";
+
+test("Utf8Renderer interface", (t: AssertionHandler) => {
   t.type(Utf8Renderer.render, "function", "Should have render function");
 
   t.end();
 });
 
-test("Utf8Renderer render", function (t) {
+test("Utf8Renderer render", (t: AssertionHandler) => {
   const sampleQrData = QRCode.create("sample text", { version: 2 });
   let str;
 
-  t.notThrow(function () {
+  t.notThrow(() => {
     str = Utf8Renderer.render(sampleQrData);
   }, "Should not throw with only qrData param");
 
-  t.notThrow(function () {
+  t.notThrow(() => {
     str = Utf8Renderer.render(sampleQrData, {
       margin: 10,
       scale: 1,
@@ -30,14 +33,14 @@ test("Utf8Renderer render", function (t) {
   t.end();
 });
 
-test("Utf8 renderToFile", function (t) {
+test("Utf8 renderToFile", (t: AssertionHandler) => {
   const sampleQrData = QRCode.create("sample text", { version: 2 });
   const fileName = "qrimage.txt";
   let fsStub = sinon.stub(fs, "writeFile").callsArg(2);
 
   t.plan(5);
 
-  Utf8Renderer.renderToFile(fileName, sampleQrData, function (err) {
+  Utf8Renderer.renderToFile(fileName, sampleQrData, (err: Error) => {
     t.ok(!err, "Should not generate errors with only qrData param");
 
     t.equal(
@@ -54,7 +57,7 @@ test("Utf8 renderToFile", function (t) {
       margin: 10,
       scale: 1,
     },
-    function (err) {
+    function(err) {
       t.ok(!err, "Should not generate errors with options param");
 
       t.equal(
@@ -68,7 +71,7 @@ test("Utf8 renderToFile", function (t) {
   fsStub.restore();
   fsStub = sinon.stub(fs, "writeFile").callsArgWith(2, new Error());
 
-  Utf8Renderer.renderToFile(fileName, sampleQrData, function (err) {
+  Utf8Renderer.renderToFile(fileName, sampleQrData, (err: Error) => {
     t.ok(err, "Should fail if error occurs during save");
   });
 

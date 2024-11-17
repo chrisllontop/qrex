@@ -1,9 +1,9 @@
 import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
-import { test } from "test";
-import Mode from "core/mode";
-import BitBuffer from "core/bit-buffer";
-import AlphaNumericData from "core/alphanumeric-data";
+import { test } from "tap";
+import Mode from "../../../src/core/mode.js";
+import BitBuffer from ".../../../src/core/bit-buffer.js";
+import AlphaNumericData from "../../../src/core/alphanumeric-data.js";
 
 type MockMode = {
   data: string;

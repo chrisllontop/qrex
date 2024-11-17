@@ -1,7 +1,7 @@
 import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
 import { test } from "tap";
-import Poly from "core/polynomial";
+import Poly from "../../../src/core/polynomial.js";
 
 test("Generator polynomial", (t: AssertionHandler) => {
   const result = Poly.generateECPolynomial(0);

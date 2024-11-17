@@ -1,6 +1,8 @@
-import { type QRCode } from "qrcode";
-import { type RGBAValue, getOptions } from "./utils";
-import { type ExtendedRendererOptions as RendererOptions } from "./utils";
+import type { QRCode } from "qrcode";
+import type { RGBAValue } from "./utils.js";
+import type { ExtendedRendererOptions as RendererOptions } from "./utils.js";
+
+import { getOptions } from "./utils.js";
 
 class SvgTagRenderer {
 

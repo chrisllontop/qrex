@@ -1,12 +1,12 @@
 import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
 import { test } from "tap";
-import BitBuffer from "core/bit-buffer";
-import Utils from "core/utils";
-import Version from "core/version";
-import ECLevel from "core/error-correction-level";
-import ECCode from "core/error-correction-code";
-import Mode from "core/mode";
+import BitBuffer from ".../../../src/core/bit-buffer.js";
+import Utils from "../../../src/core/utils.js";
+import Version from "../../../src/core/version.js";
+import ECLevel from "../../../src/core/error-correction-level.js";
+import ECCode from "../../../src/core/error-correction-code.js";
+import Mode from "../../../src/core/mode.js";
 
 test("Error correction codewords", (t: AssertionHandler) => {
   const levels = [ECLevel.L, ECLevel.M, ECLevel.Q, ECLevel.H];

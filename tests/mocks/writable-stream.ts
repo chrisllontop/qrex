@@ -27,4 +27,4 @@ WritableStream.prototype.forceErrorOnWrite = () => {
   return this;
 };
 
-export WritableStream;
+export default WritableStream;

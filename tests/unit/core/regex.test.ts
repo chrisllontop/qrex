@@ -1,7 +1,7 @@
 import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
 import { test } from "tap";
-import Regex from "core/regex";
+import Regex from "../../../src/core/regex.js";
 
 test("Regex", (t: AssertionHandler) => {
   t.ok(Regex.NUMERIC instanceof RegExp, "Should export a regex for NUMERIC");

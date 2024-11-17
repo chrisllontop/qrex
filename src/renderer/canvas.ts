@@ -1,6 +1,7 @@
-import { getImageWidth, getOptions, qrToImageData } from "./utils";
-import { type QRCode } from "qrcode";
-import { type ExtendedRendererOptions as RendererOptions } from "./utils";
+import type { QRCode } from "qrcode";
+import type { ExtendedRendererOptions as RendererOptions } from "./utils.js";
+
+import { getImageWidth, getOptions, qrToImageData } from "./utils.js";
 
 function clearCanvas(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, size: number): void {
   ctx.clearRect(0, 0, canvas.width, canvas.height);

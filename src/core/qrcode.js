@@ -285,7 +285,7 @@ function createData(version, errorCorrectionLevel, segments) {
  */
 function createCodewords(bitBuffer, version, errorCorrectionLevel) {
   // Total codewords for this QR code version (Data + Error correction)
-  const totalCodewords = getSymbolTotalCodewords(version);
+  const totalCodewords = CoreUtils.getSymbolTotalCodewords(version);
 
   // Total number of error correction codewords
   const ecTotalCodewords = ECCode.getTotalCodewordsCount(

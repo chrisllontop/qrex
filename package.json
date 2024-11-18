@@ -28,11 +28,11 @@
   "license": "MIT",
   "scripts": {
     "build": "rspack build",
-    "lint": "biome lint",
-    "lint:fix": "biome lint --fix",
-    "test": "node --throw-deprecation test.js",
-    "test:ci": "echo 'No tests yet'",
-    "prepublish": "npm run build"
+    "lint:ci": "biome lint && biome format",
+    "lint:fix": "biome lint --write && biome format --write",
+    "test:dev": "vitest --watch",
+    "test:ci": "vitest --coverage --run",
+    "prepublish": "pnpm run build"
   },
   "bin": {
     "qrex": "./bin/qrex"
@@ -47,12 +47,15 @@
     "@biomejs/biome": "^1.9.4",
     "@rspack/cli": "^1.1.0",
     "@rspack/core": "^1.1.0",
+    "@vitest/coverage-istanbul": "2.1.4",
+    "@vitest/ui": "2.1.4",
     "babel-loader": "^9.2.1",
     "canvas": "^2.8.0",
     "htmlparser2": "^4.1.0",
     "terser-webpack-plugin": "^5.3.10",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.4"
   },
   "repository": {
     "type": "git",

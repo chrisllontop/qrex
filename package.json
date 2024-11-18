@@ -23,7 +23,11 @@
     "./dist/cjs/qrex.js": "./dist/cjs/qrex.browser.js",
     "fs": false
   },
-  "files": ["bin", "dist", "helper"],
+  "files": [
+    "bin",
+    "dist",
+    "helper"
+  ],
   "homepage": "https://github.com/chrisllontop/qrex",
   "license": "MIT",
   "scripts": {
@@ -45,6 +49,7 @@
   "devDependencies": {
     "@babel/preset-env": "^7.26.0",
     "@biomejs/biome": "^1.9.4",
+    "@codecov/webpack-plugin": "^1.4.0",
     "@rspack/cli": "^1.1.0",
     "@rspack/core": "^1.1.0",
     "@vitest/coverage-istanbul": "2.1.4",

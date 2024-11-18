@@ -1,5 +1,6 @@
 const path = require("node:path");
 const TerserPlugin = require("terser-webpack-plugin");
+const { codecovWebpackPlugin } = require("@codecov/webpack-plugin");
 
 const babelConfig = {
   babelrc: false,
@@ -11,6 +12,13 @@ const babelConfig = {
 module.exports = [
   {
     entry: "./src/index.js",
+    plugins: [
+      codecovWebpackPlugin({
+        enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
+        bundleName: "qrex",
+        uploadToken: process.env.CODECOV_TOKEN,
+      }),
+    ],
     output: {
       path: path.resolve(__dirname, "dist/cjs"),
       filename: "qrex.js",

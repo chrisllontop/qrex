@@ -4,7 +4,7 @@ import { test } from "tap";
 import GF from "../../../src/core/galois-field.js";
 
 test("Galois Field", (t: AssertionHandler) => {
-  t.throw(() => {
+  t.throws(() => {
     GF.log(0);
   }, "Should throw for log(n) with n < 1");
 

@@ -55,7 +55,7 @@ test("Alphanumeric Data", (t: AsssertionHandler) => {
 
     const bitBuffer = new BitBuffer();
     alphanumericData.write(bitBuffer);
-    t.deepEqual(
+    t.same(
       bitBuffer.buffer,
       data.dataBit,
       "Should write correct data to buffer",

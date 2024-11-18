@@ -36,7 +36,7 @@ test("PNG render", (t: AssertionHandler) => {
   const sampleQrData = QRCode.create("sample text", { version: 2 });
   let png;
 
-  t.notThrow(() => {
+  t.doesNotThrow(() => {
     png = PngRenderer.render(sampleQrData);
   }, "Should not throw with only qrData param");
 
@@ -47,7 +47,7 @@ test("PNG render", (t: AssertionHandler) => {
   // modules: 25, margins: 4 * 2, scale: 4
   t.equal(png.width, (25 + 4 * 2) * 4, "Should have correct size");
 
-  t.notThrow(() => {
+  t.doesNotThrow(() => {
     png = PngRenderer.render(sampleQrData, {
       margin: 10,
       scale: 1,
@@ -143,11 +143,11 @@ test("PNG renderToFile", (t: AssertionHandler) => {
 test("PNG renderToFileStream", (t: AssertionHandler) => {
   const sampleQrData = QRCode.create("sample text", { version: 2 });
 
-  t.notThrow(() => {
+  t.doesNotThrow(() => {
     PngRenderer.renderToFileStream(new StreamMock(), sampleQrData);
   }, "Should not throw with only qrData param");
 
-  t.notThrow(() => {
+  t.doesNotThrow(() => {
     PngRenderer.renderToFileStream(new StreamMock(), sampleQrData, {
       margin: 10,
       scale: 1,

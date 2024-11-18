@@ -69,11 +69,11 @@ test("Char count bits", (t: AssertionHandler) => {
     t.equal(Mode.getCharCountIndicator(Mode.KANJI, v), EXPECTED_BITS.kanji[2]);
   }
 
-  t.throw(function() {
+  t.throws(() => {
     Mode.getCharCountIndicator({}, 1);
   }, "Should throw if mode is invalid");
 
-  t.throw(function() {
+  t.throws(() => {
     Mode.getCharCountIndicator(Mode.BYTE, 0);
   }, "Should throw if version is invalid");
 
@@ -156,7 +156,7 @@ test("To string", (t: AssertionHandler) => {
   t.equal(Mode.toString(Mode.BYTE), "Byte");
   t.equal(Mode.toString(Mode.KANJI), "Kanji");
 
-  t.throw(() => {
+  t.throws(() => {
     Mode.toString({});
   }, "Should throw if mode is invalid");
 

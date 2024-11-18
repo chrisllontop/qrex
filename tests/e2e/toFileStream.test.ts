@@ -3,14 +3,14 @@ import { type DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 import { test } from "tap";
 import sinon from "sinon";
 import StreamMock from "../mocks/writable-stream.js";
-import * as QRCode from "../../src/core/qrcode.js";
+import * as QRCode from "../../src/index.js";
 
 test("toFileStream png", (t: AssertionHandler) => {
-  t.throw(() => {
+  t.throws(() => {
     QRCode.toFileStream("some text");
   }, "Should throw if stream is not provided");
 
-  t.throw(() => {
+  t.throws(() => {
     QRCode.toFileStream(new StreamMock());
   }, "Should throw if text is not provided");
 

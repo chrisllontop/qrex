@@ -1,4 +1,3 @@
-<<<<<<< HEAD:tests/unit/core/segments.test.ts
 import { describe, expect, it } from "vitest";
 import toSJIS from "../../../helper/to-sjis";
 import { AlphanumericData } from "../../../src/core/alphanumeric-data";
@@ -7,18 +6,6 @@ import { Mode } from "../../../src/core/mode";
 import NumericData from "../../../src/core/numeric-data";
 import { Segments } from "../../../src/core/segments";
 import { CoreUtils } from "../../../src/core/utils";
-=======
-import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
-
-import { test } from "tap";
-import Mode from "../../../src/core/mode.js";
-import Segments from "../../../src/core/segments.js";
-import NumericData from "../../../src/core/numeric-data.js";
-import AlphanumericData from "../../../src/core/alphanumeric-data.js";
-import ByteData from "../../../src/core/byte-data.js";
-import toSJIS from "../../../helper/to-sjis.js";
-import Utils from "../../../src/core/utils.js";
->>>>>>> a12daef (Refactor build context to esm):test/unit/core/segments.test.ts
 
 type MockData = {
   input: string;

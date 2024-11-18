@@ -6,7 +6,7 @@ import MaskPattern from "../../../src/corec/mask-pattern.js";
 
 test("Mask pattern - Pattern references", (t: AssertionHandler) => {
   const patternsCount = Object.keys(MaskPattern.Patterns).length;
-  t.equals(patternsCount, 8, "Should return 8 patterns");
+  t.equal(patternsCount, 8, "Should return 8 patterns");
 
   t.end();
 });
@@ -110,7 +110,7 @@ test("Mask pattern - Apply mask", (t: AssertionHandler) => {
   for (let p = 0; p < patterns; p++) {
     const matrix = new BitMatrix(6);
     MaskPattern.applyMask(p, matrix);
-    t.deepEqual(
+    t.same(
       matrix.data,
       new Uint8Array(expectedPatterns[p]),
       "Should return correct pattern",
@@ -124,13 +124,13 @@ test("Mask pattern - Apply mask", (t: AssertionHandler) => {
   matrix.set(1, 1, false, true);
   MaskPattern.applyMask(0, matrix);
 
-  t.deepEqual(
+  t.same(
     matrix.data,
     new Uint8Array([false, false, false, false]),
     "Should leave reserved bit unchanged",
   );
 
-  t.throws(function() {
+  t.throws(() => {
     MaskPattern.applyMask(-1, new BitMatrix(1));
   }, "Should throw if pattern is invalid");
 

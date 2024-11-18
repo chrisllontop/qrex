@@ -23,7 +23,7 @@ test("Byte Data: String Input", (t: AssertionHandler) => {
 
   const bitBuffer = new BitBuffer();
   byteData.write(bitBuffer);
-  t.deepEqual(
+  t.same(
     bitBuffer.buffer,
     textByte,
     "Should write correct data to buffer",
@@ -52,7 +52,7 @@ test("Byte Data: Byte Input", (t: AssertionHandler) => {
 
   const bitBuffer = new BitBuffer();
   byteData.write(bitBuffer);
-  t.deepEqual(bitBuffer.buffer, bytes, "Should write correct data to buffer");
+  t.same(bitBuffer.buffer, bytes, "Should write correct data to buffer");
 
   t.end();
 });

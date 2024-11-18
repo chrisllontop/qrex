@@ -24,7 +24,7 @@ test("Bit Buffer", (t: AssertionHandler) => {
   t.equal(bitBuffer.getLengthInBits(), 8, "Length should be 8");
 
   for (let i = 0; i < 8; i++) {
-    t.deepEqual(
+    t.same(
       bitBuffer.get(i),
       expectedDataBits[i],
       "Should return correct bit value",

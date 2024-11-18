@@ -7,6 +7,7 @@ import PngRenderer from "./renderer/png.js";
 import Utf8Renderer from "./renderer/utf8.js";
 import TerminalRenderer from "./renderer/terminal.js";
 import SvgRenderer from "./renderer/svg.js";
+import { toCanvas as convertToCanvas } from './browser.js';
 
 export type Parameters = {
   cb: Function;
@@ -73,7 +74,7 @@ function render(renderFunc: Function, text: string, params: Parameters) {
 
 export const create = QRCode.create;
 
-export const toCanvas = browserToCanvas;
+export const toCanvas = convertToCanvas;
 
 export function toString(text: string, opts: RendererOptions, cb: Function) {
   const params = checkParams(text, opts, cb);

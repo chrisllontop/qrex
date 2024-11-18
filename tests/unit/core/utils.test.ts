@@ -64,7 +64,7 @@ test("BCH Digit", (t: AssertionHandler) => {
 });
 
 test("Set/Get SJIS function", (t: AssertionHandler) => {
-  t.throw(() => {
+  t.throws(() => {
     Utils.setToSJISFunction();
   }, "Should throw if param is not a function");
 

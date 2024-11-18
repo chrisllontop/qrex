@@ -5,19 +5,24 @@ import sinon from "sinon";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import * as os from "node:os";
-import * as QRCode from "../../src/core/qrcode.js";
+import * as path from "node:path";
+import * as url from "node:url";
+import * as QRCode from "../../src/index.js";
 import StreamMock from "../mocks/writable-stream.js";
 import { restoreNativePromise, removeNativePromise } from "../helpers.js";
+
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 test("toFile - no promise available", (t: AssertionHandler) => {
   removeNativePromise();
   const fileName = path.join(os.tmpdir(), "qrimage.png");
 
-  t.throw(() => {
+  t.throws(() => {
     QRCode.toFile(fileName, "some text");
   }, "Should throw if a callback is not provided");
 
-  t.throw(() => {
+  t.throws(() => {
     QRCode.toFile(fileName, "some text", {});
   }, "Should throw if a callback is not a function");
 
@@ -29,11 +34,11 @@ test("toFile - no promise available", (t: AssertionHandler) => {
 test("toFile", (t: AssertionHandler) => {
   const fileName = path.join(os.tmpdir(), "qrimage.png");
 
-  t.throw(() => {
+  t.throws(() => {
     QRCode.toFile("some text", function() { });
   }, "Should throw if path is not provided");
 
-  t.throw(() => {
+  t.throws(() => {
     QRCode.toFile(fileName);
   }, "Should throw if text is not provided");
 

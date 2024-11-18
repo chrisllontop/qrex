@@ -18,7 +18,7 @@ test("Utils getOptions", (t: AssertionHandler) => {
 
   t.ok(Utils.getOptions, "getOptions should be defined");
 
-  t.deepEqual(
+  t.same(
     Utils.getOptions(),
     defaultOptions,
     "Should return default options if called without param",
@@ -54,7 +54,7 @@ test("Utils getOptions", (t: AssertionHandler) => {
     "Should return correct margin value",
   );
 
-  t.deepEqual(
+  t.same(
     Utils.getOptions({ color: { dark: "#fff", light: "#000000" } }).color,
     {
       dark: { r: 255, g: 255, b: 255, a: 255, hex: "#ffffff" },
@@ -63,7 +63,7 @@ test("Utils getOptions", (t: AssertionHandler) => {
     "Should return correct colors value from strings",
   );
 
-  t.deepEqual(
+  t.same(
     Utils.getOptions({ color: { dark: 111, light: 999 } }).color,
     {
       dark: { r: 17, g: 17, b: 17, a: 255, hex: "#111111" },
@@ -72,11 +72,11 @@ test("Utils getOptions", (t: AssertionHandler) => {
     "Should return correct colors value from numbers",
   );
 
-  t.throw(() => {
+  t.throws(() => {
     Utils.getOptions({ color: { dark: true } });
   }, "Should throw if color is not a string");
 
-  t.throw(() => {
+  t.throws(() => {
     Utils.getOptions({ color: { dark: "#aa" } });
   }, "Should throw if color is not in a valid hex format");
 

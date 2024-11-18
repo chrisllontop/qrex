@@ -2,7 +2,7 @@ import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
 import { test } from "tap";
 import { Canvas, createCanvas } from "canvas";
-import * as QRCode from "../../src/core/qrcode.js";
+import * as QRCode from "../../src/index.js";
 import { restoreNativePromise, removeNativePromise } from "../helpers.js";
 
 test("toCanvas - no promise available", (t: AssertionHandler) => {
@@ -52,7 +52,7 @@ test("toCanvas", (t: AssertionHandler) => {
 
   t.plan(7);
 
-  t.throw(() => {
+  t.throws(() => {
     QRCode.toCanvas();
   }, "Should throw if no arguments are provided");
 
@@ -91,7 +91,7 @@ test("toCanvas", (t: AssertionHandler) => {
   global.document = undefined;
 });
 
-test("toCanvas with specified canvas element", (t) => {
+test("toCanvas with specified canvas element", (t: AssertionHandler) => {
   const canvasEl = createCanvas(200, 200);
 
   t.plan(6);

@@ -1,6 +1,6 @@
 import type { Mode, ModeId } from "qrcode";
 
-import * as dijk from "dijkstrajs";
+import dijk from "dijkstrajs";
 import { NUMERIC, ALPHANUMERIC, BYTE, KANJI, getCharCountIndicator, getBestModeForData, from, toString } from "./mode.js";
 import { isKanjiModeEnabled } from './utils.js'
 import { AlphanumericData } from "./alphanumeric-data.js";
@@ -357,7 +357,7 @@ export function fromString(data: string, version: number): Segment[] {
 
   const nodes = buildNodes(segs);
   const graph = buildGraph(nodes, version);
-  const path = find_path(graph.map, 'start', 'end');
+  const path = dijk.find_path(graph.map, 'start', 'end');
 
   const optimizedSegs = [];
   for (let i = 1; i < path.length - 1; i++) {

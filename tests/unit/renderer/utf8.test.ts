@@ -17,11 +17,11 @@ test("Utf8Renderer render", (t: AssertionHandler) => {
   const sampleQrData = QRCode.create("sample text", { version: 2 });
   let str;
 
-  t.notThrow(() => {
+  t.doesNotThrow(() => {
     str = Utf8Renderer.render(sampleQrData);
   }, "Should not throw with only qrData param");
 
-  t.notThrow(() => {
+  t.doesNotThrow(() => {
     str = Utf8Renderer.render(sampleQrData, {
       margin: 10,
       scale: 1,
@@ -57,7 +57,7 @@ test("Utf8 renderToFile", (t: AssertionHandler) => {
       margin: 10,
       scale: 1,
     },
-    function(err) {
+    (err: Error) => {
       t.ok(!err, "Should not generate errors with options param");
 
       t.equal(

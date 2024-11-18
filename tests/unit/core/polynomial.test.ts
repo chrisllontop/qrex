@@ -6,7 +6,7 @@ import Poly from "../../../src/core/polynomial.js";
 test("Generator polynomial", (t: AssertionHandler) => {
   const result = Poly.generateECPolynomial(0);
   t.ok(result instanceof Uint8Array, "Should return an Uint8Array");
-  t.deepEqual(
+  t.same(
     result,
     new Uint8Array([1]),
     "Should return coeff [1] for polynomial of degree 0",

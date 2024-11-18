@@ -2,35 +2,40 @@ import { type DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 
 import { test } from "tap";
 import * as fs from "node:fs";
+import * as path from "node:path";
+import * as url from "node:url";
 import Helpers from "../helpers.js";
-import * as QRCode from "../../src/core/qrcode.js";
+import * as QRCode from "../../src/index.js";
 import * as QRCodeBrowser from "../../src/browser.js";
 import { restoreNativePromise, removeNativePromise } from "../helpers.js";
+
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename)
 
 test("toString - no promise available", (t: AssertionHandler) => {
   removeNativePromise();
 
-  t.throw(() => {
+  t.throws(() => {
     QRCode.toString();
   }, "Should throw if text is not provided");
 
-  t.throw(() => {
+  t.throws(() => {
     QRCode.toString("some text");
   }, "Should throw if a callback is not provided");
 
-  t.throw(() => {
+  t.throws(() => {
     QRCode.toString("some text", {});
   }, "Should throw if a callback is not a function");
 
-  t.throw(() => {
+  t.throws(() => {
     QRCode.toString();
   }, "Should throw if text is not provided (browser)");
 
-  t.throw(() => {
+  t.throws(() => {
     QRCodeBrowser.toString("some text");
   }, "Should throw if a callback is not provided (browser)");
 
-  t.throw(() => {
+  t.throws(() => {
     QRCodeBrowser.toString("some text", {});
   }, "Should throw if a callback is not a function (browser)");
 
@@ -42,13 +47,13 @@ test("toString - no promise available", (t: AssertionHandler) => {
 test("toString", (t: AssertionHandler) => {
   t.plan(5);
 
-  t.throw(() => {
+  t.throws(() => {
     QRCode.toString();
   }, "Should throw if text is not provided");
 
   QRCode.toString("some text", (err: Error, str: string) => {
     t.ok(!err, "There should be no error");
-    t.equals(typeof str, "string", "Should return a string");
+    t.equal(typeof str, "string", "Should return a string");
   });
 
   t.equals(
@@ -59,7 +64,7 @@ test("toString", (t: AssertionHandler) => {
 
   QRCode.toString("some text", { errorCorrectionLevel: "L" }).then(
     (str: string) => {
-      t.equals(typeof str, "string", "Should return a string");
+      t.equal(typeof str, "string", "Should return a string");
     },
   );
 });
@@ -67,13 +72,13 @@ test("toString", (t: AssertionHandler) => {
 test("toString (browser)", (t: AssertionHandler) => {
   t.plan(5);
 
-  t.throw(() => {
+  t.throws(() => {
     browser.toString();
   }, "Should throw if text is not provided");
 
   browser.toString("some text", (err: Error, str: string) => {
     t.ok(!err, "There should be no error (browser)");
-    t.equals(typeof str, "string", "Should return a string (browser)");
+    t.equal(typeof str, "string", "Should return a string (browser)");
   });
 
   t.equals(
@@ -85,7 +90,7 @@ test("toString (browser)", (t: AssertionHandler) => {
   browser
     .toString("some text", { errorCorrectionLevel: "L" })
     .then((str: string) => {
-      t.equals(typeof str, "string", "Should return a string");
+      t.equal(typeof str, "string", "Should return a string");
     });
 });
 

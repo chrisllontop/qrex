@@ -4,10 +4,10 @@ import { test } from "tap";
 import BitMatrix from "../../../src/core/bit-matrix.js";
 
 test("Bit Matrix", (t: AssertionHandler) => {
-  t.throw(() => {
+  t.throws(() => {
     new BitMatrix(0);
   }, "Should throw if size is 0");
-  t.throw(() => {
+  t.throws(() => {
     new BitMatrix(-1);
   }, "Should throw if size less than 0");
 

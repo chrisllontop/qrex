@@ -47,7 +47,7 @@ const testData: Array<MockMode> = [
 ];
 
 test("Numeric Data", (t: AssertionHandler) => {
-  testData.forEach(function(data) {
+  testData.forEach((data: MockData) => {
     const numericData = new NumericData(data.data);
 
     t.equal(numericData.mode, Mode.NUMERIC, "Mode should be NUMERIC");
@@ -64,7 +64,7 @@ test("Numeric Data", (t: AssertionHandler) => {
 
     const bitBuffer = new BitBuffer();
     numericData.write(bitBuffer);
-    t.deepEqual(
+    t.same(
       bitBuffer.buffer,
       data.dataBit,
       "Should write correct data to buffer",

@@ -30,13 +30,13 @@ test("CanvasRenderer render", (t: AssertionHandler) => {
   const sampleQrData = QRCode.create("sample text", { version: 2 });
   let canvasEl;
 
-  t.notThrow(() => {
+  t.doesNotThrow(() => {
     canvasEl = CanvasRenderer.render(sampleQrData);
   }, "Should not throw if canvas is not provided");
 
   t.ok(canvasEl instanceof Canvas, "Should return a new canvas object");
 
-  t.notThrow(() => {
+  t.doesNotThrow(() => {
     canvasEl = CanvasRenderer.render(sampleQrData, {
       margin: 10,
       scale: 1,
@@ -50,7 +50,7 @@ test("CanvasRenderer render", (t: AssertionHandler) => {
 
   global.document = undefined;
 
-  t.throw(() => {
+  t.throws(() => {
     canvasEl = CanvasRenderer.render(sampleQrData);
   }, "Should throw if canvas cannot be created");
 
@@ -61,11 +61,11 @@ test("CanvasRenderer render to provided canvas", (t: AssertionHandler) => {
   const sampleQrData = QRCode.create("sample text", { version: 2 });
   const canvasEl = createCanvas(200, 200);
 
-  t.notThrow(() => {
+  t.doesNotThrow(() => {
     CanvasRenderer.render(sampleQrData, canvasEl);
   }, "Should not throw with only qrData and canvas param");
 
-  t.notThrow(() => {
+  t.doesNotThrow(() => {
     CanvasRenderer.render(sampleQrData, canvasEl, {
       margin: 10,
       scale: 1,
@@ -93,11 +93,11 @@ test("CanvasRenderer renderToDataURL", (t: AssertionHandler) => {
   const sampleQrData = QRCode.create("sample text", { version: 2 });
   let url;
 
-  t.notThrow(() => {
+  t.doesNotThrow(() => {
     url = CanvasRenderer.renderToDataURL(sampleQrData);
   }, "Should not throw if canvas is not provided");
 
-  t.notThrow(() => {
+  t.doesNotThrow(() => {
     url = CanvasRenderer.renderToDataURL(sampleQrData, {
       margin: 10,
       scale: 1,
@@ -125,11 +125,11 @@ test("CanvasRenderer renderToDataURL to provided canvas", (t: AssertionHandler) 
   const canvasEl = createCanvas(200, 200);
   let url;
 
-  t.notThrow(() => {
+  t.doesNotThrow(() => {
     url = CanvasRenderer.renderToDataURL(sampleQrData, canvasEl);
   }, "Should not throw with only qrData and canvas param");
 
-  t.notThrow(() => {
+  t.doesNotThrow(() => {
     url = CanvasRenderer.renderToDataURL(sampleQrData, canvasEl, {
       margin: 10,
       scale: 1,

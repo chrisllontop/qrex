@@ -7,7 +7,7 @@ test("Reed-Solomon encoder", (t: AssertionHandler) => {
   let enc = new RS();
 
   t.notOk(enc.genPoly, "Should have an undefined generator polynomial");
-  t.throw(() => {
+  t.throws(() => {
     enc.encode([]);
   }, "Should throw if generator polynomial is undefined");
 
@@ -28,7 +28,7 @@ test("Reed-Solomon encoder", (t: AssertionHandler) => {
   t.ok(genPoly, "Generator polynomial should be defined");
 
   enc.initialize(3);
-  t.notEqual(
+  t.not(
     enc.genPoly,
     genPoly,
     "Should reinitialize the generator polynomial",
@@ -41,7 +41,7 @@ test("Reed-Solomon encoder", (t: AssertionHandler) => {
   );
 
   enc = new RS(1);
-  t.deepEqual(
+  t.same(
     enc.encode(new Uint8Array([0])),
     new Uint8Array([0]),
     "Should return correct buffer",

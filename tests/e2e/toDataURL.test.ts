@@ -3,41 +3,41 @@ import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
 import { test } from "tap";
 import { createCanvas } from "canvas";
 import * as QRCodeBrowser from "../../src/browser.js";
-import * as QRCode from "../../src/core/qrcode.js";
+import * as QRCode from "../../src/index.js";
 import { restoreNativePromise, removeNativePromise } from "../helpers.js";
 
 test("toDataURL - no promise available", (t: AssertionHandler) => {
   removeNativePromise();
 
-  t.throw(() => {
+  t.throws(() => {
     QRCode.toDataURL();
   }, "Should throw if no arguments are provided");
 
-  t.throw(() => {
+  t.throws(() => {
     QRCode.toDataURL(function() { });
   }, "Should throw if text is not provided");
 
-  t.throw(() => {
+  t.throws(() => {
     QRCode.toDataURL("some text");
   }, "Should throw if a callback is not provided");
 
-  t.throw(() => {
+  t.throws(() => {
     QRCode.toDataURL("some text", {});
   }, "Should throw if a callback is not a function");
 
-  t.throw(() => {
+  t.throws(() => {
     QRCodeBrowser.toDataURL();
   }, "Should throw if no arguments are provided (browser)");
 
-  t.throw(() => {
+  t.throws(() => {
     QRCodeBrowser.toDataURL(function() { });
   }, "Should throw if text is not provided (browser)");
 
-  t.throw(() => {
+  t.throws(() => {
     QRCodeBrowser.toDataURL("some text");
   }, "Should throw if a callback is not provided (browser)");
 
-  t.throw(() => {
+  t.throws(() => {
     QRCodeBrowser.toDataURL("some text", {});
   }, "Should throw if a callback is not a function (browser)");
 
@@ -68,7 +68,7 @@ test("toDataURL - image/png", (t: AssertionHandler) => {
 
   t.plan(8);
 
-  t.throw(() => {
+  t.throws(() => {
     QRCode.toDataURL();
   }, "Should throw if no arguments are provided");
 
@@ -80,7 +80,7 @@ test("toDataURL - image/png", (t: AssertionHandler) => {
     },
     (err: Error, url: string) => {
       t.ok(!err, "there should be no error " + err);
-      t.equals(
+      t.equal(
         url,
         expectedDataURL,
         "url should match expected value for error correction L",
@@ -101,7 +101,7 @@ test("toDataURL - image/png", (t: AssertionHandler) => {
     },
   );
 
-  t.equals(
+  t.equal(
     typeof QRCode.toDataURL("i am a pony!").then,
     "function",
     "Should return a promise",
@@ -111,7 +111,7 @@ test("toDataURL - image/png", (t: AssertionHandler) => {
     errorCorrectionLevel: "L",
     type: "image/png",
   }).then((url: string) => {
-    t.equals(
+    t.equal(
       url,
       expectedDataURL,
       "url should match expected value for error correction L (promise)",
@@ -150,11 +150,11 @@ test("Canvas toDataURL - image/png", (t: AssertionHandler) => {
 
   t.plan(11);
 
-  t.throw(() => {
+  t.throws(() => {
     QRCodeBrowser.toDataURL();
   }, "Should throw if no arguments are provided");
 
-  t.throw(() => {
+  t.throws(() => {
     QRCodeBrowser.toDataURL(function() { });
   }, "Should throw if text is not provided");
 
@@ -168,7 +168,7 @@ test("Canvas toDataURL - image/png", (t: AssertionHandler) => {
     },
     (err: Error, url: string) => {
       t.ok(!err, "there should be no error " + err);
-      t.equals(
+      t.equal(
         url,
         expectedDataURL,
         "url generated should match expected value",
@@ -194,7 +194,7 @@ test("Canvas toDataURL - image/png", (t: AssertionHandler) => {
     errorCorrectionLevel: "H",
     type: "image/png",
   }).then((url: string) => {
-    t.equals(
+    t.equal(
       url,
       expectedDataURL,
       "url generated should match expected value (promise)",
@@ -226,7 +226,7 @@ test("Canvas toDataURL - image/png", (t: AssertionHandler) => {
     },
     (err: Error, url: string) => {
       t.ok(!err, "there should be no error " + err);
-      t.equals(
+      t.equal(
         url,
         expectedDataURL,
         "url generated should match expected value",
@@ -238,7 +238,7 @@ test("Canvas toDataURL - image/png", (t: AssertionHandler) => {
     errorCorrectionLevel: "H",
     type: "image/png",
   }).then((url: string) => {
-    t.equals(
+    t.equal(
       url,
       expectedDataURL,
       "url generated should match expected value (promise)",

@@ -1,4 +1,5 @@
 const path = require("node:path");
+const { codecovWebpackPlugin } = require("@codecov/webpack-plugin");
 
 const babelConfig = {
   babelrc: false,
@@ -11,6 +12,13 @@ const babelConfig = {
 module.exports = [
   {
     entry: "./src/index.ts",
+    plugins: [
+      codecovWebpackPlugin({
+        enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
+        bundleName: "qrex",
+        uploadToken: process.env.CODECOV_TOKEN,
+      }),
+    ],
     output: {
       path: path.resolve(__dirname, "dist/cjs"),
       filename: "qrex.js",
@@ -39,6 +47,13 @@ module.exports = [
   },
   {
     entry: "./src/browser.ts",
+    plugins: [
+      codecovWebpackPlugin({
+        enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
+        bundleName: "qrex",
+        uploadToken: process.env.CODECOV_TOKEN,
+      }),
+    ],
     output: {
       path: path.resolve(__dirname, "dist/cjs"),
       filename: "qrex.browser.js",

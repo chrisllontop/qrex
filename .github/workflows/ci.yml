@@ -8,6 +8,9 @@ on:
     branches:
       - main
 
+env:
+  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
 jobs:
   ci:
     runs-on: ubuntu-latest
@@ -21,10 +24,15 @@ jobs:
         run: pnpm install
 
       - name: ✏️ Lint code
-        run: pnpm lint
+        run: pnpm lint:ci
 
       - name: 🛠️ Build project
         run: pnpm build
 
       - name: 🧪 Run tests
         run: pnpm test:ci
+
+      - name: Upload results to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}

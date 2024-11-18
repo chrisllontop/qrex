@@ -23,16 +23,20 @@
     "./dist/cjs/qrex.js": "./dist/cjs/qrex.browser.js",
     "fs": false
   },
-  "files": ["bin", "dist", "helper"],
+  "files": [
+    "bin",
+    "dist",
+    "helper"
+  ],
   "homepage": "https://github.com/chrisllontop/qrex",
   "license": "MIT",
   "scripts": {
     "build": "rspack build",
-    "lint": "biome lint",
-    "lint:fix": "biome lint --fix",
-    "test": "node --throw-deprecation test.js",
-    "test:ci": "echo 'No tests yet'",
-    "prepublish": "npm run build"
+    "lint:ci": "biome lint && biome format",
+    "lint:fix": "biome lint --write && biome format --write",
+    "test:dev": "vitest --watch",
+    "test:ci": "vitest --coverage --run",
+    "prepublish": "pnpm run build"
   },
   "bin": {
     "qrex": "./bin/qrex"
@@ -46,14 +50,18 @@
     "@babel/preset-env": "^7.26.0",
     "@babel/preset-typescript": "^7.26.0",
     "@biomejs/biome": "^1.9.4",
+    "@codecov/webpack-plugin": "^1.4.0",
     "@rspack/cli": "^1.1.0",
     "@rspack/core": "^1.1.0",
+    "@vitest/coverage-istanbul": "2.1.4",
+    "@vitest/coverage-v8": "^2.1.5",
     "babel-loader": "^9.2.1",
     "canvas": "^2.8.0",
     "htmlparser2": "^4.1.0",
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.4"
   },
   "repository": {
     "type": "git",

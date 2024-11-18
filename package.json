@@ -31,7 +31,7 @@
     "lint:ci": "biome lint && biome format",
     "lint:fix": "biome lint --write && biome format --write",
     "test:dev": "vitest --watch",
-    "test:ci": "vitest --coverage",
+    "test:ci": "vitest --coverage --run",
     "prepublish": "pnpm run build"
   },
   "bin": {

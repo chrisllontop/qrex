@@ -33,9 +33,9 @@ importers:
       '@vitest/coverage-istanbul':
         specifier: 2.1.4
         version: 2.1.4(vitest@2.1.4(@types/node@22.9.0)(@vitest/ui@2.1.4)(terser@5.36.0))
-      '@vitest/ui':
-        specifier: 2.1.4
-        version: 2.1.4(vitest@2.1.4)
+      '@vitest/coverage-v8':
+        specifier: ^2.1.5
+        version: 2.1.5(vitest@2.1.4(@types/node@22.9.0)(@vitest/ui@2.1.4)(terser@5.36.0))
       babel-loader:
         specifier: ^9.2.1
         version: 9.2.1(@babel/core@7.26.0)(webpack@5.96.1)
@@ -556,6 +556,9 @@ packages:
   '@babel/types@7.26.0':
     resolution: {integrity: sha512-Z/yiTPj+lDVnF7lWeKCIJzaIkI0vYO87dMpZ4bg4TDrFe4XXLFWL1TbXU27gBP3QccxV9mZICCrnjnYlJjXHOA==}
     engines: {node: '>=6.9.0'}
+
+  '@bcoe/v8-coverage@0.2.3':
+    resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
   '@biomejs/biome@1.9.4':
     resolution: {integrity: sha512-1rkd7G70+o9KkTn5KLmDYXihGoTaIGO9PIIN2ZB7UJxFrWw04CZHPYiMRjYsaDvVV7hP1dYNRLxSANLaBFGpog==}
@@ -1085,6 +1088,15 @@ packages:
     resolution: {integrity: sha512-NLmfjzXnRSmLF/h4hYkzjvd7hZ85DRZzPUqXu0McPFCMczDfNmOjMoM3KaxjFaEmOc1YzX9HHbU/Rr9VO+35ow==}
     peerDependencies:
       vitest: 2.1.4
+
+  '@vitest/coverage-v8@2.1.5':
+    resolution: {integrity: sha512-/RoopB7XGW7UEkUndRXF87A9CwkoZAJW01pj8/3pgmDVsjMH2IKy6H1A38po9tmUlwhSyYs0az82rbKd9Yaynw==}
+    peerDependencies:
+      '@vitest/browser': 2.1.5
+      vitest: 2.1.5
+    peerDependenciesMeta:
+      '@vitest/browser':
+        optional: true
 
   '@vitest/expect@2.1.4':
     resolution: {integrity: sha512-DOETT0Oh1avie/D/o2sgMHGrzYUFFo3zqESB2Hn70z6QB1HrS2IQ9z5DfyTqU8sg4Bpu13zZe9V4+UTNQlUeQA==}
@@ -3633,6 +3645,8 @@ snapshots:
       '@babel/helper-string-parser': 7.25.9
       '@babel/helper-validator-identifier': 7.25.9
 
+  '@bcoe/v8-coverage@0.2.3': {}
+
   '@biomejs/biome@1.9.4':
     optionalDependencies:
       '@biomejs/cli-darwin-arm64': 1.9.4
@@ -4103,6 +4117,24 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@vitest/coverage-v8@2.1.5(vitest@2.1.4(@types/node@22.9.0)(@vitest/ui@2.1.4)(terser@5.36.0))':
+    dependencies:
+      '@ampproject/remapping': 2.3.0
+      '@bcoe/v8-coverage': 0.2.3
+      debug: 4.3.7
+      istanbul-lib-coverage: 3.2.2
+      istanbul-lib-report: 3.0.1
+      istanbul-lib-source-maps: 5.0.6
+      istanbul-reports: 3.1.7
+      magic-string: 0.30.12
+      magicast: 0.3.5
+      std-env: 3.8.0
+      test-exclude: 7.0.1
+      tinyrainbow: 1.2.0
+      vitest: 2.1.4(@types/node@22.9.0)(@vitest/ui@2.1.4)(terser@5.36.0)
+    transitivePeerDependencies:
+      - supports-color
+
   '@vitest/expect@2.1.4':
     dependencies:
       '@vitest/spy': 2.1.4
@@ -4147,6 +4179,7 @@ snapshots:
       tinyglobby: 0.2.10
       tinyrainbow: 1.2.0
       vitest: 2.1.4(@types/node@22.9.0)(@vitest/ui@2.1.4)(terser@5.36.0)
+    optional: true
 
   '@vitest/utils@2.1.4':
     dependencies:
@@ -4755,8 +4788,10 @@ snapshots:
   fdir@6.4.2(picomatch@4.0.2):
     optionalDependencies:
       picomatch: 4.0.2
+    optional: true
 
-  fflate@0.8.2: {}
+  fflate@0.8.2:
+    optional: true
 
   fill-range@7.1.1:
     dependencies:
@@ -4789,7 +4824,8 @@ snapshots:
       locate-path: 7.2.0
       path-exists: 5.0.0
 
-  flatted@3.3.1: {}
+  flatted@3.3.1:
+    optional: true
 
   follow-redirects@1.15.9: {}
 
@@ -5181,7 +5217,8 @@ snapshots:
 
   mrmime@1.0.1: {}
 
-  mrmime@2.0.0: {}
+  mrmime@2.0.0:
+    optional: true
 
   ms@2.0.0: {}
 
@@ -5314,7 +5351,8 @@ snapshots:
 
   picomatch@2.3.1: {}
 
-  picomatch@4.0.2: {}
+  picomatch@4.0.2:
+    optional: true
 
   pkg-dir@7.0.0:
     dependencies:
@@ -5583,6 +5621,7 @@ snapshots:
       '@polka/url': 1.0.0-next.28
       mrmime: 2.0.0
       totalist: 3.0.1
+    optional: true
 
   sockjs@0.3.24:
     dependencies:
@@ -5715,6 +5754,7 @@ snapshots:
     dependencies:
       fdir: 6.4.2(picomatch@4.0.2)
       picomatch: 4.0.2
+    optional: true
 
   tinypool@1.0.1: {}
 
@@ -5730,7 +5770,8 @@ snapshots:
 
   totalist@1.1.0: {}
 
-  totalist@3.0.1: {}
+  totalist@3.0.1:
+    optional: true
 
   tr46@0.0.3: {}
 

@@ -23,7 +23,11 @@
     "./dist/cjs/qrex.js": "./dist/cjs/qrex.browser.js",
     "fs": false
   },
-  "files": ["bin", "dist", "helper"],
+  "files": [
+    "bin",
+    "dist",
+    "helper"
+  ],
   "homepage": "https://github.com/chrisllontop/qrex",
   "license": "MIT",
   "scripts": {

@@ -33,7 +33,11 @@ export const KANJI: Mode = {
   ccBits: BITS_KANJI
 };
 
-// TODO: Implement MIXED type
+export const MIXED: Mode = {
+  id: 'Mixed',
+  bit: -1,
+  ccBits: BITS_MIXED
+}
 
 
 /**

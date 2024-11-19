@@ -49,7 +49,6 @@
     "esm": "^3.2.25",
     "pngjs": "^5.0.0",
     "sinon": "^19.0.2",
-    "tap": "^21.0.1",
     "yargs": "^15.3.1"
   },
   "devDependencies": {
@@ -63,7 +62,6 @@
     "@types/node": "^16.18.119",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "@types/tap": "^15.0.12",
     "babel-loader": "^9.2.1",
     "canvas": "^2.8.0",
     "util": "0.12.5",
@@ -83,14 +81,5 @@
   "engines": {
     "node": ">=20.0.0"
   },
-  "packageManager": "pnpm@9.10.0+sha512.73a29afa36a0d092ece5271de5177ecbf8318d454ecd701343131b8ebc0c1a91c487da46ab77c8e596d6acf1461e3594ced4becedf8921b074fbd8653ed7051c",
-  "tap": {
-    "node-arg": [
-      "--loader=ts-node/esm",
-      "--loader=esmock"
-    ],
-    "plugin": [
-      "!@tapjs/typescript"
-    ]
-  }
+  "packageManager": "pnpm@9.10.0+sha512.73a29afa36a0d092ece5271de5177ecbf8318d454ecd701343131b8ebc0c1a91c487da46ab77c8e596d6acf1461e3594ced4becedf8921b074fbd8653ed7051c"
 }

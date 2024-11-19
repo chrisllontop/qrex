@@ -1,7 +1,7 @@
 import { getBCHDigit, getSymbolTotalCodewords } from './utils.js'
 import { getTotalCodewordsCount } from './error-correction-code.js'
 import { from as _from, M } from './error-correction-level.js'
-import { getCharCountIndicator, BYTE, NUMERIC, ALPHANUMERIC, KANJI } from './mode.js'
+import { getCharCountIndicator, MIXED, BYTE, NUMERIC, ALPHANUMERIC, KANJI } from './mode.js'
 import { isValid } from './version-check.js'
 import { type Segment } from './segments.js'
 import { type Mode, type ErrorCorrectionLevel } from 'qrcode.js'
@@ -51,12 +51,7 @@ function getBestVersionForMixedData(segments: Segment[], errorCorrectionLevel: E
   for (let currentVersion = 1; currentVersion <= 40; currentVersion++) {
     const length = getTotalBitsFromDataArray(segments, currentVersion);
     if (
-<<<<<<< HEAD
-      length <= getCapacity(currentVersion, errorCorrectionLevel, Mode.MIXED)
-=======
-      length <=
-      getCapacity(currentVersion, errorCorrectionLevel, BYTE) // TODO: Implement MIXED type
->>>>>>> 442a9de (Remodel renderers as classes)
+      length <= getCapacity(currentVersion, errorCorrectionLevel, MIXED)
     ) {
       return currentVersion;
     }
@@ -114,7 +109,7 @@ export function getCapacity(
   // Total number of data codewords
   const dataTotalCodewordsBits = (totalCodewords - ecTotalCodewords) * 8;
 
-  if (mode.bit === -1) return dataTotalCodewordsBits;
+  if (mode === MIXED) return dataTotalCodewordsBits;
 
   const usableBits =
     dataTotalCodewordsBits - getReservedBitsCount(mode, version);

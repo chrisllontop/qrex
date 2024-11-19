@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { CoreUtils } from "./utils";
-=======
 import { getSymbolSize } from "./utils.js";
->>>>>>> a12daef (Refactor build context to esm)
 
 const FINDER_PATTERN_SIZE = 7;
 

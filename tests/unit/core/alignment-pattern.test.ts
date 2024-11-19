@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { AlignmentPattern as pattern } from "../../../src/core/alignment-pattern";
+import { AlignmentPattern as pattern } from "../../../src/core/alignment-pattern.js";
 
 /**
  * Row/column coordinates of the center module of each alignment pattern.

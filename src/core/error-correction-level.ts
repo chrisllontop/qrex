@@ -5,7 +5,7 @@ export const M: ErrorCorrectionLevel = { bit: 0 };
 export const Q: ErrorCorrectionLevel = { bit: 3 };
 export const H: ErrorCorrectionLevel = { bit: 2 };
 
-function fromString(errStr: string): ErrorCorrectionLevel {
+export function fromString(errStr: string): ErrorCorrectionLevel {
   const lcStr = errStr.toLowerCase()
 
   switch (lcStr) {
@@ -46,4 +46,14 @@ export function from(value: ErrorCorrectionLevel | string, defaultValue: ErrorCo
       return defaultValue;
     }
   }
+}
+
+export const ECLevel = {
+  L,
+  M,
+  Q,
+  H,
+  from,
+  isValid,
+  fromString
 }

@@ -1,20 +1,20 @@
 import type { Segment } from "./segments.js";
-import type { QRCode, QRCodeOptions, ErrorCorrectionLevel, QRCodeMaskPattern } from "qrcode";
+import type { QRCode as QRCodeType, QRCodeOptions, ErrorCorrectionLevel, QRCodeMaskPattern } from "qrcode";
 
-import { fromArray, rawSplit, fromString } from "./segments.js";
-import { getSymbolTotalCodewords, getSymbolSize, setToSJISFunction } from "./utils.js";
-import { M, from } from "./error-correction-level.js"
+import { Segments } from "./segments.js";
+import { CoreUtils } from "./utils.js";
+import { ECLevel } from "./error-correction-level.js"
 import { BitBuffer } from "./bit-buffer.js";
 import { BitMatrix } from "./bit-matrix.js";
 import { ByteData } from "./byte-data.js";
 
-import { getPositions } from "./alignment-pattern.js";
-import { getPositions as _getPositions } from "./finder-pattern.js";
-import { getBestMask, applyMask, from as _from } from "./mask-pattern.js";
-import { getTotalCodewordsCount, getBlocksCount } from "./error-correction-code.js";
+import { AlignmentPattern } from "./alignment-pattern.js";
+import { FinderPattern } from "./finder-pattern.js";
+import { MaskPattern } from "./mask-pattern.js";
+import { ECCode } from "./error-correction-code.js";
 import { ReedSolomonEncoder } from "./reed-solomon-encoder.js";
-import { getEncodedBits, getBestVersionForData, from as __from } from "./version.js";
-import { getEncodedBits as _getEncodedBits } from "./format-info.js";
+import { Version } from "./version.js";
+import { FormatInfo } from "./format-info.js";
 import { getCharCountIndicator } from "./mode.js";
 
 /**
@@ -25,7 +25,7 @@ import { getCharCountIndicator } from "./mode.js";
  */
 function setupFinderPattern(matrix: BitMatrix, version: number): void {
   const size = matrix.size
-  const pos = _getPositions(version)
+  const pos = FinderPattern.getPositions(version)
 
   for (let i = 0; i < pos.length; i++) {
     const row = pos[i][0];
@@ -77,7 +77,7 @@ function setupTimingPattern(matrix: BitMatrix): void {
  * @param  {Number}    version QR Code version
  */
 function setupAlignmentPattern(matrix: BitMatrix, version: number): void {
-  const pos = getPositions(version)
+  const pos = AlignmentPattern.getPositions(version)
 
   for (let i = 0; i < pos.length; i++) {
     const row = pos[i][0];
@@ -109,7 +109,7 @@ function setupAlignmentPattern(matrix: BitMatrix, version: number): void {
  */
 function setupVersionInfo(matrix: BitMatrix, version: number): void {
   const size = matrix.size
-  const bits = getEncodedBits(version)
+  const bits = Version.getEncodedBits(version)
   let row, col, mod
 
   for (let i = 0; i < 18; i++) {
@@ -131,7 +131,7 @@ function setupVersionInfo(matrix: BitMatrix, version: number): void {
  */
 function setupFormatInfo(matrix: BitMatrix, errorCorrectionLevel: ErrorCorrectionLevel, maskPattern: QRCodeMaskPattern): void {
   const size = matrix.size
-  const bits = _getEncodedBits(errorCorrectionLevel, maskPattern)
+  const bits = FormatInfo.getEncodedBits(errorCorrectionLevel, maskPattern)
   let i, mod
 
   for (i = 0; i < 15; i++) {
@@ -372,7 +372,7 @@ function createCodewords(bitBuffer: BitBuffer, version: number, errorCorrectionL
  * @param  {MaskPattern} maskPattern     Mask pattern
  * @return {Object}                      Object containing symbol data
  */
-function createSymbol(data: string | number[], version: number, errorCorrectionLevel: ErrorCorrectionLevel, maskPattern: QRCodeMaskPattern): QRCode {
+function createSymbol(data: string | number[], version: number, errorCorrectionLevel: ErrorCorrectionLevel, maskPattern: QRCodeMaskPattern): QRCodeType {
   let segments;
 
   if (Array.isArray(data)) {
@@ -384,7 +384,7 @@ function createSymbol(data: string | number[], version: number, errorCorrectionL
       const rawSegments = Segments.rawSplit(data);
 
       // Estimate best version that can contain raw splitted segments
-      estimatedVersion = getBestVersionForData(
+      estimatedVersion = Version.getBestVersionForData(
         rawSegments[0],
         errorCorrectionLevel,
       );
@@ -478,7 +478,7 @@ Minimum version required to store current data is: ${bestVersion}.
  * @param {String} options.errorCorrectionLevel Error correction level
  * @param {Function} options.toSJISFunc         Helper func to convert utf8 to sjis
  */
-export function create(data: string, options: QRCodeOptions): QRCode {
+export function create(data: string, options: QRCodeOptions): QRCodeType {
   if (data === '' || data === null) {
     throw new Error('No input text')
   }

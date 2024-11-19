@@ -1,8 +1,8 @@
 import { type QRCodeOptions } from "qrcode";
 
 import canPromise from "./can-promise.js";
-import { create as qrCodeCreate } from "./core/qrcode.js";
-import { render as canvasRender, renderToDataURL } from "./renderer/canvas.js";
+import * as QRCode from "./core/qrcode.js";
+import { RendererCanvas } from "./renderer/canvas.js";
 import SvgTagRenderer from "./renderer/svg-tag.js";
 
 function renderCanvas(

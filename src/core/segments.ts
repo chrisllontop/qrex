@@ -175,7 +175,7 @@ function buildNodes(segs: Segment[]): Segment[] {
     }
 
     switch (seg.mode) {
-      case Mode.NUMERIC:
+      case NUMERIC:
         nodes.push([
           seg,
           { data: seg.data, mode: ALPHANUMERIC, length: seg.length },
@@ -193,7 +193,7 @@ function buildNodes(segs: Segment[]): Segment[] {
           seg,
           {
             data: seg.data,
-            mode: Mode.BYTE,
+            mode: BYTE,
             length: getStringByteLength(seg.data),
           },
         ]);
@@ -202,7 +202,7 @@ function buildNodes(segs: Segment[]): Segment[] {
         nodes.push([
           {
             data: seg.data,
-            mode: Mode.BYTE,
+            mode: BYTE,
             length: getStringByteLength(seg.data),
           },
         ]);
@@ -289,7 +289,7 @@ function buildSingleSegment(data: string, modesHint: Mode | string): Segment {
   mode = from(modesHint, bestMode);
 
   // Make sure data can be encoded
-  if (mode !== Mode.BYTE && mode.bit < bestMode.bit) {
+  if (mode !== BYTE && mode.bit < bestMode.bit) {
     throw new Error(
       `"${data}" cannot be encoded with mode ${toString(mode)}.
  Suggested mode is: ${toString(bestMode)}`,

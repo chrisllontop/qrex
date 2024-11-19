@@ -1,4 +1,4 @@
-import type { Mode } from "qrcode";
+import type { Mode as ModeType } from "qrcode";
 
 import { isValid as _isValid } from "./version-check.js";
 import { testNumeric, testAlphanumeric, testKanji } from "./regex.js";
@@ -9,32 +9,32 @@ const BITS_KANJI: Readonly<number[]> = [8, 10, 12];
 const BITS_ALPHANUMERIC: Readonly<number[]> = [9, 11, 13];
 const BITS_MIXED: Readonly<number[]> = [];
 
-export const NUMERIC: Mode = {
+export const NUMERIC: ModeType = {
   id: 'Numeric',
   bit: 1 << 0,
   ccBits: BITS_NUMERIC
 };
 
-export const ALPHANUMERIC: Mode = {
+export const ALPHANUMERIC: ModeType = {
   id: 'Alphanumeric',
   bit: 1 << 1,
   ccBits: BITS_ALPHANUMERIC
 };
 
-export const BYTE: Mode = {
+export const BYTE: ModeType = {
   id: 'Byte',
   bit: 1 << 2,
   ccBits: BITS_BYTE
 };
 
-export const KANJI: Mode = {
+export const KANJI: ModeType = {
   id: 'Kanji',
   bit: 1 << 3,
   ccBits: BITS_KANJI
 };
 
-export const MIXED: Mode = {
-  id: 'Mixed',
+export const MIXED: ModeType = {
+  id: 'Byte',
   bit: -1,
   ccBits: BITS_MIXED
 }
@@ -48,7 +48,7 @@ export const MIXED: Mode = {
  * @param  {Number} version QR Code version
  * @return {Number}         Number of bits
  */
-export function getCharCountIndicator(mode: Mode, version: number): number {
+export function getCharCountIndicator(mode: ModeType, version: number): number {
   if (!mode.ccBits) throw new Error(`Invalid mode: ${mode}`);
 
   if (!_isValid(version)) {
@@ -66,7 +66,7 @@ export function getCharCountIndicator(mode: Mode, version: number): number {
  * @param  {String} dataStr Input data string
  * @return {Mode}           Best mode
  */
-export function getBestModeForData(dataStr: string): Mode {
+export function getBestModeForData(dataStr: string): ModeType {
   if (testNumeric(dataStr)) return NUMERIC;
   else if (testAlphanumeric(dataStr)) return ALPHANUMERIC;
   else if (testKanji(dataStr)) return KANJI;
@@ -79,7 +79,7 @@ export function getBestModeForData(dataStr: string): Mode {
  * @param {Mode} mode Mode object
  * @returns {String}  Mode name
  */
-export function toString(mode: Mode): string {
+export function toString(mode: ModeType): string {
   if (mode?.id) return mode.id;
   throw new Error('Invalid mode');
 }
@@ -90,7 +90,7 @@ export function toString(mode: Mode): string {
  * @param   {Mode}    mode Mode object
  * @returns {Boolean} True if valid mode, false otherwise
  */
-export function isValid(mode: Mode): boolean {
+export function isValid(mode: ModeType): boolean {
   return mode.bit && !!mode.ccBits;
 }
 
@@ -100,7 +100,7 @@ export function isValid(mode: Mode): boolean {
  * @param   {String} string Mode name
  * @returns {Mode}          Mode object
  */
-function fromString(modeStr: string): Mode {
+function fromString(modeStr: string): ModeType {
   const lcStr = modeStr.toLowerCase();
 
   switch (lcStr) {
@@ -125,7 +125,7 @@ function fromString(modeStr: string): Mode {
  * @param  {Mode}        defaultValue Fallback value
  * @return {Mode}                     Encoding mode
  */
-export function from(value: Mode | string, defaultValue: Mode): Mode {
+export function from(value: ModeType | string, defaultValue: ModeType): ModeType {
   if (typeof value !== 'string') {
     return isValid(value) ? value : defaultValue;
   } else {

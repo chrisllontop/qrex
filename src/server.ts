@@ -28,25 +28,25 @@ function getTypeFromFilename(path: string): string {
 function getRendererFromType(type: string): Renderer {
   switch (type) {
     case "svg":
-      return RendererSvg;
+      return SvgRenderer;
 
     case "txt":
     case "utf8":
-      return RendererUtf8;
+      return Utf8Renderer;
     default:
-      return RendererPng;
+      return PngRenderer;
   }
 }
 
 function getStringRendererFromType(type: string): Renderer {
   switch (type) {
     case "svg":
-      return RendererSvg;
+      return SvgRenderer;
 
     case "terminal":
-      return RendererTerminal;
+      return TerminalRenderer;
     default:
-      return RendererUtf8;
+      return Utf8Renderer;
   }
 }
 

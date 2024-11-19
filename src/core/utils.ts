@@ -74,7 +74,8 @@ export function getSymbolTotalCodewords(version: number): number {
  * @return {Number}      Encoded value
  */
 export function getBCHDigit(data: number): number {
-  let digit = 0
+  let digit = 0;
+  let value = data;
 
   while (value !== 0) {
     digit++;

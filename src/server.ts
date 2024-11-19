@@ -1,4 +1,5 @@
-import type { Stream } from "stream";
+import type { Stream } from "node:stream";
+import type { ArbitaryFunction } from "./core/utils.js";
 import type { ExtendedRendererOptions as RendererOptions, Renderer } from "./renderer/utils";
 
 import canPromise from "./can-promise.js";
@@ -10,11 +11,11 @@ import SvgRenderer from "./renderer/svg.js";
 import { toCanvas as convertToCanvas } from './browser.js';
 
 export type Parameters = {
-  cb: Function;
+  cb: ArbitaryFunction;
   opts: RendererOptions;
 };
 
-function checkParams(text: string, opts: RendererOptions, cb?: Function): Parameters {
+function checkParams(text: string, opts: RendererOptions, cb?: ArbitaryFunction): Parameters {
   return {
     opts: opts,
     cb: cb,
@@ -50,7 +51,7 @@ function getStringRendererFromType(type: string): Renderer {
   }
 }
 
-function render(renderFunc: Function, text: string, params: Parameters) {
+function render(renderFunc: ArbitaryFunction, text: string, params: Parameters) {
   if (!params.cb) {
     return new Promise((resolve, reject) => {
       try {
@@ -76,26 +77,26 @@ export const create = QRCode.create;
 
 export const toCanvas = convertToCanvas;
 
-export function toString(text: string, opts: RendererOptions, cb: Function) {
+export function toString(text: string, opts: RendererOptions, cb: ArbitaryFunction) {
   const params = checkParams(text, opts, cb);
   const type = params.opts ? params.opts.type : undefined;
   const renderer = getStringRendererFromType(type);
   return render(renderer.render, text, params);
 }
 
-export function toDataURL(text: string, opts: RendererOptions, cb: Function) {
+export function toDataURL(text: string, opts: RendererOptions, cb: ArbitaryFunction) {
   const params = checkParams(text, opts, cb);
   const renderer = getRendererFromType(params.opts.type);
   return render(renderer.renderToDataURL, text, params);
 }
 
-export function toBuffer(text: string, opts: RendererOptions, cb: Function) {
+export function toBuffer(text: string, opts: RendererOptions, cb: ArbitaryFunction) {
   const params = checkParams(text, opts, cb);
   const renderer = getRendererFromType(params.opts.type);
   return render(renderer.renderToBuffer, text, params);
 }
 
-export function toFile(path: string, text: string, opts: RendererOptions, cb: Function) {
+export function toFile(path: string, text: string, opts: RendererOptions, cb: ArbitaryFunction) {
   if (
     typeof path !== "string" ||
     !(typeof text === "string" || typeof text === "object")

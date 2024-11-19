@@ -1,5 +1,6 @@
 import type { QRCode } from "qrcode";
-import type { Stream } from "stream";
+import type { Stream } from "node:stream";
+import type { ArbitaryFunction } from "../core/utils.js";
 import type { ExtendedRendererOptions as RendererOptions, Renderer } from "./utils.js";
 
 import * as fs from "node:fs";
@@ -23,7 +24,7 @@ class PngRenderer implements Renderer {
     return pngImage;
   }
 
-  renderToDataURL(qrData: QRCode, options: RendererOptions, cb: Function): void {
+  renderToDataURL(qrData: QRCode, options: RendererOptions, cb: ArbitaryFunction): void {
     this.renderToBuffer(qrData, options, (err, output) => {
       if (err) cb(err);
       let url = "data:image/png;base64,";
@@ -32,7 +33,7 @@ class PngRenderer implements Renderer {
     });
   }
 
-  renderToBuffer(qrData: QRCode, options: RendererOptions, cb: Function): void {
+  renderToBuffer(qrData: QRCode, options: RendererOptions, cb: ArbitaryFunction): void {
     const png = this.render(qrData, options);
     const buffer = [];
 
@@ -48,7 +49,7 @@ class PngRenderer implements Renderer {
     png.pack();
   }
 
-  renderToFile(path: string, qrData: QRCode, options: RendererOptions, cb: Function): void {
+  renderToFile(path: string, qrData: QRCode, options: RendererOptions, cb: ArbitaryFunction): void {
     let called = false;
     const done = (...args) => {
       if (called) return;

@@ -14,7 +14,7 @@ describe("RendererCanvas interface", () => {
 });
 
 describe("RendererCanvas render", () => {
-  let originalDocument;
+  let originalDocument = { createElement: () => { } };
 
   beforeAll(() => {
     originalDocument = global.document;
@@ -36,7 +36,7 @@ describe("RendererCanvas render", () => {
       version: 2,
       maskPattern: 0,
     });
-    let canvasEl;
+    let canvasEl: HTMLCanvasElement;
 
     expect(() => {
       canvasEl = RendererCanvas.render(sampleQrData);
@@ -50,7 +50,7 @@ describe("RendererCanvas render", () => {
       version: 2,
       maskPattern: 0,
     });
-    let canvasEl;
+    let canvasEl: HTMLCanvasElement;
 
     expect(() => {
       canvasEl = RendererCanvas.render(sampleQrData, { margin: 10, scale: 1 });
@@ -103,7 +103,7 @@ describe("RendererCanvas render to provided canvas", () => {
 });
 
 describe("RendererCanvas renderToDataURL", () => {
-  let originalDocument;
+  let originalDocument = { createElement: () => { } };
 
   beforeAll(() => {
     originalDocument = global.document;
@@ -125,7 +125,7 @@ describe("RendererCanvas renderToDataURL", () => {
       version: 2,
       maskPattern: 0,
     });
-    let url;
+    let url = "";
 
     expect(() => {
       url = RendererCanvas.renderToDataURL(sampleQrData);
@@ -139,7 +139,7 @@ describe("RendererCanvas renderToDataURL", () => {
       version: 2,
       maskPattern: 0,
     });
-    let url;
+    let url = "";
 
     expect(() => {
       url = RendererCanvas.renderToDataURL(sampleQrData, {
@@ -191,7 +191,7 @@ describe("RendererCanvas renderToDataURL to provided canvas", () => {
       maskPattern: 0,
     });
     const canvasEl = createCanvas(200, 200);
-    let url;
+    let url = "";
 
     expect(() => {
       url = RendererCanvas.renderToDataURL(sampleQrData, canvasEl);
@@ -206,7 +206,7 @@ describe("RendererCanvas renderToDataURL to provided canvas", () => {
       maskPattern: 0,
     });
     const canvasEl = createCanvas(200, 200);
-    let url;
+    let url = "";
 
     expect(() => {
       url = RendererCanvas.renderToDataURL(sampleQrData, canvasEl, {

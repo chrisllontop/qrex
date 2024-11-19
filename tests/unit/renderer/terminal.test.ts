@@ -13,7 +13,7 @@ describe("RendererTerminal render big", () => {
     version: 2,
     maskPattern: 0,
   });
-  let str;
+  let str = "";
 
   it("should not throw with only qrData param", () => {
     expect(() => {
@@ -47,7 +47,7 @@ describe("TerminalRenderer render small", () => {
     version: 2,
     maskPattern: 0,
   });
-  let str;
+  let str = "";
   let calledCallback = false;
   const callback = () => {
     calledCallback = true;

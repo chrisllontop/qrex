@@ -18,7 +18,7 @@ const G15_BCH = getBCHDigit(G15);
  * @return {Number}                      Encoded format information bits
  */
 export function getEncodedBits(errorCorrectionLevel: ErrorCorrectionLevel | string, mask?: number): number {
-  const value = typeof errorCorrectionLevel === 'string' ? parseInt(errorCorrectionLevel) : errorCorrectionLevel.bit;
+  const value = typeof errorCorrectionLevel === 'string' ? Number.parseInt(errorCorrectionLevel) : errorCorrectionLevel.bit;
 
   const data = (value << 3) | mask;
   let d = data << 10;

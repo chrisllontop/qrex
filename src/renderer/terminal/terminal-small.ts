@@ -1,4 +1,5 @@
 import type { QRCodeToStringOptionsTerminal as QRCodeOptions, QRCode } from "qrcode";
+import type { ArbitaryFunction } from "../../core/utils.js";
 import type { Modify } from "../utils.js";
 
 const backgroundWhite = "\x1b[47m";
@@ -59,7 +60,7 @@ const mkCode = (modules: Uint8Array, size: number, x: number, y: number): string
   mkCodePixel(modules, size, x, y) + mkCodePixel(modules, size, x, y + 1)
 );
 
-export function render(qrData: QRCode, options: ExtendedQRCodeOptions, cb: Function): string {
+export function render(qrData: QRCode, options: ExtendedQRCodeOptions, cb: ArbitaryFunction): string {
   const size = qrData.modules.size;
   const data = qrData.modules.data;
 

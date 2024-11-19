@@ -1,7 +1,7 @@
 import type { Mode } from "qrcode";
+import type { BitBuffer } from "./bit-buffer.js";
 
 import { NUMERIC } from "./mode.js";
-import { BitBuffer } from "./bit-buffer.js";
 
 class NumericData {
   mode: Mode;
@@ -31,7 +31,9 @@ NumericData.prototype.getBitsLength = function getBitsLength() {
 }
 
 NumericData.prototype.write = function write(bitBuffer: BitBuffer): void {
-  let i, group, value;
+  let i: number;
+  let value: number;
+  let group: string;
 
   // The input data string is divided into groups of three digits,
   // and each group is converted to its 10-bit binary equivalent.

@@ -1,7 +1,7 @@
 import type { Mode } from "qrcode";
+import type { BitBuffer } from "./bit-buffer.js";
 
 import { KANJI } from "./mode.js";
-import { BitBuffer } from "./bit-buffer.js";
 import { toSJIS } from "./utils.js";
 
 export class KanjiData {
@@ -24,7 +24,7 @@ export class KanjiData {
   }
 
   write(bitBuffer: BitBuffer): void {
-    let i;
+    let i = 0;
 
     // In the Shift JIS system, Kanji characters are represented by a two byte combination.
     // These byte values are shifted from the JIS X 0208 values.

@@ -1,7 +1,7 @@
 import type { Mode } from "qrcode";
+import type { BitBuffer } from "./bit-buffer.js";
 
 import { BYTE } from "./mode.js";
-import { BitBuffer } from "./bit-buffer.js";
 
 export class ByteData {
   mode: Mode;

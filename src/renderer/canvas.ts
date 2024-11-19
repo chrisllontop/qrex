@@ -22,14 +22,14 @@ function getCanvasElement(): HTMLCanvasElement {
 }
 
 export function render(qrData: QRCode, canvas: HTMLCanvasElement, options: RendererOptions): HTMLCanvasElement {
-  let opts = options;
   let canvasEl = canvas;
 
   if (!canvas) {
     canvasEl = getCanvasElement();
   }
 
-  opts = getOptions(opts);
+  const opts = getOptions(options);
+
   const size = getImageWidth(qrData.modules.size, opts);
 
   const ctx = canvasEl.getContext("2d");
@@ -43,9 +43,7 @@ export function render(qrData: QRCode, canvas: HTMLCanvasElement, options: Rende
 }
 
 export function renderToDataURL(qrData: QRCode, canvas: HTMLCanvasElement, options: RendererOptions): string {
-  let opts = options;
-
-  const canvasEl = render(qrData, canvas, opts);
+  const canvasEl = render(qrData, canvas, options);
 
   const type = opts.type || "image/png";
   const rendererOpts = opts.rendererOpts;

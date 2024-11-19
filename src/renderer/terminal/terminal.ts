@@ -1,6 +1,7 @@
 import type { QRCodeToStringOptionsTerminal as QRCodeOptions, QRCode } from "qrcode";
+import type { ArbitaryFunction } from "../../core/utils.js";
 
-export function render(qrData: QRCode, options: QRCodeOptions, cb: Function): string {
+export function render(qrData: QRCode, options: QRCodeOptions, cb: ArbitaryFunction): string {
   const size = qrData.modules.size;
   const data = qrData.modules.data;
 

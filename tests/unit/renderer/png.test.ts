@@ -30,7 +30,7 @@ describe("PNG render", () => {
   });
 
   it("should not throw with only qrData param and return PNG instance", () => {
-    let png;
+    let png = { width: 0, height: 0 };
     expect(() => {
       png = RendererPng.render(sampleQrData);
     }).not.toThrow();
@@ -40,7 +40,7 @@ describe("PNG render", () => {
   });
 
   it("should not throw with options param and return correct size", () => {
-    let png;
+    let png = { width: 0, height: 0 };
     expect(() => {
       png = RendererPng.render(sampleQrData, {
         margin: 10,

@@ -16,8 +16,8 @@ import {
 } from "./regex.js";
 
 export type Segment = {
-  data: any;
-  length?: any;
+  data: Uint8Array;
+  length?: number;
   index?: number;
   mode: Mode<ModeId>;
 }
@@ -87,8 +87,8 @@ function getSegmentsFromString(value: string): Segment[] {
     ALPHANUMERIC,
     value,
   );
-  let byteSegs;
-  let kanjiSegs;
+  let byteSegs: Segments[];
+  let kanjiSegs: Segments[];
 
   if (isKanjiModeEnabled()) {
     byteSegs = getSegments(_BYTE, BYTE, value);
@@ -283,7 +283,8 @@ function buildGraph(nodes: Segment[], version: number): Graph {
  * @return {Segment}                 Segment
  */
 function buildSingleSegment(data: string, modesHint: Mode | string): Segment {
-  let mode;
+  let mode: Mode;
+
   const bestMode = getBestModeForData(data);
 
   mode = from(modesHint, bestMode);

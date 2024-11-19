@@ -1,7 +1,7 @@
 import type { Mode } from "qrcode";
 
 import { ALPHANUMERIC } from "./mode.js";
-import { BitBuffer } from "./bit-buffer.js";
+import type { BitBuffer } from "./bit-buffer.js";
 /**
  * Array of characters available in alphanumeric mode
  *
@@ -77,7 +77,7 @@ export class AlphanumericData {
   }
 
   write(bitBuffer: BitBuffer): void {
-    let i;
+    let i = 0;
 
     // Input data characters are divided into groups of two characters
     // and encoded as 11-bit binary codes.

@@ -39,13 +39,13 @@ export function isValid(level: ErrorCorrectionLevel): boolean {
 export function from(value: ErrorCorrectionLevel | string, defaultValue: ErrorCorrectionLevel): ErrorCorrectionLevel {
   if (typeof value !== 'string') {
     return isValid(value) ? value : defaultValue;
-  } else {
-    try {
-      return fromString(value);
-    } catch {
-      return defaultValue;
-    }
   }
+  try {
+    return fromString(value);
+  } catch {
+    return defaultValue;
+  }
+
 }
 
 export const ECLevel = {

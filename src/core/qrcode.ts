@@ -1,13 +1,12 @@
 import type { Segment } from "./segments.js";
 import type { QRCode as QRCodeType, QRCodeOptions, ErrorCorrectionLevel, QRCodeMaskPattern } from "qrcode";
+import type { Segments } from "./segments.js";
+import type { BitBuffer } from "./bit-buffer.js";
+import type { BitMatrix } from "./bit-matrix.js";
+import type { ByteData } from "./byte-data.js";
 
-import { Segments } from "./segments.js";
-import { CoreUtils } from "./utils.js";
 import { ECLevel } from "./error-correction-level.js"
-import { BitBuffer } from "./bit-buffer.js";
-import { BitMatrix } from "./bit-matrix.js";
-import { ByteData } from "./byte-data.js";
-
+import { CoreUtils } from "./utils.js";
 import { AlignmentPattern } from "./alignment-pattern.js";
 import { FinderPattern } from "./finder-pattern.js";
 import { MaskPattern } from "./mask-pattern.js";
@@ -110,7 +109,9 @@ function setupAlignmentPattern(matrix: BitMatrix, version: number): void {
 function setupVersionInfo(matrix: BitMatrix, version: number): void {
   const size = matrix.size
   const bits = Version.getEncodedBits(version)
-  let row, col, mod
+  let row = 0
+  let col = 0
+  let mod = 0
 
   for (let i = 0; i < 18; i++) {
     row = Math.floor(i / 3)
@@ -132,7 +133,8 @@ function setupVersionInfo(matrix: BitMatrix, version: number): void {
 function setupFormatInfo(matrix: BitMatrix, errorCorrectionLevel: ErrorCorrectionLevel, maskPattern: QRCodeMaskPattern): void {
   const size = matrix.size
   const bits = FormatInfo.getEncodedBits(errorCorrectionLevel, maskPattern)
-  let i, mod
+  let i = 0
+  let mod = 0
 
   for (i = 0; i < 15; i++) {
     mod = ((bits >> i) & 1)
@@ -341,8 +343,8 @@ function createCodewords(bitBuffer: BitBuffer, version: number, errorCorrectionL
   // Interleave the data and error correction codewords from each block
   const data = new Uint8Array(totalCodewords);
   let index = 0;
-  let i;
-  let r;
+  let i = 0;
+  let r = 0;
 
   // Add data codewords
   for (i = 0; i < maxDataSize; i++) {
@@ -373,7 +375,7 @@ function createCodewords(bitBuffer: BitBuffer, version: number, errorCorrectionL
  * @return {Object}                      Object containing symbol data
  */
 function createSymbol(data: string | number[], version: number, errorCorrectionLevel: ErrorCorrectionLevel, maskPattern: QRCodeMaskPattern): QRCodeType {
-  let segments;
+  let segments: Segments;
 
   if (Array.isArray(data)) {
     segments = Segments.fromArray(data);
@@ -484,8 +486,8 @@ export function create(data: string, options: QRCodeOptions): QRCodeType {
   }
 
   let errorCorrectionLevel = ECLevel.M;
-  let version;
-  let mask;
+  let version = 0;
+  let mask = 0;
 
   if (typeof options !== "undefined") {
     // Use higher error correction level as default

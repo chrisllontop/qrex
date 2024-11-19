@@ -12,7 +12,8 @@ const defaultOptions = {
 
 describe("toFile - no promise available", () => {
   const fileName = path.join(os.tmpdir(), "qrimage.png");
-  let originalPromise;
+  let originalPromise: Promise;
+
   beforeAll(() => {
     originalPromise = global.Promise;
     removeNativePromise();
@@ -46,7 +47,7 @@ describe("toFile", () => {
   const fileName = path.join(os.tmpdir(), "qrimage.png");
 
   it("should throw if path is not provided", () => {
-    expect(() => toFile("some text", () => {})).toThrow("Invalid argument");
+    expect(() => toFile("some text", () => { })).toThrow("Invalid argument");
   });
 
   it("should throw if text is not provided", () => {

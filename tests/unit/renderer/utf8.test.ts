@@ -14,7 +14,7 @@ describe("RendererUtf8 render", () => {
     version: 2,
     maskPattern: 0,
   });
-  let str;
+  let str = "";
 
   it("should not throw with only qrData param", () => {
     expect(() => {

@@ -1,11 +1,11 @@
-import { type Mode, type ErrorCorrectionLevel } from 'qrcode';
+import type { Mode, ErrorCorrectionLevel } from 'qrcode';
+import type { Segment } from './segments.js'
 
 import { getBCHDigit, getSymbolTotalCodewords } from './utils.js'
 import { getTotalCodewordsCount, ECCode } from './error-correction-code.js'
 import { from as _from, M } from './error-correction-level.js'
 import { getCharCountIndicator, MIXED, BYTE, NUMERIC, ALPHANUMERIC, KANJI } from './mode.js'
 import { isValid } from './version-check.js'
-import { type Segment } from './segments.js'
 
 // Generator polynomial used to encode version information
 const G18 =
@@ -123,7 +123,6 @@ export function getCapacity(
       return Math.floor((usableBits / 11) * 2);
     case KANJI:
       return Math.floor(usableBits / 13);
-    case BYTE:
     default:
       return Math.floor(usableBits / 8);
   }
@@ -141,7 +140,7 @@ export function getBestVersionForData(
   data: Segment,
   errorCorrectionLevel: ErrorCorrectionLevel,
 ): number {
-  let seg;
+  let seg: Segment;
 
   const ecl = _from(errorCorrectionLevel.toString(), M);
 

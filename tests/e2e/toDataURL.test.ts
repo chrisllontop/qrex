@@ -9,7 +9,7 @@ const defaultOptions = {
 };
 
 describe("toDataURL - no promise available", () => {
-  let originalPromise;
+  let originalPromise: Promise;
   beforeAll(() => {
     originalPromise = global.Promise;
     removeNativePromise();
@@ -29,7 +29,7 @@ describe("toDataURL - no promise available", () => {
   });
 
   it("should throw if text is not provided (browser)", async () => {
-    await expect(() => toDataURLBrowser(() => {})).toThrow();
+    await expect(() => toDataURLBrowser(() => { })).toThrow();
   });
 
   it("should reject if a callback is not provided (browser)", async () => {
@@ -156,7 +156,7 @@ describe("Canvas toDataURL - image/png", () => {
   });
 
   it("should throw if text is not provided", () => {
-    expect(() => toDataURLBrowser(() => {})).toThrow(
+    expect(() => toDataURLBrowser(() => { })).toThrow(
       "Too few arguments provided",
     );
   });

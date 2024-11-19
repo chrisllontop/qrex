@@ -1,4 +1,5 @@
 import type { ExtendedRendererOptions as RendererOptions, Renderer } from "./utils.js";
+import type { ArbitaryFunction } from "../core/utils.js";
 import type { QRCode } from "qrcode";
 
 import * as fs from "node:fs";
@@ -29,7 +30,7 @@ function getBlockChar(top: number, bottom: number, blocks: BlockCharacters): str
 
 class Utf8Renderer implements Renderer {
 
-  render(qrData: QRCode, options: RendererOptions, cb?: Function): string {
+  render(qrData: QRCode, options: RendererOptions, cb?: ArbitaryFunction): string {
     const opts = getOptions(options);
     let blocks = BLOCK_CHAR;
     if (opts.color.dark.hex === "#ffffff" || opts.color.light.hex === "#000000") {
@@ -69,7 +70,7 @@ class Utf8Renderer implements Renderer {
     return output;
   }
 
-  renderToFile(path: string, qrData: QRCode, options: RendererOptions, cb?: Function): void {
+  renderToFile(path: string, qrData: QRCode, options: RendererOptions, cb?: ArbitaryFunction): void {
     const utf8 = this.render(qrData, options);
     fs.writeFile(path, utf8, () => cb());
   }

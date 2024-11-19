@@ -56,7 +56,7 @@ export function getCharCountIndicator(mode: ModeType, version: number): number {
   }
 
   if (version >= 1 && version < 10) return mode.ccBits[0];
-  else if (version < 27) return mode.ccBits[1];
+  if (version < 27) return mode.ccBits[1];
   return mode.ccBits[2];
 }
 
@@ -68,9 +68,9 @@ export function getCharCountIndicator(mode: ModeType, version: number): number {
  */
 export function getBestModeForData(dataStr: string): ModeType {
   if (testNumeric(dataStr)) return NUMERIC;
-  else if (testAlphanumeric(dataStr)) return ALPHANUMERIC;
-  else if (testKanji(dataStr)) return KANJI;
-  else return BYTE;
+  if (testAlphanumeric(dataStr)) return ALPHANUMERIC;
+  if (testKanji(dataStr)) return KANJI;
+  return BYTE;
 }
 
 /**
@@ -128,12 +128,11 @@ function fromString(modeStr: string): ModeType {
 export function from(value: ModeType | string, defaultValue: ModeType): ModeType {
   if (typeof value !== 'string') {
     return isValid(value) ? value : defaultValue;
-  } else {
-    try {
-      return fromString(value);
-    } catch {
-      return defaultValue;
-    }
+  }
+  try {
+    return fromString(value);
+  } catch {
+    return defaultValue;
   }
 }
 

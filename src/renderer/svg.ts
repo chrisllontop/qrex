@@ -1,4 +1,5 @@
 import type { QRCode } from "qrcode";
+import type { ArbitaryFunction } from "../core/utils.js";
 import type { ExtendedRendererOptions as RendererOptions, Renderer } from "./utils.js";
 
 import SvgTagRenderer from "./svg-tag.js";
@@ -6,7 +7,7 @@ import * as fs from "node:fs";
 
 class SvgRenderer implements Renderer {
 
-  renderToFile(path: string, qrData: QRCode, options: RendererOptions, cb: Function): void {
+  renderToFile(path: string, qrData: QRCode, options: RendererOptions, cb: ArbitaryFunction): void {
     const svgTag = this.render(qrData, options, cb);
 
     const xmlStr =
@@ -16,7 +17,7 @@ class SvgRenderer implements Renderer {
 
   }
 
-  render(qrData: QRCode, options: RendererOptions, cb?: Function): string {
+  render(qrData: QRCode, options: RendererOptions, cb?: ArbitaryFunction): string {
     return SvgTagRenderer.render(qrData, options, cb);
   }
 

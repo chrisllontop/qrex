@@ -8,8 +8,8 @@ const defaultOptions = {
 };
 
 describe("toCanvas - no promise available", () => {
-  let canvasEl;
-  let originalPromise;
+  let canvasEl: HTMLCanvasElement;
+  let originalPromise: Promise;
 
   beforeEach(() => {
     originalPromise = global.Promise;
@@ -71,7 +71,7 @@ describe("toCanvas - no promise available", () => {
 });
 
 describe("toCanvas Function Tests", () => {
-  let canvasEl;
+  let canvasEl: HTMLCanvasElement;
 
   beforeEach(() => {
     global.document = {

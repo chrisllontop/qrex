@@ -1,4 +1,6 @@
-let toSJISFunction;
+export type ArbitaryFunction = (...args: unknown[]) => unknown;
+
+let toSJISFunction: ArbitaryFunction;
 
 const CODEWORDS_COUNT: Array<number> = [
   0, // Not used
@@ -85,7 +87,7 @@ export function getBCHDigit(data: number): number {
   return digit;
 }
 
-export function setToSJISFunction(f: any): void {
+export function setToSJISFunction(f: AribitaryFunction): void {
   if (typeof f !== 'function') {
     throw new Error('"toSJISFunc" is not a valid function.')
   }
@@ -97,7 +99,7 @@ export function isKanjiModeEnabled(): boolean {
   return typeof toSJISFunction !== 'undefined'
 }
 
-export function toSJIS(kanji): any {
+export function toSJIS(kanji): ArbitaryFunction {
   return toSJISFunction(kanji)
 }
 

@@ -1,5 +1,6 @@
 import type { QRCode } from "qrcode";
 import type { RGBAValue } from "./utils.js";
+import type { ArbitaryFunction } from "../core/utils.js";
 import type { ExtendedRendererOptions as RendererOptions } from "./utils.js";
 
 import { getOptions } from "./utils.js";
@@ -58,7 +59,7 @@ class SvgTagRenderer {
     return path;
   }
 
-  render(qrData: QRCode, options: RendererOptions, cb?: Function): string {
+  render(qrData: QRCode, options: RendererOptions, cb?: ArbitaryFunction): string {
     const opts = getOptions(options);
     const size = qrData.modules.size;
     const data = qrData.modules.data;

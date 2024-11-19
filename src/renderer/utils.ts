@@ -3,16 +3,17 @@ import type {
   QRCodeToStringOptionsTerminal as QRCodeOptions,
   QRCodeToDataURLOptionsJpegWebp as RendererOptions,
 } from "qrcode";
-import type { Stream } from "stream";
+import type { ArbitaryFunction } from "../core/utils.js";
+import type { Stream } from "node:stream";
 
 export type Modify<T, R> = Omit<T, keyof R> & R;
 
 export type Renderer = {
-  render: (qrData: QRCode, options: ExtendedRendererOptions | QRCodeOptions, cb?: Function) => string;
-  renderToDataURL?: (qrData: QRCode, options: ExtendedRendererOptions, cb: Function) => void;
-  renderToBuffer?: (qrData: QRCode, options: ExtendedRendererOptions, cb: Function) => void;
+  render: (qrData: QRCode, options: ExtendedRendererOptions | QRCodeOptions, cb?: ArbitaryFunction) => string;
+  renderToDataURL?: (qrData: QRCode, options: ExtendedRendererOptions, cb: ArbitaryFunction) => void;
+  renderToBuffer?: (qrData: QRCode, options: ExtendedRendererOptions, cb: ArbitaryFunction) => void;
   renderToFileStream?: (stream: Stream, qrData: QRCode, options: ExtendedRendererOptions) => void;
-  renderToFile?: (path: string, qrData: QRCode, options: ExtendedRendererOptions, cb?: Function) => void;
+  renderToFile?: (path: string, qrData: QRCode, options: ExtendedRendererOptions, cb?: ArbitaryFunction) => void;
 }
 
 export type RGBAValue = {

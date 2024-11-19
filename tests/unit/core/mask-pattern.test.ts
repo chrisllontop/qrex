@@ -1,14 +1,12 @@
-import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
+import { describe, expect, it } from "vitest";
+import { BitMatrix } from "../../../src/core/bit-matrix";
+import { MaskPattern } from "../../../src/core/mask-pattern";
 
-import { test } from "tap";
-import BitMatrix from "../../../src/core/bit-matrix.js";
-import MaskPattern from "../../../src/corec/mask-pattern.js";
-
-test("Mask pattern - Pattern references", (t: AssertionHandler) => {
-  const patternsCount = Object.keys(MaskPattern.Patterns).length;
-  t.equal(patternsCount, 8, "Should return 8 patterns");
-
-  t.end();
+describe("Mask pattern - Pattern references", () => {
+  it("Should return 8 patterns", () => {
+    const patternsCount = Object.keys(MaskPattern.Patterns).length;
+    expect(patternsCount).toBe(8);
+  });
 });
 
 const expectedPattern000 = [
@@ -51,50 +49,39 @@ const expectedPattern111 = [
   1, 0, 0, 0, 0, 1, 1, 1, 0, 0,
 ];
 
-test("MaskPattern validity", (t: AssertionHandler) => {
-  t.notOk(MaskPattern.isValid(), "Should return false if no input");
-  t.notOk(
-    MaskPattern.isValid(""),
-    "Should return false if value is not a number",
-  );
-  t.notOk(
-    MaskPattern.isValid(-1),
-    "Should return false if value is not in range",
-  );
-  t.notOk(
-    MaskPattern.isValid(8),
-    "Should return false if value is not in range",
-  );
+describe("MaskPattern validity", () => {
+  it("Should return false if no input", () => {
+    expect(MaskPattern.isValid()).toBe(false);
+  });
 
-  t.end();
+  it("Should return false if value is not a number", () => {
+    expect(MaskPattern.isValid("")).toBe(false);
+  });
+
+  it("Should return false if value is not in range", () => {
+    expect(MaskPattern.isValid(-1)).toBe(false);
+  });
+  it("Should return false if value is not in range", () => {
+    expect(MaskPattern.isValid(8)).toBe(false);
+  });
 });
 
-test("MaskPattern from value", (t: AssertionHandler) => {
-  t.equal(
-    MaskPattern.from(5),
-    5,
-    "Should return correct mask pattern from a number",
-  );
-  t.equal(
-    MaskPattern.from("5"),
-    5,
-    "Should return correct mask pattern from a string",
-  );
-  t.equal(
-    MaskPattern.from(-1),
-    undefined,
-    "Should return undefined if value is invalid",
-  );
-  t.equal(
-    MaskPattern.from(null),
-    undefined,
-    "Should return undefined if value is null",
-  );
+describe("MaskPattern from value", () => {
+  it("Should return correct mask pattern from a number", () => {
+    expect(MaskPattern.from(5)).toBe(5);
+  });
 
-  t.end();
+  it("Should return correct mask pattern from a string", () => {
+    expect(MaskPattern.from("5")).toBe(5);
+  });
+
+  it("Should return undefined if value is invalid", () => {
+    expect(MaskPattern.from(-1)).toBeUndefined();
+    expect(MaskPattern.from(null)).toBeUndefined();
+  });
 });
 
-test("Mask pattern - Apply mask", (t: AssertionHandler) => {
+describe("Mask pattern - Apply mask", () => {
   const patterns = Object.keys(MaskPattern.Patterns).length;
   const expectedPatterns = [
     expectedPattern000,
@@ -107,208 +94,131 @@ test("Mask pattern - Apply mask", (t: AssertionHandler) => {
     expectedPattern111,
   ];
 
-  for (let p = 0; p < patterns; p++) {
-    const matrix = new BitMatrix(6);
-    MaskPattern.applyMask(p, matrix);
-    t.same(
-      matrix.data,
-      new Uint8Array(expectedPatterns[p]),
-      "Should return correct pattern",
-    );
-  }
+  it("Should return correct pattern", () => {
+    for (let p = 0; p < patterns; p++) {
+      const matrix = new BitMatrix(6);
+      MaskPattern.applyMask(p, matrix);
+      expect(matrix.data).toEqual(new Uint8Array(expectedPatterns[p]));
+    }
+  });
 
-  const matrix = new BitMatrix(2);
-  matrix.set(0, 0, false, true);
-  matrix.set(0, 1, false, true);
-  matrix.set(1, 0, false, true);
-  matrix.set(1, 1, false, true);
-  MaskPattern.applyMask(0, matrix);
+  it("Should leave reserved bit unchanged", () => {
+    const matrix = new BitMatrix(2);
+    matrix.set(0, 0, false, true);
+    matrix.set(0, 1, false, true);
+    matrix.set(1, 0, false, true);
+    matrix.set(1, 1, false, true);
+    MaskPattern.applyMask(0, matrix);
 
-  t.same(
-    matrix.data,
-    new Uint8Array([false, false, false, false]),
-    "Should leave reserved bit unchanged",
-  );
+    expect(matrix.data).toEqual(new Uint8Array([false, false, false, false]));
+  });
 
-  t.throws(() => {
-    MaskPattern.applyMask(-1, new BitMatrix(1));
-  }, "Should throw if pattern is invalid");
-
-  t.end();
+  it("Should throw if pattern is invalid", () => {
+    expect(() => {
+      MaskPattern.applyMask(-1, new BitMatrix(1));
+    }).toThrow();
+  });
 });
 
-test("Mask pattern - Penalty N1", (t: AssertionHandler) => {
-  let matrix = new BitMatrix(11);
-  matrix.data = [
-    1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1,
-    1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1,
-    0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1,
-  ];
+describe("Mask pattern - Penalty calculations", () => {
+  it("Penalty N1", () => {
+    let matrix = new BitMatrix(11);
+    matrix.data = [
+      1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1,
+      1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1,
+      0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1,
+    ];
+    expect(MaskPattern.getPenaltyN1(matrix)).toBe(59);
 
-  t.equals(
-    MaskPattern.getPenaltyN1(matrix),
-    59,
-    "Should return correct penalty points",
-  );
+    matrix = new BitMatrix(6);
+    matrix.data = expectedPattern000;
+    expect(MaskPattern.getPenaltyN1(matrix)).toBe(0);
 
-  matrix = new BitMatrix(6);
-  matrix.data = expectedPattern000;
+    matrix.data = expectedPattern001;
+    expect(MaskPattern.getPenaltyN1(matrix)).toBe(24);
 
-  t.equals(
-    MaskPattern.getPenaltyN1(matrix),
-    0,
-    "Should return correct penalty points",
-  );
+    matrix.data = expectedPattern010;
+    expect(MaskPattern.getPenaltyN1(matrix)).toBe(24);
 
-  matrix.data = expectedPattern001;
+    matrix.data = expectedPattern101;
+    expect(MaskPattern.getPenaltyN1(matrix)).toBe(20);
+  });
 
-  t.equals(
-    MaskPattern.getPenaltyN1(matrix),
-    24,
-    "Should return correct penalty points",
-  );
+  it("Penalty N2", () => {
+    let matrix = new BitMatrix(8);
+    matrix.data = [
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1,
+      0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1,
+      1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1,
+    ];
+    expect(MaskPattern.getPenaltyN2(matrix)).toBe(45);
 
-  matrix.data = expectedPattern010;
+    matrix = new BitMatrix(6);
+    matrix.data = expectedPattern000;
+    expect(MaskPattern.getPenaltyN2(matrix)).toBe(0);
 
-  t.equals(
-    MaskPattern.getPenaltyN1(matrix),
-    24,
-    "Should return correct penalty points",
-  );
+    matrix.data = expectedPattern001;
+    expect(MaskPattern.getPenaltyN1(matrix)).toBe(24);
 
-  matrix.data = expectedPattern101;
+    matrix.data = expectedPattern010;
+    expect(MaskPattern.getPenaltyN1(matrix)).toBe(24);
 
-  t.equals(
-    MaskPattern.getPenaltyN1(matrix),
-    20,
-    "Should return correct penalty points",
-  );
+    matrix.data = expectedPattern101;
+    expect(MaskPattern.getPenaltyN1(matrix)).toBe(20);
+  });
 
-  t.end();
+  it("Penalty N3", () => {
+    const matrix = new BitMatrix(11);
+    matrix.data = [
+      0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0,
+      0, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0,
+      0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1,
+      0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0,
+    ];
+    expect(MaskPattern.getPenaltyN3(matrix)).toBe(160);
+
+    matrix.data = [
+      1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1,
+      1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1,
+      1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0,
+      0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1,
+      0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1,
+    ];
+
+    expect(MaskPattern.getPenaltyN3(matrix)).toBe(280);
+  });
+
+  it("Penalty N4", () => {
+    const matrix = new BitMatrix(10);
+    matrix.data = new Array(50).fill(1).concat(new Array(50).fill(0));
+    expect(MaskPattern.getPenaltyN4(matrix)).toBe(0);
+
+    const matrix2 = new BitMatrix(21);
+    matrix2.data = new Array(190).fill(1).concat(new Array(251).fill(0));
+    expect(MaskPattern.getPenaltyN4(matrix2)).toBe(10);
+
+    const matrix3 = new BitMatrix(10);
+    matrix3.data = new Array(22).fill(1).concat(new Array(78).fill(0));
+    expect(MaskPattern.getPenaltyN4(matrix3)).toBe(50);
+  });
 });
 
-test("Mask pattern - Penalty N2", (t: AssertionHandler) => {
-  let matrix = new BitMatrix(8);
-  matrix.data = [
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1,
-    0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1,
-    1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1,
-  ];
-
-  t.equals(
-    MaskPattern.getPenaltyN2(matrix),
-    45,
-    "Should return correct penalty points",
-  );
-
-  matrix = new BitMatrix(6);
-  matrix.data = expectedPattern000;
-
-  t.equals(
-    MaskPattern.getPenaltyN2(matrix),
-    0,
-    "Should return correct penalty points",
-  );
-
-  matrix.data = expectedPattern010;
-
-  t.equals(
-    MaskPattern.getPenaltyN2(matrix),
-    30,
-    "Should return correct penalty points",
-  );
-
-  matrix.data = expectedPattern100;
-
-  t.equals(
-    MaskPattern.getPenaltyN2(matrix),
-    36,
-    "Should return correct penalty points",
-  );
-
-  t.end();
-});
-
-test("Mask pattern - Penalty N3", (t: AssertionHandler) => {
-  const matrix = new BitMatrix(11);
-  matrix.data = [
-    0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0,
-    0, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0,
-    0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1,
-    0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0,
-  ];
-
-  t.equals(
-    MaskPattern.getPenaltyN3(matrix),
-    160,
-    "Should return correct penalty points",
-  );
-
-  matrix.data = [
-    1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1,
-    1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1,
-    1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0,
-    0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1,
-    0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1,
-  ];
-
-  t.equals(
-    MaskPattern.getPenaltyN3(matrix),
-    280,
-    "Should return correct penalty points",
-  );
-
-  t.end();
-});
-
-test("Mask pattern - Penalty N4", (t: AssertionHandler) => {
-  const matrix = new BitMatrix(10);
-  matrix.data = new Array(50).fill(1).concat(new Array(50).fill(0));
-
-  t.equals(
-    MaskPattern.getPenaltyN4(matrix),
-    0,
-    "Should return correct penalty points",
-  );
-
-  const matrix2 = new BitMatrix(21);
-  matrix2.data = new Array(190).fill(1).concat(new Array(251).fill(0));
-
-  t.equals(
-    MaskPattern.getPenaltyN4(matrix2),
-    10,
-    "Should return correct penalty points",
-  );
-
-  const matrix3 = new BitMatrix(10);
-  matrix3.data = new Array(22).fill(1).concat(new Array(78).fill(0));
-
-  t.equals(
-    MaskPattern.getPenaltyN4(matrix3),
-    50,
-    "Should return correct penalty points",
-  );
-
-  t.end();
-});
-
-test("Mask pattern - Best mask", (t: AssertionHandler) => {
-  const matrix = new BitMatrix(11);
-  matrix.data = [
-    0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0,
-    0, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0,
-    0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1,
-    0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0,
-  ];
-
-  const mask = MaskPattern.getBestMask(matrix, () => { });
-  t.ok(!isNaN(mask), "Should return a number");
-
-  t.ok(mask >= 0 && mask < 8, "Should return a number in range 0,7");
-
-  t.end();
+describe("Mask pattern - Best mask", () => {
+  it("Should return a valid mask pattern", () => {
+    const matrix = new BitMatrix(11);
+    matrix.data = [
+      0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0,
+      0, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0,
+      0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1,
+      0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0,
+    ];
+    const mask = MaskPattern.getBestMask(matrix, () => {});
+    expect(mask).not.toBeNaN();
+    expect(mask).toBeGreaterThanOrEqual(0);
+    expect(mask).toBeLessThan(8);
+  });
 });

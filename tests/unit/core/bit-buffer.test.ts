@@ -1,35 +1,29 @@
-import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
+import { describe, expect, it } from "vitest";
+import { BitBuffer } from "../../../src/core/bit-buffer";
 
-import { test } from "tap";
-import BitBuffer from "../../../src/core/bit-buffer.js";
+describe("Bit Buffer", () => {
+  it("should handle bit buffer operations correctly", () => {
+    const testData = 0x41;
+    const expectedDataBits = [
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+    ];
 
-test("Bit Buffer", (t: AssertionHandler) => {
-  const testData = 0x41; // 'A'
-  const expectedDataBits = [
-    false,
-    true,
-    false,
-    false,
-    false,
-    false,
-    false,
-    true,
-  ];
+    const bitBuffer = new BitBuffer();
 
-  const bitBuffer = new BitBuffer();
+    expect(bitBuffer.getLengthInBits()).toBe(0);
 
-  t.equal(bitBuffer.getLengthInBits(), 0, "Initial length should be 0");
+    bitBuffer.put(testData, 8);
+    expect(bitBuffer.getLengthInBits()).toBe(8);
 
-  bitBuffer.put(testData, 8);
-  t.equal(bitBuffer.getLengthInBits(), 8, "Length should be 8");
-
-  for (let i = 0; i < 8; i++) {
-    t.same(
-      bitBuffer.get(i),
-      expectedDataBits[i],
-      "Should return correct bit value",
-    );
-  }
-
-  t.end();
+    for (let i = 0; i < 8; i++) {
+      expect(bitBuffer.get(i)).toEqual(expectedDataBits[i]);
+    }
+  });
 });

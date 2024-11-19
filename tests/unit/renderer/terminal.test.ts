@@ -1,82 +1,102 @@
-import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
+import { describe, expect, it } from "vitest";
+import { QRCode } from "../../../src/core/qrcode";
+import { RendererTerminal } from "../../../src/renderer/terminal";
 
-import { test } from "tap";
-import QRCode from "@core/qrcode";
-import TerminalRenderer from "../../../src/renderer/terminal.js";
-
-test("TerminalRenderer interface", (t: AssertionHandler) => {
-  t.type(TerminalRenderer.render, "function", "Should have render function");
-
-  t.end();
+describe("RendererTerminal interface", () => {
+  it("should have render function", () => {
+    expect(typeof RendererTerminal.render).toBe("function");
+  });
 });
 
-test("TerminalRenderer render big", (t: AssertionHandler) => {
-  const sampleQrData = QRCode.create("sample text", { version: 2 });
+describe("RendererTerminal render big", () => {
+  const sampleQrData = QRCode.create("sample text", {
+    version: 2,
+    maskPattern: 0,
+  });
   let str;
 
-  t.doesNotThrow(() => {
-    str = TerminalRenderer.render(sampleQrData);
-  }, "Should not throw with only qrData param");
+  it("should not throw with only qrData param", () => {
+    expect(() => {
+      str = RendererTerminal.render(sampleQrData);
+    }).not.toThrow();
+  });
 
-  t.doesNotThrow(() => {
-    str = TerminalRenderer.render(sampleQrData, {
-      margin: 10,
-      scale: 1,
-    });
-  }, "Should not throw with options param");
+  it("should not throw with options param", () => {
+    expect(() => {
+      str = RendererTerminal.render(sampleQrData, { margin: 10, scale: 1 });
+    }).not.toThrow();
+  });
 
-  t.type(str, "string", "Should return a string");
+  it("should return a string", () => {
+    expect(typeof str).toBe("string");
+  });
 
-  t.doesNotThrow(() => {
-    str = TerminalRenderer.render(sampleQrData, { inverse: true });
-  }, "Should not throw with inverse options");
+  it("should not throw with inverse options", () => {
+    expect(() => {
+      str = RendererTerminal.render(sampleQrData, { inverse: true });
+    }).not.toThrow();
+  });
 
-  t.type(str, "string", "Should return a string if inverse option is set");
-
-  t.end();
+  it("should return a string if inverse option is set", () => {
+    expect(typeof str).toBe("string");
+  });
 });
 
-test("TerminalRenderer render small", (t: AssertionHandler) => {
-  const sampleQrData = QRCode.create("sample text", { version: 2 });
+describe("TerminalRenderer render small", () => {
+  const sampleQrData = QRCode.create("sample text", {
+    version: 2,
+    maskPattern: 0,
+  });
   let str;
   let calledCallback = false;
   const callback = () => {
     calledCallback = true;
   };
 
-  t.doesNotThrow(() => {
-    str = TerminalRenderer.render(sampleQrData);
-  }, "Should not throw with only qrData param");
+  it("should not throw with only qrData param", () => {
+    expect(() => {
+      str = RendererTerminal.render(sampleQrData);
+    }).not.toThrow();
+  });
 
-  t.doesNotThrow(() => {
-    str = TerminalRenderer.render(sampleQrData, {
-      margin: 10,
-      scale: 1,
-      small: true,
-    });
-  }, "Should not throw with options param and without callback");
-
-  t.doesNotThrow(() => {
-    str = TerminalRenderer.render(
-      sampleQrData,
-      {
+  it("should not throw with options param and without callback", () => {
+    expect(() => {
+      str = RendererTerminal.render(sampleQrData, {
         margin: 10,
         scale: 1,
         small: true,
-      },
-      callback,
-    );
-  }, "Should not throw with options param and callback");
+      });
+    }).not.toThrow();
+  });
 
-  t.type(str, "string", "Should return a string");
+  it("should not throw with options param and callback", () => {
+    expect(() => {
+      str = RendererTerminal.render(
+        sampleQrData,
+        { margin: 10, scale: 1, small: true },
+        callback,
+      );
+    }).not.toThrow();
+  });
 
-  t.equal(calledCallback, true, "string", "Should call a callback");
+  it("should return a string", () => {
+    expect(typeof str).toBe("string");
+  });
 
-  t.notThrow(() => {
-    str = TerminalRenderer.render(sampleQrData, { small: true, inverse: true });
-  }, "Should not throw with inverse options");
+  it("should call a callback", () => {
+    expect(calledCallback).toBe(true);
+  });
 
-  t.type(str, "string", "Should return a string if inverse option is set");
+  it("should not throw with inverse options", () => {
+    expect(() => {
+      str = RendererTerminal.render(sampleQrData, {
+        small: true,
+        inverse: true,
+      });
+    }).not.toThrow();
+  });
 
-  t.end();
+  it("should return a string if inverse option is set", () => {
+    expect(typeof str).toBe("string");
+  });
 });

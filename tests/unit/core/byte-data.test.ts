@@ -1,58 +1,40 @@
-import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
+import { describe, expect, it } from "vitest";
+import { BitBuffer } from "../../../src/core/bit-buffer";
+import { ByteData } from "../../../src/core/byte-data";
+import { Mode } from "../../../src/core/mode";
 
-import { test } from "tap";
-import BitBuffer from "../../../src/core/bit-buffer.js";
-import ByteData from "../../../src/core/byte-data.js";
-import Mode from "../../../src/core/mode.js";
+describe("Byte Data: String Input", () => {
+  it("should handle string input correctly", () => {
+    const text = "1234";
+    const textBitLength = 32;
+    const textByte = [49, 50, 51, 52];
+    const utf8Text = "\u00bd + \u00bc = \u00be";
 
-test("Byte Data: String Input", (t: AssertionHandler) => {
-  const text = "1234";
-  const textBitLength = 32;
-  const textByte = [49, 50, 51, 52]; // 1, 2, 3, 4
-  const utf8Text = "\u00bd + \u00bc = \u00be"; // 9 char, 12 byte
+    const byteData = new ByteData(text);
 
-  const byteData = new ByteData(text);
+    expect(byteData.mode).toBe(Mode.BYTE);
+    expect(byteData.getLength()).toBe(text.length);
+    expect(byteData.getBitsLength()).toBe(textBitLength);
 
-  t.equal(byteData.mode, Mode.BYTE, "Mode should be BYTE");
-  t.equal(byteData.getLength(), text.length, "Should return correct length");
-  t.equal(
-    byteData.getBitsLength(),
-    textBitLength,
-    "Should return correct bit length",
-  );
+    const bitBuffer = new BitBuffer();
+    byteData.write(bitBuffer);
+    expect(bitBuffer.buffer).toEqual(textByte);
 
-  const bitBuffer = new BitBuffer();
-  byteData.write(bitBuffer);
-  t.same(
-    bitBuffer.buffer,
-    textByte,
-    "Should write correct data to buffer",
-  );
-
-  const byteDataUtf8 = new ByteData(utf8Text);
-  t.equal(
-    byteDataUtf8.getLength(),
-    12,
-    "Should return correct length for utf8 chars",
-  );
-
-  t.end();
+    const byteDataUtf8 = new ByteData(utf8Text);
+    expect(byteDataUtf8.getLength()).toBe(12);
+  });
 });
 
-test("Byte Data: Byte Input", (t: AssertionHandler) => {
-  const bytes = new Uint8ClampedArray([1, 231, 32, 22]);
+describe("Byte Data: Byte Input", () => {
+  it("should handle byte input correctly", () => {
+    const bytes = new Uint8ClampedArray([1, 231, 32, 22]);
 
-  const byteData = new ByteData(bytes);
-  t.equal(byteData.getLength(), bytes.length, "Should return correct length");
-  t.equal(
-    byteData.getBitsLength(),
-    bytes.length * 8,
-    "Should return correct bit length",
-  );
+    const byteData = new ByteData(bytes);
+    expect(byteData.getLength()).toBe(bytes.length);
+    expect(byteData.getBitsLength()).toBe(bytes.length * 8);
 
-  const bitBuffer = new BitBuffer();
-  byteData.write(bitBuffer);
-  t.same(bitBuffer.buffer, bytes, "Should write correct data to buffer");
-
-  t.end();
+    const bitBuffer = new BitBuffer();
+    byteData.write(bitBuffer);
+    expect(new Uint8ClampedArray(bitBuffer.buffer)).toEqual(bytes);
+  });
 });

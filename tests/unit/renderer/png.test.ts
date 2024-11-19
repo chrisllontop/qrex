@@ -1,158 +1,183 @@
-import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
-
-import { test } from "tap";
+import fs from "node:fs";
 import { PNG } from "pngjs";
-import sinon from "sinon";
-import * as fs from "node:fs";
-import QRCode from "../../../src/core/qrcode.js";
-import PngRenderer from "../../../src/renderer/png.js";
-import StreamMock from "../../mocks/writable-stream.js";
+import { describe, expect, it, vi } from "vitest";
+import { QRCode } from "../../../src/core/qrcode";
+import { RendererPng } from "../../../src/renderer/png";
+import StreamMock from "../../mocks/writable-stream";
 
-test("PNG renderer interface", (t: AssertionHandler) => {
-  t.type(PngRenderer.render, "function", "Should have render function");
-
-  t.type(
-    PngRenderer.renderToDataURL,
-    "function",
-    "Should have renderToDataURL function",
-  );
-
-  t.type(
-    PngRenderer.renderToFile,
-    "function",
-    "Should have renderToFile function",
-  );
-
-  t.type(
-    PngRenderer.renderToFileStream,
-    "function",
-    "Should have renderToFileStream function",
-  );
-
-  t.end();
-});
-
-test("PNG render", (t: AssertionHandler) => {
-  const sampleQrData = QRCode.create("sample text", { version: 2 });
-  let png;
-
-  t.doesNotThrow(() => {
-    png = PngRenderer.render(sampleQrData);
-  }, "Should not throw with only qrData param");
-
-  t.ok(png instanceof PNG, "Should return an instance of PNG");
-
-  t.equal(png.width, png.height, "Should be a square image");
-
-  // modules: 25, margins: 4 * 2, scale: 4
-  t.equal(png.width, (25 + 4 * 2) * 4, "Should have correct size");
-
-  t.doesNotThrow(() => {
-    png = PngRenderer.render(sampleQrData, {
-      margin: 10,
-      scale: 1,
-    });
-  }, "Should not throw with options param");
-
-  t.equal(png.width, png.height, "Should be a square image");
-
-  // modules: 25, margins: 10 * 2, scale: 1
-  t.equal(png.width, 25 + 10 * 2, "Should have correct size");
-
-  t.end();
-});
-
-test("PNG renderToDataURL", (t: AssertionHandler) => {
-  const sampleQrData = QRCode.create("sample text", { version: 2 });
-
-  t.plan(6);
-
-  PngRenderer.renderToDataURL(sampleQrData, (err: Error, url: string) => {
-    t.ok(!err, "Should not generate errors with only qrData param");
-
-    t.type(url, "string", "Should return a string");
+describe("PNG renderer interface", () => {
+  it("should have render function", () => {
+    expect(RendererPng.render).toBeTypeOf("function");
   });
 
-  PngRenderer.renderToDataURL(
-    sampleQrData,
-    { margin: 10, scale: 1 },
-    (err: Error, url: string) => {
-      t.ok(!err, "Should not generate errors with options param");
+  it("should have renderToDataURL function", () => {
+    expect(RendererPng.renderToDataURL).toBeTypeOf("function");
+  });
 
-      t.type(url, "string", "Should return a string");
+  it("should have renderToFile function", () => {
+    expect(RendererPng.renderToFile).toBeTypeOf("function");
+  });
 
-      t.equal(
-        url.split(",")[0],
-        "data:image/png;base64",
-        "Should have correct header",
-      );
-
-      const b64png = url.split(",")[1];
-      t.equal(b64png.length % 4, 0, "Should have a correct length");
-    },
-  );
+  it("should have renderToFileStream function", () => {
+    expect(RendererPng.renderToFileStream).toBeTypeOf("function");
+  });
 });
 
-test("PNG renderToFile", (t: AssertionHandler) => {
-  const sampleQrData = QRCode.create("sample text", { version: 2 });
+describe("PNG render", () => {
+  const sampleQrData = QRCode.create("sample text", {
+    version: 2,
+    maskPattern: 0,
+  });
+
+  it("should not throw with only qrData param and return PNG instance", () => {
+    let png;
+    expect(() => {
+      png = RendererPng.render(sampleQrData);
+    }).not.toThrow();
+    expect(png).toBeInstanceOf(PNG);
+    expect(png.width).toBe(png.height);
+    expect(png.width).toBe((25 + 4 * 2) * 4);
+  });
+
+  it("should not throw with options param and return correct size", () => {
+    let png;
+    expect(() => {
+      png = RendererPng.render(sampleQrData, {
+        margin: 10,
+        scale: 1,
+      });
+    }).not.toThrow();
+    expect(png).toBeInstanceOf(PNG);
+    expect(png.width).toBe(png.height);
+    expect(png.width).toBe(25 + 10 * 2);
+  });
+});
+
+describe("PNG renderToDataURL", () => {
+  const sampleQrData = QRCode.create("sample text", {
+    version: 2,
+    maskPattern: 0,
+  });
+
+  it("should not generate errors with only qrData param and return a string", async () => {
+    const url = await new Promise((resolve, reject) => {
+      RendererPng.renderToDataURL(sampleQrData, (err, url) => {
+        if (err) reject(err);
+        else resolve(url);
+      });
+    });
+    expect(url).toBeTypeOf("string");
+  });
+
+  it("should not generate errors with options param and return a valid data URL", async () => {
+    const url = await new Promise((resolve, reject) => {
+      RendererPng.renderToDataURL(
+        sampleQrData,
+        { margin: 10, scale: 1 },
+        (err, url) => {
+          if (err) reject(err);
+          else resolve(url);
+        },
+      );
+    });
+
+    expect(url).toBeTypeOf("string");
+    expect(url.split(",")[0]).toBe("data:image/png;base64");
+    const b64png = url.split(",")[1];
+    expect(b64png.length % 4).toBe(0);
+  });
+});
+
+describe("PNG renderToFile", () => {
+  const sampleQrData = QRCode.create("sample text", {
+    version: 2,
+    maskPattern: 0,
+  });
   const fileName = "qrimage.png";
-  let fsStub = sinon.stub(fs, "createWriteStream");
-  fsStub.returns(new StreamMock());
 
-  t.plan(5);
+  it("should not generate errors with only qrData param and save file with correct file name", async () => {
+    const fsStub = vi
+      .spyOn(fs, "createWriteStream")
+      .mockReturnValue(new StreamMock());
 
-  PngRenderer.renderToFile(fileName, sampleQrData, (err: Error) => {
-    t.ok(!err, "Should not generate errors with only qrData param");
+    await new Promise((resolve, reject) => {
+      RendererPng.renderToFile(fileName, sampleQrData, (err) => {
+        try {
+          expect(err).toBeFalsy();
+          expect(fsStub).toHaveBeenCalledWith(fileName);
+          resolve();
+        } catch (e) {
+          reject(e);
+        }
+      });
+    });
 
-    t.equal(
-      fsStub.getCall(0).args[0],
-      fileName,
-      "Should save file with correct file name",
-    );
+    fsStub.mockRestore();
   });
 
-  PngRenderer.renderToFile(
-    fileName,
-    sampleQrData,
-    {
-      margin: 10,
-      scale: 1,
-    },
-    (err: Error) => {
-      t.ok(!err, "Should not generate errors with options param");
+  it("should not generate errors with options param and save file with correct file name", async () => {
+    const fsStub = vi
+      .spyOn(fs, "createWriteStream")
+      .mockReturnValue(new StreamMock());
 
-      t.equal(
-        fsStub.getCall(0).args[0],
+    await new Promise((resolve, reject) => {
+      RendererPng.renderToFile(
         fileName,
-        "Should save file with correct file name",
+        sampleQrData,
+        { margin: 10, scale: 1 },
+        (err) => {
+          try {
+            expect(err).toBeFalsy();
+            expect(fsStub).toHaveBeenCalledWith(fileName);
+            resolve();
+          } catch (e) {
+            reject(e);
+          }
+        },
       );
-    },
-  );
+    });
 
-  fsStub.restore();
-  fsStub = sinon.stub(fs, "createWriteStream");
-  fsStub.returns(new StreamMock().forceErrorOnWrite());
-
-  PngRenderer.renderToFile(fileName, sampleQrData, function(err) {
-    t.ok(err, "Should fail if error occurs during save");
+    fsStub.mockRestore();
   });
 
-  fsStub.restore();
+  it("should fail if error occurs during save", async () => {
+    const fsStub = vi
+      .spyOn(fs, "createWriteStream")
+      .mockReturnValue(new StreamMock().forceErrorOnWrite());
+
+    await new Promise((resolve, reject) => {
+      RendererPng.renderToFile(fileName, sampleQrData, (err) => {
+        try {
+          expect(err).toBeTruthy();
+          resolve();
+        } catch (e) {
+          reject(e);
+        }
+      });
+    });
+
+    fsStub.mockRestore();
+  });
 });
 
-test("PNG renderToFileStream", (t: AssertionHandler) => {
-  const sampleQrData = QRCode.create("sample text", { version: 2 });
+describe("PNG renderToFileStream", () => {
+  const sampleQrData = QRCode.create("sample text", {
+    version: 2,
+    maskPattern: 0,
+  });
 
-  t.doesNotThrow(() => {
-    PngRenderer.renderToFileStream(new StreamMock(), sampleQrData);
-  }, "Should not throw with only qrData param");
+  it("should not throw with only qrData param", () => {
+    expect(() => {
+      RendererPng.renderToFileStream(new StreamMock(), sampleQrData);
+    }).not.toThrow();
+  });
 
-  t.doesNotThrow(() => {
-    PngRenderer.renderToFileStream(new StreamMock(), sampleQrData, {
-      margin: 10,
-      scale: 1,
-    });
-  }, "Should not throw with options param");
-
-  t.end();
+  it("should not throw with options param", () => {
+    expect(() => {
+      RendererPng.renderToFileStream(new StreamMock(), sampleQrData, {
+        margin: 10,
+        scale: 1,
+      });
+    }).not.toThrow();
+  });
 });

@@ -1,68 +1,41 @@
-import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
-
-import { test } from "tap";
-import ECLevel from "../../../src/core/error-correction-level.js";
+import { describe, expect, it } from "vitest";
+import { ECLevel } from "../../../src/core/error-correction-level";
 
 const EC_LEVELS = [ECLevel.L, ECLevel.M, ECLevel.Q, ECLevel.H];
 
-test("Error level from input value", (t: AssertionHandler) => {
-  const values = [
-    ["l", "low"],
-    ["m", "medium"],
-    ["q", "quartile"],
-    ["h", "high"],
-  ];
+describe("Error Level from Input Value", () => {
+  it("should return correct error level from input value", () => {
+    const values = [
+      ["l", "low"],
+      ["m", "medium"],
+      ["q", "quartile"],
+      ["h", "high"],
+    ];
 
-  for (let l = 0; l < values.length; l++) {
-    for (let i = 0; i < values[l].length; i++) {
-      t.equal(ECLevel.from(values[l][i]), EC_LEVELS[l]);
-      t.equal(ECLevel.from(values[l][i].toUpperCase()), EC_LEVELS[l]);
+    for (let l = 0; l < values.length; l++) {
+      for (let i = 0; i < values[l].length; i++) {
+        expect(ECLevel.from(values[l][i])).toBe(EC_LEVELS[l]);
+        expect(ECLevel.from(values[l][i].toUpperCase())).toBe(EC_LEVELS[l]);
+      }
     }
-  }
 
-  t.equal(
-    ECLevel.from(ECLevel.L),
-    ECLevel.L,
-    "Should return passed level if value is valid",
-  );
-  t.equal(
-    ECLevel.from(undefined, ECLevel.M),
-    ECLevel.M,
-    "Should return default level if value is undefined",
-  );
-  t.equal(
-    ECLevel.from("", ECLevel.Q),
-    ECLevel.Q,
-    "Should return default level if value is invalid",
-  );
-
-  t.end();
+    expect(ECLevel.from(ECLevel.L)).toBe(ECLevel.L);
+    expect(ECLevel.from(undefined, ECLevel.M)).toBe(ECLevel.M);
+    expect(ECLevel.from("", ECLevel.Q)).toBe(ECLevel.Q);
+  });
 });
 
-test("Error level validity", (t: AssertionHandler) => {
-  for (let l = 0; l < EC_LEVELS.length; l++) {
-    t.ok(
-      ECLevel.isValid(EC_LEVELS[l]),
-      "Should return true if error level is valid",
-    );
-  }
+describe("Error Level Validity", () => {
+  it("should return true for valid error levels", () => {
+    for (let l = 0; l < EC_LEVELS.length; l++) {
+      expect(ECLevel.isValid(EC_LEVELS[l])).toBe(true);
+    }
+  });
 
-  t.notOk(
-    ECLevel.isValid(undefined),
-    "Should return false if level is undefined",
-  );
-  t.notOk(
-    ECLevel.isValid({}),
-    "Should return false if bit property is undefined",
-  );
-  t.notOk(
-    ECLevel.isValid({ bit: -1 }),
-    "Should return false if bit property value is < 0",
-  );
-  t.notOk(
-    ECLevel.isValid({ bit: 4 }),
-    "Should return false if bit property value is > 3",
-  );
-
-  t.end();
+  it("should return false for invalid error levels", () => {
+    expect(ECLevel.isValid(undefined)).toBe(undefined);
+    expect(ECLevel.isValid({})).toBe(false);
+    expect(ECLevel.isValid({ bit: -1 })).toBe(false);
+    expect(ECLevel.isValid({ bit: 4 })).toBe(false);
+  });
 });

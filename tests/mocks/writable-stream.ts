@@ -1,30 +1,29 @@
-import stream from "stream";
-import util from "util";
+import { Writable } from "node:stream";
 
-function WritableStream(): void {
-  stream.Writable.call(this);
-  this.forceError = false;
+class WritableStream extends Writable {
+  constructor() {
+    super();
+    this.forceError = false;
 
-  this.once("finish", () => {
-    this.close();
-  });
+    this.once("finish", () => {
+      this.close();
+    });
+  }
+
+  _write(data, encoding, cb) {
+    if (this.forceError) this.emit("error", new Error("Fake error"));
+    cb(this.forceError || null);
+  }
+
+  close(cb) {
+    this.emit("close");
+    if (cb) cb();
+  }
+
+  forceErrorOnWrite() {
+    this.forceError = true;
+    return this;
+  }
 }
-
-util.inherits(WritableStream, stream.Writable);
-
-WritableStream.prototype._write = (data: string, encoding: string, cb: Function) => {
-  if (this.forceError) this.emit("error", new Error("Fake error"));
-  cb(this.forceError || null);
-};
-
-WritableStream.prototype.close = (cb: Function) => {
-  this.emit("close");
-  if (cb) cb();
-};
-
-WritableStream.prototype.forceErrorOnWrite = () => {
-  this.forceError = true;
-  return this;
-};
 
 export default WritableStream;

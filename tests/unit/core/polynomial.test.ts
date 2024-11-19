@@ -1,39 +1,34 @@
-import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
+import { describe, expect, test } from "vitest";
+import { Polynomial } from "../../../src/core/polynomial";
 
-import { test } from "tap";
-import Poly from "../../../src/core/polynomial.js";
+describe("Generator Polynomial", () => {
+  test("Should return an Uint8Array for degree 0", () => {
+    const result = Polynomial.generateECPolynomial(0);
+    expect(result instanceof Uint8Array).toBe(true);
+    expect(result).toEqual(new Uint8Array([1]));
+  });
 
-test("Generator polynomial", (t: AssertionHandler) => {
-  const result = Poly.generateECPolynomial(0);
-  t.ok(result instanceof Uint8Array, "Should return an Uint8Array");
-  t.same(
-    result,
-    new Uint8Array([1]),
-    "Should return coeff [1] for polynomial of degree 0",
-  );
-
-  for (let e = 2; e <= 68; e++) {
-    t.equal(
-      Poly.generateECPolynomial(e).length,
-      e + 1,
-      "Should return a number of coefficients equal to (degree + 1)",
-    );
-  }
-
-  t.end();
+  test("Should return a number of coefficients equal to (degree + 1)", () => {
+    for (let e = 2; e <= 68; e++) {
+      expect(Polynomial.generateECPolynomial(e).length).toBe(e + 1);
+    }
+  });
 });
 
-test("Polynomial", (t: AssertionHandler) => {
-  const p1 = [0, 1, 2, 3, 4];
-  const p2 = [5, 6];
+describe("Polynomial Operations", () => {
+  test("Should return correct result for polynomial multiplication", () => {
+    const p1 = [0, 1, 2, 3, 4];
+    const p2 = [5, 6];
 
-  let result = Poly.mul(p1, p2);
-  t.ok(result instanceof Uint8Array, "Should return an Uint8Array");
-  t.equal(result.length, 6, "Should return correct number of coefficients");
+    const result = Polynomial.mul(p1, p2);
+    expect(result instanceof Uint8Array).toBe(true);
+    expect(result.length).toBe(6);
+  });
 
-  result = Poly.mod(p1, Poly.generateECPolynomial(2));
-  t.ok(result instanceof Uint8Array, "Should return an Uint8Array");
-  t.equal(result.length, 2, "Should return correct number of coefficients");
-
-  t.end();
+  test("Should return correct result for polynomial modulus", () => {
+    const p1 = [0, 1, 2, 3, 4];
+    const result = Polynomial.mod(p1, Polynomial.generateECPolynomial(2));
+    expect(result instanceof Uint8Array).toBe(true);
+    expect(result.length).toBe(2);
+  });
 });

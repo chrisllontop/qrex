@@ -1,58 +1,73 @@
-import { type DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
+import { describe, expect, it, vi } from "vitest";
+import { toFileStream } from "../../src";
+import StreamMock from "../mocks/writable-stream";
 
-import { test } from "tap";
-import sinon from "sinon";
-import StreamMock from "../mocks/writable-stream.js";
-import * as QRCode from "../../src/index.js";
-
-test("toFileStream png", (t: AssertionHandler) => {
-  t.throws(() => {
-    QRCode.toFileStream("some text");
-  }, "Should throw if stream is not provided");
-
-  t.throws(() => {
-    QRCode.toFileStream(new StreamMock());
-  }, "Should throw if text is not provided");
-
-  const fstream = new StreamMock();
-  const spy = sinon.spy(fstream, "emit");
-
-  QRCode.toFileStream(fstream, "i am a pony!");
-
-  QRCode.toFileStream(fstream, "i am a pony!", {
-    type: "image/png",
+const defaultOptions = {
+  maskPattern: 0,
+  errorCorrectionLevel: "L",
+};
+describe("toFileStream", () => {
+  it("should throw if stream is not provided", () => {
+    expect(() => toFileStream("some text")).toThrow(
+      "Too few arguments provided",
+    );
   });
 
-  t.ok(spy.neverCalledWith("error"), "There should be no error");
+  it("should throw if text is not provided", () => {
+    expect(() => toFileStream(new StreamMock())).toThrow(
+      "Too few arguments provided",
+    );
+  });
 
-  spy.restore();
-  t.end();
-});
+  it("should not call error event", () => {
+    const fstream = new StreamMock();
+    const spy = vi.spyOn(fstream, "emit");
 
-test("toFileStream png with write error", (t: AssertionHandler) => {
-  const fstreamErr = new StreamMock().forceErrorOnWrite();
-  QRCode.toFileStream(fstreamErr, "i am a pony!");
+    toFileStream(fstream, "i am a pony!", defaultOptions);
+    toFileStream(fstream, "i am a pony!", {
+      ...defaultOptions,
+      type: "image/png",
+    });
 
-  t.plan(2);
+    expect(spy).not.toHaveBeenCalledWith("error");
 
-  fstreamErr.on("error", (err: Error) => {
-    t.ok(err, "Should return an error");
+    spy.mockRestore();
   });
 });
 
-test("toFileStream png with qrcode error", (t: AssertionHandler) => {
-  const fstreamErr = new StreamMock();
-  const bigString = Array(200).join("i am a pony!");
+describe("toFileStream png with write error", () => {
+  it("should return an error on write error", async () => {
+    const fstreamErr = new StreamMock().forceErrorOnWrite();
+    const errorPromise = new Promise((resolve) => {
+      fstreamErr.on("error", (e) => {
+        resolve(e);
+      });
+    });
 
-  t.plan(2);
+    toFileStream(fstreamErr, "i am a pony!");
 
-  fstreamErr.on("error", (err: Error) => {
-    t.ok(err, "Should return an error");
+    const error = await errorPromise;
+    expect(error).toBeDefined();
   });
+});
 
-  QRCode.toFileStream(fstreamErr, bigString);
-  QRCode.toFileStream(fstreamErr, "i am a pony!", {
-    version: 1, // force version=1 to trigger an error
-    errorCorrectionLevel: "H",
+describe("toFileStream png with qrcode error", () => {
+  it("should return an error on qrcode error", async () => {
+    const fstreamErr = new StreamMock();
+    const bigString = Array(200).join("i am a pony!");
+    const errorPromise = new Promise((resolve) => {
+      fstreamErr.on("error", (e) => {
+        resolve(e);
+      });
+    });
+
+    toFileStream(fstreamErr, bigString);
+    toFileStream(fstreamErr, "i am a pony!", {
+      version: 1,
+      errorCorrectionLevel: "H",
+    });
+
+    const error = await errorPromise;
+    expect(error).toBeDefined();
   });
 });

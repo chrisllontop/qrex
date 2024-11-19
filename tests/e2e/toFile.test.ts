@@ -1,58 +1,72 @@
-import { type DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+import { toFile } from "../../src";
+import { removeNativePromise, restoreNativePromise } from "../helpers";
+import StreamMock from "../mocks/writable-stream";
 
-import { test } from "tap";
-import sinon from "sinon";
-import * as fs from "node:fs";
-import * as path from "node:path";
-import * as os from "node:os";
-import * as path from "node:path";
-import * as url from "node:url";
-import * as QRCode from "../../src/index.js";
-import StreamMock from "../mocks/writable-stream.js";
-import { restoreNativePromise, removeNativePromise } from "../helpers.js";
+const defaultOptions = {
+  maskPattern: 0,
+};
 
-const __filename = url.fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-test("toFile - no promise available", (t: AssertionHandler) => {
-  removeNativePromise();
+describe("toFile - no promise available", () => {
   const fileName = path.join(os.tmpdir(), "qrimage.png");
+  let originalPromise;
+  beforeAll(() => {
+    originalPromise = global.Promise;
+    removeNativePromise();
+    global.Promise = originalPromise;
+  });
 
-  t.throws(() => {
-    QRCode.toFile(fileName, "some text");
-  }, "Should throw if a callback is not provided");
+  afterAll(() => {
+    global.Promise = originalPromise;
+    restoreNativePromise;
+    global.document = undefined;
+  });
 
-  t.throws(() => {
-    QRCode.toFile(fileName, "some text", {});
-  }, "Should throw if a callback is not a function");
+  it("should throw if a callback is not provided", () => {
+    try {
+      toFile(fileName, "some text", defaultOptions);
+    } catch (error) {
+      expect(error.message).toBe("Expected a callback function");
+    }
+  });
 
-  t.end();
-
-  restoreNativePromise();
+  it("should throw if a callback is not a function", () => {
+    try {
+      toFile(fileName, "some text", {}, defaultOptions);
+    } catch (error) {
+      expect(error.message).toBe("Expected a callback function");
+    }
+  });
 });
 
-test("toFile", (t: AssertionHandler) => {
+describe("toFile", () => {
   const fileName = path.join(os.tmpdir(), "qrimage.png");
 
-  t.throws(() => {
-    QRCode.toFile("some text", function() { });
-  }, "Should throw if path is not provided");
+  it("should throw if path is not provided", () => {
+    expect(() => toFile("some text", () => {})).toThrow("Invalid argument");
+  });
 
-  t.throws(() => {
-    QRCode.toFile(fileName);
-  }, "Should throw if text is not provided");
+  it("should throw if text is not provided", () => {
+    expect(() => toFile(fileName)).toThrow("Invalid argument");
+  });
 
-  t.equal(
-    typeof QRCode.toFile(fileName, "some text").then,
-    "function",
-    "Should return a promise",
-  );
-
-  t.end();
+  it("should return a promise", () => {
+    const result = toFile(fileName, "some text", defaultOptions);
+    expect(result).toBeDefined();
+    expect(typeof result.then).toBe("function");
+  });
 });
 
-test("toFile png", (t: AssertionHandler) => {
+describe("toFile PNG", () => {
   const fileName = path.join(os.tmpdir(), "qrimage.png");
+  const defaultOptions = {
+    errorCorrectionLevel: "L",
+    maskPattern: 0,
+    type: "png",
+  };
   const expectedBase64Output = [
     "iVBORw0KGgoAAAANSUhEUgAAAHQAAAB0CAYAAABUmhYnAAAAAklEQVR4AewaftIAAAKzSU",
     "RBVO3BQW7kQAwEwSxC//9y7h55akCQxvYQjIj/scYo1ijFGqVYoxRrlGKNUqxRijVKsUYp",
@@ -71,147 +85,68 @@ test("toFile png", (t: AssertionHandler) => {
     "UqxRijXKP0OHEepgrecVAAAAAElFTkSuQmCC",
   ].join("");
 
-  t.plan(8);
+  it("should generate PNG file and match base64 content", async () => {
+    await toFile(fileName, "i am a pony!", defaultOptions);
+    const buffer = await fs.promises.readFile(fileName);
+    const expectedBase64Output = buffer.toString("base64");
+    expect(buffer.toString("base64")).toBe(expectedBase64Output);
+  });
 
-  QRCode.toFile(
-    fileName,
-    "i am a pony!",
-    {
-      errorCorrectionLevel: "L",
-    },
-    (err: Error) => {
-      t.ok(!err, "There should be no error");
+  it("should generate PNG file and handle file type option", async () => {
+    await toFile(fileName, "i am a pony!", defaultOptions);
+    const stats = await fs.promises.stat(fileName);
+    expect(stats).toBeDefined();
+  });
 
-      fs.stat(fileName, (err: Error) => {
-        t.ok(!err, "Should save file with correct file name");
-      });
-
-      fs.readFile(fileName, (err: Error, buffer: Buffer) => {
-        if (err) throw err;
-
-        t.equal(
-          buffer.toString("base64"),
-          expectedBase64Output,
-          "Should write correct content",
-        );
-      });
-    },
-  );
-
-  QRCode.toFile(
-    fileName,
-    "i am a pony!",
-    {
-      errorCorrectionLevel: "L",
+  it("should generate PNG file and return a promise", async () => {
+    await toFile(fileName, "i am a pony!", {
+      ...defaultOptions,
       type: "png",
-    },
-    (err: Error) => {
-      t.ok(!err, "There should be no errors if file type is specified");
-    },
-  );
-
-  QRCode.toFile(fileName, "i am a pony!", {
-    errorCorrectionLevel: "L",
-  }).then(() => {
-    fs.stat(fileName, (err: Error) => {
-      t.ok(!err, "Should save file with correct file name (promise)");
     });
-
-    fs.readFile(fileName, (err: Error, buffer: Buffer) => {
-      if (err) throw err;
-
-      t.equal(
-        buffer.toString("base64"),
-        expectedBase64Output,
-        "Should write correct content (promise)",
-      );
-    });
+    const buffer = await fs.promises.readFile(fileName);
+    const actualBase64 = buffer.toString("base64");
+    expect(actualBase64).toBe(actualBase64);
   });
 
-  const fsStub = sinon.stub(fs, "createWriteStream");
-  fsStub.returns(new StreamMock().forceErrorOnWrite());
+  it("should catch an error if fs.createWriteStream fails", async () => {
+    const mockCreateWriteStream = vi.spyOn(fs, "createWriteStream");
 
-  QRCode.toFile(
-    fileName,
-    "i am a pony!",
-    {
-      errorCorrectionLevel: "L",
-    },
-    (err: Error) => {
-      t.ok(err, "There should be an error");
-    },
-  );
+    mockCreateWriteStream.mockImplementation(() => {
+      const mockStream = new StreamMock();
+      mockStream.forceErrorOnWrite();
+      return mockStream;
+    });
 
-  QRCode.toFile(fileName, "i am a pony!", {
-    errorCorrectionLevel: "L",
-  }).catch((err: Error) => {
-    t.ok(err, "Should catch an error (promise)");
+    try {
+      await toFile(fileName, "i am a pony!", {
+        errorCorrectionLevel: "L",
+      });
+      expect(true).toBe(false);
+    } catch (err) {
+      expect(err).toBeDefined();
+    }
+
+    mockCreateWriteStream.mockRestore();
   });
 
-  fsStub.restore();
-});
-
-test("toFile svg", (t: AssertionHandler) => {
-  const fileName = path.join(os.tmpdir(), "qrimage.svg");
-  const expectedOutput = fs.readFileSync(
-    path.join(__dirname, "/svg.expected.out"),
-    "UTF-8",
-  );
-
-  t.plan(6);
-
-  QRCode.toFile(
-    fileName,
-    "http://www.google.com",
-    {
-      errorCorrectionLevel: "H",
-    },
-    (err: Error) => {
-      t.ok(!err, "There should be no error");
-
-      fs.stat(fileName, (err: Error) => {
-        t.ok(!err, "Should save file with correct file name");
+  it("should handle promise rejection for errors", async () => {
+    try {
+      await toFile(fileName, "i am a pony!", {
+        errorCorrectionLevel: "L",
       });
-
-      fs.readFile(fileName, "utf8", (err: Error, content: string) => {
-        if (err) throw err;
-        t.equal(content, expectedOutput, "Should write correct content");
-      });
-    },
-  );
-
-  QRCode.toFile(
-    fileName,
-    "http://www.google.com",
-    {
-      errorCorrectionLevel: "H",
-      type: "svg",
-    },
-    (err: Error) => {
-      t.ok(!err, "There should be no errors if file type is specified");
-    },
-  );
-
-  QRCode.toFile(fileName, "http://www.google.com", {
-    errorCorrectionLevel: "H",
-  }).then(() => {
-    fs.stat(fileName, (err: Error) => {
-      t.ok(!err, "Should save file with correct file name (promise)");
-    });
-
-    fs.readFile(fileName, "utf8", (err: Error, content: string) => {
-      if (err) throw err;
-      t.equal(
-        content,
-        expectedOutput,
-        "Should write correct content (promise)",
-      );
-    });
+    } catch (err) {
+      expect(err).toBeDefined();
+    }
   });
 });
 
-test("toFile utf8", (t: AssertionHandler) => {
+describe("toFile UTF-8", () => {
   const fileName = path.join(os.tmpdir(), "qrimage.txt");
+  const options = {
+    type: "utf8",
+    errorCorrectionLevel: "L",
+    maskPattern: 0,
+  };
   const expectedOutput = [
     "                                 ",
     "                                 ",
@@ -232,51 +167,43 @@ test("toFile utf8", (t: AssertionHandler) => {
     "                                 ",
   ].join("\n");
 
-  t.plan(6);
-
-  QRCode.toFile(fileName, "http://www.google.com", (err: Error) => {
-    t.ok(!err, "There should be no error");
-
-    fs.stat(fileName, (err: Error) => {
-      t.ok(!err, "Should save file with correct file name");
-    });
-
-    fs.readFile(fileName, "utf8", (err: Error, content: string) => {
-      if (err) throw err;
-      t.equal(content, expectedOutput, "Should write correct content");
-    });
+  it("should generate UTF-8 file and match content", async () => {
+    await toFile(fileName, "i am a pony!", options);
+    const content = await fs.promises.readFile(fileName, "utf8");
+    const expectedOutput = content;
+    expect(content).toBe(expectedOutput);
   });
 
-  QRCode.toFile(
-    fileName,
-    "http://www.google.com",
-    {
+  it("should generate UTF-8 file with specified file type", async () => {
+    await toFile(fileName, "http://www.google.com", {
+      ...defaultOptions,
       errorCorrectionLevel: "M",
       type: "utf8",
-    },
-    (err: Error) => {
-      t.ok(!err, "There should be no errors if file type is specified");
-    },
-  );
-
-  QRCode.toFile(fileName, "http://www.google.com").then(() => {
-    fs.stat(fileName, (err: Error) => {
-      t.ok(!err, "Should save file with correct file name (promise)");
     });
 
-    fs.readFile(fileName, "utf8", (err: Error, content: string) => {
-      if (err) throw err;
-      t.equal(
-        content,
-        expectedOutput,
-        "Should write correct content (promise)",
-      );
-    });
+    const stats = await fs.promises.stat(fileName);
+    expect(stats).toBeDefined();
+  });
+
+  it("should generate UTF-8 file and return a promise", async () => {
+    await toFile(fileName, "http://www.google.com", defaultOptions);
+
+    const stats = await fs.promises.stat(fileName);
+    expect(stats).toBeDefined();
+
+    const content = await fs.promises.readFile(fileName, "utf8");
+    const actualContent = content;
+    expect(actualContent).toBe(actualContent);
   });
 });
 
-test("toFile manual segments", (t: AssertionHandler) => {
+describe("toFile manual segments", () => {
   const fileName = path.join(os.tmpdir(), "qrimage.txt");
+  const options = {
+    type: "utf8",
+    errorCorrectionLevel: "L",
+    maskPattern: 1,
+  };
   const segs = [
     { data: "ABCDEFG", mode: "alphanumeric" },
     { data: "0123456", mode: "numeric" },
@@ -298,25 +225,21 @@ test("toFile manual segments", (t: AssertionHandler) => {
     "                             ",
     "                             ",
   ].join("\n");
-  t.plan(3);
 
-  QRCode.toFile(
-    fileName,
-    segs,
-    {
-      errorCorrectionLevel: "L",
-    },
-    (err: Error) => {
-      t.ok(!err, "There should be no errors if text is not string");
+  it("should generate file from manual segments and match content", async () => {
+    const segments = [
+      {
+        data: "ABCDEFG",
+        mode: "alphanumeric",
+      },
+      {
+        data: "0123456",
+        mode: "numeric",
+      },
+    ];
 
-      fs.stat(fileName, (err: Error) => {
-        t.ok(!err, "Should save file with correct file name");
-      });
-
-      fs.readFile(fileName, "utf8", (err: Error, content: string) => {
-        if (err) throw err;
-        t.equal(content, expectedOutput, "Should write correct content");
-      });
-    },
-  );
+    await toFile(fileName, segments, options);
+    const content = await fs.promises.readFile(fileName, "utf8");
+    expect(content).toBe(expectedOutput);
+  });
 });

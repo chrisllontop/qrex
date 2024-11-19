@@ -1,18 +1,9 @@
-import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
+import { describe, expect, it } from "vitest";
+import { AlphanumericData } from "../../../src/core/alphanumeric-data";
+import { BitBuffer } from "../../../src/core/bit-buffer";
+import { Mode } from "../../../src/core/mode";
 
-import { test } from "tap";
-import Mode from "../../../src/core/mode.js";
-import BitBuffer from ".../../../src/core/bit-buffer.js";
-import AlphaNumericData from "../../../src/core/alphanumeric-data.js";
-
-type MockMode = {
-  data: string;
-  length: number;
-  bitLength: number;
-  dataBit: Array<number>;
-}
-
-const testData: Array<MockMode> = [
+const testData = [
   {
     data: "A",
     length: 1,
@@ -33,34 +24,19 @@ const testData: Array<MockMode> = [
   },
 ];
 
-test("Alphanumeric Data", (t: AsssertionHandler) => {
-  testData.forEach((data: MockMode) => {
-    const alphanumericData = new AlphanumericData(data.data);
+describe("Alphanumeric Data", () => {
+  it("should handle alphanumeric data correctly", () => {
+    for (const data of testData) {
+      const alphanumericData = new AlphanumericData(data.data);
 
-    t.equal(
-      alphanumericData.mode,
-      Mode.ALPHANUMERIC,
-      "Mode should be ALPHANUMERIC",
-    );
-    t.equal(
-      alphanumericData.getLength(),
-      data.length,
-      "Should return correct length",
-    );
-    t.equal(
-      alphanumericData.getBitsLength(),
-      data.bitLength,
-      "Should return correct bit length",
-    );
+      expect(alphanumericData.mode).toBe(Mode.ALPHANUMERIC);
+      expect(alphanumericData.getLength()).toBe(data.length);
+      expect(alphanumericData.getBitsLength()).toBe(data.bitLength);
 
-    const bitBuffer = new BitBuffer();
-    alphanumericData.write(bitBuffer);
-    t.same(
-      bitBuffer.buffer,
-      data.dataBit,
-      "Should write correct data to buffer",
-    );
+      const bitBuffer = new BitBuffer();
+      alphanumericData.write(bitBuffer);
+
+      expect(bitBuffer.buffer).toEqual(data.dataBit);
+    }
   });
-
-  t.end();
 });

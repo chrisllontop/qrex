@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { AlignmentPattern as pattern } from "../../../src/core/alignment-pattern.js";
+import { AlignmentPattern as pattern } from "../../../src/core/alignment-pattern";
 
 /**
  * Row/column coordinates of the center module of each alignment pattern.
@@ -7,7 +7,7 @@ import { AlignmentPattern as pattern } from "../../../src/core/alignment-pattern
  *
  * @type {Array}
  */
-const EXPECTED_POSITION_TABLE: Array<number[]> = [
+const EXPECTED_POSITION_TABLE = [
   [],
   [6, 18],
   [6, 22],

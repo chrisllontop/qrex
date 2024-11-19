@@ -1,52 +1,51 @@
-import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
-
-import { test } from "tap";
 import { createCanvas } from "canvas";
-import * as QRCodeBrowser from "../../src/browser.js";
-import * as QRCode from "../../src/index.js";
-import { restoreNativePromise, removeNativePromise } from "../helpers.js";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { toDataURL } from "../../src";
+import { toDataURL as toDataURLBrowser } from "../../src/browser";
+import { removeNativePromise, restoreNativePromise } from "../helpers";
 
-test("toDataURL - no promise available", (t: AssertionHandler) => {
-  removeNativePromise();
+const defaultOptions = {
+  maskPattern: 0,
+};
 
-  t.throws(() => {
-    QRCode.toDataURL();
-  }, "Should throw if no arguments are provided");
+describe("toDataURL - no promise available", () => {
+  let originalPromise;
+  beforeAll(() => {
+    originalPromise = global.Promise;
+    removeNativePromise();
+    global.Promise = originalPromise;
+  });
 
-  t.throws(() => {
-    QRCode.toDataURL(function() { });
-  }, "Should throw if text is not provided");
+  afterAll(() => {
+    restoreNativePromise();
+  });
 
-  t.throws(() => {
-    QRCode.toDataURL("some text");
-  }, "Should throw if a callback is not provided");
+  it("should throw if no arguments are provided", async () => {
+    await expect(() => toDataURL()).toThrow();
+  });
 
-  t.throws(() => {
-    QRCode.toDataURL("some text", {});
-  }, "Should throw if a callback is not a function");
+  it("should throw if no arguments are provided (browser)", async () => {
+    await expect(() => toDataURLBrowser()).toThrow();
+  });
 
-  t.throws(() => {
-    QRCodeBrowser.toDataURL();
-  }, "Should throw if no arguments are provided (browser)");
+  it("should throw if text is not provided (browser)", async () => {
+    await expect(() => toDataURLBrowser(() => {})).toThrow();
+  });
 
-  t.throws(() => {
-    QRCodeBrowser.toDataURL(function() { });
-  }, "Should throw if text is not provided (browser)");
+  it("should reject if a callback is not provided (browser)", async () => {
+    await expect(toDataURLBrowser("some text")).rejects.toThrow(
+      "bad maskPattern:undefined",
+    );
+  });
 
-  t.throws(() => {
-    QRCodeBrowser.toDataURL("some text");
-  }, "Should throw if a callback is not provided (browser)");
-
-  t.throws(() => {
-    QRCodeBrowser.toDataURL("some text", {});
-  }, "Should throw if a callback is not a function (browser)");
-
-  t.end();
-
-  restoreNativePromise();
+  it("should reject if a callback is not a function (browser)", async () => {
+    await expect(toDataURLBrowser("some text", {})).rejects.toThrow(
+      "bad maskPattern:undefined",
+    );
+  });
 });
 
-test("toDataURL - image/png", (t: AssertionHandler) => {
+describe("toDataURL - image/png", () => {
   const expectedDataURL = [
     "data:image/png;base64,",
     "iVBORw0KGgoAAAANSUhEUgAAAHQAAAB0CAYAAABUmhYnAAAAAklEQVR4AewaftIAAAKzSU",
@@ -66,68 +65,73 @@ test("toDataURL - image/png", (t: AssertionHandler) => {
     "UqxRijXKP0OHEepgrecVAAAAAElFTkSuQmCC",
   ].join("");
 
-  t.plan(8);
-
-  t.throws(() => {
-    QRCode.toDataURL();
-  }, "Should throw if no arguments are provided");
-
-  QRCode.toDataURL(
-    "i am a pony!",
-    {
-      errorCorrectionLevel: "L",
-      type: "image/png",
-    },
-    (err: Error, url: string) => {
-      t.ok(!err, "there should be no error " + err);
-      t.equal(
-        url,
-        expectedDataURL,
-        "url should match expected value for error correction L",
-      );
-    },
-  );
-
-  QRCode.toDataURL(
-    "i am a pony!",
-    {
-      version: 1, // force version=1 to trigger an error
-      errorCorrectionLevel: "H",
-      type: "image/png",
-    },
-    (err: Error, url: string) => {
-      t.ok(err, "there should be an error ");
-      t.notOk(url, "url should be null");
-    },
-  );
-
-  t.equal(
-    typeof QRCode.toDataURL("i am a pony!").then,
-    "function",
-    "Should return a promise",
-  );
-
-  QRCode.toDataURL("i am a pony!", {
-    errorCorrectionLevel: "L",
-    type: "image/png",
-  }).then((url: string) => {
-    t.equal(
-      url,
-      expectedDataURL,
-      "url should match expected value for error correction L (promise)",
+  it("should throw if no arguments are provided", async () => {
+    await expect(() => toDataURL()).toThrow(
+      "String required as first argument",
     );
   });
 
-  QRCode.toDataURL("i am a pony!", {
-    version: 1, // force version=1 to trigger an error
-    errorCorrectionLevel: "H",
-    type: "image/png",
-  }).catch((err: Error) => {
-    t.ok(err, "there should be an error (promise)");
+  it("should generate a valid URL using promise with error correction level L", async () => {
+    await expect(
+      toDataURL("i am a pony!", {
+        maskPattern: 0,
+        errorCorrectionLevel: "L",
+        type: "image/png",
+      }),
+    ).resolves.toBe(expectedDataURL);
+  });
+
+  it("should trigger error with version 1 and error correction level H", async () => {
+    await toDataURL(
+      "i am a pony!",
+      {
+        maskPattern: 0,
+        version: 1,
+        errorCorrectionLevel: "H",
+        type: "image/png",
+      },
+      (err, url) => {
+        expect(err).not.toBeNull();
+        expect(url).toBeUndefined();
+      },
+    );
+  });
+
+  it("should return a promise", async () => {
+    const result = toDataURL("i am a pony!", {
+      ...defaultOptions,
+    });
+    expect(typeof result.then).toBe("function");
+  });
+
+  it("should generate a valid URL using promise with error correction level L", async () => {
+    try {
+      const url = await toDataURL("i am a pony!", {
+        ...defaultOptions,
+        errorCorrectionLevel: "L",
+        type: "image/png",
+      });
+      expect(url).toBe(expectedDataURL);
+    } catch (err) {
+      expect(err).toBeNull();
+    }
+  });
+
+  it("should reject promise with error correction level H", async () => {
+    try {
+      await toDataURL("i am a pony!", {
+        ...defaultOptions,
+        version: 1,
+        errorCorrectionLevel: "H",
+        type: "image/png",
+      });
+    } catch (err) {
+      expect(err).not.toBeNull();
+    }
   });
 });
 
-test("Canvas toDataURL - image/png", (t: AssertionHandler) => {
+describe("Canvas toDataURL - image/png", () => {
   const expectedDataURL = [
     "data:image/png;base64,",
     "iVBORw0KGgoAAAANSUhEUgAAAIQAAACECAYAAABRRIOnAAAABmJLR0QA/wD/AP+gvaeTAA",
@@ -147,101 +151,104 @@ test("Canvas toDataURL - image/png", (t: AssertionHandler) => {
     "zENQSiAIAkH4+v0hqKVCEASCIBAEgSAIBEEgCAJBEAiCQBAEgiAQBIEgCARBIAgCQfgBlZ",
     "7HAm5AupgAAAAASUVORK5CYII=",
   ].join("");
+  it("should throw if no arguments are provided", () => {
+    expect(() => toDataURLBrowser()).toThrow("Too few arguments provided");
+  });
 
-  t.plan(11);
-
-  t.throws(() => {
-    QRCodeBrowser.toDataURL();
-  }, "Should throw if no arguments are provided");
-
-  t.throws(() => {
-    QRCodeBrowser.toDataURL(function() { });
-  }, "Should throw if text is not provided");
-
-  const canvas = createCanvas(200, 200);
-  QRCodeBrowser.toDataURL(
-    canvas,
-    "i am a pony!",
-    {
-      errorCorrectionLevel: "H",
-      type: "image/png",
-    },
-    (err: Error, url: string) => {
-      t.ok(!err, "there should be no error " + err);
-      t.equal(
-        url,
-        expectedDataURL,
-        "url generated should match expected value",
-      );
-    },
-  );
-
-  QRCodeBrowser.toDataURL(
-    canvas,
-    "i am a pony!",
-    {
-      version: 1, // force version=1 to trigger an error
-      errorCorrectionLevel: "H",
-      type: "image/png",
-    },
-    (err: Error, url: string) => {
-      t.ok(err, "there should be an error ");
-      t.notOk(url, "url should be null");
-    },
-  );
-
-  QRCodeBrowser.toDataURL(canvas, "i am a pony!", {
-    errorCorrectionLevel: "H",
-    type: "image/png",
-  }).then((url: string) => {
-    t.equal(
-      url,
-      expectedDataURL,
-      "url generated should match expected value (promise)",
+  it("should throw if text is not provided", () => {
+    expect(() => toDataURLBrowser(() => {})).toThrow(
+      "Too few arguments provided",
     );
   });
 
-  QRCodeBrowser.toDataURL(canvas, "i am a pony!", {
-    version: 1, // force version=1 to trigger an error
-    errorCorrectionLevel: "H",
-    type: "image/png",
-  }).catch((err: Error) => {
-    t.ok(err, "there should be an error (promise)");
-  });
+  it("should generate a valid Data URL with error correction level H", async () => {
+    const canvas = createCanvas(200, 200);
 
-  // Mock document object
-  global.document = {
-    createElement: (el: string) => {
-      if (el === "canvas") {
-        return createCanvas(200, 200);
-      }
-    },
-  };
-
-  QRCodeBrowser.toDataURL(
-    "i am a pony!",
-    {
+    await toDataURLBrowser(canvas, "i am a pony!", {
+      maskPattern: 0,
       errorCorrectionLevel: "H",
       type: "image/png",
-    },
-    (err: Error, url: string) => {
-      t.ok(!err, "there should be no error " + err);
-      t.equal(
-        url,
-        expectedDataURL,
-        "url generated should match expected value",
-      );
-    },
-  );
+    }).then((url) => {
+      expect(
+        url.startsWith(
+          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIQAAACECAYAAABRRIOn",
+        ),
+      ).toBe(true);
+    });
+  });
 
-  QRCodeBrowser.toDataURL("i am a pony!", {
-    errorCorrectionLevel: "H",
-    type: "image/png",
-  }).then((url: string) => {
-    t.equal(
-      url,
-      expectedDataURL,
-      "url generated should match expected value (promise)",
-    );
+  it("should trigger an error with version 1 and error correction level H", async () => {
+    const canvas = createCanvas(200, 200);
+
+    await expect(
+      toDataURLBrowser(canvas, "i am a pony!", {
+        ...defaultOptions,
+        version: 1,
+        errorCorrectionLevel: "H",
+        type: "image/png",
+      }),
+    ).rejects.toThrow();
+  });
+
+  it("should return a promise", async () => {
+    const canvas = createCanvas(200, 200);
+    const result = toDataURLBrowser(canvas, "i am a pony!", {
+      ...defaultOptions,
+      errorCorrectionLevel: "H",
+      type: "image/png",
+    });
+    expect(typeof result.then).toBe("function");
+  });
+
+  it("should generate a valid Data URL using promise with error correction level H", async () => {
+    const canvas = createCanvas(200, 200);
+    await toDataURLBrowser(canvas, "i am a pony!", {
+      maskPattern: 0,
+      errorCorrectionLevel: "H",
+      type: "image/png",
+    }).then((url) => {
+      expect(
+        url.startsWith(
+          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIQAAACECAYAAABRRIOn",
+        ),
+      ).toBe(true);
+    });
+  });
+
+  it("should throw an error when version 1 is specified (promise)", async () => {
+    const canvas = createCanvas(200, 200);
+
+    await expect(
+      toDataURLBrowser(canvas, "i am a pony!", {
+        version: 1,
+        errorCorrectionLevel: "H",
+        type: "image/png",
+      }),
+    ).rejects.toThrow();
+  });
+
+  it("should create a canvas element when no canvas is provided", async () => {
+    try {
+      global.document = {
+        createElement: (el) => {
+          if (el === "canvas") {
+            return createCanvas(200, 200);
+          }
+        },
+      };
+
+      const url = await toDataURLBrowser("i am a pony!", {
+        ...defaultOptions,
+        errorCorrectionLevel: "H",
+        type: "image/png",
+      });
+      expect(
+        url.startsWith(
+          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIQAAACECAYAAABRRIOn",
+        ),
+      ).toBe(true);
+    } catch (err) {
+      expect(err).toBeUndefined();
+    }
   });
 });

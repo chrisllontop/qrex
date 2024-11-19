@@ -1,30 +1,35 @@
-import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
+import { describe, expect, it } from "vitest";
+import { BitMatrix } from "../../../src/core/bit-matrix";
 
-import { test } from "tap";
-import BitMatrix from "../../../src/core/bit-matrix.js";
+describe("Bit Matrix", () => {
+  it("should throw an error if size is 0", () => {
+    expect(() => new BitMatrix(0)).toThrow(
+      "BitMatrix size must be defined and greater than 0",
+    );
+  });
 
-test("Bit Matrix", (t: AssertionHandler) => {
-  t.throws(() => {
-    new BitMatrix(0);
-  }, "Should throw if size is 0");
-  t.throws(() => {
-    new BitMatrix(-1);
-  }, "Should throw if size less than 0");
+  it("should throw an error if size is less than 0", () => {
+    expect(() => new BitMatrix(-1)).toThrow(
+      "BitMatrix size must be defined and greater than 0",
+    );
+  });
 
-  const bm = new BitMatrix(2);
+  it("should handle bit matrix operations correctly", () => {
+    const bm = new BitMatrix(2);
 
-  t.equal(bm.size, 2, "Should have correct size");
-  t.equal(bm.data.length, 4, "Should correctly set buffer size");
+    expect(bm.size).toBe(2);
+    expect(bm.data.length).toBe(4);
+    expect(bm.reservedBit.length).toBe(4);
 
-  bm.set(0, 1, true, true);
-  t.ok(bm.get(0, 1), "Should correctly set bit to true");
-  t.ok(bm.isReserved(0, 1), "Should correctly set bit as reserved");
+    bm.set(0, 1, 1, true);
+    expect(bm.get(0, 1)).toBe(1);
+    expect(bm.isReserved(0, 1)).toBe(1);
 
-  bm.xor(0, 1, 1);
-  t.ok(!bm.get(0, 1), "Should correctly xor bit");
+    bm.xor(0, 1, 1);
+    expect(bm.get(0, 1)).toBe(0);
 
-  bm.set(0, 1, false);
-  t.notOk(bm.get(0, 1), "Should correctly set bit to false");
-
-  t.end();
+    bm.set(0, 1, 1);
+    expect(bm.get(0, 1)).toBe(1);
+    expect(bm.isReserved(0, 1)).toBe(1);
+  });
 });

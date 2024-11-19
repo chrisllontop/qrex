@@ -1,131 +1,174 @@
-import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
-
-import { test } from "tap";
 import { Canvas, createCanvas } from "canvas";
-import * as QRCode from "../../src/index.js";
-import { restoreNativePromise, removeNativePromise } from "../helpers.js";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { toCanvas } from "../../src";
+import { removeNativePromise, restoreNativePromise } from "../helpers";
 
-test("toCanvas - no promise available", (t: AssertionHandler) => {
-  removeNativePromise();
+const defaultOptions = {
+  maskPattern: 0,
+};
 
-  // Mock document object
-  global.document = {
-    createElement: (el: string) => {
-      if (el === "canvas") {
-        return createCanvas(200, 200);
-      }
-    },
-  };
-  const canvasEl = createCanvas(200, 200);
+describe("toCanvas - no promise available", () => {
+  let canvasEl;
+  let originalPromise;
 
-  t.throws(() => {
-    QRCode.toCanvas();
-  }, "Should throw if no arguments are provided");
+  beforeEach(() => {
+    originalPromise = global.Promise;
+    removeNativePromise();
+    global.Promise = originalPromise;
+    canvasEl = createCanvas(200, 200);
 
-  t.throws(() => {
-    QRCode.toCanvas("some text");
-  }, "Should throw if a callback is not provided");
+    global.document = {
+      createElement: (el) => {
+        if (el === "canvas") {
+          return createCanvas(200, 200);
+        }
+      },
+    };
+  });
 
-  t.throws(() => {
-    QRCode.toCanvas(canvasEl, "some text");
-  }, "Should throw if a callback is not provided");
+  afterEach(() => {
+    global.Promise = originalPromise;
+    restoreNativePromise;
+    global.document = undefined;
+  });
 
-  t.throws(() => {
-    QRCode.toCanvas(canvasEl, "some text", {});
-  }, "Should throw if callback is not a function");
+  it("should throw an error if no arguments are provided", () => {
+    expect(() => {
+      toCanvas();
+    }).toThrow("Too few arguments provided");
+  });
 
-  t.end();
+  it("should work with text and callback", () => {
+    return new Promise((resolve) => {
+      toCanvas("test text", defaultOptions, (err, canvas) => {
+        expect(err).toBeNull();
+        expect(canvas).toBeDefined();
+        resolve();
+      });
+    });
+  });
 
-  global.document = undefined;
-  restoreNativePromise();
+  it("should work with canvas, text and callback", () => {
+    return new Promise((resolve) => {
+      toCanvas(canvasEl, "test text", defaultOptions, (err, canvas) => {
+        expect(err).toBeNull();
+        expect(canvas).toBeDefined();
+        resolve();
+      });
+    });
+  });
+
+  it("should work with canvas, text, options and callback", () => {
+    return new Promise((resolve) => {
+      const options = { ...defaultOptions, width: 200 };
+      toCanvas(canvasEl, "test text", options, (err, canvas) => {
+        expect(err).toBeNull();
+        expect(canvas).toBeDefined();
+        resolve();
+      });
+    });
+  });
 });
 
-test("toCanvas", (t: AssertionHandler) => {
-  // Mock document object
-  global.document = {
-    createElement: (el: string) => {
-      if (el === "canvas") {
-        return createCanvas(200, 200);
-      }
-    },
-  };
+describe("toCanvas Function Tests", () => {
+  let canvasEl;
 
-  t.plan(7);
-
-  t.throws(() => {
-    QRCode.toCanvas();
-  }, "Should throw if no arguments are provided");
-
-  QRCode.toCanvas("some text", (err: Error, canvasEl: HTMLCanvasElement) => {
-    t.ok(!err, "There should be no error");
-    t.ok(canvasEl instanceof Canvas, "Should return a new canvas object");
+  beforeEach(() => {
+    global.document = {
+      createElement: (el) => {
+        if (el === "canvas") {
+          return createCanvas(200, 200);
+        }
+      },
+    };
+    canvasEl = createCanvas(200, 200);
   });
 
-  QRCode.toCanvas(
-    "some text",
-    {
-      errorCorrectionLevel: "H",
-    },
-    (err: Error, canvasEl: HTMLCanvasElement) => {
-      t.ok(!err, "There should be no error");
-      t.ok(canvasEl instanceof Canvas, "Should return a new canvas object");
-    },
-  );
-
-  QRCode.toCanvas("some text").then((canvasEl: HTMLCanvasElement) => {
-    t.ok(
-      canvasEl instanceof Canvas,
-      "Should return a new canvas object (promise)",
-    );
+  afterEach(() => {
+    global.document = undefined;
   });
 
-  QRCode.toCanvas("some text", {
-    errorCorrectionLevel: "H",
-  }).then((canvasEl: HTMLCanvasElement) => {
-    t.ok(
-      canvasEl instanceof Canvas,
-      "Should return a new canvas object (promise)",
-    );
+  describe("Basic Functionality", () => {
+    it("should throw an error if no arguments are provided", () => {
+      expect(() => {
+        toCanvas();
+      }).toThrow("Too few arguments provided");
+    });
+
+    it("should work with text and callback", () => {
+      return new Promise((resolve) => {
+        toCanvas("some text", defaultOptions, (err, canvas) => {
+          expect(err).toBeNull();
+          expect(canvas).toBeInstanceOf(Canvas);
+          resolve();
+        });
+      });
+    });
+
+    it("should work with text, options, and callback", () => {
+      return new Promise((resolve) => {
+        const options = {
+          ...defaultOptions,
+          errorCorrectionLevel: "H",
+        };
+        toCanvas("some text", options, (err, canvas) => {
+          expect(err).toBeNull();
+          expect(canvas).toBeInstanceOf(Canvas);
+          resolve();
+        });
+      });
+    });
+    it("should return a canvas object when using text with Promise", async () => {
+      const canvas = await toCanvas("some text", defaultOptions);
+      expect(canvas).toBeInstanceOf(Canvas);
+    });
+
+    it("should return a canvas object when using text and options with Promise", async () => {
+      const options = {
+        ...defaultOptions,
+        errorCorrectionLevel: "H",
+      };
+      const canvas = await toCanvas("some text", options);
+      expect(canvas).toBeInstanceOf(Canvas);
+    });
   });
 
-  global.document = undefined;
-});
+  describe("toCanvas with specified canvas element", () => {
+    it("should work with canvas element, text, and callback", () => {
+      return new Promise((resolve) => {
+        toCanvas(canvasEl, "some text", defaultOptions, (err, canvas) => {
+          expect(err).toBeNull();
+          expect(canvas).toBeInstanceOf(Canvas);
+          resolve();
+        });
+      });
+    });
 
-test("toCanvas with specified canvas element", (t: AssertionHandler) => {
-  const canvasEl = createCanvas(200, 200);
+    it("should work with canvas element, text, options, and callback", () => {
+      return new Promise((resolve) => {
+        toCanvas(
+          canvasEl,
+          "some text",
+          { errorCorrectionLevel: "H", maskPattern: 0 },
+          (err, canvas) => {
+            expect(err).toBeNull();
+            expect(canvas).toBeInstanceOf(Canvas);
+            resolve();
+          },
+        );
+      });
+    });
 
-  t.plan(6);
+    it("should return a canvas object when using canvas element, text with Promise", async () => {
+      const canvas = await toCanvas(canvasEl, "some text", defaultOptions);
+      expect(canvas).toBeInstanceOf(Canvas);
+    });
 
-  QRCode.toCanvas(canvasEl, "some text", (err: Error, canvasEl: HTMLCanvasElement) => {
-    t.ok(!err, "There should be no error");
-    t.ok(canvasEl instanceof Canvas, "Should return a new canvas object");
-  });
-
-  QRCode.toCanvas(
-    canvasEl,
-    "some text",
-    {
-      errorCorrectionLevel: "H",
-    },
-    (err: Error, canvasEl: HTMLCanvasElement) => {
-      t.ok(!err, "There should be no error");
-      t.ok(canvasEl instanceof Canvas, "Should return a new canvas object");
-    },
-  );
-
-  QRCode.toCanvas(canvasEl, "some text").then((canvasEl: HTMLCanvasElement) => {
-    t.ok(
-      canvasEl instanceof Canvas,
-      "Should return a new canvas object (promise)",
-    );
-  });
-
-  QRCode.toCanvas(canvasEl, "some text", {
-    errorCorrectionLevel: "H",
-  }).then((canvasEl: HTMLCanvasElement) => {
-    t.ok(
-      canvasEl instanceof Canvas,
-      "Should return a new canvas object (promise)",
-    );
+    it("should return a canvas object when using canvas element, text, and options with Promise", async () => {
+      const canvas = await toCanvas(canvasEl, "some text", defaultOptions, {
+        errorCorrectionLevel: "H",
+      });
+      expect(canvas).toBeInstanceOf(Canvas);
+    });
   });
 });

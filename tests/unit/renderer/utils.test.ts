@@ -1,9 +1,7 @@
-import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
+import { describe, expect, it } from "vitest";
+import { RendererUtils } from "../../../src/renderer/utils";
 
-import { test } from "tap";
-import Utils from "../../../src/renderer/utils.js";
-
-test("Utils getOptions", (t: AssertionHandler) => {
+describe("Utils getOptions", () => {
   const defaultOptions = {
     width: undefined,
     scale: 4,
@@ -16,123 +14,116 @@ test("Utils getOptions", (t: AssertionHandler) => {
     rendererOpts: {},
   };
 
-  t.ok(Utils.getOptions, "getOptions should be defined");
+  it("should be defined", () => {
+    expect(RendererUtils.getOptions).toBeDefined();
+  });
 
-  t.same(
-    Utils.getOptions(),
-    defaultOptions,
-    "Should return default options if called without param",
-  );
+  it("should return default options if called without param", () => {
+    expect(RendererUtils.getOptions()).toEqual(defaultOptions);
+  });
 
-  t.equal(
-    Utils.getOptions({ scale: 8 }).scale,
-    8,
-    "Should return correct scale value",
-  );
+  it("should return correct scale value", () => {
+    expect(RendererUtils.getOptions({ scale: 8 }).scale).toBe(8);
+  });
 
-  t.equal(
-    Utils.getOptions({ width: 300 }).scale,
-    4,
-    "Should reset scale value to default if width is set",
-  );
+  it("should reset scale value to default if width is set", () => {
+    expect(RendererUtils.getOptions({ width: 300 }).scale).toBe(4);
+  });
 
-  t.equal(
-    Utils.getOptions({ margin: null }).margin,
-    4,
-    "Should return default margin if specified value is null",
-  );
+  it("should return default margin if specified value is null", () => {
+    expect(RendererUtils.getOptions({ margin: null }).margin).toBe(4);
+  });
 
-  t.equal(
-    Utils.getOptions({ margin: -1 }).margin,
-    4,
-    "Should return default margin if specified value is < 0",
-  );
+  it("should return default margin if specified value is < 0", () => {
+    expect(RendererUtils.getOptions({ margin: -1 }).margin).toBe(4);
+  });
 
-  t.equal(
-    Utils.getOptions({ margin: 20 }).margin,
-    20,
-    "Should return correct margin value",
-  );
+  it("should return correct margin value", () => {
+    expect(RendererUtils.getOptions({ margin: 20 }).margin).toBe(20);
+  });
 
-  t.same(
-    Utils.getOptions({ color: { dark: "#fff", light: "#000000" } }).color,
-    {
+  it("should return correct colors value from strings", () => {
+    expect(
+      RendererUtils.getOptions({ color: { dark: "#fff", light: "#000000" } })
+        .color,
+    ).toEqual({
       dark: { r: 255, g: 255, b: 255, a: 255, hex: "#ffffff" },
       light: { r: 0, g: 0, b: 0, a: 255, hex: "#000000" },
-    },
-    "Should return correct colors value from strings",
-  );
+    });
+  });
 
-  t.same(
-    Utils.getOptions({ color: { dark: 111, light: 999 } }).color,
-    {
+  it("should return correct colors value from numbers", () => {
+    expect(
+      RendererUtils.getOptions({ color: { dark: 111, light: 999 } }).color,
+    ).toEqual({
       dark: { r: 17, g: 17, b: 17, a: 255, hex: "#111111" },
       light: { r: 153, g: 153, b: 153, a: 255, hex: "#999999" },
-    },
-    "Should return correct colors value from numbers",
-  );
+    });
+  });
 
-  t.throws(() => {
-    Utils.getOptions({ color: { dark: true } });
-  }, "Should throw if color is not a string");
+  it("should throw if color is not a string", () => {
+    expect(() => {
+      RendererUtils.getOptions({ color: { dark: true } });
+    }).toThrow("Color should be defined as hex string");
+  });
 
-  t.throws(() => {
-    Utils.getOptions({ color: { dark: "#aa" } });
-  }, "Should throw if color is not in a valid hex format");
-
-  t.end();
+  it("should throw if color is not in a valid hex format", () => {
+    expect(() => {
+      RendererUtils.getOptions({ color: { dark: "#aa" } });
+    }).toThrow("Invalid hex color: #aa");
+  });
 });
 
-test("Utils getScale", (t: AssertionHandler) => {
+describe("Utils getScale", () => {
   const symbolSize = 21;
 
-  t.equal(
-    Utils.getScale(symbolSize, { scale: 5 }),
-    5,
-    "Should return correct scale value",
-  );
+  it("should return correct scale value", () => {
+    expect(RendererUtils.getScale(symbolSize, { scale: 5 })).toBe(5);
+  });
 
-  t.equal(
-    Utils.getScale(symbolSize, { width: 50, margin: 2 }),
-    2,
-    "Should calculate correct scale from width and margin",
-  );
+  it("should calculate correct scale from width and margin", () => {
+    expect(RendererUtils.getScale(symbolSize, { width: 50, margin: 2 })).toBe(
+      2,
+    );
+  });
 
-  t.equal(
-    Utils.getScale(symbolSize, { width: 21, margin: 2, scale: 4 }),
-    4,
-    "Should return default scale if width is too small to contain the symbol",
-  );
-
-  t.end();
+  it("should return default scale if width is too small to contain the symbol", () => {
+    expect(
+      RendererUtils.getScale(symbolSize, { width: 21, margin: 2, scale: 4 }),
+    ).toBe(4);
+  });
 });
 
-test("Utils getImageWidth", (t: AssertionHandler) => {
+describe("Utils getImageWidth", () => {
   const symbolSize = 21;
 
-  t.equal(
-    Utils.getImageWidth(symbolSize, { scale: 5, margin: 0 }),
-    105,
-    "Should return correct width value",
-  );
+  it("should return correct width value", () => {
+    expect(
+      RendererUtils.getImageWidth(symbolSize, { scale: 5, margin: 0 }),
+    ).toBe(105);
+  });
 
-  t.equal(
-    Utils.getImageWidth(symbolSize, { width: 250, margin: 2 }),
-    250,
-    "Should return specified width value",
-  );
+  it("should return specified width value", () => {
+    expect(
+      RendererUtils.getImageWidth(symbolSize, { width: 250, margin: 2 }),
+    ).toBe(250);
+  });
 
-  t.equal(
-    Utils.getImageWidth(symbolSize, { width: 10, margin: 4, scale: 4 }),
-    116,
-    "Should ignore width option if too small to contain the symbol",
-  );
-
-  t.end();
+  it("should ignore width option if too small to contain the symbol", () => {
+    expect(
+      RendererUtils.getImageWidth(symbolSize, {
+        width: 10,
+        margin: 4,
+        scale: 4,
+      }),
+    ).toBe(116);
+  });
 });
 
-test("Utils qrToImageData", (t: AssertionHandler) => {
-  t.ok(Utils.qrToImageData, "qrToImageData should be defined");
+describe("Utils qrToImageData", () => {
+  it("should be defined", () => {
+    expect(RendererUtils.qrToImageData).toBeDefined();
+  });
 
   const sampleQrData = {
     modules: {
@@ -158,27 +149,19 @@ test("Utils qrToImageData", (t: AssertionHandler) => {
 
   let imageData = [];
   const expectedImageSize = (sampleQrData.modules.size + margin * 2) * scale;
-  let expectedImageDataLength = Math.pow(expectedImageSize, 2) * 4;
+  let expectedImageDataLength = expectedImageSize ** 2 * 4;
 
-  Utils.qrToImageData(imageData, sampleQrData, opts);
-
-  t.equal(
-    imageData.length,
-    expectedImageDataLength,
-    "Should return correct imageData length",
-  );
+  it("should return correct imageData length", () => {
+    RendererUtils.qrToImageData(imageData, sampleQrData, opts);
+    expect(imageData.length).toBe(expectedImageDataLength);
+  });
 
   imageData = [];
   opts.width = width;
-  expectedImageDataLength = Math.pow(width, 2) * 4;
+  expectedImageDataLength = width ** 2 * 4;
 
-  Utils.qrToImageData(imageData, sampleQrData, opts);
-
-  t.equal(
-    imageData.length,
-    expectedImageDataLength,
-    "Should return correct imageData length",
-  );
-
-  t.end();
+  it("should return correct imageData length when width is specified", () => {
+    RendererUtils.qrToImageData(imageData, sampleQrData, opts);
+    expect(imageData.length).toBe(expectedImageDataLength);
+  });
 });

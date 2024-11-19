@@ -1,79 +1,91 @@
-import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
+import fs from "node:fs";
+import { describe, expect, it, vi } from "vitest";
+import { QRCode } from "../../../src/core/qrcode";
+import { RendererUtf8 } from "../../../src/renderer/utf8";
 
-import { test } from "tap";
-import sinon from "sinon";
-import * as fs from "node:fs";
-import QRCode from "./../../src/core/qrcode.js";
-import Utf8Renderer from "../../../src/renderer/utf8.js";
-import Utils from "../../../src/renderer/utils.js";
-
-test("Utf8Renderer interface", (t: AssertionHandler) => {
-  t.type(Utf8Renderer.render, "function", "Should have render function");
-
-  t.end();
+describe("RendererUtf8 interface", () => {
+  it("should have render function", () => {
+    expect(typeof RendererUtf8.render).toBe("function");
+  });
 });
 
-test("Utf8Renderer render", (t: AssertionHandler) => {
-  const sampleQrData = QRCode.create("sample text", { version: 2 });
+describe("RendererUtf8 render", () => {
+  const sampleQrData = QRCode.create("sample text", {
+    version: 2,
+    maskPattern: 0,
+  });
   let str;
 
-  t.doesNotThrow(() => {
-    str = Utf8Renderer.render(sampleQrData);
-  }, "Should not throw with only qrData param");
+  it("should not throw with only qrData param", () => {
+    expect(() => {
+      str = RendererUtf8.render(sampleQrData);
+    }).not.toThrow();
+  });
 
-  t.doesNotThrow(() => {
-    str = Utf8Renderer.render(sampleQrData, {
-      margin: 10,
-      scale: 1,
-    });
-  }, "Should not throw with options param");
+  it("should not throw with options param", () => {
+    expect(() => {
+      str = RendererUtf8.render(sampleQrData, { margin: 10, scale: 1 });
+    }).not.toThrow();
+  });
 
-  t.type(str, "string", "Should return a string");
-
-  t.end();
+  it("should return a string", () => {
+    expect(typeof str).toBe("string");
+  });
 });
 
-test("Utf8 renderToFile", (t: AssertionHandler) => {
-  const sampleQrData = QRCode.create("sample text", { version: 2 });
+describe("RendererUtf8 renderToFile", () => {
+  const sampleQrData = QRCode.create("sample text", {
+    version: 2,
+    maskPattern: 0,
+  });
   const fileName = "qrimage.txt";
-  let fsStub = sinon.stub(fs, "writeFile").callsArg(2);
 
-  t.plan(5);
+  it("should not generate errors with only qrData param", async () => {
+    const fsStub = vi.spyOn(fs, "writeFile");
+    fsStub.mockImplementationOnce((_, __, cb) => cb(null));
 
-  Utf8Renderer.renderToFile(fileName, sampleQrData, (err: Error) => {
-    t.ok(!err, "Should not generate errors with only qrData param");
-
-    t.equal(
-      fsStub.getCall(0).args[0],
-      fileName,
-      "Should save file with correct file name",
-    );
-  });
-
-  Utf8Renderer.renderToFile(
-    fileName,
-    sampleQrData,
-    {
-      margin: 10,
-      scale: 1,
-    },
-    (err: Error) => {
-      t.ok(!err, "Should not generate errors with options param");
-
-      t.equal(
-        fsStub.getCall(0).args[0],
+    await RendererUtf8.renderToFile(fileName, sampleQrData, (err) => {
+      expect(err).toBeNull();
+      expect(fsStub).toHaveBeenCalledWith(
         fileName,
-        "Should save file with correct file name",
+        expect.any(String),
+        expect.any(Function),
       );
-    },
-  );
+    });
 
-  fsStub.restore();
-  fsStub = sinon.stub(fs, "writeFile").callsArgWith(2, new Error());
-
-  Utf8Renderer.renderToFile(fileName, sampleQrData, (err: Error) => {
-    t.ok(err, "Should fail if error occurs during save");
+    fsStub.mockReset();
   });
 
-  fsStub.restore();
+  it("should not generate errors with options param", async () => {
+    const fsStub = vi.spyOn(fs, "writeFile");
+    fsStub.mockImplementationOnce((_, __, cb) => cb(null));
+
+    await RendererUtf8.renderToFile(
+      fileName,
+      sampleQrData,
+      { margin: 10, scale: 1 },
+      (err) => {
+        expect(err).toBeNull();
+        expect(fsStub).toHaveBeenCalledWith(
+          fileName,
+          expect.any(String),
+          expect.any(Function),
+        );
+      },
+    );
+
+    fsStub.mockReset();
+  });
+
+  it("should fail if error occurs during save", async () => {
+    const fsStub = vi.spyOn(fs, "writeFile");
+    fsStub.mockImplementationOnce((_, __, cb) => cb(new Error("Write failed")));
+
+    await RendererUtf8.renderToFile(fileName, sampleQrData, (err) => {
+      expect(err).toBeInstanceOf(Error);
+      expect(err.message).toBe("Write failed");
+    });
+
+    fsStub.mockReset();
+  });
 });

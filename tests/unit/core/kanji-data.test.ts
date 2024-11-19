@@ -1,40 +1,36 @@
-import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
+import { describe, expect, it } from "vitest";
+import toSJIS from "../../../helper/to-sjis";
+import { BitBuffer } from "../../../src/core/bit-buffer";
+import { KanjiData } from "../../../src/core/kanji-data";
+import { Mode } from "../../../src/core/mode";
+import { CoreUtils } from "../../../src/core/utils";
 
-import { test } from "tap";
-import BitBuffer from "../../../src/core/bit-buffer.js";
-import KanjiData from "../../../src/core/kanji-data.js";
-import Mode from "../../../src/core/mode.js";
-import toSJIS from "../../../helper/to-sjis.js";
-import Utils from "../../../src/core/utils.js";
+CoreUtils.setToSJISFunction(toSJIS);
 
-Utils.setToSJISFunction(toSJIS);
+describe("Kanji Data", () => {
+  it("should handle valid Kanji data", () => {
+    const data = "漢字漾癶";
+    const length = 4;
+    const bitLength = 52;
+    const dataBit = [57, 250, 134, 174, 129, 134, 0];
 
-test("Kanji Data", (t: AssertionHandler) => {
-  const data = "漢字漾癶";
-  const length = 4;
-  const bitLength = 52; // length * 13
+    const kanjiData = new KanjiData(data);
 
-  const dataBit = [57, 250, 134, 174, 129, 134, 0];
+    expect(kanjiData.mode).toBe(Mode.KANJI);
+    expect(kanjiData.getLength()).toBe(length);
+    expect(kanjiData.getBitsLength()).toBe(bitLength);
 
-  let kanjiData = new KanjiData(data);
-
-  t.equal(kanjiData.mode, Mode.KANJI, "Mode should be KANJI");
-  t.equal(kanjiData.getLength(), length, "Should return correct length");
-  t.equal(
-    kanjiData.getBitsLength(),
-    bitLength,
-    "Should return correct bit length",
-  );
-
-  let bitBuffer = new BitBuffer();
-  kanjiData.write(bitBuffer);
-  t.same(bitBuffer.buffer, dataBit, "Should write correct data to buffer");
-
-  kanjiData = new KanjiData("abc");
-  bitBuffer = new BitBuffer();
-  t.throws(() => {
+    const bitBuffer = new BitBuffer();
     kanjiData.write(bitBuffer);
-  }, "Should throw if data is invalid");
+    expect(bitBuffer.buffer).toEqual(dataBit);
+  });
 
-  t.end();
+  it("should throw if data is invalid", () => {
+    const kanjiData = new KanjiData("abc");
+    const bitBuffer = new BitBuffer();
+
+    expect(() => {
+      kanjiData.write(bitBuffer);
+    }).toThrow("Invalid SJIS character: a\nMake sure your charset is UTF-8");
+  });
 });

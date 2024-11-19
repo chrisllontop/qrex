@@ -1,26 +1,40 @@
-import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
+import { describe, expect, it } from "vitest";
+import toSJIS from "../../../helper/to-sjis";
 
-import { test } from "tap";
-import toSJIS from "../../../helper/to-sjis.js";
+describe("SJIS from char", () => {
+  it("should return undefined if character is invalid", () => {
+    expect(toSJIS("")).toBeUndefined();
+  });
 
-test("SJIS from char", (t: AssertionHandler) => {
-  t.notOk(toSJIS(""), "Should return undefined if character is invalid");
+  it("should return undefined if character is not a kanji", () => {
+    expect(toSJIS("A")).toBeUndefined();
+  });
 
-  t.notOk(toSJIS("A"), "Should return undefined if character is not a kanji");
+  it("should return correct SJIS value for 襦", () => {
+    expect(toSJIS("襦")).toBe(0xe640);
+  });
 
-  t.equal(toSJIS("襦"), 0xe640, "Should return correct SJIS value");
+  it("should return correct SJIS value for ￢", () => {
+    expect(toSJIS("￢")).toBe(0x81ca);
+  });
 
-  t.equal(toSJIS("￢"), 0x81ca, "Should return correct SJIS value");
+  it("should return correct SJIS value for ≧", () => {
+    expect(toSJIS("≧")).toBe(0x8186);
+  });
 
-  t.equal(toSJIS("≧"), 0x8186, "Should return correct SJIS value");
+  it("should return correct SJIS value for ⊥", () => {
+    expect(toSJIS("⊥")).toBe(0x81db);
+  });
 
-  t.equal(toSJIS("⊥"), 0x81db, "Should return correct SJIS value");
+  it("should return correct SJIS value for 愛", () => {
+    expect(toSJIS("愛")).toBe(0x88a4);
+  });
 
-  t.equal(toSJIS("愛"), 0x88a4, "Should return correct SJIS value");
+  it("should return correct SJIS value for 衣", () => {
+    expect(toSJIS("衣")).toBe(0x88df);
+  });
 
-  t.equal(toSJIS("衣"), 0x88df, "Should return correct SJIS value");
-
-  t.equal(toSJIS("蔭"), 0x88fc, "Should return correct SJIS value");
-
-  t.end();
+  it("should return correct SJIS value for 蔭", () => {
+    expect(toSJIS("蔭")).toBe(0x88fc);
+  });
 });

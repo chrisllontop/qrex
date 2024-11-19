@@ -1,51 +1,44 @@
-import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
+import { describe, expect, it } from "vitest";
+import { ReedSolomonEncoder as RS } from "../../../src/core/reed-solomon-encoder";
 
-import { test } from "tap";
-import RS from "../../../src/core/reed-solomon-encoder.js";
+describe("Reed-Solomon encoder", () => {
+  it("Encoder not initialized", () => {
+    const enc = new RS();
+    expect(enc.genPoly).toBeUndefined();
+    expect(() => enc.encode([])).toThrow("Encoder not initialized");
+  });
 
-test("Reed-Solomon encoder", (t: AssertionHandler) => {
-  let enc = new RS();
+  it("should set correct degree value and define generator polynomial", () => {
+    const enc = new RS();
+    enc.initialize(2);
+    expect(enc.degree).toBe(2);
+    expect(enc.genPoly).toBeDefined();
+  });
 
-  t.notOk(enc.genPoly, "Should have an undefined generator polynomial");
-  t.throws(() => {
-    enc.encode([]);
-  }, "Should throw if generator polynomial is undefined");
+  it("should return a number of codewords equal to the gen poly degree", () => {
+    const enc = new RS();
+    enc.initialize(2);
+    const result = enc.encode(new Uint8Array([48, 49, 50, 51, 52]));
+    expect(result.length).toBe(2);
+  });
 
-  enc.initialize(2);
-  t.equal(enc.degree, 2, "Should set correct degree value");
-  t.ok(enc.genPoly, "Generator polynomial should be defined");
+  it("should reinitialize the generator polynomial when degree changes", () => {
+    const enc = new RS(2);
+    const genPoly = enc.genPoly;
+    expect(enc.degree).toBe(2);
+    expect(enc.genPoly).toBeDefined();
 
-  const result = enc.encode(new Uint8Array([48, 49, 50, 51, 52]));
-  t.equal(
-    result.length,
-    2,
-    "Should return a number of codewords equal to gen poly degree",
-  );
+    enc.initialize(3);
+    expect(enc.genPoly).not.toBe(genPoly);
+  });
 
-  enc = new RS(2);
-  const genPoly = enc.genPoly;
-  t.equal(enc.degree, 2, "Should set correct degree value");
-  t.ok(genPoly, "Generator polynomial should be defined");
+  it("should not create a generator polynomial if degree is 0", () => {
+    const enc = new RS(0);
+    expect(enc.genPoly).toBeUndefined();
+  });
 
-  enc.initialize(3);
-  t.not(
-    enc.genPoly,
-    genPoly,
-    "Should reinitialize the generator polynomial",
-  );
-
-  enc = new RS(0);
-  t.notOk(
-    enc.genPoly,
-    "Should not create a generator polynomial if degree is 0",
-  );
-
-  enc = new RS(1);
-  t.same(
-    enc.encode(new Uint8Array([0])),
-    new Uint8Array([0]),
-    "Should return correct buffer",
-  );
-
-  t.end();
+  it("should return correct buffer when encoding data", () => {
+    const enc = new RS(1);
+    expect(enc.encode(new Uint8Array([0]))).toEqual(new Uint8Array([0]));
+  });
 });

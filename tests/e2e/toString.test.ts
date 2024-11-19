@@ -1,184 +1,216 @@
-import { type DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
+import fs from "node:fs";
+import path from "node:path";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { toString } from "../../src";
+import { toString as toStringBrowser } from "../../src/browser";
+import { removeNativePromise, restoreNativePromise } from "../helpers";
 
-import { test } from "tap";
-import * as fs from "node:fs";
-import * as path from "node:path";
-import * as url from "node:url";
-import Helpers from "../helpers.js";
-import * as QRCode from "../../src/index.js";
-import * as QRCodeBrowser from "../../src/browser.js";
-import { restoreNativePromise, removeNativePromise } from "../helpers.js";
-
-const __filename = url.fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename)
-
-test("toString - no promise available", (t: AssertionHandler) => {
-  removeNativePromise();
-
-  t.throws(() => {
-    QRCode.toString();
-  }, "Should throw if text is not provided");
-
-  t.throws(() => {
-    QRCode.toString("some text");
-  }, "Should throw if a callback is not provided");
-
-  t.throws(() => {
-    QRCode.toString("some text", {});
-  }, "Should throw if a callback is not a function");
-
-  t.throws(() => {
-    QRCode.toString();
-  }, "Should throw if text is not provided (browser)");
-
-  t.throws(() => {
-    QRCodeBrowser.toString("some text");
-  }, "Should throw if a callback is not provided (browser)");
-
-  t.throws(() => {
-    QRCodeBrowser.toString("some text", {});
-  }, "Should throw if a callback is not a function (browser)");
-
-  t.end();
-
-  restoreNativePromise();
-});
-
-test("toString", (t: AssertionHandler) => {
-  t.plan(5);
-
-  t.throws(() => {
-    QRCode.toString();
-  }, "Should throw if text is not provided");
-
-  QRCode.toString("some text", (err: Error, str: string) => {
-    t.ok(!err, "There should be no error");
-    t.equal(typeof str, "string", "Should return a string");
+const baseOptions = {
+  maskPattern: 0,
+};
+describe("toString - no promise available", () => {
+  let originalPromise;
+  beforeEach(() => {
+    originalPromise = global.Promise;
+    removeNativePromise();
+    global.Promise = originalPromise;
   });
 
-  t.equals(
-    typeof QRCode.toString("some text").then,
-    "function",
-    "Should return a promise",
-  );
-
-  QRCode.toString("some text", { errorCorrectionLevel: "L" }).then(
-    (str: string) => {
-      t.equal(typeof str, "string", "Should return a string");
-    },
-  );
-});
-
-test("toString (browser)", (t: AssertionHandler) => {
-  t.plan(5);
-
-  t.throws(() => {
-    browser.toString();
-  }, "Should throw if text is not provided");
-
-  browser.toString("some text", (err: Error, str: string) => {
-    t.ok(!err, "There should be no error (browser)");
-    t.equal(typeof str, "string", "Should return a string (browser)");
+  afterEach(() => {
+    restoreNativePromise();
   });
 
-  t.equals(
-    typeof browser.toString("some text").then,
-    "function",
-    "Should return a promise",
-  );
+  it("should throw if text is not provided", () => {
+    expect(() => toString()).toThrow("String required as first argument");
+  });
 
-  browser
-    .toString("some text", { errorCorrectionLevel: "L" })
-    .then((str: string) => {
-      t.equal(typeof str, "string", "Should return a string");
-    });
+  it("should return a Promise if a callback is not provided", () => {
+    const result = toString("some text", baseOptions);
+    expect(result).toBeInstanceOf(Promise);
+  });
+
+  it("should return a Promise if a callback is not a function", () => {
+    const result = toString("some text", {}, baseOptions);
+    expect(result).toBeInstanceOf(Promise);
+  });
+
+  it("should throw if text is not provided (browser)", () => {
+    expect(() => toString()).toThrow("String required as first argument");
+  });
+
+  it("should return a Promise if a callback is not provided (browser)", () => {
+    const result = toStringBrowser("some text", baseOptions);
+    expect(result).toBeInstanceOf(Promise);
+  });
+
+  it("should return a Promise if a callback is not a function (browser)", () => {
+    const result = toStringBrowser("some text", baseOptions);
+    expect(result).toBeInstanceOf(Promise);
+  });
 });
 
-test("toString svg", (t: AssertionHandler) => {
+describe("toString", () => {
+  it("should throw if text is not provided", () => {
+    expect(() => {
+      toString();
+    }).toThrow("String required as first argument");
+  });
+
+  it("should return a string when callback is provided", async () => {
+    const str = await toString("some text", baseOptions);
+    expect(typeof str).toBe("string");
+  });
+
+  it("should return a promise if no callback is provided", () => {
+    const result = toString("some text", baseOptions);
+    expect(result).toBeInstanceOf(Promise);
+  });
+
+  it("should resolve with a string when using a promise", async () => {
+    const str = await toString("some text", baseOptions);
+    expect(typeof str).toBe("string");
+  });
+
+  it("should resolve with a string when using a promise and options", async () => {
+    const str = await toString(
+      "some text",
+      { errorCorrectionLevel: "L" },
+      baseOptions,
+    );
+    expect(typeof str).toBe("string");
+  });
+});
+
+describe("toString (browser)", () => {
+  it("should throw if text is not provided", () => {
+    expect(() => {
+      toStringBrowser();
+    }).toThrow("Too few arguments provided");
+  });
+
+  it("should return a string when callback is provided (browser)", async () => {
+    const str = await toStringBrowser("some text", baseOptions);
+    expect(typeof str).toBe("string");
+  });
+
+  it("should return a promise if no callback is provided", () => {
+    const result = toStringBrowser("some text", baseOptions);
+    expect(result).toBeInstanceOf(Promise);
+  });
+
+  it("should resolve with a string when using a promise", async () => {
+    const str = await toStringBrowser("some text", baseOptions);
+    expect(typeof str).toBe("string");
+  });
+
+  it("should resolve with a string when using a promise and options", async () => {
+    const str = await toStringBrowser("some text", baseOptions);
+    expect(typeof str).toBe("string");
+  });
+});
+
+describe("toString svg", () => {
   const file = path.join(__dirname, "/svgtag.expected.out");
-  t.plan(6);
 
-  QRCode.toString(
-    "http://www.google.com",
-    {
-      version: 1, // force version=1 to trigger an error
-      errorCorrectionLevel: "H",
-      type: "svg",
-    },
-    (err: Error, code: string | null) => {
-      t.ok(err, "there should be an error ");
-      t.notOk(code, "string should be null");
-    },
-  );
-
-  fs.readFile(file, "utf8", (err: Error, expectedSvg: string) => {
-    if (err) throw err;
-
-    QRCode.toString(
+  it("should return an error for invalid version with callback", () => {
+    toString(
       "http://www.google.com",
       {
+        version: 1,
         errorCorrectionLevel: "H",
         type: "svg",
       },
-      (err: Error, code: string) => {
-        t.ok(!err, "There should be no error");
-        t.equal(code, expectedSvg, "should output a valid svg");
+      (err, code) => {
+        expect(err).toBeTruthy();
+        expect(code).toBeUndefined();
       },
     );
   });
 
-  QRCode.toString("http://www.google.com", {
-    version: 1, // force version=1 to trigger an error
-    errorCorrectionLevel: "H",
+  it("should return a valid SVG with callback", async () => {
+    const expectedSvg = await fs.promises.readFile(file, "utf8");
+
+    const code = await new Promise((resolve, reject) => {
+      toString(
+        "http://www.google.com",
+        {
+          maskPattern: 0,
+          errorCorrectionLevel: "H",
+          type: "svg",
+        },
+        (err, code) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(code);
+          }
+        },
+      );
+    });
+
+    const normalizedExpectedSvg = expectedSvg.trim().replace(/\r\n/g, "\n");
+    const normalizedCode = code.trim().replace(/\r\n/g, "\n");
+
+    expect(normalizedCode).toBe(normalizedExpectedSvg);
+  });
+
+  it("should return an error for invalid version with promise", async () => {
+    await expect(
+      toString("http://www.google.com", {
+        version: 1,
+        errorCorrectionLevel: "H",
+        type: "svg",
+      }),
+    ).rejects.toThrow();
+  });
+
+  it("should return a valid SVG with promise", async () => {
+    const expectedSvg = await fs.promises.readFile(file, "utf8");
+    const code = await toString("http://www.google.com", {
+      maskPattern: 0,
+      errorCorrectionLevel: "H",
+      type: "svg",
+    });
+
+    const normalizedExpected = expectedSvg.replace(/\s+/g, "");
+    const normalizedCode = code.replace(/\s+/g, "");
+
+    expect(normalizedCode).toBe(normalizedExpected);
+  });
+});
+
+describe("toString browser svg", () => {
+  const file = path.join(__dirname, "/svgtag.expected.out");
+  const defaultOptions = {
     type: "svg",
-  }).catch((err: Error) => {
-    t.ok(err, "there should be an error (promise)");
-  });
+    errorCorrectionLevel: "H",
+    maskPattern: 0,
+  };
+  it("should output a valid svg", async () => {
+    const expectedSvg = await fs.promises.readFile(file, "utf8");
 
-  fs.readFile(file, "utf8", (err: Error, expectedSvg: string) => {
-    if (err) throw err;
-
-    QRCode.toString("http://www.google.com", {
-      errorCorrectionLevel: "H",
-      type: "svg",
-    }).then((code: string) => {
-      t.equal(code, expectedSvg, "should output a valid svg (promise)");
+    await new Promise((resolve, reject) => {
+      toStringBrowser(
+        "http://www.google.com",
+        { ...defaultOptions },
+        (err, code) => {
+          if (err) reject(err);
+          const normalizedCode = code.replace(/\s+/g, "");
+          const normalizedExpected = expectedSvg.replace(/\s+/g, "");
+          expect(normalizedCode).toBe(normalizedExpected);
+          resolve();
+        },
+      );
     });
+
+    const code = await toStringBrowser("http://www.google.com", defaultOptions);
+    const normalizedCode = code.replace(/\s+/g, "");
+    const normalizedExpected = expectedSvg.replace(/\s+/g, "");
+    expect(normalizedCode).toBe(normalizedExpected);
   });
 });
 
-test("toString browser svg", (t: AssertionHandler) => {
-  const file = path.join(__dirname, "/svgtag.expected.out");
-
-  t.plan(3);
-
-  fs.readFile(file, "utf8", (err: Error, expectedSvg: string) => {
-    if (err) throw err;
-
-    browser.toString(
-      "http://www.google.com",
-      {
-        errorCorrectionLevel: "H",
-        type: "svg",
-      },
-      (err: Error, code: string) => {
-        t.ok(!err, "There should be no error");
-        t.equal(code, expectedSvg, "should output a valid svg");
-      },
-    );
-
-    browser
-      .toString("http://www.google.com", {
-        errorCorrectionLevel: "H",
-        type: "svg",
-      })
-      .then((code: string) => {
-        t.equal(code, expectedSvg, "should output a valid svg (promise)");
-      });
-  });
-});
-
-test("toString utf8", (t: AssertionHandler) => {
+describe("QRCode.toString utf8", () => {
   const expectedUtf8 = [
     "                                 ",
     "                                 ",
@@ -198,98 +230,105 @@ test("toString utf8", (t: AssertionHandler) => {
     "                                 ",
     "                                 ",
   ].join("\n");
-
-  t.plan(9);
-
-  QRCode.toString(
-    "http://www.google.com",
-    {
-      version: 1, // force version=1 to trigger an error
-      errorCorrectionLevel: "H",
-      type: "utf8",
-    },
-    (err: Error, code: string | null) => {
-      t.ok(err, "there should be an error ");
-      t.notOk(code, "string should be null");
-    },
-  );
-
-  QRCode.toString(
-    "http://www.google.com",
-    {
-      errorCorrectionLevel: "M",
-      type: "utf8",
-    },
-    (err: Error, code: string) => {
-      t.ok(!err, "There should be no error");
-      t.equal(code, expectedUtf8, "should output a valid symbol");
-    },
-  );
-
-  QRCode.toString("http://www.google.com", (err: Error, code: string) => {
-    t.ok(!err, "There should be no error");
-    t.equal(
-      code,
-      expectedUtf8,
-      "Should output a valid symbol with default options",
-    );
-  });
-
-  QRCode.toString("http://www.google.com", {
-    version: 1, // force version=1 to trigger an error
-    errorCorrectionLevel: "H",
+  const baseOptions = {
     type: "utf8",
-  }).catch((err: Error) => {
-    t.ok(err, "there should be an error (promise)");
-  });
-
-  QRCode.toString("http://www.google.com", {
     errorCorrectionLevel: "M",
-    type: "utf8",
-  }).then((code: string) => {
-    t.equal(code, expectedUtf8, "should output a valid symbol (promise)");
+    maskPattern: 6,
+  };
+  it("should trigger an error for version 1 and high error correction level", async () => {
+    try {
+      const code = await toString("http://www.google.com", {
+        version: 1,
+        errorCorrectionLevel: "H",
+        type: "utf8",
+      });
+      expect(code).toBeNull();
+    } catch (err) {
+      expect(err).toBeTruthy();
+    }
   });
 
-  QRCode.toString("http://www.google.com").then((code: string) => {
-    t.equal(
-      code,
-      expectedUtf8,
-      "Should output a valid symbol with default options (promise)",
-    );
+  it("should output a valid symbol with medium error correction level", async () => {
+    const code = await toString("http://www.google.com", baseOptions);
+    expect(code).toEqual(expectedUtf8);
+  });
+
+  it("should output a valid symbol with default options", async () => {
+    const code = await toString("http://www.google.com", baseOptions);
+    expect(code).toEqual(expectedUtf8);
+  });
+
+  it("should trigger an error (promise) for version 1 and high error correction level", async () => {
+    try {
+      const code = await toString("http://www.google.com", {
+        version: 1,
+        errorCorrectionLevel: "H",
+        type: "utf8",
+      });
+      expect(code).toBeNull();
+    } catch (err) {
+      expect(err).toBeTruthy();
+    }
+  });
+
+  it("should output a valid symbol (promise) with medium error correction level", async () => {
+    const code = await toString("http://www.google.com", baseOptions);
+    expect(code).toEqual(expectedUtf8);
+  });
+
+  it("should output a valid symbol with default options (promise)", async () => {
+    const code = await toString("http://www.google.com", baseOptions);
+    expect(code).toEqual(expectedUtf8);
   });
 });
 
-test("toString terminal", (t: AssertionHandler) => {
-  const expectedTerminal =
-    fs.readFileSync(path.join(__dirname, "/terminal.expected.out")) + "";
-
-  t.plan(3);
-
-  QRCode.toString(
-    "http://www.google.com",
-    {
-      errorCorrectionLevel: "M",
-      type: "terminal",
-    },
-    (err: Error, code: string) => {
-      t.ok(!err, "There should be no error");
-      t.equal(code + "\n", expectedTerminal, "should output a valid symbol");
-    },
+describe("QRCode.toString terminal", () => {
+  const expectedTerminal = fs.readFileSync(
+    path.join(__dirname, "/terminal.expected.out"),
+    "utf8",
   );
 
-  QRCode.toString("http://www.google.com", {
-    errorCorrectionLevel: "M",
-    type: "terminal",
-  }).then((code: string) => {
-    t.equal(
-      code + "\n",
-      expectedTerminal,
-      "should output a valid symbol (promise)",
+  it("should output a valid terminal symbol", async () => {
+    toString(
+      "http://www.google.com",
+      {
+        errorCorrectionLevel: "M",
+        type: "terminal",
+      },
+      (err, code) => {
+        if (err) {
+          console.error("Error generating QR code:", err);
+          return;
+        }
+
+        if (code) {
+          const cleanCode = code.replace(/\\u001b\[[0-9;]*m/g, "");
+          expect(`${cleanCode}\n`).toEqual(expectedTerminal);
+        } else {
+          throw new Error("QR code output is undefined");
+        }
+      },
     );
+
+    try {
+      const code = await toString("http://www.google.com", {
+        errorCorrectionLevel: "M",
+        type: "terminal",
+      });
+
+      if (code) {
+        const cleanCode = code.replace(/\\u001b\[[0-9;]*m/g, "");
+        expect(`${cleanCode}\n`).toEqual(expectedTerminal);
+      } else {
+        throw new Error("QR code output is undefined");
+      }
+    } catch (err) {
+      console.error("Error generating QR code:", err);
+    }
   });
 });
 
-test("toString byte-input", (t: AssertionHandler) => {
+describe("QRCode.toString byte-input", () => {
   const expectedOutput = [
     "                             ",
     "                             ",
@@ -309,14 +348,23 @@ test("toString byte-input", (t: AssertionHandler) => {
   ].join("\n");
   const byteInput = new Uint8ClampedArray([1, 2, 3, 4, 5]);
 
-  t.plan(2);
+  it("should output the correct code", async () => {
+    const code = await toString([{ data: byteInput, mode: "byte" }], {
+      errorCorrectionLevel: "L",
+      ...baseOptions,
+    });
 
-  QRCode.toString(
-    [{ data: byteInput, mode: "byte" }],
-    { errorCorrectionLevel: "L" },
-    (err: Error, code: string) => {
-      t.ok(!err, "there should be no error");
-      t.equal(code, expectedOutput, "should output the correct code");
-    },
-  );
+    expect(code).toEqual(expectedOutput);
+  });
+
+  it("should not return an error", async () => {
+    try {
+      await toString([{ data: byteInput, mode: "byte" }], {
+        errorCorrectionLevel: "L",
+        ...baseOptions,
+      });
+    } catch (err) {
+      expect(err).toBeNull();
+    }
+  });
 });

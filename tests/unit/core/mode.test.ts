@@ -1,9 +1,7 @@
-import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
+import { describe, expect, it } from "vitest";
+import { Mode } from "../../../src/core/mode";
 
-import { test } from "tap";
-import Mode from "../../../src/core/mode.js";
-
-test("Mode bits", (t: AssertionHandler) => {
+describe("Mode bits", () => {
   const EXPECTED_BITS = {
     numeric: 1,
     alphanumeric: 2,
@@ -12,16 +10,16 @@ test("Mode bits", (t: AssertionHandler) => {
     mixed: -1,
   };
 
-  t.equal(Mode.NUMERIC.bit, EXPECTED_BITS.numeric);
-  t.equal(Mode.ALPHANUMERIC.bit, EXPECTED_BITS.alphanumeric);
-  t.equal(Mode.BYTE.bit, EXPECTED_BITS.byte);
-  t.equal(Mode.KANJI.bit, EXPECTED_BITS.kanji);
-  //t.equal(Mode.MIXED.bit, EXPECTED_BITS.mixed);
-
-  t.end();
+  it("Mode bit values", () => {
+    expect(Mode.NUMERIC.bit).toBe(EXPECTED_BITS.numeric);
+    expect(Mode.ALPHANUMERIC.bit).toBe(EXPECTED_BITS.alphanumeric);
+    expect(Mode.BYTE.bit).toBe(EXPECTED_BITS.byte);
+    expect(Mode.KANJI.bit).toBe(EXPECTED_BITS.kanji);
+    expect(Mode.MIXED.bit).toBe(EXPECTED_BITS.mixed);
+  });
 });
 
-test("Char count bits", (t: AssertionHandler) => {
+describe("Char count bits", () => {
   const EXPECTED_BITS = {
     numeric: [10, 12, 14],
     alphanumeric: [9, 11, 13],
@@ -29,59 +27,60 @@ test("Char count bits", (t: AssertionHandler) => {
     kanji: [8, 10, 12],
   };
 
-  let v;
-  for (v = 1; v < 10; v++) {
-    t.equal(
-      Mode.getCharCountIndicator(Mode.NUMERIC, v),
-      EXPECTED_BITS.numeric[0],
-    );
-    t.equal(
-      Mode.getCharCountIndicator(Mode.ALPHANUMERIC, v),
-      EXPECTED_BITS.alphanumeric[0],
-    );
-    t.equal(Mode.getCharCountIndicator(Mode.BYTE, v), EXPECTED_BITS.byte[0]);
-    t.equal(Mode.getCharCountIndicator(Mode.KANJI, v), EXPECTED_BITS.kanji[0]);
-  }
+  it("Char count indicator for versions", () => {
+    for (let v = 1; v < 10; v++) {
+      expect(Mode.getCharCountIndicator(Mode.NUMERIC, v)).toBe(
+        EXPECTED_BITS.numeric[0],
+      );
+      expect(Mode.getCharCountIndicator(Mode.ALPHANUMERIC, v)).toBe(
+        EXPECTED_BITS.alphanumeric[0],
+      );
+      expect(Mode.getCharCountIndicator(Mode.BYTE, v)).toBe(
+        EXPECTED_BITS.byte[0],
+      );
+      expect(Mode.getCharCountIndicator(Mode.KANJI, v)).toBe(
+        EXPECTED_BITS.kanji[0],
+      );
+    }
 
-  for (v = 10; v < 27; v++) {
-    t.equal(
-      Mode.getCharCountIndicator(Mode.NUMERIC, v),
-      EXPECTED_BITS.numeric[1],
-    );
-    t.equal(
-      Mode.getCharCountIndicator(Mode.ALPHANUMERIC, v),
-      EXPECTED_BITS.alphanumeric[1],
-    );
-    t.equal(Mode.getCharCountIndicator(Mode.BYTE, v), EXPECTED_BITS.byte[1]);
-    t.equal(Mode.getCharCountIndicator(Mode.KANJI, v), EXPECTED_BITS.kanji[1]);
-  }
+    for (let v = 10; v < 27; v++) {
+      expect(Mode.getCharCountIndicator(Mode.NUMERIC, v)).toBe(
+        EXPECTED_BITS.numeric[1],
+      );
+      expect(Mode.getCharCountIndicator(Mode.ALPHANUMERIC, v)).toBe(
+        EXPECTED_BITS.alphanumeric[1],
+      );
+      expect(Mode.getCharCountIndicator(Mode.BYTE, v)).toBe(
+        EXPECTED_BITS.byte[1],
+      );
+      expect(Mode.getCharCountIndicator(Mode.KANJI, v)).toBe(
+        EXPECTED_BITS.kanji[1],
+      );
+    }
 
-  for (v = 27; v <= 40; v++) {
-    t.equal(
-      Mode.getCharCountIndicator(Mode.NUMERIC, v),
-      EXPECTED_BITS.numeric[2],
-    );
-    t.equal(
-      Mode.getCharCountIndicator(Mode.ALPHANUMERIC, v),
-      EXPECTED_BITS.alphanumeric[2],
-    );
-    t.equal(Mode.getCharCountIndicator(Mode.BYTE, v), EXPECTED_BITS.byte[2]);
-    t.equal(Mode.getCharCountIndicator(Mode.KANJI, v), EXPECTED_BITS.kanji[2]);
-  }
+    for (let v = 27; v <= 40; v++) {
+      expect(Mode.getCharCountIndicator(Mode.NUMERIC, v)).toBe(
+        EXPECTED_BITS.numeric[2],
+      );
+      expect(Mode.getCharCountIndicator(Mode.ALPHANUMERIC, v)).toBe(
+        EXPECTED_BITS.alphanumeric[2],
+      );
+      expect(Mode.getCharCountIndicator(Mode.BYTE, v)).toBe(
+        EXPECTED_BITS.byte[2],
+      );
+      expect(Mode.getCharCountIndicator(Mode.KANJI, v)).toBe(
+        EXPECTED_BITS.kanji[2],
+      );
+    }
+  });
 
-  t.throws(() => {
-    Mode.getCharCountIndicator({}, 1);
-  }, "Should throw if mode is invalid");
-
-  t.throws(() => {
-    Mode.getCharCountIndicator(Mode.BYTE, 0);
-  }, "Should throw if version is invalid");
-
-  t.end();
+  it("Throws on invalid mode or version", () => {
+    expect(() => Mode.getCharCountIndicator({}, 1)).toThrow();
+    expect(() => Mode.getCharCountIndicator(Mode.BYTE, 0)).toThrow();
+  });
 });
 
-test("Best mode", (t: AssertionHandler) => {
-  /* eslint-disable quote-props */
+describe("Best mode", () => {
   const EXPECTED_MODE = {
     12345: Mode.NUMERIC,
     abcde: Mode.BYTE,
@@ -94,34 +93,29 @@ test("Best mode", (t: AssertionHandler) => {
     皿a晒三: Mode.BYTE,
   };
 
-  Object.keys(EXPECTED_MODE).forEach((data: string) => {
-    t.equal(
-      Mode.getBestModeForData(data),
-      EXPECTED_MODE[data],
-      "Should return mode " +
-      Mode.toString(EXPECTED_MODE[data]) +
-      " for data: " +
-      data,
-    );
+  it("Best mode for data", () => {
+    for (const data of Object.keys(EXPECTED_MODE)) {
+      expect(Mode.getBestModeForData(data)).toBe(EXPECTED_MODE[data]);
+    }
+  });
+});
+
+describe("Is valid", () => {
+  it("Valid modes", () => {
+    expect(Mode.isValid(Mode.NUMERIC)).toEqual([10, 12, 14]);
+    expect(Mode.isValid(Mode.ALPHANUMERIC)).toEqual([9, 11, 13]);
+    expect(Mode.isValid(Mode.BYTE)).toEqual([8, 16, 16]);
+    expect(Mode.isValid(Mode.KANJI)).toEqual([8, 10, 12]);
   });
 
-  t.end();
+  it("Invalid modes", () => {
+    expect(Mode.isValid(undefined)).toBe(undefined);
+    expect(Mode.isValid({ bit: 1 })).toBe(undefined);
+    expect(Mode.isValid({ ccBits: [] })).toBe(undefined);
+  });
 });
 
-test("Is valid", (t: AssertionHandler) => {
-  t.ok(Mode.isValid(Mode.NUMERIC));
-  t.ok(Mode.isValid(Mode.ALPHANUMERIC));
-  t.ok(Mode.isValid(Mode.BYTE));
-  t.ok(Mode.isValid(Mode.KANJI));
-
-  t.notOk(Mode.isValid(undefined));
-  t.notOk(Mode.isValid({ bit: 1 }));
-  t.notOk(Mode.isValid({ ccBits: [] }));
-
-  t.end();
-});
-
-test("From value", (t: AssertionHandler) => {
+describe("From value", () => {
   const modes = [
     { name: "numeric", mode: Mode.NUMERIC },
     { name: "alphanumeric", mode: Mode.ALPHANUMERIC },
@@ -129,36 +123,27 @@ test("From value", (t: AssertionHandler) => {
     { name: "byte", mode: Mode.BYTE },
   ];
 
-  for (let m = 0; m < modes.length; m++) {
-    t.equal(Mode.from(modes[m].name), modes[m].mode);
-    t.equal(Mode.from(modes[m].name.toUpperCase()), modes[m].mode);
-    t.equal(Mode.from(modes[m].mode), modes[m].mode);
-  }
+  it("From name or mode", () => {
+    for (const { name, mode } of modes) {
+      expect(Mode.from(name)).toBe(mode);
+      expect(Mode.from(name.toUpperCase())).toBe(mode);
+      expect(Mode.from(mode)).toBe(mode);
+    }
 
-  t.equal(
-    Mode.from("", Mode.NUMERIC),
-    Mode.NUMERIC,
-    "Should return default value if mode is invalid",
-  );
-
-  t.equal(
-    Mode.from(null, Mode.NUMERIC),
-    Mode.NUMERIC,
-    "Should return default value if mode undefined",
-  );
-
-  t.end();
+    expect(Mode.from("", Mode.NUMERIC)).toBe(Mode.NUMERIC);
+    expect(Mode.from(null, Mode.NUMERIC)).toBe(Mode.NUMERIC);
+  });
 });
 
-test("To string", (t: AssertionHandler) => {
-  t.equal(Mode.toString(Mode.NUMERIC), "Numeric");
-  t.equal(Mode.toString(Mode.ALPHANUMERIC), "Alphanumeric");
-  t.equal(Mode.toString(Mode.BYTE), "Byte");
-  t.equal(Mode.toString(Mode.KANJI), "Kanji");
+describe("To string", () => {
+  it("String representation of modes", () => {
+    expect(Mode.toString(Mode.NUMERIC)).toBe("Numeric");
+    expect(Mode.toString(Mode.ALPHANUMERIC)).toBe("Alphanumeric");
+    expect(Mode.toString(Mode.BYTE)).toBe("Byte");
+    expect(Mode.toString(Mode.KANJI)).toBe("Kanji");
+  });
 
-  t.throws(() => {
-    Mode.toString({});
-  }, "Should throw if mode is invalid");
-
-  t.end();
+  it("Throws on invalid mode", () => {
+    expect(() => Mode.toString({})).toThrow();
+  });
 });

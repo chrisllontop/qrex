@@ -1,57 +1,55 @@
-import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
+import { describe, expect, it } from "vitest";
+import { Regex } from "../../../src/core/regex";
 
-import { test } from "tap";
-import Regex from "../../../src/core/regex.js";
+describe("Regex", () => {
+  it("should export a regex for NUMERIC", () => {
+    expect(Regex.NUMERIC).toBeInstanceOf(RegExp);
+  });
 
-test("Regex", (t: AssertionHandler) => {
-  t.ok(Regex.NUMERIC instanceof RegExp, "Should export a regex for NUMERIC");
+  it("should export a regex for ALPHANUMERIC", () => {
+    expect(Regex.ALPHANUMERIC).toBeInstanceOf(RegExp);
+  });
 
-  t.ok(
-    Regex.ALPHANUMERIC instanceof RegExp,
-    "Should export a regex for ALPHANUMERIC",
-  );
+  it("should export a regex for BYTE", () => {
+    expect(Regex.BYTE).toBeInstanceOf(RegExp);
+  });
 
-  t.ok(Regex.BYTE instanceof RegExp, "Should export a regex for BYTE");
+  it("should export a regex for KANJI", () => {
+    expect(Regex.KANJI).toBeInstanceOf(RegExp);
+  });
 
-  t.ok(Regex.KANJI instanceof RegExp, "Should export a regex for KANJI");
-
-  t.ok(
-    Regex.BYTE_KANJI instanceof RegExp,
-    "Should export a regex for BYTE_KANJI",
-  );
-
-  t.end();
+  it("should export a regex for BYTE_KANJI", () => {
+    expect(Regex.BYTE_KANJI).toBeInstanceOf(RegExp);
+  });
 });
 
-test("Regex test", (t: AssertionHandler) => {
-  t.ok(Regex.testNumeric("123456"), "Should return true if is a number");
-  t.notOk(
-    Regex.testNumeric("a12345"),
-    "Should return false if is not a number",
-  );
-  t.notOk(
-    Regex.testNumeric("ABC123"),
-    "Should return false if is not a number",
-  );
+describe("Regex test", () => {
+  it("should return true if the string is numeric", () => {
+    expect(Regex.testNumeric("123456")).toBe(true);
+  });
 
-  t.ok(
-    Regex.testAlphanumeric("123ABC"),
-    "Should return true if is alphanumeric",
-  );
-  t.ok(
-    Regex.testAlphanumeric("123456"),
-    "Should return true if is alphanumeric",
-  );
-  t.notOk(
-    Regex.testAlphanumeric("ABCabc"),
-    "Should return false if is not alphanumeric",
-  );
+  it("should return false if the string is not numeric", () => {
+    expect(Regex.testNumeric("a12345")).toBe(false);
+    expect(Regex.testNumeric("ABC123")).toBe(false);
+  });
 
-  t.ok(Regex.testKanji("乂ЁЖぞβ"), "Should return true if is a kanji");
-  t.notOk(Regex.testKanji("皿a晒三A"), "Should return false if is not a kanji");
-  t.notOk(Regex.testKanji("123456"), "Should return false if is not a kanji");
-  t.notOk(Regex.testKanji("ABC123"), "Should return false if is not a kanji");
-  t.notOk(Regex.testKanji("abcdef"), "Should return false if is not a kanji");
+  it("should return true if the string is alphanumeric", () => {
+    expect(Regex.testAlphanumeric("123ABC")).toBe(true);
+    expect(Regex.testAlphanumeric("123456")).toBe(true);
+  });
 
-  t.end();
+  it("should return false if the string is not alphanumeric", () => {
+    expect(Regex.testAlphanumeric("ABCabc")).toBe(false);
+  });
+
+  it("should return true if the string is kanji", () => {
+    expect(Regex.testKanji("乂ЁЖぞβ")).toBe(true);
+  });
+
+  it("should return false if the string is not kanji", () => {
+    expect(Regex.testKanji("皿a晒三A")).toBe(false);
+    expect(Regex.testKanji("123456")).toBe(false);
+    expect(Regex.testKanji("ABC123")).toBe(false);
+    expect(Regex.testKanji("abcdef")).toBe(false);
+  });
 });

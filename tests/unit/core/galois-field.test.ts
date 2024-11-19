@@ -1,37 +1,49 @@
-import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
+import { describe, expect, it } from "vitest";
+import { GaloisField as GF } from "../../../src/core/galois-field";
 
-import { test } from "tap";
-import GF from "../../../src/core/galois-field.js";
+describe("Galois Field", () => {
+  it("should throw for log(n) with n < 1", () => {
+    expect(() => GF.log(0)).toThrow("log(0)");
+  });
 
-test("Galois Field", (t: AssertionHandler) => {
-  t.throws(() => {
-    GF.log(0);
-  }, "Should throw for log(n) with n < 1");
-
-  for (let i = 1; i < 255; i++) {
-    t.equal(
-      GF.log(GF.exp(i)),
-      i,
-      "log and exp should be one the inverse of the other",
+  it("log and exp should be the inverse of each other for values 1 to 254", () => {
+    const logExpResults = Array.from({ length: 254 }, (_, i) => i + 1).map(
+      (i) => ({
+        value: i,
+        logExpResult: GF.log(GF.exp(i)),
+        expLogResult: GF.exp(GF.log(i)),
+      }),
     );
-    t.equal(
-      GF.exp(GF.log(i)),
-      i,
-      "exp and log should be one the inverse of the other",
+
+    for (const { value, logExpResult, expLogResult } of logExpResults) {
+      expect(logExpResult).toBe(value);
+      expect(expLogResult).toBe(value);
+    }
+  });
+
+  it("should return 0 if first parameter is 0 in multiplication", () => {
+    expect(GF.mul(0, 1)).toBe(0);
+  });
+
+  it("should return 0 if second parameter is 0 in multiplication", () => {
+    expect(GF.mul(1, 0)).toBe(0);
+  });
+
+  it("should return 0 if both parameters are 0 in multiplication", () => {
+    expect(GF.mul(0, 0)).toBe(0);
+  });
+
+  it("Multiplication should be commutative for values 1 to 254", () => {
+    const mulResults = Array.from({ length: 254 }, (_, j) => j + 1).map(
+      (j) => ({
+        value: j,
+        mulResult: GF.mul(j, 255 - j),
+        commutativeResult: GF.mul(255 - j, j),
+      }),
     );
-  }
 
-  t.equal(GF.mul(0, 1), 0, "Should return 0 if first param is 0");
-  t.equal(GF.mul(1, 0), 0, "Should return 0 if second param is 0");
-  t.equal(GF.mul(0, 0), 0, "Should return 0 if both params are 0");
-
-  for (let j = 1; j < 255; j++) {
-    t.equal(
-      GF.mul(j, 255 - j),
-      GF.mul(255 - j, j),
-      "Multiplication should be commutative",
-    );
-  }
-
-  t.end();
+    for (const { mulResult, commutativeResult } of mulResults) {
+      expect(mulResult).toBe(commutativeResult);
+    }
+  });
 });

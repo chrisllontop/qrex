@@ -1,41 +1,32 @@
-import type { DeprecatedAssertionSynonyms as AssertionHandler } from "tap";
-import type { ExtendedRendererOptions as RendererOptions } from "core/utils";
-
-import fs from "fs";
-import { test } from "tap";
-import sinon from "sinon";
+import fs from "node:fs";
 import htmlparser from "htmlparser2";
-import QRCode from "../../../src/core/qrcode.js";
-import SvgRenderer from "../../../src/renderer/svg.js";
+import { describe, expect, it, vi } from "vitest";
+import { QRCode } from "../../../src/core/qrcode";
+import { RendererSvg } from "../../../src/renderer/svg";
 
-function getExpectedViewbox(size: number, margin: number): string {
+function getExpectedViewbox(size, margin) {
   const expectedQrCodeSize = size + margin * 2;
-  return "0 0 " + expectedQrCodeSize + " " + expectedQrCodeSize;
+  return `0 0 ${expectedQrCodeSize} ${expectedQrCodeSize}`;
 }
 
-function testSvgFragment(t: AssertionHandler, svgFragment: string, expectedTags: Array<string>): Promise<undefined, Error> {
-  return new Promise((resolve: Promise.resolve, reject: Promise.reject) => {
+function testSvgFragment(svgFragment, expectedTags) {
+  return new Promise((resolve, reject) => {
     const parser = new htmlparser.Parser(
       {
-        onopentag: (name: string, attribs: Array<string>) => {
+        onopentag: (name, attribs) => {
           const tag = expectedTags.shift();
 
-          t.equal(tag.name, name, "Should have a " + tag.name + " tag");
-
-          tag.attribs.forEach(function(attr) {
-            t.equal(
-              attribs[attr.name],
-              attr.value.toString(),
-              "Should have attrib " + attr.name + " with value " + attr.value,
-            );
-          });
+          expect(tag.name).toBe(name);
+          for (const attr of tag.attribs) {
+            expect(attribs[attr.name]?.toString()).toBe(attr.value.toString());
+          }
         },
 
         onend: () => {
           resolve();
         },
 
-        onerror: (e: Error) => {
+        onerror: (e) => {
           reject(e);
         },
       },
@@ -47,41 +38,26 @@ function testSvgFragment(t: AssertionHandler, svgFragment: string, expectedTags:
   });
 }
 
-function buildTest(t: AssertionHandler, data: string, opts: RendererOptions, expectedTags: Array<string>): Promise<undefined, Error> {
-  const svg = SvgRenderer.render(data, opts);
-  return testSvgFragment(t, svg, expectedTags.slice());
+function buildTest(data, opts, expectedTags) {
+  const svg = RendererSvg.render(data, opts);
+  return testSvgFragment(svg, expectedTags.slice());
 }
 
-test("svgrender interface", (t: AssertionHandler) => {
-  t.type(SvgRenderer.render, "function", "Should have render function");
+describe("SvgRenderer", () => {
+  it("should have render function", () => {
+    expect(RendererSvg.render).toBeTypeOf("function");
+  });
 
-  t.type(
-    SvgRenderer.renderToFile,
-    "function",
-    "Should have renderToFile function",
-  );
+  it("should have renderToFile function", () => {
+    expect(RendererSvg.renderToFile).toBeTypeOf("function");
+  });
 
-  t.end();
-});
+  describe("Svg render", () => {
+    const data = QRCode.create("sample text", { version: 2, maskPattern: 0 });
+    const size = data.modules.size;
 
-test("Svg render", (t: AssertionHandler) => {
-  const tests = [];
-
-  const data = QRCode.create("sample text", { version: 2 });
-  const size = data.modules.size;
-
-  tests.push(
-    buildTest(
-      t,
-      data,
-      {
-        scale: 4,
-        margin: 4,
-        color: {
-          light: "#ffffff80",
-        },
-      },
-      [
+    it("should render SVG with scale 4 and margin 4", async () => {
+      const expectedTags = [
         {
           name: "svg",
           attribs: [{ name: "viewbox", value: getExpectedViewbox(size, 4) }],
@@ -97,23 +73,23 @@ test("Svg render", (t: AssertionHandler) => {
           name: "path",
           attribs: [{ name: "stroke", value: "#000000" }],
         },
-      ],
-    ),
-  );
+      ];
 
-  tests.push(
-    buildTest(
-      t,
-      data,
-      {
-        scale: 0,
-        margin: 8,
-        color: {
-          light: "#0000",
-          dark: "#00000080",
+      await buildTest(
+        data,
+        {
+          scale: 4,
+          margin: 4,
+          color: {
+            light: "#ffffff80",
+          },
         },
-      },
-      [
+        expectedTags,
+      );
+    });
+
+    it("should render SVG with scale 0 and margin 8", async () => {
+      const expectedTags = [
         {
           name: "svg",
           attribs: [{ name: "viewbox", value: getExpectedViewbox(size, 8) }],
@@ -125,82 +101,105 @@ test("Svg render", (t: AssertionHandler) => {
             { name: "stroke-opacity", value: ".50" },
           ],
         },
-      ],
-    ),
-  );
+      ];
 
-  tests.push(
-    buildTest(t, data, {}, [
-      {
-        name: "svg",
-        attribs: [{ name: "viewbox", value: getExpectedViewbox(size, 4) }],
-      },
-      { name: "path", attribs: [{ name: "fill", value: "#ffffff" }] },
-      { name: "path", attribs: [{ name: "stroke", value: "#000000" }] },
-    ]),
-  );
-
-  tests.push(
-    buildTest(t, data, { width: 250 }, [
-      {
-        name: "svg",
-        attribs: [
-          { name: "width", value: "250" },
-          { name: "height", value: "250" },
-          { name: "viewbox", value: getExpectedViewbox(size, 4) },
-        ],
-      },
-      { name: "path", attribs: [{ name: "fill", value: "#ffffff" }] },
-      { name: "path", attribs: [{ name: "stroke", value: "#000000" }] },
-    ]),
-  );
-
-  Promise.all(tests).then(() => {
-    t.end();
-  });
-});
-
-test("Svg renderToFile", (t: AssertionHandler) => {
-  const sampleQrData = QRCode.create("sample text", { version: 2 });
-  const fileName = "qrimage.svg";
-  let fsStub = sinon.stub(fs, "writeFile").callsArg(2);
-
-  t.plan(5);
-
-  SvgRenderer.renderToFile(fileName, sampleQrData, (err: Error) => {
-    t.ok(!err, "Should not generate errors with only qrData param");
-
-    t.equal(
-      fsStub.getCall(0).args[0],
-      fileName,
-      "Should save file with correct file name",
-    );
-  });
-
-  SvgRenderer.renderToFile(
-    fileName,
-    sampleQrData,
-    {
-      margin: 10,
-      scale: 1,
-    },
-    (err: Error) => {
-      t.ok(!err, "Should not generate errors with options param");
-
-      t.equal(
-        fsStub.getCall(0).args[0],
-        fileName,
-        "Should save file with correct file name",
+      await buildTest(
+        data,
+        {
+          scale: 0,
+          margin: 8,
+          color: {
+            light: "#0000",
+            dark: "#00000080",
+          },
+        },
+        expectedTags,
       );
-    },
-  );
+    });
 
-  fsStub.restore();
-  fsStub = sinon.stub(fs, "writeFile").callsArgWith(2, new Error());
+    it("should render SVG with default options", async () => {
+      const expectedTags = [
+        {
+          name: "svg",
+          attribs: [{ name: "viewbox", value: getExpectedViewbox(size, 4) }],
+        },
+        { name: "path", attribs: [{ name: "fill", value: "#ffffff" }] },
+        { name: "path", attribs: [{ name: "stroke", value: "#000000" }] },
+      ];
 
-  SvgRenderer.renderToFile(fileName, sampleQrData, (err: Error) => {
-    t.ok(err, "Should fail if error occurs during save");
+      await buildTest(data, {}, expectedTags);
+    });
+
+    it("should render SVG with width 250", async () => {
+      const expectedTags = [
+        {
+          name: "svg",
+          attribs: [
+            { name: "width", value: "250" },
+            { name: "height", value: "250" },
+            { name: "viewbox", value: getExpectedViewbox(size, 4) },
+          ],
+        },
+        { name: "path", attribs: [{ name: "fill", value: "#ffffff" }] },
+        { name: "path", attribs: [{ name: "stroke", value: "#000000" }] },
+      ];
+
+      await buildTest(data, { width: 250 }, expectedTags);
+    });
   });
 
-  fsStub.restore();
+  describe("Svg renderToFile", () => {
+    const sampleQrData = QRCode.create("sample text", {
+      version: 2,
+      maskPattern: 0,
+    });
+    const fileName = "qrimage.svg";
+
+    it("should render to file with correct filename and without error", async () => {
+      const writeFileMock = vi.fn((file, content, callback) => callback());
+
+      vi.spyOn(fs, "writeFile").mockImplementation(writeFileMock);
+
+      await RendererSvg.renderToFile(fileName, sampleQrData, (err) => {
+        expect(err).toBeUndefined();
+        expect(writeFileMock).toHaveBeenCalledWith(
+          fileName,
+          expect.any(String),
+          expect.any(Function),
+        );
+      });
+    });
+
+    it("should render to file with options and without error", async () => {
+      const writeFileMock = vi.fn((file, content, callback) => callback());
+
+      vi.spyOn(fs, "writeFile").mockImplementation(writeFileMock);
+
+      await RendererSvg.renderToFile(
+        fileName,
+        sampleQrData,
+        { margin: 10, scale: 1 },
+        (err) => {
+          expect(err).toBeUndefined();
+          expect(writeFileMock).toHaveBeenCalledWith(
+            fileName,
+            expect.any(String),
+            expect.any(Function),
+          );
+        },
+      );
+    });
+
+    it("should fail if an error occurs during file save", async () => {
+      const writeFileMock = vi.fn((file, content, callback) =>
+        callback(new Error("File error")),
+      );
+
+      vi.spyOn(fs, "writeFile").mockImplementation(writeFileMock);
+
+      await RendererSvg.renderToFile(fileName, sampleQrData, (err) => {
+        expect(err).toBeTruthy();
+      });
+    });
+  });
 });

@@ -95,7 +95,9 @@ QRex.toCanvas(canvas, 'sample text', function (error) {
 ```
 
 #### Precompiled bundle
+
 ```html
+
 <canvas id="canvas"></canvas>
 
 <script src="/build/qrex.js"></script>
@@ -280,26 +282,27 @@ An helper method is provided by the lib through an optional file that you can in
 
 ```javascript
   const qrex = require('qrex')
-  const toSJIS = require('qrex/helper/to-sjis')
+const toSJIS = require('qrex/helper/to-sjis')
 
-  QRex.toDataURL(kanjiString, { toSJISFunc: toSJIS }, function (err, url) {
-    console.log(url)
-  })
+QRex.toDataURL(kanjiString, { toSJISFunc: toSJIS }, function (err, url) {
+  console.log(url)
+})
 ```
 
 With precompiled bundle:
 
 ```html
+
 <canvas id="canvas"></canvas>
 
 <script src="/build/qrex.min.js"></script>
 <script src="/build/qrex.tosjis.min.js"></script>
 <script>
   QRex.toCanvas(document.getElementById('canvas'),
-    'sample text', { toSJISFunc: QRex.toSJIS }, function (error) {
-    if (error) console.error(error)
-    console.log('success!')
-  })
+      'sample text', { toSJISFunc: QRex.toSJIS }, function (error) {
+        if (error) console.error(error)
+        console.log('success!')
+      })
 </script>
 ```
 
@@ -419,6 +422,7 @@ Type: `Function`
 Callback function called on finish.
 
 ##### Example
+
 ```javascript
 QRex.toCanvas('text', { errorCorrectionLevel: 'H' }, function (err, canvas) {
   if (err) throw err
@@ -467,6 +471,7 @@ Type: `Function`
 Callback function called on finish.
 
 ##### Example
+
 ```javascript
 const opts = {
   errorCorrectionLevel: 'H',
@@ -474,8 +479,8 @@ const opts = {
   quality: 0.3,
   margin: 1,
   color: {
-    dark:"#010599FF",
-    light:"#FFBF60FF"
+    dark: "#010599FF",
+    light: "#FFBF60FF"
   }
 }
 

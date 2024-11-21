@@ -1,8 +1,9 @@
 import * as fs from "node:fs";
 import { PNG } from "pngjs";
+import type { QRData, QRexOptions } from "../types/qrex.type";
 import { RendererUtils } from "./utils";
 
-function render(qrData, options) {
+function render(qrData: QRData, options: QRexOptions) {
   const opts = RendererUtils.getOptions(options);
   const pngOpts = opts.rendererOpts;
   const size = RendererUtils.getImageWidth(qrData.modules.size, opts);
@@ -16,7 +17,7 @@ function render(qrData, options) {
   return pngImage;
 }
 
-function renderToDataURL(qrData, options, cb) {
+function renderToDataURL(qrData: QRData, options: QRexOptions, cb) {
   if (typeof cb === "undefined") {
     cb = options;
     options = undefined;
@@ -30,7 +31,7 @@ function renderToDataURL(qrData, options, cb) {
   });
 }
 
-function renderToBuffer(qrData, options, cb) {
+function renderToBuffer(qrData: QRData, options, cb) {
   if (typeof cb === "undefined") {
     cb = options;
     options = undefined;
@@ -52,7 +53,7 @@ function renderToBuffer(qrData, options, cb) {
   png.pack();
 }
 
-function renderToFile(path, qrData, options, cb) {
+function renderToFile(path, qrData: QRData, options, cb) {
   if (typeof cb === "undefined") {
     cb = options;
     options = undefined;
@@ -72,7 +73,7 @@ function renderToFile(path, qrData, options, cb) {
   renderToFileStream(stream, qrData, options);
 }
 
-function renderToFileStream(stream, qrData, options) {
+function renderToFileStream(stream, qrData: QRData, options) {
   const png = render(qrData, options);
   png.pack().pipe(stream);
 }

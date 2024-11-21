@@ -1,3 +1,6 @@
+import type { MaskPatternType } from "../types/qrex.type";
+import type { BitMatrix } from "./bit-matrix";
+
 const Patterns = {
   PATTERN000: 0,
   PATTERN001: 1,
@@ -11,7 +14,6 @@ const Patterns = {
 
 /**
  * Weighted penalty scores for the undesirable features
- * @type {Object}
  */
 const PenaltyScores = {
   N1: 3,
@@ -22,25 +24,17 @@ const PenaltyScores = {
 
 /**
  * Check if mask pattern value is valid
- *
- * @param  {Number}  mask    Mask pattern
- * @return {Boolean}         true if valid, false otherwise
  */
-function isValid(mask) {
-  return (
-    mask != null && mask !== "" && !Number.isNaN(mask) && mask >= 0 && mask <= 7
-  );
+function isValid(mask: MaskPatternType) {
+  return mask != null && !Number.isNaN(mask) && mask >= 0 && mask <= 7;
 }
 
 /**
  * Returns mask pattern from a value.
  * If value is not valid, returns undefined
- *
- * @param  {Number|String} value        Mask pattern value
- * @return {Number}                     Valid mask pattern or undefined
  */
-function from(value) {
-  return isValid(value) ? Number.parseInt(value, 10) : undefined;
+function from(value: MaskPatternType): MaskPatternType {
+  return isValid(value) ? value : undefined;
 }
 
 /**
@@ -100,11 +94,7 @@ function getPenaltyN2(data) {
 
   for (let row = 0; row < size - 1; row++) {
     for (let col = 0; col < size - 1; col++) {
-      const last =
-        data.get(row, col) +
-        data.get(row, col + 1) +
-        data.get(row + 1, col) +
-        data.get(row + 1, col + 1);
+      const last = data.get(row, col) + data.get(row, col + 1) + data.get(row + 1, col) + data.get(row + 1, col + 1);
 
       if (last === 4 || last === 0) points++;
     }
@@ -209,12 +199,8 @@ function applyMask(pattern, data) {
 
 /**
  * Returns the best mask pattern for data
- *
- * @param  {BitMatrix} data
- * @param setupFormatFunc
- * @return {Number} Mask pattern reference number
  */
-function getBestMask(data, setupFormatFunc) {
+function getBestMask(data: BitMatrix, setupFormatFunc) {
   const numPatterns = Object.keys(Patterns).length;
   let bestPattern = 0;
   let lowerPenalty = Number.POSITIVE_INFINITY;
@@ -224,22 +210,18 @@ function getBestMask(data, setupFormatFunc) {
     applyMask(p, data);
 
     // Calculate penalty
-    const penalty =
-      getPenaltyN1(data) +
-      getPenaltyN2(data) +
-      getPenaltyN3(data) +
-      getPenaltyN4(data);
+    const penalty = getPenaltyN1(data) + getPenaltyN2(data) + getPenaltyN3(data) + getPenaltyN4(data);
 
     // Undo previously applied mask
     applyMask(p, data);
 
     if (penalty < lowerPenalty) {
       lowerPenalty = penalty;
-      bestPattern = p;
+      bestPattern = p as MaskPatternType;
     }
   }
 
-  return bestPattern;
+  return bestPattern as MaskPatternType;
 }
 
 export const MaskPattern = {

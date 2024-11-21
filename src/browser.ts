@@ -1,7 +1,7 @@
-import canPromise from "./can-promise";
-import { QRCode } from "./core/qrcode";
+import { QRex } from "./core/qrex";
 import { RendererCanvas } from "./renderer/canvas";
 import { RendererSvgTag } from "./renderer/svg-tag";
+import { canPromise } from "./utils/can-promise";
 
 function renderCanvas(renderFunc, canvas, text, opts, cb) {
   const args = [].slice.call(arguments, 1);
@@ -64,13 +64,8 @@ function renderCanvas(renderFunc, canvas, text, opts, cb) {
   }
 }
 
-export const create = QRCode.create;
+export const create = QRex.create;
 export const toCanvas = renderCanvas.bind(null, RendererCanvas.render);
-export const toDataURL = renderCanvas.bind(
-  null,
-  RendererCanvas.renderToDataURL,
-);
+export const toDataURL = renderCanvas.bind(null, RendererCanvas.renderToDataURL);
 
-export const toString = renderCanvas.bind(null, (data, _, opts) =>
-  RendererSvgTag.render(data, opts),
-);
+export const toString = renderCanvas.bind(null, (data, _, opts) => RendererSvgTag.render(data, opts));

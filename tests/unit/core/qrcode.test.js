@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import toSJIS from "../../../helper/to-sjis";
 import { ECLevel } from "../../../src/core/error-correction-level";
-import { QRCode } from "../../../src/core/qrcode";
-import Version from "../../../src/core/version";
+import { QRex } from "../../../src/core/qrex";
+import { Version } from "../../../src/core/version";
 
 describe("QRCode Interface", () => {
   const defaultOptions = {
@@ -10,19 +10,19 @@ describe("QRCode Interface", () => {
     errorCorrectionLevel: "M",
   };
   it("Should have 'create' function", () => {
-    expect(typeof QRCode.create).toBe("function");
+    expect(typeof QRex.create).toBe("function");
   });
 
   it("Should throw if no data is provided", () => {
-    expect(() => QRCode.create()).toThrow();
+    expect(() => QRex.create()).toThrow();
   });
 
   it("Should not throw when valid data is provided", () => {
-    expect(() => QRCode.create("1234567", defaultOptions)).not.toThrow();
+    expect(() => QRex.create("1234567", defaultOptions)).not.toThrow();
   });
 
   it("Should return correct QR code properties", () => {
-    const qr = QRCode.create("a123456A", {
+    const qr = QRex.create("a123456A", {
       version: 1,
       maskPattern: 1,
       errorCorrectionLevel: "H",
@@ -35,18 +35,16 @@ describe("QRCode Interface", () => {
   });
 
   it("Should throw if invalid data is passed", () => {
-    expect(() => QRCode.create({})).toThrow();
+    expect(() => QRex.create({})).toThrow();
   });
 
   it("Should accept data as string", () => {
-    expect(() =>
-      QRCode.create("AAAAA00000", { version: 5, maskPattern: 0 }),
-    ).not.toThrow();
+    expect(() => QRex.create("AAAAA00000", { version: 5, maskPattern: 0 })).not.toThrow();
   });
 
   it("Should accept data as array of objects", () => {
     expect(() => {
-      QRCode.create(
+      QRex.create(
         [
           { data: "ABCDEFG", mode: "alphanumeric" },
           { data: "abcdefg" },
@@ -60,13 +58,13 @@ describe("QRCode Interface", () => {
 
   it("Should accept errorCorrectionLevel as string", () => {
     expect(() =>
-      QRCode.create("AAAAA00000", {
+      QRex.create("AAAAA00000", {
         errorCorrectionLevel: "quartile",
         maskPattern: 0,
       }),
     ).not.toThrow();
     expect(() =>
-      QRCode.create("AAAAA00000", {
+      QRex.create("AAAAA00000", {
         errorCorrectionLevel: "q",
         maskPattern: 0,
       }),
@@ -86,7 +84,7 @@ describe("QRCode Error Correction", () => {
     for (const { name, level } of ecValues) {
       for (const ecName of name) {
         expect(() => {
-          const qr = QRCode.create("ABCDEFG", {
+          const qr = QRex.create("ABCDEFG", {
             errorCorrectionLevel: ecName,
             maskPattern: 0,
           });
@@ -94,7 +92,7 @@ describe("QRCode Error Correction", () => {
         }).not.toThrow();
 
         expect(() => {
-          const qr = QRCode.create("ABCDEFG", {
+          const qr = QRex.create("ABCDEFG", {
             errorCorrectionLevel: ecName.toUpperCase(),
             maskPattern: 0,
           });
@@ -105,14 +103,14 @@ describe("QRCode Error Correction", () => {
   });
 
   it("Should set default error correction level to M", () => {
-    const qr = QRCode.create("ABCDEFG", { maskPattern: 0 });
+    const qr = QRex.create("ABCDEFG", { maskPattern: 0 });
     expect(qr.errorCorrectionLevel).toBe(ECLevel.M);
   });
 });
 
 describe("QRCode Version", () => {
   it("Should create QR code with correct version", () => {
-    const qr = QRCode.create("data", {
+    const qr = QRex.create("data", {
       version: 9,
       errorCorrectionLevel: ECLevel.M,
       maskPattern: 0,
@@ -123,7 +121,7 @@ describe("QRCode Version", () => {
 
   it("Should throw if data cannot be contained with chosen version", () => {
     expect(() => {
-      QRCode.create(new Array(Version.getCapacity(2, ECLevel.H)).join("a"), {
+      QRex.create(new Array(Version.getCapacity(2, ECLevel.H)).join("a"), {
         version: 1,
         errorCorrectionLevel: ECLevel.H,
         maskPattern: 0,
@@ -131,48 +129,45 @@ describe("QRCode Version", () => {
     }).toThrow();
 
     expect(() => {
-      QRCode.create(
-        new Array(Version.getCapacity(40, ECLevel.H) + 2).join("a"),
-        {
-          version: 40,
-          errorCorrectionLevel: ECLevel.H,
-          maskPattern: 0,
-        },
-      );
+      QRex.create(new Array(Version.getCapacity(40, ECLevel.H) + 2).join("a"), {
+        version: 40,
+        errorCorrectionLevel: ECLevel.H,
+        maskPattern: 0,
+      });
     }).toThrow();
   });
 
   it("Should use best version if the one provided is invalid", () => {
     expect(() => {
-      QRCode.create("abcdefg", { version: "invalid", maskPattern: 0 });
+      QRex.create("abcdefg", { version: "invalid", maskPattern: 0 });
     }).not.toThrow();
   });
 });
 
 describe("QRCode Capacity", () => {
   it("Should contain 7 byte characters", () => {
-    const qr = QRCode.create([{ data: "abcdefg", mode: "byte" }], {
+    const qr = QRex.create([{ data: "abcdefg", mode: "byte" }], {
       maskPattern: 0,
     });
     expect(qr.version).toBe(1);
   });
 
   it("Should contain 17 numeric characters", () => {
-    const qr = QRCode.create([{ data: "12345678901234567", mode: "numeric" }], {
+    const qr = QRex.create([{ data: "12345678901234567", mode: "numeric" }], {
       maskPattern: 0,
     });
     expect(qr.version).toBe(1);
   });
 
   it("Should contain 10 alphanumeric characters", () => {
-    const qr = QRCode.create([{ data: "ABCDEFGHIL", mode: "alphanumeric" }], {
+    const qr = QRex.create([{ data: "ABCDEFGHIL", mode: "alphanumeric" }], {
       maskPattern: 0,
     });
     expect(qr.version).toBe(1);
   });
 
   it("Should contain 4 kanji characters", () => {
-    const qr = QRCode.create([{ data: "ＡＩぐサ", mode: "kanji" }], {
+    const qr = QRex.create([{ data: "ＡＩぐサ", mode: "kanji" }], {
       toSJISFunc: toSJIS,
       maskPattern: 0,
     });

@@ -1,6 +1,9 @@
+import type { DataMode } from "../types/qrex.type";
 import { Mode } from "./mode";
 
 export class ByteData {
+  mode: DataMode;
+
   constructor(data) {
     this.mode = Mode.BYTE;
     if (typeof data === "string") {

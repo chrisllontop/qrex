@@ -1,19 +1,12 @@
+import type { ErrorCorrectionLevel, ErrorCorrectionLevelString } from "../types/qrex.type";
 import { ECCode } from "./error-correction-code";
 import { ECLevel } from "./error-correction-level";
 import { Mode } from "./mode";
 import { CoreUtils } from "./utils";
 import { VersionCheck } from "./version-check";
 
-// Generator polynomial used to encode version information
-const G18 =
-  (1 << 12) |
-  (1 << 11) |
-  (1 << 10) |
-  (1 << 9) |
-  (1 << 8) |
-  (1 << 5) |
-  (1 << 2) |
-  (1 << 0);
+/** Generator polynomial used to encode version information */
+const G18 = (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0);
 const G18_BCH = CoreUtils.getBCHDigit(G18);
 
 function getBestVersionForDataLength(mode, length, errorCorrectionLevel) {
@@ -45,9 +38,7 @@ function getTotalBitsFromDataArray(segments, version) {
 function getBestVersionForMixedData(segments, errorCorrectionLevel) {
   for (let currentVersion = 1; currentVersion <= 40; currentVersion++) {
     const length = getTotalBitsFromDataArray(segments, currentVersion);
-    if (
-      length <= getCapacity(currentVersion, errorCorrectionLevel, Mode.MIXED)
-    ) {
+    if (length <= getCapacity(currentVersion, errorCorrectionLevel, Mode.MIXED)) {
       return currentVersion;
     }
   }
@@ -57,18 +48,14 @@ function getBestVersionForMixedData(segments, errorCorrectionLevel) {
 
 /**
  * Returns version number from a value.
- * If value is not a valid version, returns defaultValue
- *
- * @param  {Number|String} value        QR Code version
- * @param  {Number}        defaultValue Fallback value
- * @return {Number}                     QR Code version number
+ * If value is not a valid version, triggers an error
  */
-function from(value, defaultValue) {
+function from(value: number) {
   if (VersionCheck.isValid(value)) {
-    return Number.parseInt(value, 10);
+    return value;
   }
 
-  return defaultValue;
+  throw new Error("No valid version provided");
 }
 
 /**
@@ -92,18 +79,14 @@ function getCapacity(version, errorCorrectionLevel, mode) {
   const totalCodewords = CoreUtils.getSymbolTotalCodewords(version);
 
   // Total number of error correction codewords
-  const ecTotalCodewords = ECCode.getTotalCodewordsCount(
-    version,
-    errorCorrectionLevel,
-  );
+  const ecTotalCodewords = ECCode.getTotalCodewordsCount(version, errorCorrectionLevel);
 
   // Total number of data codewords
   const dataTotalCodewordsBits = (totalCodewords - ecTotalCodewords) * 8;
 
   if (mode === Mode.MIXED) return dataTotalCodewordsBits;
 
-  const usableBits =
-    dataTotalCodewordsBits - getReservedBitsCount(mode, version);
+  const usableBits = dataTotalCodewordsBits - getReservedBitsCount(mode, version);
 
   // Return max number of storable codewords
   switch (mode) {
@@ -128,7 +111,7 @@ function getCapacity(version, errorCorrectionLevel, mode) {
  * @param  {Mode} mode                       Data mode
  * @return {Number}                          QR Code version
  */
-function getBestVersionForData(data, errorCorrectionLevel) {
+function getBestVersionForData(data, errorCorrectionLevel: ErrorCorrectionLevel) {
   let seg;
 
   const ecl = ECLevel.from(errorCorrectionLevel, ECLevel.M);

@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import { PNG } from "pngjs";
 import { describe, expect, it, vi } from "vitest";
-import { QRCode } from "../../../src/core/qrcode";
+import { QRex } from "../../../src/core/qrex";
 import { RendererPng } from "../../../src/renderer/png";
 import StreamMock from "../../mocks/writable-stream";
 
@@ -24,7 +24,7 @@ describe("PNG renderer interface", () => {
 });
 
 describe("PNG render", () => {
-  const sampleQrData = QRCode.create("sample text", {
+  const sampleQrData = QRex.create("sample text", {
     version: 2,
     maskPattern: 0,
   });
@@ -54,7 +54,7 @@ describe("PNG render", () => {
 });
 
 describe("PNG renderToDataURL", () => {
-  const sampleQrData = QRCode.create("sample text", {
+  const sampleQrData = QRex.create("sample text", {
     version: 2,
     maskPattern: 0,
   });
@@ -71,14 +71,10 @@ describe("PNG renderToDataURL", () => {
 
   it("should not generate errors with options param and return a valid data URL", async () => {
     const url = await new Promise((resolve, reject) => {
-      RendererPng.renderToDataURL(
-        sampleQrData,
-        { margin: 10, scale: 1 },
-        (err, url) => {
-          if (err) reject(err);
-          else resolve(url);
-        },
-      );
+      RendererPng.renderToDataURL(sampleQrData, { margin: 10, scale: 1 }, (err, url) => {
+        if (err) reject(err);
+        else resolve(url);
+      });
     });
 
     expect(url).toBeTypeOf("string");
@@ -89,16 +85,14 @@ describe("PNG renderToDataURL", () => {
 });
 
 describe("PNG renderToFile", () => {
-  const sampleQrData = QRCode.create("sample text", {
+  const sampleQrData = QRex.create("sample text", {
     version: 2,
     maskPattern: 0,
   });
   const fileName = "qrimage.png";
 
   it("should not generate errors with only qrData param and save file with correct file name", async () => {
-    const fsStub = vi
-      .spyOn(fs, "createWriteStream")
-      .mockReturnValue(new StreamMock());
+    const fsStub = vi.spyOn(fs, "createWriteStream").mockReturnValue(new StreamMock());
 
     await new Promise((resolve, reject) => {
       RendererPng.renderToFile(fileName, sampleQrData, (err) => {
@@ -116,34 +110,25 @@ describe("PNG renderToFile", () => {
   });
 
   it("should not generate errors with options param and save file with correct file name", async () => {
-    const fsStub = vi
-      .spyOn(fs, "createWriteStream")
-      .mockReturnValue(new StreamMock());
+    const fsStub = vi.spyOn(fs, "createWriteStream").mockReturnValue(new StreamMock());
 
     await new Promise((resolve, reject) => {
-      RendererPng.renderToFile(
-        fileName,
-        sampleQrData,
-        { margin: 10, scale: 1 },
-        (err) => {
-          try {
-            expect(err).toBeFalsy();
-            expect(fsStub).toHaveBeenCalledWith(fileName);
-            resolve();
-          } catch (e) {
-            reject(e);
-          }
-        },
-      );
+      RendererPng.renderToFile(fileName, sampleQrData, { margin: 10, scale: 1 }, (err) => {
+        try {
+          expect(err).toBeFalsy();
+          expect(fsStub).toHaveBeenCalledWith(fileName);
+          resolve();
+        } catch (e) {
+          reject(e);
+        }
+      });
     });
 
     fsStub.mockRestore();
   });
 
   it("should fail if error occurs during save", async () => {
-    const fsStub = vi
-      .spyOn(fs, "createWriteStream")
-      .mockReturnValue(new StreamMock().forceErrorOnWrite());
+    const fsStub = vi.spyOn(fs, "createWriteStream").mockReturnValue(new StreamMock().forceErrorOnWrite());
 
     await new Promise((resolve, reject) => {
       RendererPng.renderToFile(fileName, sampleQrData, (err) => {
@@ -161,7 +146,7 @@ describe("PNG renderToFile", () => {
 });
 
 describe("PNG renderToFileStream", () => {
-  const sampleQrData = QRCode.create("sample text", {
+  const sampleQrData = QRex.create("sample text", {
     version: 2,
     maskPattern: 0,
   });

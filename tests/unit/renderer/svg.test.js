@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import htmlparser from "htmlparser2";
 import { describe, expect, it, vi } from "vitest";
-import { QRCode } from "../../../src/core/qrcode";
+import { QRex } from "../../../src/core/qrex";
 import { RendererSvg } from "../../../src/renderer/svg";
 
 function getExpectedViewbox(size, margin) {
@@ -53,7 +53,7 @@ describe("SvgRenderer", () => {
   });
 
   describe("Svg render", () => {
-    const data = QRCode.create("sample text", { version: 2, maskPattern: 0 });
+    const data = QRex.create("sample text", { version: 2, maskPattern: 0 });
     const size = data.modules.size;
 
     it("should render SVG with scale 4 and margin 4", async () => {
@@ -149,7 +149,7 @@ describe("SvgRenderer", () => {
   });
 
   describe("Svg renderToFile", () => {
-    const sampleQrData = QRCode.create("sample text", {
+    const sampleQrData = QRex.create("sample text", {
       version: 2,
       maskPattern: 0,
     });
@@ -162,11 +162,7 @@ describe("SvgRenderer", () => {
 
       await RendererSvg.renderToFile(fileName, sampleQrData, (err) => {
         expect(err).toBeUndefined();
-        expect(writeFileMock).toHaveBeenCalledWith(
-          fileName,
-          expect.any(String),
-          expect.any(Function),
-        );
+        expect(writeFileMock).toHaveBeenCalledWith(fileName, expect.any(String), expect.any(Function));
       });
     });
 
@@ -175,25 +171,14 @@ describe("SvgRenderer", () => {
 
       vi.spyOn(fs, "writeFile").mockImplementation(writeFileMock);
 
-      await RendererSvg.renderToFile(
-        fileName,
-        sampleQrData,
-        { margin: 10, scale: 1 },
-        (err) => {
-          expect(err).toBeUndefined();
-          expect(writeFileMock).toHaveBeenCalledWith(
-            fileName,
-            expect.any(String),
-            expect.any(Function),
-          );
-        },
-      );
+      await RendererSvg.renderToFile(fileName, sampleQrData, { margin: 10, scale: 1 }, (err) => {
+        expect(err).toBeUndefined();
+        expect(writeFileMock).toHaveBeenCalledWith(fileName, expect.any(String), expect.any(Function));
+      });
     });
 
     it("should fail if an error occurs during file save", async () => {
-      const writeFileMock = vi.fn((file, content, callback) =>
-        callback(new Error("File error")),
-      );
+      const writeFileMock = vi.fn((file, content, callback) => callback(new Error("File error")));
 
       vi.spyOn(fs, "writeFile").mockImplementation(writeFileMock);
 

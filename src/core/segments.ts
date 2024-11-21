@@ -9,11 +9,8 @@ import { CoreUtils } from "./utils";
 
 /**
  * Returns UTF8 byte length
- *
- * @param  {String} str Input string
- * @return {Number}     Number of byte
  */
-function getStringByteLength(str) {
+function getStringByteLength(str: string) {
   return unescape(encodeURIComponent(str)).length;
 }
 
@@ -51,11 +48,7 @@ function getSegments(regex, mode, str) {
  */
 function getSegmentsFromString(dataStr) {
   const numSegs = getSegments(Regex.NUMERIC, Mode.NUMERIC, dataStr);
-  const alphaNumSegs = getSegments(
-    Regex.ALPHANUMERIC,
-    Mode.ALPHANUMERIC,
-    dataStr,
-  );
+  const alphaNumSegs = getSegments(Regex.ALPHANUMERIC, Mode.ALPHANUMERIC, dataStr);
   let byteSegs;
   let kanjiSegs;
 
@@ -148,10 +141,7 @@ function buildNodes(segs) {
         ]);
         break;
       case Mode.ALPHANUMERIC:
-        nodes.push([
-          seg,
-          { data: seg.data, mode: Mode.BYTE, length: seg.length },
-        ]);
+        nodes.push([seg, { data: seg.data, mode: Mode.BYTE, length: seg.length }]);
         break;
       case Mode.KANJI:
         nodes.push([
@@ -211,19 +201,15 @@ function buildGraph(nodes, version) {
 
         if (table[prevNodeId] && table[prevNodeId].node.mode === node.mode) {
           graph[prevNodeId][key] =
-            getSegmentBitsLength(
-              table[prevNodeId].lastCount + node.length,
-              node.mode,
-            ) - getSegmentBitsLength(table[prevNodeId].lastCount, node.mode);
+            getSegmentBitsLength(table[prevNodeId].lastCount + node.length, node.mode) -
+            getSegmentBitsLength(table[prevNodeId].lastCount, node.mode);
 
           table[prevNodeId].lastCount += node.length;
         } else {
           if (table[prevNodeId]) table[prevNodeId].lastCount = node.length;
 
           graph[prevNodeId][key] =
-            getSegmentBitsLength(node.length, node.mode) +
-            4 +
-            Mode.getCharCountIndicator(node.mode, version); // switch cost
+            getSegmentBitsLength(node.length, node.mode) + 4 + Mode.getCharCountIndicator(node.mode, version); // switch cost
         }
       }
     }

@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import { describe, expect, it, vi } from "vitest";
-import { QRCode } from "../../../src/core/qrcode";
+import { QRex } from "../../../src/core/qrex";
 import { RendererUtf8 } from "../../../src/renderer/utf8";
 
 describe("RendererUtf8 interface", () => {
@@ -10,7 +10,7 @@ describe("RendererUtf8 interface", () => {
 });
 
 describe("RendererUtf8 render", () => {
-  const sampleQrData = QRCode.create("sample text", {
+  const sampleQrData = QRex.create("sample text", {
     version: 2,
     maskPattern: 0,
   });
@@ -34,7 +34,7 @@ describe("RendererUtf8 render", () => {
 });
 
 describe("RendererUtf8 renderToFile", () => {
-  const sampleQrData = QRCode.create("sample text", {
+  const sampleQrData = QRex.create("sample text", {
     version: 2,
     maskPattern: 0,
   });
@@ -46,11 +46,7 @@ describe("RendererUtf8 renderToFile", () => {
 
     await RendererUtf8.renderToFile(fileName, sampleQrData, (err) => {
       expect(err).toBeNull();
-      expect(fsStub).toHaveBeenCalledWith(
-        fileName,
-        expect.any(String),
-        expect.any(Function),
-      );
+      expect(fsStub).toHaveBeenCalledWith(fileName, expect.any(String), expect.any(Function));
     });
 
     fsStub.mockReset();
@@ -60,19 +56,10 @@ describe("RendererUtf8 renderToFile", () => {
     const fsStub = vi.spyOn(fs, "writeFile");
     fsStub.mockImplementationOnce((_, __, cb) => cb(null));
 
-    await RendererUtf8.renderToFile(
-      fileName,
-      sampleQrData,
-      { margin: 10, scale: 1 },
-      (err) => {
-        expect(err).toBeNull();
-        expect(fsStub).toHaveBeenCalledWith(
-          fileName,
-          expect.any(String),
-          expect.any(Function),
-        );
-      },
-    );
+    await RendererUtf8.renderToFile(fileName, sampleQrData, { margin: 10, scale: 1 }, (err) => {
+      expect(err).toBeNull();
+      expect(fsStub).toHaveBeenCalledWith(fileName, expect.any(String), expect.any(Function));
+    });
 
     fsStub.mockReset();
   });

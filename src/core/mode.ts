@@ -1,26 +1,27 @@
+import type { DataMode, ModeType } from "../types/qrex.type";
 import { Regex } from "./regex";
 import { VersionCheck } from "./version-check";
 
-const NUMERIC = {
-  id: "Numeric",
+const NUMERIC: DataMode = {
+  id: "numeric",
   bit: 1 << 0,
   ccBits: [10, 12, 14],
 };
 
-const ALPHANUMERIC = {
-  id: "Alphanumeric",
+const ALPHANUMERIC: DataMode = {
+  id: "alphanumeric",
   bit: 1 << 1,
   ccBits: [9, 11, 13],
 };
 
-const BYTE = {
-  id: "Byte",
+const BYTE: DataMode = {
+  id: "byte",
   bit: 1 << 2,
   ccBits: [8, 16, 16],
 };
 
-const KANJI = {
-  id: "Kanji",
+const KANJI: DataMode = {
+  id: "kanji",
   bit: 1 << 3,
   ccBits: [8, 10, 12],
 };
@@ -32,12 +33,8 @@ const MIXED = {
 /**
  * Returns the number of bits needed to store the data length
  * according to QR Code specifications.
- *
- * @param  {Mode}   mode    Data mode
- * @param  {Number} version QR Code version
- * @return {Number}         Number of bits
  */
-function getCharCountIndicator(mode, version) {
+function getCharCountIndicator(mode: DataMode, version: number): number {
   if (!mode.ccBits) throw new Error(`Invalid mode: ${mode}`);
 
   if (!VersionCheck.isValid(version)) {
@@ -51,11 +48,8 @@ function getCharCountIndicator(mode, version) {
 
 /**
  * Returns the most efficient mode to store the specified data
- *
- * @param  {String} dataStr Input data string
- * @return {Mode}           Best mode
  */
-function getBestModeForData(dataStr) {
+function getBestModeForData(dataStr: string) {
   if (Regex.testNumeric(dataStr)) return NUMERIC;
   if (Regex.testAlphanumeric(dataStr)) return ALPHANUMERIC;
   if (Regex.testKanji(dataStr)) return KANJI;
@@ -64,32 +58,24 @@ function getBestModeForData(dataStr) {
 
 /**
  * Return mode name as string
- *
- * @param {Mode} mode Mode object
- * @returns {String}  Mode name
  */
-function toString(mode) {
+function toString(mode: DataMode) {
   if (mode?.id) return mode.id;
   throw new Error("Invalid mode");
 }
 
 /**
  * Check if input param is a valid mode object
- *
- * @param   {Mode}    mode Mode object
- * @returns {Boolean} True if valid mode, false otherwise
  */
-function isValid(mode) {
-  return mode?.bit && mode.ccBits;
+function isValid(mode: DataMode) {
+  return Boolean(mode?.bit && mode.ccBits);
 }
 
 /**
  * Get mode object from its name
  *
- * @param   {String} string Mode name
- * @returns {Mode}          Mode object
  */
-function fromString(string) {
+function fromString(string: ModeType): DataMode {
   if (typeof string !== "string") {
     throw new Error("Param is not a string");
   }
@@ -113,18 +99,15 @@ function fromString(string) {
 /**
  * Returns mode from a value.
  * If value is not a valid mode, returns defaultValue
- *
- * @param  {Mode|String} value        Encoding mode
- * @param  {Mode}        defaultValue Fallback value
- * @return {Mode}                     Encoding mode
  */
-function from(value, defaultValue) {
-  if (isValid(value)) {
-    return value;
-  }
-
+function from(value: ModeType | DataMode, defaultValue: DataMode): DataMode {
   try {
-    return fromString(value);
+    if (typeof value === "string") {
+      return fromString(value);
+    }
+    if (isValid(value)) {
+      return value;
+    }
   } catch (e) {
     return defaultValue;
   }

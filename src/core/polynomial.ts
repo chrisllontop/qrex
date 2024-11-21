@@ -48,11 +48,8 @@ function mod(divident, divisor) {
 /**
  * Generate an irreducible generator polynomial of specified degree
  * (used by Reed-Solomon encoder)
- *
- * @param  {Number} degree Degree of the generator polynomial
- * @return {Uint8Array}    Buffer containing polynomial coefficients
  */
-function generateECPolynomial(degree) {
+function generateECPolynomial(degree: number) {
   let poly = new Uint8Array([1]);
   for (let i = 0; i < degree; i++) {
     poly = mul(poly, new Uint8Array([1, GaloisField.exp(i)]));

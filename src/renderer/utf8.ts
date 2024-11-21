@@ -1,4 +1,5 @@
 import * as fs from "node:fs";
+import type { QRData } from "../types/qrex.type";
 import { RendererUtils } from "./utils";
 
 const BLOCK_CHAR = {
@@ -22,7 +23,7 @@ function getBlockChar(top, bottom, blocks) {
   return blocks.WW;
 }
 
-function render(qrData, options, cb) {
+function render(qrData: QRData, options) {
   const opts = RendererUtils.getOptions(options);
   let blocks = BLOCK_CHAR;
   if (opts.color.dark.hex === "#ffffff" || opts.color.light.hex === "#000000") {
@@ -55,20 +56,12 @@ function render(qrData, options, cb) {
 
   output += hMargin.slice(0, -1);
 
-  if (typeof cb === "function") {
-    cb(null, output);
-  }
-
   return output;
 }
 
-function renderToFile(path, qrData, options, cb) {
-  if (typeof cb === "undefined") {
-    cb = options;
-    options = undefined;
-  }
+function renderToFile(path, qrData: QRData, options) {
   const utf8 = render(qrData, options);
-  fs.writeFile(path, utf8, cb);
+  fs.writeFileSync(path, utf8);
 }
 
 export const RendererUtf8 = {

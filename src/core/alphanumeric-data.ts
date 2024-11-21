@@ -1,3 +1,4 @@
+import type { DataMode } from "../types/qrex.type";
 import { Mode } from "./mode";
 
 /**
@@ -58,6 +59,8 @@ const ALPHA_NUM_CHARS = [
 ];
 
 export class AlphanumericData {
+  mode: DataMode;
+
   constructor(data) {
     this.mode = Mode.ALPHANUMERIC;
     this.data = data;

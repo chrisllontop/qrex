@@ -1,9 +1,11 @@
-const L = { bit: 1 };
-const M = { bit: 0 };
-const Q = { bit: 3 };
-const H = { bit: 2 };
+import type { ErrorCorrectionLevel, ErrorCorrectionLevelBit, ErrorCorrectionLevelString } from "../types/qrex.type";
 
-function fromString(string) {
+const L: ErrorCorrectionLevelBit = { bit: 1 };
+const M: ErrorCorrectionLevelBit = { bit: 0 };
+const Q: ErrorCorrectionLevelBit = { bit: 3 };
+const H: ErrorCorrectionLevelBit = { bit: 2 };
+
+function fromString(string: ErrorCorrectionLevelString) {
   if (typeof string !== "string") {
     throw new Error("Param is not a string");
   }
@@ -32,19 +34,19 @@ function fromString(string) {
   }
 }
 
-function isValid(level) {
-  return (
-    level && typeof level.bit !== "undefined" && level.bit >= 0 && level.bit < 4
-  );
+function isValid(level: ErrorCorrectionLevelBit) {
+  return level && typeof level?.bit !== "undefined" && level.bit >= 0 && level.bit < 4;
 }
 
-function from(value, defaultValue) {
-  if (isValid(value)) {
-    return value;
-  }
-
+function from(value: ErrorCorrectionLevel, defaultValue: ErrorCorrectionLevelBit): ErrorCorrectionLevelBit {
   try {
-    return fromString(value);
+    if (typeof value === "string") {
+      return fromString(value);
+    }
+
+    if (isValid(value)) {
+      return value;
+    }
   } catch (e) {
     return defaultValue;
   }

@@ -4,7 +4,11 @@
  * @param {Number} size Symbol size
  */
 export class BitMatrix {
-  constructor(size) {
+  size: number;
+  data: Uint8Array;
+  reservedBit: Uint8Array;
+
+  constructor(size: number) {
     if (!size || size < 1) {
       throw new Error("BitMatrix size must be defined and greater than 0");
     }
@@ -23,7 +27,7 @@ export class BitMatrix {
    * @param {Boolean} value
    * @param {Boolean} reserved
    */
-  set(row, col, value, reserved) {
+  set(row, col, value, reserved?) {
     const index = row * this.size + col;
     this.data[index] = value;
     if (reserved) this.reservedBit[index] = true;

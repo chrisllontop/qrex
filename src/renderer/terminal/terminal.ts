@@ -1,4 +1,6 @@
-function render(qrData, options, cb) {
+import type { QRData } from "../../types/qrex.type";
+
+function render(qrData: QRData, options) {
   const size = qrData.modules.size;
   const data = qrData.modules.data;
 
@@ -27,10 +29,6 @@ function render(qrData, options, cb) {
 
   output += `${hMargin}
 `;
-
-  if (typeof cb === "function") {
-    cb(null, output);
-  }
 
   return output;
 }

@@ -4,7 +4,7 @@
  * @param  {Number}  version QR Code version
  * @return {Boolean}         true if valid version, false otherwise
  */
-function isValid(version) {
+function isValid(version: number): boolean {
   return !Number.isNaN(version) && version >= 1 && version <= 40;
 }
 

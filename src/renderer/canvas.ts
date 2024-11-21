@@ -1,3 +1,4 @@
+import type { QRData } from "../types/qrex.type";
 import { RendererUtils } from "./utils";
 
 function clearCanvas(ctx, canvas, size) {
@@ -18,7 +19,7 @@ function getCanvasElement() {
   }
 }
 
-function render(qrData, canvas, options) {
+function render(qrData: QRData, canvas, options) {
   let opts = options;
   let canvasEl = canvas;
 
@@ -44,7 +45,7 @@ function render(qrData, canvas, options) {
   return canvasEl;
 }
 
-function renderToDataURL(qrData, canvas, options) {
+function renderToDataURL(qrData: QRData, canvas, options) {
   let opts = options;
 
   if (typeof opts === "undefined" && (!canvas || !canvas.getContext)) {

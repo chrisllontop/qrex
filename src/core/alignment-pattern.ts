@@ -24,7 +24,7 @@ import { CoreUtils } from "./utils";
  * @param  {Number} version QR Code version
  * @return {Array}          Array of coordinate
  */
-export function getRowColCoords(version) {
+export function getRowColCoords(version: number): number[] {
   if (version === 1) return [];
 
   const posCount = Math.floor(version / 7) + 2;
@@ -62,8 +62,8 @@ export function getRowColCoords(version) {
  * @param  {Number} version QR Code version
  * @return {Array}          Array of coordinates
  */
-function getPositions(version) {
-  const coords = [];
+function getPositions(version: number): Array<[number, number]> {
+  const coords: Array<[number, number]> = [];
   const pos = getRowColCoords(version);
   const posLength = pos.length;
 

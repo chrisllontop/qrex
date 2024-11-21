@@ -44,10 +44,9 @@ const mkCodePixel = (modules, size, x, y) => {
  * @param {number} y
  * @return {keyof palette}
  */
-const mkCode = (modules, size, x, y) =>
-  mkCodePixel(modules, size, x, y) + mkCodePixel(modules, size, x, y + 1);
+const mkCode = (modules, size, x, y) => mkCodePixel(modules, size, x, y) + mkCodePixel(modules, size, x, y + 1);
 
-function render(qrData, options, cb) {
+function render(qrData, options) {
   const size = qrData.modules.size;
   const data = qrData.modules.data;
 
@@ -71,10 +70,6 @@ ${lineSetup}`;
   }
 
   output += reset;
-
-  if (typeof cb === "function") {
-    cb(null, output);
-  }
 
   return output;
 }

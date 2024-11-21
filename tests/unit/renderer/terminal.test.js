@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { QRCode } from "../../../src/core/qrcode";
+import { QRex } from "../../../src/core/qrex";
 import { RendererTerminal } from "../../../src/renderer/terminal";
 
 describe("RendererTerminal interface", () => {
@@ -9,7 +9,7 @@ describe("RendererTerminal interface", () => {
 });
 
 describe("RendererTerminal render big", () => {
-  const sampleQrData = QRCode.create("sample text", {
+  const sampleQrData = QRex.create("sample text", {
     version: 2,
     maskPattern: 0,
   });
@@ -43,7 +43,7 @@ describe("RendererTerminal render big", () => {
 });
 
 describe("TerminalRenderer render small", () => {
-  const sampleQrData = QRCode.create("sample text", {
+  const sampleQrData = QRex.create("sample text", {
     version: 2,
     maskPattern: 0,
   });
@@ -71,11 +71,7 @@ describe("TerminalRenderer render small", () => {
 
   it("should not throw with options param and callback", () => {
     expect(() => {
-      str = RendererTerminal.render(
-        sampleQrData,
-        { margin: 10, scale: 1, small: true },
-        callback,
-      );
+      str = RendererTerminal.render(sampleQrData, { margin: 10, scale: 1, small: true }, callback);
     }).not.toThrow();
   });
 

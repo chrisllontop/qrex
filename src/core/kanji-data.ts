@@ -1,7 +1,10 @@
+import type { DataMode } from "../types/qrex.type";
 import { Mode } from "./mode";
 import { CoreUtils } from "./utils";
 
 export class KanjiData {
+  mode: DataMode;
+
   constructor(data) {
     this.mode = Mode.KANJI;
     this.data = data;

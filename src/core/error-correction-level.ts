@@ -6,10 +6,6 @@ const Q: ErrorCorrectionLevelBit = { bit: 3 };
 const H: ErrorCorrectionLevelBit = { bit: 2 };
 
 function fromString(string: ErrorCorrectionLevelString) {
-  if (typeof string !== "string") {
-    throw new Error("Param is not a string");
-  }
-
   const lcStr = string.toLowerCase();
 
   switch (lcStr) {

@@ -4,27 +4,27 @@ import { CoreUtils } from "./utils";
 
 export class KanjiData {
   mode: DataMode;
+  data: string;
 
-  constructor(data) {
+  constructor(data: string) {
     this.mode = Mode.KANJI;
     this.data = data;
   }
 
-  static getBitsLength(length) {
+  static getBitsLength(length: number): number {
     return length * 13;
   }
 
-  getLength() {
+  getLength(): number {
     return this.data.length;
   }
 
-  write(bitBuffer) {
-    let i;
+  getBitsLength(): number {
+    return KanjiData.getBitsLength(this.data.length);
+  }
 
-    // In the Shift JIS system, Kanji characters are represented by a two byte combination.
-    // These byte values are shifted from the JIS X 0208 values.
-    // JIS X 0208 gives details of the shift coded representation.
-    for (i = 0; i < this.data.length; i++) {
+  write(bitBuffer: any): void {
+    for (let i = 0; i < this.data.length; i++) {
       let value = CoreUtils.toSJIS(this.data[i]);
 
       // For characters with Shift JIS values from 0x8140 to 0x9FFC:
@@ -32,7 +32,7 @@ export class KanjiData {
         // Subtract 0x8140 from Shift JIS value
         value -= 0x8140;
 
-        // For characters with Shift JIS values from 0xE040 to 0xEBBF
+        // For characters with Shift JIS values from 0xE040 to 0xEBBF:
       } else if (value >= 0xe040 && value <= 0xebbf) {
         // Subtract 0xC140 from Shift JIS value
         value -= 0xc140;
@@ -52,7 +52,3 @@ Make sure your charset is UTF-8`,
     }
   }
 }
-
-KanjiData.prototype.getBitsLength = function getBitsLength() {
-  return KanjiData.getBitsLength(this.data.length);
-};

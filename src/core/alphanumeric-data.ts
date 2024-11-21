@@ -60,8 +60,9 @@ const ALPHA_NUM_CHARS = [
 
 export class AlphanumericData {
   mode: DataMode;
+  data: string;
 
-  constructor(data) {
+  constructor(data: string) {
     this.mode = Mode.ALPHANUMERIC;
     this.data = data;
   }
@@ -97,7 +98,7 @@ export class AlphanumericData {
     }
   }
 
-  static getBitsLength(length) {
+  static getBitsLength(length: number) {
     return 11 * Math.floor(length / 2) + 6 * (length % 2);
   }
 }

@@ -1,4 +1,5 @@
-let toSJISFunction;
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+let toSJISFunction: (arg0: any) => any;
 const CODEWORDS_COUNT = [
   0, // Not used
   26,

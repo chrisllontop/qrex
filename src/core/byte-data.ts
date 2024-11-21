@@ -3,8 +3,9 @@ import { Mode } from "./mode";
 
 export class ByteData {
   mode: DataMode;
+  data: Uint8Array;
 
-  constructor(data) {
+  constructor(data: Uint8Array | string) {
     this.mode = Mode.BYTE;
     if (typeof data === "string") {
       this.data = new TextEncoder().encode(data);
@@ -13,12 +14,16 @@ export class ByteData {
     }
   }
 
-  static getBitsLength(length) {
+  static getBitsLength(length: number) {
     return length * 8;
   }
 
   getLength() {
     return this.data.length;
+  }
+
+  getBitsLength() {
+    return ByteData.getBitsLength(this.data.length);
   }
 
   write(bitBuffer) {
@@ -27,7 +32,3 @@ export class ByteData {
     }
   }
 }
-
-ByteData.prototype.getBitsLength = function getBitsLength() {
-  return ByteData.getBitsLength(this.data.length);
-};

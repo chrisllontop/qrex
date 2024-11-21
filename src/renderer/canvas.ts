@@ -1,15 +1,23 @@
-import type { QRData } from "../types/qrex.type";
+import type { QRData, QRexOptions } from "../types/qrex.type";
 import { RendererUtils } from "./utils";
 
 export class RendererCanvas {
-  private clearCanvas(ctx, canvas, size): void {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  private readonly canvas: HTMLCanvasElement;
 
-    if (!canvas.style) canvas.style = {};
-    canvas.height = size;
-    canvas.width = size;
-    canvas.style.height = `${size}px`;
-    canvas.style.width = `${size}px`;
+  constructor(canvas?: HTMLCanvasElement) {
+    this.canvas = canvas ?? this.getCanvasElement();
+  }
+
+  private clearCanvas(ctx: CanvasRenderingContext2D, size: number): void {
+    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    if (!this.canvas.style) {
+      this.canvas.style = {};
+    }
+    this.canvas.height = size;
+    this.canvas.width = size;
+    this.canvas.style.height = `${size}px`;
+    this.canvas.style.width = `${size}px`;
   }
 
   private getCanvasElement(): HTMLCanvasElement {
@@ -20,46 +28,28 @@ export class RendererCanvas {
     }
   }
 
-  public render(qrData: QRData, canvas, options): HTMLCanvasElement {
+  public render(qrData: QRData, options?: QRexOptions): HTMLCanvasElement {
     let opts = options;
-    let canvasEl = canvas;
-
-    if (typeof opts === "undefined" && (!canvas || !canvas.getContext)) {
-      opts = canvas;
-      canvas = undefined;
-    }
-
-    if (!canvas) {
-      canvasEl = this.getCanvasElement();
-    }
+    const canvasEl = this.canvas;
 
     opts = RendererUtils.getOptions(opts);
     const size = RendererUtils.getImageWidth(qrData.modules.size, opts);
 
-    const ctx = canvasEl.getContext("2d");
-    const image = ctx.createImageData(size, size);
+    const ctx = canvasEl.getContext("2d")!;
+    const image = ctx!.createImageData(size, size);
     RendererUtils.qrToImageData(image.data, qrData, opts);
 
-    this.clearCanvas(ctx, canvasEl, size);
-    ctx.putImageData(image, 0, 0);
+    this.clearCanvas(ctx, size);
+    ctx!.putImageData(image, 0, 0);
 
     return canvasEl;
   }
 
-  public renderToDataURL(qrData: QRData, canvas, options): string {
-    let opts = options;
+  public renderToDataURL(qrData: QRData, options?: QRexOptions): string {
+    const canvasEl = this.render(qrData, options);
 
-    if (typeof opts === "undefined" && (!canvas || !canvas.getContext)) {
-      opts = canvas;
-      canvas = undefined;
-    }
-
-    if (!opts) opts = {};
-
-    const canvasEl = this.render(qrData, canvas, opts);
-
-    const type = opts.type || "image/png";
-    const rendererOpts = opts.rendererOpts || {};
+    const type = options?.type || "image/png";
+    const rendererOpts = options?.rendererOpts || {};
 
     return canvasEl.toDataURL(type, rendererOpts.quality);
   }

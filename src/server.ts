@@ -1,35 +1,19 @@
 import { toCanvas as browserToCanvas } from "./browser";
-import { QRex as QRexCore } from "./core/qrex";
+import { QRexBase } from "./qrex.base";
 import { RendererPng } from "./renderer/png";
 import { RendererSvg } from "./renderer/svg";
 import { RendererTerminal } from "./renderer/terminal";
 import { RendererUtf8 } from "./renderer/utf8";
-import type { QRexOptions, QrContent, RendererType } from "./types/qrex.type";
+import type { RendererType } from "./types/qrex.type";
 
-function checkParams(text: QrContent, opts?: QRexOptions) {
-  if (typeof text === "undefined") {
-    throw new Error("String required as first argument");
+export class QRex extends QRexBase {
+  private render(renderFunc) {
+    const data = this.create();
+    return renderFunc(data, this.opts);
   }
-  // TODO - Add opts validation
-}
 
-function getTypeFromFilename(path: string): RendererType {
-  return <RendererType>path.slice(((path.lastIndexOf(".") - 1) >>> 0) + 2).toLowerCase();
-}
-
-function render(renderFunc, text: QrContent, opts?: QRexOptions) {
-  const data = QRexCore.create(text, opts);
-  return renderFunc(data, opts);
-}
-
-export class QRex {
-  private readonly opts?: QRexOptions;
-  private readonly data: QrContent;
-
-  constructor(data: QrContent, opts?: QRexOptions) {
-    this.data = data;
-    this.opts = opts;
-    checkParams(data, opts);
+  private getTypeFromFilename(path: string): RendererType {
+    return <RendererType>path.slice(((path.lastIndexOf(".") - 1) >>> 0) + 2).toLowerCase();
   }
 
   private getRendererFromType(type?: RendererType) {
@@ -59,46 +43,42 @@ export class QRex {
     }
   }
 
-  create() {
-    return QRexCore.create(this.data, this.opts);
-  }
-
-  toString() {
+  public toString() {
     const renderer = this.getStringRendererFromType(this.opts?.type);
-    return render(renderer.render, this.data, this.opts);
+    return this.render(renderer.render);
   }
 
-  toDataURL() {
+  public toDataURL() {
     const renderer = this.getRendererFromType(this.opts?.type);
     if ("renderToDataURL" in renderer) {
-      return render(renderer.renderToDataURL, this.data, this.opts);
+      return this.render(renderer.renderToDataURL);
     }
     throw new Error("Data URL is not supported for this renderer");
   }
 
-  toBuffer() {
+  public toBuffer() {
     const renderer = this.getRendererFromType(this.opts?.type);
     if ("renderToBuffer" in renderer) {
-      return render(renderer.renderToBuffer, this.data, this.opts);
+      return this.render(renderer.renderToBuffer);
     }
     throw new Error("Buffer is not supported for this renderer");
   }
 
-  toFile(path: string) {
-    const type = this.opts?.type || getTypeFromFilename(path);
+  public toFile(path: string) {
+    const type = this.opts?.type || this.getTypeFromFilename(path);
     const renderer = this.getRendererFromType(type);
     if ("renderToFile" in renderer) {
       const renderToFile = renderer.renderToFile.bind(null, path);
-      return render(renderToFile, this.data, this.opts);
+      return this.render(renderToFile);
     }
     throw new Error("File is not supported for this renderer");
   }
 
-  toFileStream(stream) {
+  public toFileStream(stream) {
     const renderer = this.getRendererFromType("png") as RendererPng;
     const renderToFileStream = renderer.renderToFileStream.bind(null, stream);
 
-    render(renderToFileStream, this.data, this.opts);
+    this.render(renderToFileStream);
   }
 
   static toCanvas = browserToCanvas;

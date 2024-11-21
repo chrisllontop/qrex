@@ -24,6 +24,9 @@ export class KanjiData {
   }
 
   write(bitBuffer: any): void {
+    // In the Shift JIS system, Kanji characters are represented by a two byte combination.
+    // These byte values are shifted from the JIS X 0208 values.
+    // JIS X 0208 gives details of the shift coded representation.
     for (let i = 0; i < this.data.length; i++) {
       let value = CoreUtils.toSJIS(this.data[i]);
 

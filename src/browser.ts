@@ -1,71 +1,38 @@
-import { QRex } from "./core/qrex";
+import { QRexBase } from "./qrex.base";
 import { RendererCanvas } from "./renderer/canvas";
 import { RendererSvgTag } from "./renderer/svg-tag";
-import { canPromise } from "./utils/can-promise";
+import type { QRData, QRexOptions, QrContent } from "./types/qrex.type";
 
-function renderCanvas(renderFunc, canvas, text, opts, cb) {
-  const args = [].slice.call(arguments, 1);
-  const argsNum = args.length;
-  const isLastArgCb = typeof args[argsNum - 1] === "function";
+export class QRex extends QRexBase {
+  private readonly canvas?: HTMLCanvasElement;
+  private readonly rendererCanvas = new RendererCanvas();
+  private readonly rendererSvgTag = new RendererSvgTag();
 
-  if (!isLastArgCb && !canPromise()) {
-    throw new Error("Callback required as last argument");
+  constructor(data: QrContent, opts?: QRexOptions, canvas?: HTMLCanvasElement) {
+    super(data, opts);
+    this.canvas = canvas;
   }
 
-  if (isLastArgCb) {
-    if (argsNum < 2) {
-      throw new Error("Too few arguments provided");
+  private async renderCanvas(renderFunc) {
+    try {
+      const qrData = this.create();
+      return renderFunc(qrData, this.canvas, this.opts);
+    } catch (e) {
+      return Promise.reject(e);
     }
-
-    if (argsNum === 2) {
-      cb = text;
-      text = canvas;
-      canvas = opts = undefined;
-    } else if (argsNum === 3) {
-      if (canvas.getContext && typeof cb === "undefined") {
-        cb = opts;
-        opts = undefined;
-      } else {
-        cb = opts;
-        opts = text;
-        text = canvas;
-        canvas = undefined;
-      }
-    }
-  } else {
-    if (argsNum < 1) {
-      throw new Error("Too few arguments provided");
-    }
-
-    if (argsNum === 1) {
-      text = canvas;
-      canvas = opts = undefined;
-    } else if (argsNum === 2 && !canvas.getContext) {
-      opts = text;
-      text = canvas;
-      canvas = undefined;
-    }
-
-    return new Promise((resolve, reject) => {
-      try {
-        const data = create(text, opts);
-        resolve(renderFunc(data, canvas, opts));
-      } catch (e) {
-        reject(e);
-      }
-    });
   }
 
-  try {
-    const data = create(text, opts);
-    cb(null, renderFunc(data, canvas, opts));
-  } catch (e) {
-    cb(e);
+  public toCanvas() {
+    return this.renderCanvas(this.rendererCanvas.render);
+  }
+
+  public toDataURL() {
+    return this.renderCanvas(this.rendererCanvas.renderToDataURL);
+  }
+
+  public toString() {
+    return this.renderCanvas((data: QRData, _: HTMLCanvasElement, opts: QRexOptions) =>
+      this.rendererSvgTag.render(data, opts),
+    );
   }
 }
-
-export const create = QRex.create;
-export const toCanvas = renderCanvas.bind(null, RendererCanvas.render);
-export const toDataURL = renderCanvas.bind(null, RendererCanvas.renderToDataURL);
-
-export const toString = renderCanvas.bind(null, (data, _, opts) => RendererSvgTag.render(data, opts));

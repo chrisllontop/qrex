@@ -1,4 +1,3 @@
-import { toCanvas as browserToCanvas } from "./browser";
 import { QRexBase } from "./qrex.base";
 import { RendererPng } from "./renderer/png";
 import { RendererSvg } from "./renderer/svg";
@@ -7,11 +6,6 @@ import { RendererUtf8 } from "./renderer/utf8";
 import type { RendererType } from "./types/qrex.type";
 
 export class QRex extends QRexBase {
-  private render(renderFunc) {
-    const data = this.create();
-    return renderFunc(data, this.opts);
-  }
-
   private getTypeFromFilename(path: string): RendererType {
     return <RendererType>path.slice(((path.lastIndexOf(".") - 1) >>> 0) + 2).toLowerCase();
   }
@@ -80,6 +74,4 @@ export class QRex extends QRexBase {
 
     this.render(renderToFileStream);
   }
-
-  static toCanvas = browserToCanvas;
 }

@@ -1,4 +1,5 @@
 import { find_path } from "dijkstrajs";
+import type { DataMode, Segment } from "../types/qrex.type";
 import { AlphanumericData } from "./alphanumeric-data";
 import { ByteData } from "./byte-data";
 import { KanjiData } from "./kanji-data";
@@ -17,15 +18,10 @@ function getStringByteLength(str: string) {
 /**
  * Get a list of segments of the specified mode
  * from a string
- *
- * @param regex
- * @param  {Mode}   mode Segment mode
- * @param  {String} str  String to process
- * @return {Array}       Array of object with segments data
  */
-function getSegments(regex, mode, str) {
-  const segments = [];
-  let result;
+function getSegments(regex: RegExp, mode: DataMode, str: string) {
+  const segments: Segment[] = [];
+  let result: RegExpExecArray | null;
 
   while ((result = regex.exec(str)) !== null) {
     segments.push({
@@ -42,15 +38,12 @@ function getSegments(regex, mode, str) {
 /**
  * Extracts a series of segments with the appropriate
  * modes from a string
- *
- * @param  {String} dataStr Input string
- * @return {Array}          Array of object with segments data
  */
-function getSegmentsFromString(dataStr) {
+function getSegmentsFromString(dataStr: string): Omit<Segment, "index">[] {
   const numSegs = getSegments(Regex.NUMERIC, Mode.NUMERIC, dataStr);
   const alphaNumSegs = getSegments(Regex.ALPHANUMERIC, Mode.ALPHANUMERIC, dataStr);
-  let byteSegs;
-  let kanjiSegs;
+  let byteSegs: Segment[];
+  let kanjiSegs: Segment[];
 
   if (CoreUtils.isKanjiModeEnabled()) {
     byteSegs = getSegments(Regex.BYTE, Mode.BYTE, dataStr);
@@ -74,12 +67,8 @@ function getSegmentsFromString(dataStr) {
 /**
  * Returns how many bits are needed to encode a string of
  * specified length with the specified mode
- *
- * @param  {Number} length String length
- * @param  {Mode} mode     Segment mode
- * @return {Number}        Bit length
  */
-function getSegmentBitsLength(length, mode) {
+function getSegmentBitsLength(length: number, mode: DataMode) {
   switch (mode) {
     case Mode.NUMERIC:
       return NumericData.getBitsLength(length);
@@ -179,7 +168,7 @@ function buildNodes(segs) {
  * @param  {Number} version QR Code version
  * @return {Object}         Graph of all possible segments
  */
-function buildGraph(nodes, version) {
+function buildGraph(nodes, version: number) {
   const table = {};
   const graph = { start: {} };
   let prevNodeIds = ["start"];
@@ -233,7 +222,7 @@ function buildGraph(nodes, version) {
  * @return {Segment}                 Segment
  */
 function buildSingleSegment(data, modesHint) {
-  let mode;
+  let mode: DataMode;
   const bestMode = Mode.getBestModeForData(data);
 
   mode = Mode.from(modesHint, bestMode);
@@ -296,13 +285,9 @@ function fromArray(array) {
 /**
  * Builds an optimized sequence of segments from a string,
  * which will produce the shortest possible bitstream.
- *
- * @param  {String} data    Input string
- * @param  {Number} version QR Code version
- * @return {Array}          Array of segments
  */
-function fromString(data, version) {
-  const segs = getSegmentsFromString(data, CoreUtils.isKanjiModeEnabled());
+function fromString(data: string, version: number) {
+  const segs = getSegmentsFromString(data);
 
   const nodes = buildNodes(segs);
   const graph = buildGraph(nodes, version);

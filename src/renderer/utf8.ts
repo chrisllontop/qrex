@@ -17,7 +17,7 @@ export class RendererUtf8 {
     WB: "▀",
   };
 
-  private getBlockChar(top: boolean, bottom: boolean, blocks): string {
+  private getBlockChar(top: number, bottom: number, blocks): string {
     if (top && bottom) return blocks.BB;
     if (top && !bottom) return blocks.BW;
     if (!top && bottom) return blocks.WB;

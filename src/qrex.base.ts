@@ -1,5 +1,5 @@
 import { QRex as QRexCore } from "./core/qrex";
-import type { QRexOptions, QrContent } from "./types/qrex.type";
+import type { QRexOptions, QrContent, RenderFunctionBase } from "./types/qrex.type";
 
 export abstract class QRexBase {
   protected readonly opts?: QRexOptions;
@@ -20,5 +20,10 @@ export abstract class QRexBase {
 
   public create() {
     return QRexCore.create(this.data, this.opts);
+  }
+
+  protected render<T>(renderFunc: RenderFunctionBase<T>): T {
+    const data = this.create();
+    return renderFunc(data, this.opts);
   }
 }

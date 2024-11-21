@@ -24,7 +24,7 @@ export type QRData = {
   version: number;
   errorCorrectionLevel: ErrorCorrectionLevelBit;
   maskPattern: MaskPatternType;
-  segments: any;
+  segments: Segment[];
 };
 
 export type ErrorCorrectionLevelBit = {
@@ -50,3 +50,12 @@ export type DataMode = {
   /** Number of bits for the character count indicator */
   ccBits: [number, number, number];
 };
+
+export type Segment = {
+  data: string;
+  index: number;
+  mode: DataMode;
+  length: number;
+};
+
+export type RenderFunctionBase<T> = (data: QRData, opts?: QRexOptions) => T;

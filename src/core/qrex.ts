@@ -1,4 +1,4 @@
-import type { ErrorCorrectionLevelBit, MaskPatternType } from "../types/qrex.type";
+import type { ErrorCorrectionLevelBit, MaskPatternType, Segment } from "../types/qrex.type";
 import type { QRData, QRexOptions, QrContent } from "../types/qrex.type";
 import { AlignmentPattern } from "./alignment-pattern";
 import { BitBuffer } from "./bit-buffer";
@@ -332,7 +332,7 @@ function createSymbol(
   errorCorrectionLevel: ErrorCorrectionLevelBit,
   maskPattern: MaskPatternType,
 ): QRData {
-  let segments;
+  let segments: Segment[];
 
   if (Array.isArray(data)) {
     segments = Segments.fromArray(data);

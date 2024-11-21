@@ -27,13 +27,9 @@
       },
       "style": {
         "noParameterAssign": "off",
-        "noArguments": "off"
+        "noArguments": "off",
+        "noNonNullAssertion": "off"
       }
-    }
-  },
-  "javascript": {
-    "formatter": {
-      "quoteStyle": "double"
     }
   }
 }

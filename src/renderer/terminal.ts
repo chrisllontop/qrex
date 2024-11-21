@@ -2,13 +2,14 @@ import type { QRData } from "../types/qrex.type";
 import { Terminal } from "./terminal/terminal";
 import { TerminalSmall } from "./terminal/terminal-small";
 
-function render(qrData: QRData, options) {
-  if (options?.small) {
-    return TerminalSmall.render(qrData, options);
-  }
-  return Terminal.render(qrData, options);
-}
+export class RendererTerminal {
+  private terminal = new Terminal();
+  private terminalSmall = new TerminalSmall();
 
-export const RendererTerminal = {
-  render,
-};
+  public render(qrData: QRData, options): string {
+    if (options?.small) {
+      return this.terminalSmall.render(qrData, options);
+    }
+    return this.terminal.render(qrData, options);
+  }
+}

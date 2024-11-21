@@ -1,4 +1,4 @@
-import type { ErrorCorrectionLevel, ErrorCorrectionLevelString } from "../types/qrex.type";
+import type { DataMode, ErrorCorrectionLevel, ErrorCorrectionLevelBit } from "../types/qrex.type";
 import { ECCode } from "./error-correction-code";
 import { ECLevel } from "./error-correction-level";
 import { Mode } from "./mode";
@@ -9,22 +9,22 @@ import { VersionCheck } from "./version-check";
 const G18 = (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0);
 const G18_BCH = CoreUtils.getBCHDigit(G18);
 
-function getBestVersionForDataLength(mode, length, errorCorrectionLevel) {
+function getBestVersionForDataLength(mode: DataMode, length: number, errorCorrectionLevel: ErrorCorrectionLevelBit) {
   for (let currentVersion = 1; currentVersion <= 40; currentVersion++) {
     if (length <= getCapacity(currentVersion, errorCorrectionLevel, mode)) {
       return currentVersion;
     }
   }
 
-  return undefined;
+  throw new Error("Data is too long to fit in a QR Code");
 }
 
-function getReservedBitsCount(mode, version) {
+function getReservedBitsCount(mode: DataMode, version: number) {
   // Character count indicator + mode indicator bits
   return Mode.getCharCountIndicator(mode, version) + 4;
 }
 
-function getTotalBitsFromDataArray(segments, version) {
+function getTotalBitsFromDataArray(segments, version: number) {
   let totalBits = 0;
 
   for (const data of segments) {
@@ -35,7 +35,7 @@ function getTotalBitsFromDataArray(segments, version) {
   return totalBits;
 }
 
-function getBestVersionForMixedData(segments, errorCorrectionLevel) {
+function getBestVersionForMixedData(segments, errorCorrectionLevel: ErrorCorrectionLevelBit) {
   for (let currentVersion = 1; currentVersion <= 40; currentVersion++) {
     const length = getTotalBitsFromDataArray(segments, currentVersion);
     if (length <= getCapacity(currentVersion, errorCorrectionLevel, Mode.MIXED)) {
@@ -61,13 +61,8 @@ function from(value: number) {
 /**
  * Returns how much data can be stored with the specified QR code version
  * and error correction level
- *
- * @param  {Number} version              QR Code version (1-40)
- * @param  {Number} errorCorrectionLevel Error correction level
- * @param  {Mode}   mode                 Data mode
- * @return {Number}                      Quantity of storable data
  */
-function getCapacity(version, errorCorrectionLevel, mode) {
+function getCapacity(version: number, errorCorrectionLevel: ErrorCorrectionLevelBit, mode: DataMode) {
   if (!VersionCheck.isValid(version)) {
     throw new Error("Invalid QR Code version");
   }
@@ -105,13 +100,8 @@ function getCapacity(version, errorCorrectionLevel, mode) {
 
 /**
  * Returns the minimum version needed to contain the amount of data
- *
- * @param  {Segment} data                    Segment of data
- * @param  {Number} [errorCorrectionLevel=H] Error correction level
- * @param  {Mode} mode                       Data mode
- * @return {Number}                          QR Code version
  */
-function getBestVersionForData(data, errorCorrectionLevel: ErrorCorrectionLevel) {
+function getBestVersionForData(data, errorCorrectionLevel: ErrorCorrectionLevel): number {
   let seg;
 
   const ecl = ECLevel.from(errorCorrectionLevel, ECLevel.M);
@@ -139,11 +129,8 @@ function getBestVersionForData(data, errorCorrectionLevel: ErrorCorrectionLevel)
  * The version information is included in QR Code symbols of version 7 or larger.
  * It consists of an 18-bit sequence containing 6 data bits,
  * with 12 error correction bits calculated using the (18, 6) Golay code.
- *
- * @param  {Number} version QR Code version
- * @return {Number}         Encoded version info bits
  */
-function getEncodedBits(version) {
+function getEncodedBits(version: number) {
   if (!VersionCheck.isValid(version) || version < 7) {
     throw new Error("Invalid QR Code version");
   }

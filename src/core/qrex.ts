@@ -107,7 +107,11 @@ function setupVersionInfo(matrix: BitMatrix, version: number) {
 /**
  * Add format info bits to matrix
  */
-function setupFormatInfo(matrix: BitMatrix, errorCorrectionLevel: any, maskPattern: MaskPatternType) {
+function setupFormatInfo(
+  matrix: BitMatrix,
+  errorCorrectionLevel: ErrorCorrectionLevelBit,
+  maskPattern: MaskPatternType,
+) {
   const size = matrix.size;
   const bits = FormatInfo.getEncodedBits(errorCorrectionLevel, maskPattern);
   let i: number;
@@ -185,7 +189,7 @@ function setupData(matrix: BitMatrix, data: Uint8Array) {
 /**
  * Create encoded codewords from data input
  */
-function createData(version: number, errorCorrectionLevel, segments) {
+function createData(version: number, errorCorrectionLevel: ErrorCorrectionLevelBit, segments) {
   // Prepare data buffer
   const buffer = new BitBuffer();
 
@@ -245,7 +249,7 @@ function createData(version: number, errorCorrectionLevel, segments) {
  * Encode input data with Reed-Solomon and return codewords with
  * relative error correction bits
  */
-function createCodewords(bitBuffer: BitBuffer, version: number, errorCorrectionLevel) {
+function createCodewords(bitBuffer: BitBuffer, version: number, errorCorrectionLevel: ErrorCorrectionLevelBit) {
   // Total codewords for this QR code version (Data + Error correction)
   const totalCodewords = CoreUtils.getSymbolTotalCodewords(version);
 

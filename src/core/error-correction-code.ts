@@ -36,7 +36,7 @@ function getBlocksCount(version: number, errorCorrectionLevel: ErrorCorrectionLe
     case ECLevel.H:
       return EC_BLOCKS_TABLE[(version - 1) * 4 + 3];
     default:
-      return undefined;
+      throw new Error("Invalid error correction level");
   }
 }
 
@@ -55,7 +55,7 @@ function getTotalCodewordsCount(version: number, errorCorrectionLevel: ErrorCorr
     case ECLevel.H:
       return EC_CODEWORDS_TABLE[(version - 1) * 4 + 3];
     default:
-      return undefined;
+      throw new Error("Invalid error correction level");
   }
 }
 

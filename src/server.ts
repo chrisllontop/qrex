@@ -87,9 +87,11 @@ export class QRex {
   toFile(path: string) {
     const type = this.opts?.type || getTypeFromFilename(path);
     const renderer = this.getRendererFromType(type);
-    const renderToFile = renderer.renderToFile.bind(null, path);
-
-    return render(renderToFile, this.data, this.opts);
+    if ("renderToFile" in renderer) {
+      const renderToFile = renderer.renderToFile.bind(null, path);
+      return render(renderToFile, this.data, this.opts);
+    }
+    throw new Error("File is not supported for this renderer");
   }
 
   toFileStream(stream) {

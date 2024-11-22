@@ -39,7 +39,7 @@ function getSegments(regex: RegExp, mode: DataMode, str: string) {
  * Extracts a series of segments with the appropriate
  * modes from a string
  */
-function getSegmentsFromString(dataStr: string): Omit<Segment, "index">[] {
+function getSegmentsFromString(dataStr: string) {
   const numSegs = getSegments(Regex.NUMERIC, Mode.NUMERIC, dataStr);
   const alphaNumSegs = getSegments(Regex.ALPHANUMERIC, Mode.ALPHANUMERIC, dataStr);
   let byteSegs: Segment[];
@@ -55,13 +55,12 @@ function getSegmentsFromString(dataStr: string): Omit<Segment, "index">[] {
 
   const segs = numSegs.concat(alphaNumSegs, byteSegs, kanjiSegs);
 
-  return segs
-    .sort((s1, s2) => s1.index - s2.index)
-    .map((obj) => ({
-      data: obj.data,
-      mode: obj.mode,
-      length: obj.length,
-    }));
+  return segs.sort((s1, s2) => s1.index - s2.index);
+  // .map((obj) => ({
+  //   data: obj.data,
+  //   mode: obj.mode,
+  //   length: obj.length,
+  // }));
 }
 
 /**
@@ -307,12 +306,9 @@ function fromString(data: string, version: number) {
  * The produced segments are far from being optimized.
  * The output of this function is only used to estimate a QR Code version
  * which may contain the data.
- *
- * @param  {string} data Input string
- * @return {Array}       Array of segments
  */
-function rawSplit(data) {
-  return fromArray(getSegmentsFromString(data, CoreUtils.isKanjiModeEnabled()));
+function rawSplit(data: string) {
+  return fromArray(getSegmentsFromString(data));
 }
 
 export const Segments = {

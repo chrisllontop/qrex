@@ -186,7 +186,7 @@ function getMaskAt(maskPattern, i, j) {
  * @param  {Number}    pattern Pattern reference number
  * @param  {BitMatrix} data    BitMatrix data
  */
-function applyMask(pattern, data) {
+function applyMask(pattern: MaskPatternType, data: BitMatrix) {
   const size = data.size;
 
   for (let col = 0; col < size; col++) {
@@ -207,13 +207,13 @@ function getBestMask(data: BitMatrix, setupFormatFunc) {
 
   for (let p = 0; p < numPatterns; p++) {
     setupFormatFunc(p);
-    applyMask(p, data);
+    applyMask(p as MaskPatternType, data);
 
     // Calculate penalty
     const penalty = getPenaltyN1(data) + getPenaltyN2(data) + getPenaltyN3(data) + getPenaltyN4(data);
 
     // Undo previously applied mask
-    applyMask(p, data);
+    applyMask(p as MaskPatternType, data);
 
     if (penalty < lowerPenalty) {
       lowerPenalty = penalty;

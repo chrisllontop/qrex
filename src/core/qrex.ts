@@ -328,9 +328,9 @@ function createCodewords(bitBuffer: BitBuffer, version: number, errorCorrectionL
  */
 function createSymbol(
   data: QrContent,
-  version?: number,
   errorCorrectionLevel: ErrorCorrectionLevelBit,
-  maskPattern: MaskPatternType,
+  maskPattern?: MaskPatternType,
+  version?: number,
 ): QRData {
   let segments: Segment[];
 
@@ -405,16 +405,16 @@ Minimum version required to store current data is: ${bestVersion}.
   }
 
   // Apply mask pattern
-  MaskPattern.applyMask(maskPattern, modules);
+  MaskPattern.applyMask(maskPattern!, modules);
 
   // Replace format info bits with correct values
-  setupFormatInfo(modules, errorCorrectionLevel, maskPattern);
+  setupFormatInfo(modules, errorCorrectionLevel, maskPattern!);
 
   return {
     modules: modules,
     version: version,
     errorCorrectionLevel: errorCorrectionLevel,
-    maskPattern: maskPattern,
+    maskPattern: maskPattern!,
     segments: segments,
   };
 }
@@ -428,8 +428,8 @@ function create(data: QrContent, options?: QRexOptions) {
   }
 
   let errorCorrectionLevel = ECLevel.M;
-  let version: number;
-  let mask: MaskPatternType;
+  let version: number | undefined;
+  let mask: MaskPatternType | undefined;
 
   if (options) {
     // Use higher error correction level as default
@@ -442,7 +442,7 @@ function create(data: QrContent, options?: QRexOptions) {
     }
   }
 
-  return createSymbol(data, version, errorCorrectionLevel, mask);
+  return createSymbol(data, errorCorrectionLevel, mask, version);
 }
 
 export const QRex = {

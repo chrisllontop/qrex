@@ -43,19 +43,14 @@ describe("Utils getOptions", () => {
   });
 
   it("should return correct colors value from strings", () => {
-    expect(
-      RendererUtils.getOptions({ color: { dark: "#fff", light: "#000000" } })
-        .color,
-    ).toEqual({
+    expect(RendererUtils.getOptions({ color: { dark: "#fff", light: "#000000" } }).color).toEqual({
       dark: { r: 255, g: 255, b: 255, a: 255, hex: "#ffffff" },
       light: { r: 0, g: 0, b: 0, a: 255, hex: "#000000" },
     });
   });
 
   it("should return correct colors value from numbers", () => {
-    expect(
-      RendererUtils.getOptions({ color: { dark: 111, light: 999 } }).color,
-    ).toEqual({
+    expect(RendererUtils.getOptions({ color: { dark: 111, light: 999 } }).color).toEqual({
       dark: { r: 17, g: 17, b: 17, a: 255, hex: "#111111" },
       light: { r: 153, g: 153, b: 153, a: 255, hex: "#999999" },
     });
@@ -82,15 +77,11 @@ describe("Utils getScale", () => {
   });
 
   it("should calculate correct scale from width and margin", () => {
-    expect(RendererUtils.getScale(symbolSize, { width: 50, margin: 2 })).toBe(
-      2,
-    );
+    expect(RendererUtils.getScale(symbolSize, { width: 50, margin: 2 })).toBe(2);
   });
 
   it("should return default scale if width is too small to contain the symbol", () => {
-    expect(
-      RendererUtils.getScale(symbolSize, { width: 21, margin: 2, scale: 4 }),
-    ).toBe(4);
+    expect(RendererUtils.getScale(symbolSize, { width: 21, margin: 2, scale: 4 })).toBe(4);
   });
 });
 
@@ -98,15 +89,11 @@ describe("Utils getImageWidth", () => {
   const symbolSize = 21;
 
   it("should return correct width value", () => {
-    expect(
-      RendererUtils.getImageWidth(symbolSize, { scale: 5, margin: 0 }),
-    ).toBe(105);
+    expect(RendererUtils.getImageWidth(symbolSize, { scale: 5, margin: 0 })).toBe(105);
   });
 
   it("should return specified width value", () => {
-    expect(
-      RendererUtils.getImageWidth(symbolSize, { width: 250, margin: 2 }),
-    ).toBe(250);
+    expect(RendererUtils.getImageWidth(symbolSize, { width: 250, margin: 2 })).toBe(250);
   });
 
   it("should ignore width option if too small to contain the symbol", () => {

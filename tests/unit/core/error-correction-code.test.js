@@ -11,19 +11,14 @@ describe("Error Correction Codewords", () => {
   it("should return correct number of error correction codewords", () => {
     for (let v = 1; v <= 40; v++) {
       const totalCodewords = CoreUtils.getSymbolTotalCodewords(v);
-      const reservedByte = Math.ceil(
-        (Mode.getCharCountIndicator(Mode.BYTE, v) + 4) / 8,
-      );
+      const reservedByte = Math.ceil((Mode.getCharCountIndicator(Mode.BYTE, v) + 4) / 8);
 
       for (let l = 0; l < levels.length; l++) {
-        const dataCodewords =
-          Version.getCapacity(v, levels[l], Mode.BYTE) + reservedByte;
+        const dataCodewords = Version.getCapacity(v, levels[l], Mode.BYTE) + reservedByte;
 
         const expectedCodewords = totalCodewords - dataCodewords;
 
-        expect(ECCode.getTotalCodewordsCount(v, levels[l])).toBe(
-          expectedCodewords,
-        );
+        expect(ECCode.getTotalCodewordsCount(v, levels[l])).toBe(expectedCodewords);
       }
     }
 

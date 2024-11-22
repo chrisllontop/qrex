@@ -33,15 +33,11 @@ describe("toDataURL - no promise available", () => {
   });
 
   it("should reject if a callback is not provided (browser)", async () => {
-    await expect(toDataURLBrowser("some text")).rejects.toThrow(
-      "bad maskPattern:undefined",
-    );
+    await expect(toDataURLBrowser("some text")).rejects.toThrow("bad maskPattern:undefined");
   });
 
   it("should reject if a callback is not a function (browser)", async () => {
-    await expect(toDataURLBrowser("some text", {})).rejects.toThrow(
-      "bad maskPattern:undefined",
-    );
+    await expect(toDataURLBrowser("some text", {})).rejects.toThrow("bad maskPattern:undefined");
   });
 });
 
@@ -66,9 +62,7 @@ describe("toDataURL - image/png", () => {
   ].join("");
 
   it("should throw if no arguments are provided", async () => {
-    await expect(() => toDataURL()).toThrow(
-      "String required as first argument",
-    );
+    await expect(() => toDataURL()).toThrow("String required as first argument");
   });
 
   it("should generate a valid URL using promise with error correction level L", async () => {
@@ -156,9 +150,7 @@ describe("Canvas toDataURL - image/png", () => {
   });
 
   it("should throw if text is not provided", () => {
-    expect(() => toDataURLBrowser(() => {})).toThrow(
-      "Too few arguments provided",
-    );
+    expect(() => toDataURLBrowser(() => {})).toThrow("Too few arguments provided");
   });
 
   it("should generate a valid Data URL with error correction level H", async () => {
@@ -169,11 +161,7 @@ describe("Canvas toDataURL - image/png", () => {
       errorCorrectionLevel: "H",
       type: "image/png",
     }).then((url) => {
-      expect(
-        url.startsWith(
-          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIQAAACECAYAAABRRIOn",
-        ),
-      ).toBe(true);
+      expect(url.startsWith("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIQAAACECAYAAABRRIOn")).toBe(true);
     });
   });
 
@@ -207,11 +195,7 @@ describe("Canvas toDataURL - image/png", () => {
       errorCorrectionLevel: "H",
       type: "image/png",
     }).then((url) => {
-      expect(
-        url.startsWith(
-          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIQAAACECAYAAABRRIOn",
-        ),
-      ).toBe(true);
+      expect(url.startsWith("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIQAAACECAYAAABRRIOn")).toBe(true);
     });
   });
 
@@ -242,11 +226,7 @@ describe("Canvas toDataURL - image/png", () => {
         errorCorrectionLevel: "H",
         type: "image/png",
       });
-      expect(
-        url.startsWith(
-          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIQAAACECAYAAABRRIOn",
-        ),
-      ).toBe(true);
+      expect(url.startsWith("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIQAAACECAYAAABRRIOn")).toBe(true);
     } catch (err) {
       expect(err).toBeUndefined();
     }

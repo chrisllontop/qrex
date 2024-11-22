@@ -183,11 +183,9 @@ const EXPECTED_BYTE_CAPACITY = [
 ];
 
 const EXPECTED_VERSION_BITS = [
-  0x07c94, 0x085bc, 0x09a99, 0x0a4d3, 0x0bbf6, 0x0c762, 0x0d847, 0x0e60d,
-  0x0f928, 0x10b78, 0x1145d, 0x12a17, 0x13532, 0x149a6, 0x15683, 0x168c9,
-  0x177ec, 0x18ec4, 0x191e1, 0x1afab, 0x1b08e, 0x1cc1a, 0x1d33f, 0x1ed75,
-  0x1f250, 0x209d5, 0x216f0, 0x228ba, 0x2379f, 0x24b0b, 0x2542e, 0x26a64,
-  0x27541, 0x28c69,
+  0x07c94, 0x085bc, 0x09a99, 0x0a4d3, 0x0bbf6, 0x0c762, 0x0d847, 0x0e60d, 0x0f928, 0x10b78, 0x1145d, 0x12a17, 0x13532,
+  0x149a6, 0x15683, 0x168c9, 0x177ec, 0x18ec4, 0x191e1, 0x1afab, 0x1b08e, 0x1cc1a, 0x1d33f, 0x1ed75, 0x1f250, 0x209d5,
+  0x216f0, 0x228ba, 0x2379f, 0x24b0b, 0x2542e, 0x26a64, 0x27541, 0x28c69,
 ];
 
 describe("Version validity", () => {
@@ -331,10 +329,7 @@ describe("Version best match", () => {
 
   it("should return correct best versions for capacities", () => {
     checkBestVersionForCapacity(EXPECTED_NUMERIC_CAPACITY, NumericData);
-    checkBestVersionForCapacity(
-      EXPECTED_ALPHANUMERIC_CAPACITY,
-      AlphanumericData,
-    );
+    checkBestVersionForCapacity(EXPECTED_ALPHANUMERIC_CAPACITY, AlphanumericData);
     checkBestVersionForCapacity(EXPECTED_KANJI_CAPACITY, KanjiData);
     checkBestVersionForCapacity(EXPECTED_BYTE_CAPACITY, ByteData);
   });
@@ -342,20 +337,13 @@ describe("Version best match", () => {
   it("should return undefined if data is too big", () => {
     for (const [i, level] of EC_LEVELS.entries()) {
       const exceededCapacity = EXPECTED_NUMERIC_CAPACITY[39][i] + 1;
-      const tooBigData = new NumericData(
-        new Array(exceededCapacity + 1).join("-"),
-      );
+      const tooBigData = new NumericData(new Array(exceededCapacity + 1).join("-"));
       expect(Version.getBestVersionForData(tooBigData, level)).toBeFalsy();
     }
   });
 
   it("should return a version number if input array is valid", () => {
-    expect(
-      Version.getBestVersionForData([
-        new ByteData("abc"),
-        new NumericData("1234"),
-      ]),
-    ).toBeTruthy();
+    expect(Version.getBestVersionForData([new ByteData("abc"), new NumericData("1234")])).toBeTruthy();
   });
 
   it("should return 1 if array is empty", () => {

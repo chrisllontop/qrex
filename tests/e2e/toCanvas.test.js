@@ -146,16 +146,11 @@ describe("toCanvas Function Tests", () => {
 
     it("should work with canvas element, text, options, and callback", () => {
       return new Promise((resolve) => {
-        toCanvas(
-          canvasEl,
-          "some text",
-          { errorCorrectionLevel: "H", maskPattern: 0 },
-          (err, canvas) => {
-            expect(err).toBeNull();
-            expect(canvas).toBeInstanceOf(Canvas);
-            resolve();
-          },
-        );
+        toCanvas(canvasEl, "some text", { errorCorrectionLevel: "H", maskPattern: 0 }, (err, canvas) => {
+          expect(err).toBeNull();
+          expect(canvas).toBeInstanceOf(Canvas);
+          resolve();
+        });
       });
     });
 

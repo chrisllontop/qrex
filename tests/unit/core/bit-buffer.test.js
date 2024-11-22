@@ -4,16 +4,7 @@ import { BitBuffer } from "../../../src/core/bit-buffer";
 describe("Bit Buffer", () => {
   it("should handle bit buffer operations correctly", () => {
     const testData = 0x41;
-    const expectedDataBits = [
-      false,
-      true,
-      false,
-      false,
-      false,
-      false,
-      false,
-      true,
-    ];
+    const expectedDataBits = [false, true, false, false, false, false, false, true];
 
     const bitBuffer = new BitBuffer();
 

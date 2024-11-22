@@ -18,9 +18,7 @@ describe("Format encoded info", () => {
     const allResultsPass = levels.every((level, lIndex) =>
       Array.from(
         { length: patterns },
-        (_, p) =>
-          FormatInfo.getEncodedBits(level, p) ===
-          EXPECTED_FORMAT_BITS[lIndex][p],
+        (_, p) => FormatInfo.getEncodedBits(level, p) === EXPECTED_FORMAT_BITS[lIndex][p],
       ).every(Boolean),
     );
 

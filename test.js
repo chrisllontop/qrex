@@ -10,13 +10,4 @@ const opt = {
   stdio: [process.stdin, process.stdout, process.stderr],
 };
 
-spawn(
-  "node",
-  [
-    "node_modules/.bin/tap",
-    "--cov",
-    "--100",
-    process.argv[2] || "test/**/*.test.js",
-  ],
-  opt,
-);
+spawn("node", ["node_modules/.bin/tap", "--cov", "--100", process.argv[2] || "test/**/*.test.js"], opt);

@@ -3,10 +3,7 @@ const { codecovWebpackPlugin } = require("@codecov/webpack-plugin");
 
 const babelConfig = {
   babelrc: false,
-  presets: [
-    "@babel/preset-typescript",
-    ["@babel/preset-env", { targets: "defaults, IE >= 10, Safari >= 5.1" }],
-  ],
+  presets: ["@babel/preset-typescript", ["@babel/preset-env", { targets: "defaults, IE >= 10, Safari >= 5.1" }]],
 };
 
 module.exports = [

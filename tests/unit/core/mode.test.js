@@ -29,48 +29,24 @@ describe("Char count bits", () => {
 
   it("Char count indicator for versions", () => {
     for (let v = 1; v < 10; v++) {
-      expect(Mode.getCharCountIndicator(Mode.NUMERIC, v)).toBe(
-        EXPECTED_BITS.numeric[0],
-      );
-      expect(Mode.getCharCountIndicator(Mode.ALPHANUMERIC, v)).toBe(
-        EXPECTED_BITS.alphanumeric[0],
-      );
-      expect(Mode.getCharCountIndicator(Mode.BYTE, v)).toBe(
-        EXPECTED_BITS.byte[0],
-      );
-      expect(Mode.getCharCountIndicator(Mode.KANJI, v)).toBe(
-        EXPECTED_BITS.kanji[0],
-      );
+      expect(Mode.getCharCountIndicator(Mode.NUMERIC, v)).toBe(EXPECTED_BITS.numeric[0]);
+      expect(Mode.getCharCountIndicator(Mode.ALPHANUMERIC, v)).toBe(EXPECTED_BITS.alphanumeric[0]);
+      expect(Mode.getCharCountIndicator(Mode.BYTE, v)).toBe(EXPECTED_BITS.byte[0]);
+      expect(Mode.getCharCountIndicator(Mode.KANJI, v)).toBe(EXPECTED_BITS.kanji[0]);
     }
 
     for (let v = 10; v < 27; v++) {
-      expect(Mode.getCharCountIndicator(Mode.NUMERIC, v)).toBe(
-        EXPECTED_BITS.numeric[1],
-      );
-      expect(Mode.getCharCountIndicator(Mode.ALPHANUMERIC, v)).toBe(
-        EXPECTED_BITS.alphanumeric[1],
-      );
-      expect(Mode.getCharCountIndicator(Mode.BYTE, v)).toBe(
-        EXPECTED_BITS.byte[1],
-      );
-      expect(Mode.getCharCountIndicator(Mode.KANJI, v)).toBe(
-        EXPECTED_BITS.kanji[1],
-      );
+      expect(Mode.getCharCountIndicator(Mode.NUMERIC, v)).toBe(EXPECTED_BITS.numeric[1]);
+      expect(Mode.getCharCountIndicator(Mode.ALPHANUMERIC, v)).toBe(EXPECTED_BITS.alphanumeric[1]);
+      expect(Mode.getCharCountIndicator(Mode.BYTE, v)).toBe(EXPECTED_BITS.byte[1]);
+      expect(Mode.getCharCountIndicator(Mode.KANJI, v)).toBe(EXPECTED_BITS.kanji[1]);
     }
 
     for (let v = 27; v <= 40; v++) {
-      expect(Mode.getCharCountIndicator(Mode.NUMERIC, v)).toBe(
-        EXPECTED_BITS.numeric[2],
-      );
-      expect(Mode.getCharCountIndicator(Mode.ALPHANUMERIC, v)).toBe(
-        EXPECTED_BITS.alphanumeric[2],
-      );
-      expect(Mode.getCharCountIndicator(Mode.BYTE, v)).toBe(
-        EXPECTED_BITS.byte[2],
-      );
-      expect(Mode.getCharCountIndicator(Mode.KANJI, v)).toBe(
-        EXPECTED_BITS.kanji[2],
-      );
+      expect(Mode.getCharCountIndicator(Mode.NUMERIC, v)).toBe(EXPECTED_BITS.numeric[2]);
+      expect(Mode.getCharCountIndicator(Mode.ALPHANUMERIC, v)).toBe(EXPECTED_BITS.alphanumeric[2]);
+      expect(Mode.getCharCountIndicator(Mode.BYTE, v)).toBe(EXPECTED_BITS.byte[2]);
+      expect(Mode.getCharCountIndicator(Mode.KANJI, v)).toBe(EXPECTED_BITS.kanji[2]);
     }
   });
 

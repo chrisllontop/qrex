@@ -3,15 +3,11 @@ import { BitMatrix } from "../../../src/core/bit-matrix";
 
 describe("Bit Matrix", () => {
   it("should throw an error if size is 0", () => {
-    expect(() => new BitMatrix(0)).toThrow(
-      "BitMatrix size must be defined and greater than 0",
-    );
+    expect(() => new BitMatrix(0)).toThrow("BitMatrix size must be defined and greater than 0");
   });
 
   it("should throw an error if size is less than 0", () => {
-    expect(() => new BitMatrix(-1)).toThrow(
-      "BitMatrix size must be defined and greater than 0",
-    );
+    expect(() => new BitMatrix(-1)).toThrow("BitMatrix size must be defined and greater than 0");
   });
 
   it("should handle bit matrix operations correctly", () => {

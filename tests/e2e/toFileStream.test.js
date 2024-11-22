@@ -8,15 +8,11 @@ const defaultOptions = {
 };
 describe("toFileStream", () => {
   it("should throw if stream is not provided", () => {
-    expect(() => toFileStream("some text")).toThrow(
-      "Too few arguments provided",
-    );
+    expect(() => toFileStream("some text")).toThrow("Too few arguments provided");
   });
 
   it("should throw if text is not provided", () => {
-    expect(() => toFileStream(new StreamMock())).toThrow(
-      "Too few arguments provided",
-    );
+    expect(() => toFileStream(new StreamMock())).toThrow("Too few arguments provided");
   });
 
   it("should not call error event", () => {

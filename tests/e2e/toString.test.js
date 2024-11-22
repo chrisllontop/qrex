@@ -72,11 +72,7 @@ describe("toString", () => {
   });
 
   it("should resolve with a string when using a promise and options", async () => {
-    const str = await toString(
-      "some text",
-      { errorCorrectionLevel: "L" },
-      baseOptions,
-    );
+    const str = await toString("some text", { errorCorrectionLevel: "L" }, baseOptions);
     expect(typeof str).toBe("string");
   });
 });
@@ -190,17 +186,13 @@ describe("toString browser svg", () => {
     const expectedSvg = await fs.promises.readFile(file, "utf8");
 
     await new Promise((resolve, reject) => {
-      toStringBrowser(
-        "http://www.google.com",
-        { ...defaultOptions },
-        (err, code) => {
-          if (err) reject(err);
-          const normalizedCode = code.replace(/\s+/g, "");
-          const normalizedExpected = expectedSvg.replace(/\s+/g, "");
-          expect(normalizedCode).toBe(normalizedExpected);
-          resolve();
-        },
-      );
+      toStringBrowser("http://www.google.com", { ...defaultOptions }, (err, code) => {
+        if (err) reject(err);
+        const normalizedCode = code.replace(/\s+/g, "");
+        const normalizedExpected = expectedSvg.replace(/\s+/g, "");
+        expect(normalizedCode).toBe(normalizedExpected);
+        resolve();
+      });
     });
 
     const code = await toStringBrowser("http://www.google.com", defaultOptions);
@@ -283,10 +275,7 @@ describe("QRCode.toString utf8", () => {
 });
 
 describe("QRCode.toString terminal", () => {
-  const expectedTerminal = fs.readFileSync(
-    path.join(__dirname, "/terminal.expected.out"),
-    "utf8",
-  );
+  const expectedTerminal = fs.readFileSync(path.join(__dirname, "/terminal.expected.out"), "utf8");
 
   it("should output a valid terminal symbol", async () => {
     toString(

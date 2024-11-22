@@ -1,6 +1,10 @@
 import type { ColorObject, QRexOptions } from "../types/qrex.type";
 
 function hex2rgba(hex: string): ColorObject {
+  if (!hex || typeof hex !== "string") {
+    throw new Error("Color should be defined as hex string");
+  }
+
   let hexCode = hex.slice().replace("#", "").split("");
   if (hexCode.length < 3 || hexCode.length === 5 || hexCode.length > 8) {
     throw new Error(`Invalid hex color: ${hex}`);

@@ -30,11 +30,11 @@ function fromString(string: ErrorCorrectionLevelString) {
   }
 }
 
-function isValid(level: ErrorCorrectionLevelBit) {
-  return level && typeof level?.bit !== "undefined" && level.bit >= 0 && level.bit < 4;
+function isValid(level?: ErrorCorrectionLevelBit) {
+  return Boolean(level && typeof level?.bit !== "undefined" && level.bit >= 0 && level.bit < 4);
 }
 
-function from(value: ErrorCorrectionLevel, defaultValue: ErrorCorrectionLevelBit): ErrorCorrectionLevelBit {
+function from(value: ErrorCorrectionLevel, defaultValue: ErrorCorrectionLevelBit) {
   try {
     if (typeof value === "string") {
       return fromString(value);
@@ -43,6 +43,7 @@ function from(value: ErrorCorrectionLevel, defaultValue: ErrorCorrectionLevelBit
     if (isValid(value)) {
       return value;
     }
+    throw new Error("Invalid Error Correction Level");
   } catch (e) {
     return defaultValue;
   }

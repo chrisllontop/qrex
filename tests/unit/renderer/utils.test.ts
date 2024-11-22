@@ -49,13 +49,6 @@ describe("Utils getOptions", () => {
     });
   });
 
-  it("should return correct colors value from numbers", () => {
-    expect(RendererUtils.getOptions({ color: { dark: 111, light: 999 } }).color).toEqual({
-      dark: { r: 17, g: 17, b: 17, a: 255, hex: "#111111" },
-      light: { r: 153, g: 153, b: 153, a: 255, hex: "#999999" },
-    });
-  });
-
   it("should throw if color is not a string", () => {
     expect(() => {
       RendererUtils.getOptions({ color: { dark: true } });

@@ -22,7 +22,8 @@ describe("Error Correction Codewords", () => {
       }
     }
 
-    expect(ECCode.getTotalCodewordsCount(1)).toBeUndefined();
+    // @ts-ignore
+    expect(ECCode.getTotalCodewordsCount(1, undefined)).toThrow("Invalid error correction level");
   });
 });
 
@@ -36,6 +37,7 @@ describe("Error Correction Blocks", () => {
       }
     }
 
-    expect(ECCode.getBlocksCount(1)).toBeUndefined();
+    // @ts-ignore
+    expect(ECCode.getBlocksCount(1, undefined)).toThrow("Invalid error correction level");
   });
 });

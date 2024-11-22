@@ -108,6 +108,7 @@ function from(value: ModeType | DataMode, defaultValue: DataMode): DataMode {
     if (isValid(value)) {
       return value;
     }
+    throw new Error("Invalid mode");
   } catch (e) {
     return defaultValue;
   }

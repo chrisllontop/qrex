@@ -1,4 +1,4 @@
-import type { DataMode } from "../types/qrex.type";
+import type { DataMode, SegmentInterface } from "../types/qrex.type";
 import { Mode } from "./mode";
 
 /**
@@ -58,13 +58,15 @@ const ALPHA_NUM_CHARS = [
   ":",
 ];
 
-export class AlphanumericData {
+export class AlphanumericData implements SegmentInterface {
   mode: DataMode;
   data: string;
+  length: number;
 
   constructor(data: string) {
     this.mode = Mode.ALPHANUMERIC;
     this.data = data;
+    this.length = this.data?.length ?? 0;
   }
 
   getLength() {

@@ -1,4 +1,4 @@
-import type { ErrorCorrectionLevelBit, MaskPatternType, Segment } from "../types/qrex.type";
+import type { ErrorCorrectionLevelBit, MaskPatternType } from "../types/qrex.type";
 import type { QRData, QRexOptions, QrContent } from "../types/qrex.type";
 import { AlignmentPattern } from "./alignment-pattern";
 import { BitBuffer } from "./bit-buffer";
@@ -332,26 +332,18 @@ function createSymbol(
   maskPattern?: MaskPatternType,
   version?: number,
 ): QRData {
-  let segments: Segment[];
+  let estimatedVersion = version;
 
-  if (Array.isArray(data)) {
-    segments = Segments.fromArray(data);
-  } else if (typeof data === "string") {
-    let estimatedVersion = version;
+  if (!estimatedVersion) {
+    const rawSegments = Segments.rawSplit(data);
 
-    if (!estimatedVersion) {
-      const rawSegments = Segments.rawSplit(data);
-
-      // Estimate best version that can contain raw splitted segments
-      estimatedVersion = Version.getBestVersionForData(rawSegments, errorCorrectionLevel);
-    }
-
-    // Build optimized segments
-    // If estimated version is undefined, try with the highest version
-    segments = Segments.fromString(data, estimatedVersion || 40);
-  } else {
-    throw new Error("Invalid data");
+    // Estimate best version that can contain raw splitted segments
+    estimatedVersion = Version.getBestVersionForData(rawSegments, errorCorrectionLevel);
   }
+
+  // Build optimized segments
+  // If estimated version is undefined, try with the highest version
+  const segments = Segments.fromString(data, estimatedVersion || 40);
 
   // Get the min version that can contain data
   const bestVersion = Version.getBestVersionForData(segments, errorCorrectionLevel);

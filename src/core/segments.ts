@@ -1,5 +1,5 @@
 import { find_path } from "dijkstrajs";
-import type { DataMode, Segment } from "../types/qrex.type";
+import type { DataMode, ModeType, Segment } from "../types/qrex.type";
 import { AlphanumericData } from "./alphanumeric-data";
 import { ByteData } from "./byte-data";
 import { KanjiData } from "./kanji-data";
@@ -215,12 +215,8 @@ function buildGraph(nodes, version: number) {
 /**
  * Builds a segment from a specified data and mode.
  * If a mode is not specified, the more suitable will be used.
- *
- * @param  {String} data             Input data
- * @param  {Mode | String} modesHint Data mode
- * @return {Segment}                 Segment
  */
-function buildSingleSegment(data, modesHint) {
+function buildSingleSegment(data: string, modesHint: DataMode | ModeType) {
   let mode: DataMode;
   const bestMode = Mode.getBestModeForData(data);
 
@@ -266,15 +262,13 @@ function buildSingleSegment(data, modesHint) {
  * Objects must contain at least the property "data".
  * If property "mode" is not present, the more suitable mode will be used.
  *
- * @param  {Array} array Array of objects with segments data
- * @return {Array}       Array of Segments
  */
-function fromArray(array) {
-  return array.reduce((acc, seg) => {
+function fromArray(array: Segment[]) {
+  return array.reduce((acc: Segment[], seg) => {
     if (typeof seg === "string") {
       acc.push(buildSingleSegment(seg, null));
-    } else if (seg.data) {
-      acc.push(buildSingleSegment(seg.data, seg.mode));
+    } else if (seg?.data) {
+      acc.push(buildSingleSegment(seg?.data as string, seg.mode));
     }
 
     return acc;

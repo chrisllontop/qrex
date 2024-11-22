@@ -1,4 +1,4 @@
-import type { DataMode, ErrorCorrectionLevel, ErrorCorrectionLevelBit } from "../types/qrex.type";
+import type { DataMode, ErrorCorrectionLevel, ErrorCorrectionLevelBit, Segment } from "../types/qrex.type";
 import { ECCode } from "./error-correction-code";
 import { ECLevel } from "./error-correction-level";
 import { Mode } from "./mode";
@@ -24,7 +24,7 @@ function getReservedBitsCount(mode: DataMode, version: number) {
   return Mode.getCharCountIndicator(mode, version) + 4;
 }
 
-function getTotalBitsFromDataArray(segments, version: number) {
+function getTotalBitsFromDataArray(segments: Segment[], version: number) {
   let totalBits = 0;
 
   for (const data of segments) {
@@ -35,7 +35,7 @@ function getTotalBitsFromDataArray(segments, version: number) {
   return totalBits;
 }
 
-function getBestVersionForMixedData(segments, errorCorrectionLevel: ErrorCorrectionLevelBit) {
+function getBestVersionForMixedData(segments: Segment[], errorCorrectionLevel: ErrorCorrectionLevelBit) {
   for (let currentVersion = 1; currentVersion <= 40; currentVersion++) {
     const length = getTotalBitsFromDataArray(segments, currentVersion);
     if (length <= getCapacity(currentVersion, errorCorrectionLevel, Mode.MIXED)) {
@@ -101,14 +101,14 @@ function getCapacity(version: number, errorCorrectionLevel: ErrorCorrectionLevel
 /**
  * Returns the minimum version needed to contain the amount of data
  */
-function getBestVersionForData(data, errorCorrectionLevel: ErrorCorrectionLevel): number {
-  let seg;
+function getBestVersionForData(data: Segment[], errorCorrectionLevel: ErrorCorrectionLevel): number {
+  let seg: Segment;
 
   const ecl = ECLevel.from(errorCorrectionLevel, ECLevel.M);
 
   if (Array.isArray(data)) {
     if (data.length > 1) {
-      return getBestVersionForMixedData(data, ecl);
+      return getBestVersionForMixedData(data, ecl)!;
     }
 
     if (data.length === 0) {

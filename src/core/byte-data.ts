@@ -1,9 +1,10 @@
-import type { DataMode } from "../types/qrex.type";
+import type { DataMode, SegmentInterface } from "../types/qrex.type";
 import { Mode } from "./mode";
 
-export class ByteData {
+export class ByteData implements SegmentInterface<Uint8Array> {
   mode: DataMode;
   data: Uint8Array;
+  length: number;
 
   constructor(data: Uint8Array | string) {
     this.mode = Mode.BYTE;
@@ -12,6 +13,7 @@ export class ByteData {
     } else {
       this.data = new Uint8Array(data);
     }
+    this.length = this.data.length;
   }
 
   static getBitsLength(length: number) {

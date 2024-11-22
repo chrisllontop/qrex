@@ -1,14 +1,16 @@
-import type { DataMode } from "../types/qrex.type";
+import type { DataMode, SegmentInterface } from "../types/qrex.type";
 import { Mode } from "./mode";
 import { CoreUtils } from "./utils";
 
-export class KanjiData {
+export class KanjiData implements SegmentInterface {
   mode: DataMode;
   data: string;
+  length: number;
 
   constructor(data: string) {
     this.mode = Mode.KANJI;
     this.data = data;
+    this.length = this.data?.length ?? 0;
   }
 
   static getBitsLength(length: number): number {

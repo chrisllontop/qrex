@@ -1,13 +1,15 @@
-import type { DataMode } from "../types/qrex.type";
+import type { DataMode, SegmentInterface } from "../types/qrex.type";
 import { Mode } from "./mode";
 
-class NumericData {
+class NumericData implements SegmentInterface {
   mode: DataMode;
   data: string;
+  length: number;
 
   constructor(data: string) {
     this.mode = Mode.NUMERIC;
     this.data = data.toString();
+    this.length = this.data?.length ?? 0;
   }
 
   static getBitsLength(length: number): number {
@@ -22,7 +24,7 @@ class NumericData {
     return NumericData.getBitsLength(this.data.length);
   }
 
-  write(bitBuffer: any): void {
+  write(bitBuffer): void {
     let i: number;
     let group: string;
     let value: number;

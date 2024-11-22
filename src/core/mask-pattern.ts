@@ -150,30 +150,25 @@ function getPenaltyN4(data) {
 
 /**
  * Return mask value at given position
- *
- * @param  {Number} maskPattern Pattern reference value
- * @param  {Number} i           Row
- * @param  {Number} j           Column
- * @return {Boolean}            Mask value
  */
-function getMaskAt(maskPattern, i, j) {
+function getMaskAt(maskPattern: MaskPatternType, row: number, col: number) {
   switch (maskPattern) {
     case Patterns.PATTERN000:
-      return (i + j) % 2 === 0;
+      return (row + col) % 2 === 0;
     case Patterns.PATTERN001:
-      return i % 2 === 0;
+      return row % 2 === 0;
     case Patterns.PATTERN010:
-      return j % 3 === 0;
+      return col % 3 === 0;
     case Patterns.PATTERN011:
-      return (i + j) % 3 === 0;
+      return (row + col) % 3 === 0;
     case Patterns.PATTERN100:
-      return (Math.floor(i / 2) + Math.floor(j / 3)) % 2 === 0;
+      return (Math.floor(row / 2) + Math.floor(col / 3)) % 2 === 0;
     case Patterns.PATTERN101:
-      return ((i * j) % 2) + ((i * j) % 3) === 0;
+      return ((row * col) % 2) + ((row * col) % 3) === 0;
     case Patterns.PATTERN110:
-      return (((i * j) % 2) + ((i * j) % 3)) % 2 === 0;
+      return (((row * col) % 2) + ((row * col) % 3)) % 2 === 0;
     case Patterns.PATTERN111:
-      return (((i * j) % 3) + ((i + j) % 2)) % 2 === 0;
+      return (((row * col) % 3) + ((row + col) % 2)) % 2 === 0;
 
     default:
       throw new Error(`bad maskPattern:${maskPattern}`);
@@ -182,9 +177,6 @@ function getMaskAt(maskPattern, i, j) {
 
 /**
  * Apply a mask pattern to a BitMatrix
- *
- * @param  {Number}    pattern Pattern reference number
- * @param  {BitMatrix} data    BitMatrix data
  */
 function applyMask(pattern: MaskPatternType, data: BitMatrix) {
   const size = data.size;
@@ -192,7 +184,7 @@ function applyMask(pattern: MaskPatternType, data: BitMatrix) {
   for (let col = 0; col < size; col++) {
     for (let row = 0; row < size; row++) {
       if (data.isReserved(row, col)) continue;
-      data.xor(row, col, getMaskAt(pattern, row, col));
+      data.xor(row, col, Number(getMaskAt(pattern, row, col)));
     }
   }
 }

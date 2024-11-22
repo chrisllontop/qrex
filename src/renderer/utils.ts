@@ -1,12 +1,6 @@
-function hex2rgba(hex) {
-  if (typeof hex === "number") {
-    hex = hex.toString();
-  }
+import type { QRexOptions } from "../types/qrex.type";
 
-  if (typeof hex !== "string") {
-    throw new Error("Color should be defined as hex string");
-  }
-
+function hex2rgba(hex: string) {
   let hexCode = hex.slice().replace("#", "").split("");
   if (hexCode.length < 3 || hexCode.length === 5 || hexCode.length > 8) {
     throw new Error(`Invalid hex color: ${hex}`);
@@ -34,19 +28,15 @@ function hex2rgba(hex) {
   };
 }
 
-function getOptions(options) {
-  if (!options) options = {};
+function getOptions(opts?: QRexOptions) {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  const options: any = opts ?? {}; // TODO Add full type for options
   if (!options.color) options.color = {};
 
   const margin =
-    typeof options.margin === "undefined" ||
-    options.margin === null ||
-    options.margin < 0
-      ? 4
-      : options.margin;
+    typeof options.margin === "undefined" || options.margin === null || options.margin < 0 ? 4 : options.margin;
 
-  const width =
-    options.width && options.width >= 21 ? options.width : undefined;
+  const width = options.width && options.width >= 21 ? options.width : undefined;
   const scale = options.scale || 4;
 
   return {
@@ -62,10 +52,8 @@ function getOptions(options) {
   };
 }
 
-function getScale(qrSize, opts) {
-  return opts.width && opts.width >= qrSize + opts.margin * 2
-    ? opts.width / (qrSize + opts.margin * 2)
-    : opts.scale;
+function getScale(qrSize: number, opts) {
+  return opts.width && opts.width >= qrSize + opts.margin * 2 ? opts.width / (qrSize + opts.margin * 2) : opts.scale;
 }
 
 function getImageWidth(qrSize, opts) {
@@ -86,12 +74,7 @@ function qrToImageData(imgData, qr, opts) {
       let posDst = (i * symbolSize + j) * 4;
       let pxColor = opts.color.light;
 
-      if (
-        i >= scaledMargin &&
-        j >= scaledMargin &&
-        i < symbolSize - scaledMargin &&
-        j < symbolSize - scaledMargin
-      ) {
+      if (i >= scaledMargin && j >= scaledMargin && i < symbolSize - scaledMargin && j < symbolSize - scaledMargin) {
         const iSrc = Math.floor((i - scaledMargin) / scale);
         const jSrc = Math.floor((j - scaledMargin) / scale);
         pxColor = palette[data[iSrc * size + jSrc] ? 1 : 0];

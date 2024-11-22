@@ -1,4 +1,4 @@
-import type { QRData } from "../../types/qrex.type";
+import type { QRData, QRexOptions } from "../../types/qrex.type";
 
 export class TerminalSmall {
   private backgroundWhite = "\x1b[47m";
@@ -37,17 +37,12 @@ export class TerminalSmall {
 
   /**
    * Returns code for four QR pixels. Suitable as key in palette.
-   * @param {boolean[][]} modules
-   * @param {number} size
-   * @param {number} x
-   * @param {number} y
-   * @return {keyof palette}
    */
   private mkCode(modules: boolean[][], size: number, x: number, y: number): string {
     return this.mkCodePixel(modules, size, x, y) + this.mkCodePixel(modules, size, x, y + 1);
   }
 
-  public render(qrData: QRData, options): string {
+  public render(qrData: QRData, options?: QRexOptions): string {
     const size = qrData.modules.size;
     const data = qrData.modules.data;
 

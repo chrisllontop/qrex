@@ -1,7 +1,7 @@
 import type { QRData } from "../../types/qrex.type";
 
 export class Terminal {
-  public render(qrData: QRData, options): string {
+  public render(qrData: QRData): string {
     const size = qrData.modules.size;
     const data = qrData.modules.data;
 

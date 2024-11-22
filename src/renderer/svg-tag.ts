@@ -1,4 +1,4 @@
-import type { QRData } from "../types/qrex.type";
+import type { QRData, QRexOptions } from "../types/qrex.type";
 import { RendererUtils } from "./utils";
 
 export class RendererSvgTag {
@@ -50,7 +50,7 @@ export class RendererSvgTag {
     return path;
   }
 
-  public render(qrData: QRData, options): string {
+  public render(qrData: QRData, options?: QRexOptions): string {
     const opts = RendererUtils.getOptions(options);
     const size = qrData.modules.size;
     const data = qrData.modules.data;

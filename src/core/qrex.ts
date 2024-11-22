@@ -328,7 +328,7 @@ function createCodewords(bitBuffer: BitBuffer, version: number, errorCorrectionL
  */
 function createSymbol(
   data: QrContent,
-  version: number,
+  version?: number,
   errorCorrectionLevel: ErrorCorrectionLevelBit,
   maskPattern: MaskPatternType,
 ): QRData {

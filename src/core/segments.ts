@@ -251,12 +251,22 @@ function buildSingleSegment(data: string, modesHint: DataMode | ModeType) {
  * If property "mode" is not present, the more suitable mode will be used.
  *
  */
-function fromArray(array: Segment[]) {
-  return array.reduce((acc: Segment[], seg) => {
-    acc.push(buildSingleSegment(seg?.data as string, seg.mode)!);
+function fromArray(array: (string | { data: string; mode?: ModeType | DataMode })[]) {
+  return array.reduce((acc: (NumericData | AlphanumericData | KanjiData | ByteData)[], seg) => {
+    const segmentData = typeof seg === "string" 
+      ? { data: seg, mode: undefined } 
+      : seg;
+
+    const modeHint = segmentData.mode ?? Mode.getBestModeForData(segmentData.data);
+
+    const segment = buildSingleSegment(segmentData.data, modeHint);
+    if (segment) {
+      acc.push(segment);
+    }
     return acc;
   }, []);
 }
+
 
 /**
  * Builds an optimized sequence of segments from a string,

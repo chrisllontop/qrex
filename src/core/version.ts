@@ -62,7 +62,7 @@ function from(value: number) {
  * Returns how much data can be stored with the specified QR code version
  * and error correction level
  */
-function getCapacity(version: number, errorCorrectionLevel: ErrorCorrectionLevelBit, mode: DataMode) {
+function getCapacity(version: number, errorCorrectionLevel: ErrorCorrectionLevelBit, mode: DataMode | undefined) {
   if (!VersionCheck.isValid(version)) {
     throw new Error("Invalid QR Code version");
   }

@@ -1,3 +1,4 @@
+import { Canvas } from "canvas";
 import type { QRData, QRexOptions } from "../types/qrex.type";
 import { RendererUtils } from "./utils";
 

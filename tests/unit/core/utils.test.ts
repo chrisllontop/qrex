@@ -12,8 +12,8 @@ const EXPECTED_SYMBOL_SIZES = [
 
 it("Symbol size", () => {
   expect(() => {
-    CoreUtils.getSymbolSize();
-  }).toThrow('"version" cannot be null or undefined');
+    CoreUtils.getSymbolSize(-1);
+  }).toThrow('should be in range from 1 to 40');
 
   expect(() => {
     CoreUtils.getSymbolSize(0);
@@ -50,12 +50,12 @@ it("BCH Digit", () => {
 
 it("Set/Get SJIS function", () => {
   expect(() => {
-    CoreUtils.setToSJISFunction();
+    CoreUtils.setToSJISFunction(-1);
   }).toThrow('"toSJISFunc" is not a valid function.');
 
   expect(CoreUtils.isKanjiModeEnabled()).toBe(false);
 
-  const testFunc = (c) => `test_${c}`;
+  const testFunc = (c:any) => `test_${c}`;
 
   CoreUtils.setToSJISFunction(testFunc);
 

@@ -8,14 +8,14 @@ export type RendererType = "canvas" | "svg" | "terminal" | "txt" | "utf8" | "png
  */
 export type QRexOptions = {
   /** Output type */
-  type: RendererType;
+  type?: RendererType;
   /** QR Code version */
-  version: number;
+  version?: number;
   /** Error correction level */
-  errorCorrectionLevel: ErrorCorrectionLevelString;
+  errorCorrectionLevel?: ErrorCorrectionLevel;
   /** Mask pattern */
-  maskPattern: MaskPatternType;
-  toSJISFunc: (text: string) => Uint8Array;
+  maskPattern?: MaskPatternType;
+  toSJISFunc?: (text: string) => Uint8Array;
 };
 
 export type QrContent = string;

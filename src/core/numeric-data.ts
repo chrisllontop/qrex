@@ -1,4 +1,5 @@
 import type { DataMode, SegmentInterface } from "../types/qrex.type";
+import type { BitBuffer } from "./bit-buffer";
 import { Mode } from "./mode";
 
 class NumericData implements SegmentInterface {
@@ -24,7 +25,7 @@ class NumericData implements SegmentInterface {
     return NumericData.getBitsLength(this.data.length);
   }
 
-  write(bitBuffer): void {
+  write(bitBuffer: BitBuffer): void {
     let i: number;
     let group: string;
     let value: number;

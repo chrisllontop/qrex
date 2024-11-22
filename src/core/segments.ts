@@ -55,12 +55,7 @@ function getSegmentsFromString(dataStr: string) {
 
   const segs = numSegs.concat(alphaNumSegs, byteSegs, kanjiSegs);
 
-  return segs.sort((s1, s2) => s1.index - s2.index);
-  // .map((obj) => ({
-  //   data: obj.data,
-  //   mode: obj.mode,
-  //   length: obj.length,
-  // }));
+  return segs.sort((s1, s2) => s1.index! - s2.index!);
 }
 
 /**
@@ -111,11 +106,8 @@ function mergeSegments(segs) {
  * possible encoding mode.
  *
  * Each node represents a possible segment.
- *
- * @param  {Array} segs Array of object with segments data
- * @return {Array}      Array of object with segments data
  */
-function buildNodes(segs) {
+function buildNodes(segs: Segment[]) {
   const nodes = [];
   for (let i = 0; i < segs.length; i++) {
     const seg = segs[i];
@@ -137,7 +129,7 @@ function buildNodes(segs) {
           {
             data: seg.data,
             mode: Mode.BYTE,
-            length: getStringByteLength(seg.data),
+            length: getStringByteLength(seg.data as string),
           },
         ]);
         break;
@@ -146,7 +138,7 @@ function buildNodes(segs) {
           {
             data: seg.data,
             mode: Mode.BYTE,
-            length: getStringByteLength(seg.data),
+            length: getStringByteLength(seg.data as string),
           },
         ]);
     }
@@ -162,14 +154,10 @@ function buildNodes(segs) {
  *
  * At each connection will be assigned a weight depending on the
  * segment's byte length.
- *
- * @param  {Array} nodes    Array of object with segments data
- * @param  {Number} version QR Code version
- * @return {Object}         Graph of all possible segments
  */
-function buildGraph(nodes, version: number) {
-  const table = {};
-  const graph = { start: {} };
+function buildGraph(nodes: ReturnType<typeof buildNodes>, version: number) {
+  const table: { [key: string]: { node: Segment; lastCount: number } } = {};
+  const graph: { [key: string]: { [key: string]: number } } = { start: {} };
   let prevNodeIds = ["start"];
 
   for (let i = 0; i < nodes.length; i++) {
@@ -181,7 +169,7 @@ function buildGraph(nodes, version: number) {
       const key = `${i}${j}`;
 
       currentNodeIds.push(key);
-      table[key] = { node: node, lastCount: 0 };
+      table[key] = { node: node as Segment, lastCount: 0 };
       graph[key] = {};
 
       for (let n = 0; n < prevNodeIds.length; n++) {
@@ -189,15 +177,15 @@ function buildGraph(nodes, version: number) {
 
         if (table[prevNodeId] && table[prevNodeId].node.mode === node.mode) {
           graph[prevNodeId][key] =
-            getSegmentBitsLength(table[prevNodeId].lastCount + node.length, node.mode) -
-            getSegmentBitsLength(table[prevNodeId].lastCount, node.mode);
+            getSegmentBitsLength(table[prevNodeId].lastCount + node.length, node.mode)! -
+            getSegmentBitsLength(table[prevNodeId].lastCount, node.mode)!;
 
           table[prevNodeId].lastCount += node.length;
         } else {
           if (table[prevNodeId]) table[prevNodeId].lastCount = node.length;
 
           graph[prevNodeId][key] =
-            getSegmentBitsLength(node.length, node.mode) + 4 + Mode.getCharCountIndicator(node.mode, version); // switch cost
+            getSegmentBitsLength(node.length, node.mode)! + 4 + Mode.getCharCountIndicator(node.mode, version); // switch cost
         }
       }
     }
@@ -265,12 +253,7 @@ function buildSingleSegment(data: string, modesHint: DataMode | ModeType) {
  */
 function fromArray(array: Segment[]) {
   return array.reduce((acc: Segment[], seg) => {
-    if (typeof seg === "string") {
-      acc.push(buildSingleSegment(seg, null));
-    } else if (seg?.data) {
-      acc.push(buildSingleSegment(seg?.data as string, seg.mode));
-    }
-
+    acc.push(buildSingleSegment(seg?.data as string, seg.mode)!);
     return acc;
   }, []);
 }

@@ -1,4 +1,4 @@
-import type { ErrorCorrectionLevelBit, MaskPatternType } from "../types/qrex.type";
+import type { ErrorCorrectionLevelBit, MaskPatternType, Segment } from "../types/qrex.type";
 import type { QRData, QRexOptions, QrContent } from "../types/qrex.type";
 import { AlignmentPattern } from "./alignment-pattern";
 import { BitBuffer } from "./bit-buffer";
@@ -36,9 +36,9 @@ function setupFinderPattern(matrix: BitMatrix, version: number) {
           (c >= 0 && c <= 6 && (r === 0 || r === 6)) ||
           (r >= 2 && r <= 4 && c >= 2 && c <= 4)
         ) {
-          matrix.set(row + r, col + c, true, true);
+          matrix.set(row + r, col + c, Number(true), true);
         } else {
-          matrix.set(row + r, col + c, false, true);
+          matrix.set(row + r, col + c, Number(false), true);
         }
       }
     }
@@ -55,8 +55,8 @@ function setupTimingPattern(matrix: BitMatrix) {
 
   for (let r = 8; r < size - 8; r++) {
     const value = r % 2 === 0;
-    matrix.set(r, 6, value, true);
-    matrix.set(6, r, value, true);
+    matrix.set(r, 6, Number(value), true);
+    matrix.set(6, r, Number(value), true);
   }
 }
 
@@ -75,9 +75,9 @@ function setupAlignmentPattern(matrix: BitMatrix, version: number) {
     for (let r = -2; r <= 2; r++) {
       for (let c = -2; c <= 2; c++) {
         if (r === -2 || r === 2 || c === -2 || c === 2 || (r === 0 && c === 0)) {
-          matrix.set(row + r, col + c, true, true);
+          matrix.set(row + r, col + c, Number(true), true);
         } else {
-          matrix.set(row + r, col + c, false, true);
+          matrix.set(row + r, col + c, Number(false), true);
         }
       }
     }
@@ -99,8 +99,8 @@ function setupVersionInfo(matrix: BitMatrix, version: number) {
     col = (i % 3) + size - 8 - 3;
     mod = ((bits >> i) & 1) === 1;
 
-    matrix.set(row, col, mod, true);
-    matrix.set(col, row, mod, true);
+    matrix.set(row, col, Number(mod), true);
+    matrix.set(col, row, Number(mod), true);
   }
 }
 
@@ -122,20 +122,20 @@ function setupFormatInfo(
 
     // vertical
     if (i < 6) {
-      matrix.set(i, 8, mod, true);
+      matrix.set(i, 8, Number(mod), true);
     } else if (i < 8) {
-      matrix.set(i + 1, 8, mod, true);
+      matrix.set(i + 1, 8, Number(mod), true);
     } else {
-      matrix.set(size - 15 + i, 8, mod, true);
+      matrix.set(size - 15 + i, 8, Number(mod), true);
     }
 
     // horizontal
     if (i < 8) {
-      matrix.set(8, size - i - 1, mod, true);
+      matrix.set(8, size - i - 1, Number(mod), true);
     } else if (i < 9) {
-      matrix.set(8, 15 - i - 1 + 1, mod, true);
+      matrix.set(8, 15 - i - 1 + 1, Number(mod), true);
     } else {
-      matrix.set(8, 15 - i - 1, mod, true);
+      matrix.set(8, 15 - i - 1, Number(mod), true);
     }
   }
 
@@ -165,7 +165,7 @@ function setupData(matrix: BitMatrix, data: Uint8Array) {
             dark = ((data[byteIndex] >>> bitIndex) & 1) === 1;
           }
 
-          matrix.set(row, col - c, dark);
+          matrix.set(row, col - c, Number(dark));
           bitIndex--;
 
           if (bitIndex === -1) {
@@ -189,7 +189,7 @@ function setupData(matrix: BitMatrix, data: Uint8Array) {
 /**
  * Create encoded codewords from data input
  */
-function createData(version: number, errorCorrectionLevel: ErrorCorrectionLevelBit, segments) {
+function createData(version: number, errorCorrectionLevel: ErrorCorrectionLevelBit, segments: Segment[]) {
   // Prepare data buffer
   const buffer = new BitBuffer();
 
@@ -204,10 +204,10 @@ function createData(version: number, errorCorrectionLevel: ErrorCorrectionLevelB
     // and must be a certain number of bits long, depending on the QR version
     // and data mode
     // @see {@link Mode.getCharCountIndicator}.
-    buffer.put(data.getLength(), Mode.getCharCountIndicator(data.mode, version));
+    buffer.put(data.getLength!(), Mode.getCharCountIndicator(data.mode, version));
 
     // add binary data sequence to buffer
-    data.write(buffer);
+    data.write!(buffer);
   }
 
   // Calculate required number of bits

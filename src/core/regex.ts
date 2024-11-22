@@ -19,15 +19,15 @@ const TEST_KANJI = new RegExp(`^${kanji}$`);
 const TEST_NUMERIC = new RegExp(`^${numeric}$`);
 const TEST_ALPHANUMERIC = /^[A-Z0-9 $%*+\-.\/:]+$/;
 
-function testKanji(str) {
+function testKanji(str: string) {
   return TEST_KANJI.test(str);
 }
 
-function testNumeric(str) {
+function testNumeric(str: string) {
   return TEST_NUMERIC.test(str);
 }
 
-function testAlphanumeric(str) {
+function testAlphanumeric(str: string) {
   return TEST_ALPHANUMERIC.test(str);
 }
 

@@ -1,4 +1,5 @@
 import type { DataMode, SegmentInterface } from "../types/qrex.type";
+import type { BitBuffer } from "./bit-buffer";
 import { Mode } from "./mode";
 
 /**
@@ -77,8 +78,8 @@ export class AlphanumericData implements SegmentInterface {
     return AlphanumericData.getBitsLength(this.data.length);
   }
 
-  write(bitBuffer) {
-    let i;
+  write(bitBuffer: BitBuffer) {
+    let i: number;
 
     // Input data characters are divided into groups of two characters
     // and encoded as 11-bit binary codes.

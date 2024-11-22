@@ -1,8 +1,5 @@
-import type { AlphanumericData } from "../core/alphanumeric-data";
+import type { BitBuffer } from "../core/bit-buffer";
 import type { BitMatrix } from "../core/bit-matrix";
-import type { ByteData } from "../core/byte-data";
-import type { KanjiData } from "../core/kanji-data";
-import type NumericData from "../core/numeric-data";
 
 export type RendererType = "canvas" | "svg" | "terminal" | "txt" | "utf8" | "png";
 
@@ -55,20 +52,16 @@ export type DataMode = {
   ccBits: [number, number, number];
 };
 
-/*export type Segment = {
-  data: string;
-  index: number;
-  mode: DataMode;
-  length: number;
-};*/
-
-export type Segment = AlphanumericData | ByteData | KanjiData | NumericData;
+export type Segment = SegmentInterface | SegmentInterface<Uint8Array>;
 
 export interface SegmentInterface<T = string> {
   data: T;
   index?: number;
   mode: DataMode;
   length: number;
+  getBitsLength?(): number;
+  getLength?(): number;
+  write?(bitBuffer: BitBuffer): void;
 }
 
 export type RenderFunctionBase<T> = (data: QRData, opts?: QRexOptions) => T;

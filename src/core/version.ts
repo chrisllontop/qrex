@@ -29,7 +29,7 @@ function getTotalBitsFromDataArray(segments: Segment[], version: number) {
 
   for (const data of segments) {
     const reservedBits = getReservedBitsCount(data.mode, version);
-    totalBits += reservedBits + data.getBitsLength();
+    totalBits += reservedBits + data.getBitsLength!();
   }
 
   return totalBits;
@@ -120,7 +120,7 @@ function getBestVersionForData(data: Segment[], errorCorrectionLevel: ErrorCorre
     seg = data;
   }
 
-  return getBestVersionForDataLength(seg.mode, seg.getLength(), ecl);
+  return getBestVersionForDataLength(seg.mode, seg.getLength!(), ecl);
 }
 
 /**

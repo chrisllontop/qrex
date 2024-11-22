@@ -1,4 +1,5 @@
 import type { DataMode, SegmentInterface } from "../types/qrex.type";
+import type { BitBuffer } from "./bit-buffer";
 import { Mode } from "./mode";
 import { CoreUtils } from "./utils";
 
@@ -25,7 +26,7 @@ export class KanjiData implements SegmentInterface {
     return KanjiData.getBitsLength(this.data.length);
   }
 
-  write(bitBuffer: any): void {
+  write(bitBuffer: BitBuffer): void {
     // In the Shift JIS system, Kanji characters are represented by a two byte combination.
     // These byte values are shifted from the JIS X 0208 values.
     // JIS X 0208 gives details of the shift coded representation.

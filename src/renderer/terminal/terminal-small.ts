@@ -41,7 +41,7 @@ export class TerminalSmall {
    * Returns code for four QR pixels. Suitable as key in palette.
    */
   private mkCode(modules: Uint8Array, size: number, x: number, y: number): PaletteKey {
-    return this.mkCodePixel(modules, size, x, y) + this.mkCodePixel(modules, size, x, y + 1) as PaletteKey;
+    return (this.mkCodePixel(modules, size, x, y) + this.mkCodePixel(modules, size, x, y + 1)) as PaletteKey;
   }
 
   public render(qrData: QRData, options?: QRexOptions): string {

@@ -1,4 +1,5 @@
 import type { DataMode, SegmentInterface } from "../types/qrex.type";
+import type { BitBuffer } from "./bit-buffer";
 import { Mode } from "./mode";
 
 export class ByteData implements SegmentInterface<Uint8Array> {
@@ -28,7 +29,7 @@ export class ByteData implements SegmentInterface<Uint8Array> {
     return ByteData.getBitsLength(this.data.length);
   }
 
-  write(bitBuffer) {
+  write(bitBuffer: BitBuffer) {
     for (let i = 0, l = this.data.length; i < l; i++) {
       bitBuffer.put(this.data[i], 8);
     }

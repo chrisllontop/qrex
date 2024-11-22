@@ -24,7 +24,7 @@ export class RendererUtf8 {
     return blocks.WW;
   }
 
-  public render(qrData: QRData, options?: QRexOptions): string {
+  public render(qrData: QRData, options?: QRexOptions) {
     const opts = RendererUtils.getOptions(options);
     let blocks = this.BLOCK_CHAR;
     if (opts.color.dark.hex === "#ffffff" || opts.color.light.hex === "#000000") {

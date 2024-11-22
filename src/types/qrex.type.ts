@@ -59,3 +59,11 @@ export type Segment = {
 };
 
 export type RenderFunctionBase<T> = (data: QRData, opts?: QRexOptions) => T;
+
+export type ColorObject = {
+  r: number;
+  g: number;
+  b: number;
+  a: number;
+  hex: string;
+};

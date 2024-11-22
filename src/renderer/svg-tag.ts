@@ -1,22 +1,22 @@
-import type { QRData, QRexOptions } from "../types/qrex.type";
+import type { ColorObject, QRData, QRexOptions } from "../types/qrex.type";
 import { RendererUtils } from "./utils";
 
 export class RendererSvgTag {
-  private getColorAttrib(color, attrib): string {
+  private getColorAttrib(color: ColorObject, attrib: string) {
     const alpha = color.a / 255;
     const str = `${attrib}="${color.hex}"`;
 
     return alpha < 1 ? `${str} ${attrib}-opacity="${alpha.toFixed(2).slice(1)}"` : str;
   }
 
-  private svgCmd(cmd: string, x: number, y?: number): string {
+  private svgCmd(cmd: string, x: number, y?: number) {
     let str = cmd + x;
     if (typeof y !== "undefined") str += ` ${y}`;
 
     return str;
   }
 
-  private qrToPath(data: boolean[], size: number, margin: number): string {
+  private qrToPath(data: Uint8Array, size: number, margin: number) {
     let path = "";
     let moveBy = 0;
     let newRow = false;
@@ -50,7 +50,7 @@ export class RendererSvgTag {
     return path;
   }
 
-  public render(qrData: QRData, options?: QRexOptions): string {
+  public render(qrData: QRData, options?: QRexOptions) {
     const opts = RendererUtils.getOptions(options);
     const size = qrData.modules.size;
     const data = qrData.modules.data;

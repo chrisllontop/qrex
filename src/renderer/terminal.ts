@@ -10,6 +10,6 @@ export class RendererTerminal {
     if (options?.small) {
       return this.terminalSmall.render(qrData, options);
     }
-    return this.terminal.render(qrData, options);
+    return this.terminal.render(qrData);
   }
 }

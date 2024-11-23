@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { Mode } from "../../../src/core/mode";
+import type { DataMode } from "../../../src/types/qrex.type";
 
 describe("Mode bits", () => {
   const EXPECTED_BITS = {
@@ -57,7 +58,7 @@ describe("Char count bits", () => {
 });
 
 describe("Best mode", () => {
-  const EXPECTED_MODE = {
+  const EXPECTED_MODE: Record<string, DataMode> = {
     12345: Mode.NUMERIC,
     abcde: Mode.BYTE,
     "1234a": Mode.BYTE,
@@ -78,16 +79,16 @@ describe("Best mode", () => {
 
 describe("Is valid", () => {
   it("Valid modes", () => {
-    expect(Mode.isValid(Mode.NUMERIC)).toEqual([10, 12, 14]);
-    expect(Mode.isValid(Mode.ALPHANUMERIC)).toEqual([9, 11, 13]);
-    expect(Mode.isValid(Mode.BYTE)).toEqual([8, 16, 16]);
-    expect(Mode.isValid(Mode.KANJI)).toEqual([8, 10, 12]);
+    expect(Mode.isValid(Mode.NUMERIC)).toEqual(true);
+    expect(Mode.isValid(Mode.ALPHANUMERIC)).toEqual(true);
+    expect(Mode.isValid(Mode.BYTE)).toEqual(true);
+    expect(Mode.isValid(Mode.KANJI)).toEqual(true);
   });
 
   it("Invalid modes", () => {
-    expect(Mode.isValid(undefined)).toBe(undefined);
-    expect(Mode.isValid({ bit: 1 })).toBe(undefined);
-    expect(Mode.isValid({ ccBits: [] })).toBe(undefined);
+    expect(Mode.isValid(undefined)).toBe(false);
+    expect(Mode.isValid({ bit: 1 })).toBe(false);
+    expect(Mode.isValid({ ccBits: [] })).toBe(false);
   });
 });
 
@@ -113,10 +114,10 @@ describe("From value", () => {
 
 describe("To string", () => {
   it("String representation of modes", () => {
-    expect(Mode.toString(Mode.NUMERIC)).toBe("Numeric");
-    expect(Mode.toString(Mode.ALPHANUMERIC)).toBe("Alphanumeric");
-    expect(Mode.toString(Mode.BYTE)).toBe("Byte");
-    expect(Mode.toString(Mode.KANJI)).toBe("Kanji");
+    expect(Mode.toString(Mode.NUMERIC)).toBe("numeric");
+    expect(Mode.toString(Mode.ALPHANUMERIC)).toBe("alphanumeric");
+    expect(Mode.toString(Mode.BYTE)).toBe("byte");
+    expect(Mode.toString(Mode.KANJI)).toBe("kanji");
   });
 
   it("Throws on invalid mode", () => {

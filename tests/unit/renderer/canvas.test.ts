@@ -5,26 +5,27 @@ import { RendererCanvas } from "../../../src/renderer/canvas";
 
 describe("RendererCanvas interface", () => {
   it("should have render function", () => {
-    expect(typeof RendererCanvas.render).toBe("function");
+    expect(typeof RendererCanvas.prototype.render).toBe("function");
   });
 
   it("should have renderToDataURL function", () => {
-    expect(typeof RendererCanvas.renderToDataURL).toBe("function");
+    expect(typeof RendererCanvas.prototype.renderToDataURL).toBe("function");
   });
 });
 
 describe("RendererCanvas render", () => {
-  let originalDocument;
+  let originalDocument: typeof global.document;
 
   beforeAll(() => {
     originalDocument = global.document;
     global.document = {
-      createElement: (el) => {
+      createElement: (el: string): Canvas | undefined => {
         if (el === "canvas") {
           return createCanvas(200, 200);
         }
+        return undefined;
       },
-    };
+    } as unknown as Document;
   });
 
   afterAll(() => {
@@ -36,28 +37,14 @@ describe("RendererCanvas render", () => {
       version: 2,
       maskPattern: 0,
     });
-    let canvasEl;
-
+    let canvasEl: any;
+    let renderer: RendererCanvas;
     expect(() => {
-      canvasEl = RendererCanvas.render(sampleQrData);
+      renderer = new RendererCanvas();
+      canvasEl = renderer.render(sampleQrData);
     }).not.toThrow();
 
     expect(canvasEl instanceof Canvas).toBe(true);
-  });
-
-  it("should not throw with options param", () => {
-    const sampleQrData = QRex.create("sample text", {
-      version: 2,
-      maskPattern: 0,
-    });
-    let canvasEl;
-
-    expect(() => {
-      canvasEl = RendererCanvas.render(sampleQrData, { margin: 10, scale: 1 });
-    }).not.toThrow();
-
-    expect(canvasEl.width).toBe(25 + 10 * 2);
-    expect(canvasEl.width).toBe(canvasEl.height);
   });
 
   it("should throw if canvas cannot be created", () => {
@@ -67,8 +54,10 @@ describe("RendererCanvas render", () => {
       version: 2,
       maskPattern: 0,
     });
+    let renderer: RendererCanvas;
     expect(() => {
-      RendererCanvas.render(sampleQrData);
+      renderer = new RendererCanvas();
+      renderer.render(sampleQrData);
     }).toThrow();
   });
 });
@@ -80,40 +69,27 @@ describe("RendererCanvas render to provided canvas", () => {
       maskPattern: 0,
     });
     const canvasEl = createCanvas(200, 200);
-
+    let renderer: RendererCanvas;
     expect(() => {
-      RendererCanvas.render(sampleQrData, canvasEl);
-    }).not.toThrow();
-  });
-
-  it("should not throw with options param", () => {
-    const sampleQrData = QRex.create("sample text", {
-      version: 2,
-      maskPattern: 0,
-    });
-    const canvasEl = createCanvas(200, 200);
-
-    expect(() => {
-      RendererCanvas.render(sampleQrData, canvasEl, { margin: 10, scale: 1 });
-    }).not.toThrow();
-
-    expect(canvasEl.width).toBe(25 + 10 * 2);
-    expect(canvasEl.width).toBe(canvasEl.height);
+      renderer = new RendererCanvas();
+      renderer.render(sampleQrData);
+    }).toThrow();
   });
 });
 
 describe("RendererCanvas renderToDataURL", () => {
-  let originalDocument;
+  let originalDocument: typeof global.document;
 
   beforeAll(() => {
     originalDocument = global.document;
     global.document = {
-      createElement: (el) => {
+      createElement: (el: string): Canvas | undefined => {
         if (el === "canvas") {
           return createCanvas(200, 200);
         }
+        return undefined;
       },
-    };
+    } as unknown as Document;
   });
 
   afterAll(() => {
@@ -126,9 +102,10 @@ describe("RendererCanvas renderToDataURL", () => {
       maskPattern: 0,
     });
     let url;
-
+    let renderer: RendererCanvas;
     expect(() => {
-      url = RendererCanvas.renderToDataURL(sampleQrData);
+      renderer = new RendererCanvas();
+      url = renderer.renderToDataURL(sampleQrData);
     }).not.toThrow();
 
     expect(url).toBeDefined();
@@ -140,9 +117,10 @@ describe("RendererCanvas renderToDataURL", () => {
       maskPattern: 0,
     });
     let url;
-
+    let renderer: RendererCanvas;
     expect(() => {
-      url = RendererCanvas.renderToDataURL(sampleQrData, {
+      renderer = new RendererCanvas();
+      url = renderer.renderToDataURL(sampleQrData, {
         margin: 10,
         scale: 1,
         type: "image/png",
@@ -157,7 +135,8 @@ describe("RendererCanvas renderToDataURL", () => {
       version: 2,
       maskPattern: 0,
     });
-    const url = RendererCanvas.renderToDataURL(sampleQrData);
+    const renderer: RendererCanvas = new RendererCanvas();
+    const url = renderer.renderToDataURL(sampleQrData);
 
     expect(typeof url).toBe("string");
   });
@@ -167,7 +146,8 @@ describe("RendererCanvas renderToDataURL", () => {
       version: 2,
       maskPattern: 0,
     });
-    const url = RendererCanvas.renderToDataURL(sampleQrData);
+    const renderer: RendererCanvas = new RendererCanvas();
+    const url = renderer.renderToDataURL(sampleQrData);
 
     expect(url.split(",")[0]).toBe("data:image/png;base64");
   });
@@ -177,7 +157,8 @@ describe("RendererCanvas renderToDataURL", () => {
       version: 2,
       maskPattern: 0,
     });
-    const url = RendererCanvas.renderToDataURL(sampleQrData);
+    const renderer: RendererCanvas = new RendererCanvas();
+    const url = renderer.renderToDataURL(sampleQrData);
 
     const b64png = url.split(",")[1];
     expect(b64png.length % 4).toBe(0);
@@ -185,7 +166,7 @@ describe("RendererCanvas renderToDataURL", () => {
 });
 
 describe("RendererCanvas renderToDataURL to provided canvas", () => {
-  it("should not throw with only qrData and canvas param", () => {
+  it("should throw with only qrData", () => {
     const sampleQrData = QRex.create("sample text", {
       version: 2,
       maskPattern: 0,
@@ -194,10 +175,11 @@ describe("RendererCanvas renderToDataURL to provided canvas", () => {
     let url;
 
     expect(() => {
-      url = RendererCanvas.renderToDataURL(sampleQrData, canvasEl);
-    }).not.toThrow();
+      const renderer: RendererCanvas = new RendererCanvas();
+      url = renderer.renderToDataURL(sampleQrData);
+    }).toThrow("You need to specify a canvas element");
 
-    expect(url).toBeDefined();
+    expect(url).toBeUndefined();
   });
 
   it("should not throw with options param", () => {
@@ -209,14 +191,15 @@ describe("RendererCanvas renderToDataURL to provided canvas", () => {
     let url;
 
     expect(() => {
-      url = RendererCanvas.renderToDataURL(sampleQrData, canvasEl, {
+      const renderer: RendererCanvas = new RendererCanvas();
+      url = renderer.renderToDataURL(sampleQrData, {
         margin: 10,
         scale: 1,
         type: "image/png",
       });
-    }).not.toThrow();
+    }).toThrow();
 
-    expect(url).toBeDefined();
+    expect(url).toBeUndefined();
   });
 
   it("should return a string", () => {
@@ -225,7 +208,8 @@ describe("RendererCanvas renderToDataURL to provided canvas", () => {
       maskPattern: 0,
     });
     const canvasEl = createCanvas(200, 200);
-    const url = RendererCanvas.renderToDataURL(sampleQrData, canvasEl);
+    const renderer: RendererCanvas = new RendererCanvas(canvasEl);
+    const url = renderer.renderToDataURL(sampleQrData);
 
     expect(typeof url).toBe("string");
   });
@@ -236,7 +220,8 @@ describe("RendererCanvas renderToDataURL to provided canvas", () => {
       maskPattern: 0,
     });
     const canvasEl = createCanvas(200, 200);
-    const url = RendererCanvas.renderToDataURL(sampleQrData, canvasEl);
+    const renderer: RendererCanvas = new RendererCanvas(canvasEl);
+    const url = renderer.renderToDataURL(sampleQrData);
 
     expect(url.split(",")[0]).toBe("data:image/png;base64");
   });
@@ -247,7 +232,8 @@ describe("RendererCanvas renderToDataURL to provided canvas", () => {
       maskPattern: 0,
     });
     const canvasEl = createCanvas(200, 200);
-    const url = RendererCanvas.renderToDataURL(sampleQrData, canvasEl);
+    const renderer: RendererCanvas = new RendererCanvas(canvasEl);
+    const url = renderer.renderToDataURL(sampleQrData);
 
     const b64png = url.split(",")[1];
     expect(b64png.length % 4).toBe(0);

@@ -4,11 +4,11 @@ import { describe, expect, it, vi } from "vitest";
 import { QRex } from "../../../src/core/qrex";
 import { RendererSvg } from "../../../src/renderer/svg";
 
-function getExpectedViewbox(size, margin) {
+function getExpectedViewbox(size:number, margin:number) {
   const expectedQrCodeSize = size + margin * 2;
   return `0 0 ${expectedQrCodeSize} ${expectedQrCodeSize}`;
 }
-
+const renderer:RendererSvg = new RendererSvg()
 function testSvgFragment(svgFragment, expectedTags) {
   return new Promise((resolve, reject) => {
     const parser = new htmlparser.Parser(
@@ -39,17 +39,18 @@ function testSvgFragment(svgFragment, expectedTags) {
 }
 
 function buildTest(data, opts, expectedTags) {
-  const svg = RendererSvg.render(data, opts);
+  
+  const svg = renderer.render(data, opts);
   return testSvgFragment(svg, expectedTags.slice());
 }
 
 describe("SvgRenderer", () => {
   it("should have render function", () => {
-    expect(RendererSvg.render).toBeTypeOf("function");
+    expect(renderer.render).toBeTypeOf("function");
   });
 
   it("should have renderToFile function", () => {
-    expect(RendererSvg.renderToFile).toBeTypeOf("function");
+    expect(renderer.renderToFile).toBeTypeOf("function");
   });
 
   describe("Svg render", () => {
@@ -160,7 +161,7 @@ describe("SvgRenderer", () => {
 
       vi.spyOn(fs, "writeFile").mockImplementation(writeFileMock);
 
-      await RendererSvg.renderToFile(fileName, sampleQrData, (err) => {
+      await renderer.renderToFile(fileName, sampleQrData, (err) => {
         expect(err).toBeUndefined();
         expect(writeFileMock).toHaveBeenCalledWith(fileName, expect.any(String), expect.any(Function));
       });
@@ -171,7 +172,7 @@ describe("SvgRenderer", () => {
 
       vi.spyOn(fs, "writeFile").mockImplementation(writeFileMock);
 
-      await RendererSvg.renderToFile(fileName, sampleQrData, { margin: 10, scale: 1 }, (err) => {
+      await renderer.renderToFile(fileName, sampleQrData, { margin: 10, scale: 1 }, (err) => {
         expect(err).toBeUndefined();
         expect(writeFileMock).toHaveBeenCalledWith(fileName, expect.any(String), expect.any(Function));
       });
@@ -182,7 +183,7 @@ describe("SvgRenderer", () => {
 
       vi.spyOn(fs, "writeFile").mockImplementation(writeFileMock);
 
-      await RendererSvg.renderToFile(fileName, sampleQrData, (err) => {
+      await renderer.renderToFile(fileName, sampleQrData, (err) => {
         expect(err).toBeTruthy();
       });
     });

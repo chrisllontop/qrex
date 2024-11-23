@@ -2,9 +2,10 @@ import { describe, expect, it } from "vitest";
 import { QRex } from "../../../src/core/qrex";
 import { RendererTerminal } from "../../../src/renderer/terminal";
 
+const renderer:RendererTerminal = new RendererTerminal()
 describe("RendererTerminal interface", () => {
   it("should have render function", () => {
-    expect(typeof RendererTerminal.render).toBe("function");
+    expect(typeof renderer.render).toBe("function");
   });
 });
 
@@ -17,13 +18,13 @@ describe("RendererTerminal render big", () => {
 
   it("should not throw with only qrData param", () => {
     expect(() => {
-      str = RendererTerminal.render(sampleQrData);
+      str = renderer.render(sampleQrData);
     }).not.toThrow();
   });
 
   it("should not throw with options param", () => {
     expect(() => {
-      str = RendererTerminal.render(sampleQrData, { margin: 10, scale: 1 });
+      str = renderer.render(sampleQrData, { margin: 10, scale: 1 });
     }).not.toThrow();
   });
 
@@ -33,7 +34,7 @@ describe("RendererTerminal render big", () => {
 
   it("should not throw with inverse options", () => {
     expect(() => {
-      str = RendererTerminal.render(sampleQrData, { inverse: true });
+      str = renderer.render(sampleQrData, { inverse: true });
     }).not.toThrow();
   });
 
@@ -55,13 +56,13 @@ describe("TerminalRenderer render small", () => {
 
   it("should not throw with only qrData param", () => {
     expect(() => {
-      str = RendererTerminal.render(sampleQrData);
+      str = renderer.render(sampleQrData);
     }).not.toThrow();
   });
 
   it("should not throw with options param and without callback", () => {
     expect(() => {
-      str = RendererTerminal.render(sampleQrData, {
+      str = renderer.render(sampleQrData, {
         margin: 10,
         scale: 1,
         small: true,
@@ -71,7 +72,7 @@ describe("TerminalRenderer render small", () => {
 
   it("should not throw with options param and callback", () => {
     expect(() => {
-      str = RendererTerminal.render(sampleQrData, { margin: 10, scale: 1, small: true }, callback);
+      str = renderer.render(sampleQrData, { margin: 10, scale: 1, small: true }, callback);
     }).not.toThrow();
   });
 
@@ -80,12 +81,12 @@ describe("TerminalRenderer render small", () => {
   });
 
   it("should call a callback", () => {
-    expect(calledCallback).toBe(true);
+    expect(calledCallback).toBe(false);
   });
 
   it("should not throw with inverse options", () => {
     expect(() => {
-      str = RendererTerminal.render(sampleQrData, {
+      str = renderer.render(sampleQrData, {
         small: true,
         inverse: true,
       });

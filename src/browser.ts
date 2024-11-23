@@ -7,7 +7,7 @@ export class QRex extends QRexBase {
   private readonly rendererCanvas: RendererCanvas;
   private readonly rendererSvgTag = new RendererSvgTag();
 
-  constructor(data: QrContent, opts?: QRexOptions, canvas?: HTMLCanvasElement) {
+  constructor(data: QrContent, opts?: QRexOptions, canvas?) {
     super(data, opts);
     this.rendererCanvas = new RendererCanvas(canvas);
   }

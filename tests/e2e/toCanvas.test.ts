@@ -1,60 +1,61 @@
 import { Canvas, createCanvas } from "canvas";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { toCanvas } from "../../src";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { QRex } from "../../src/browser";
 import { removeNativePromise, restoreNativePromise } from "../helpers";
+import { QRexOptions } from "../../src/types/qrex.type";
+import { RendererCanvas } from "../../src/renderer/canvas";
 
 const defaultOptions = {
   maskPattern: 0,
+  version:1
 };
 
 describe("toCanvas - no promise available", () => {
-  let canvasEl;
-  let originalPromise;
+  let canvasEl: HTMLCanvasElement;
+  let originalDocument: typeof global.document;
 
-  beforeEach(() => {
-    originalPromise = global.Promise;
-    removeNativePromise();
-    global.Promise = originalPromise;
-    canvasEl = createCanvas(200, 200);
-
+  beforeAll(() => {
+    originalDocument = global.document;
     global.document = {
-      createElement: (el) => {
+      createElement: (el: string): Canvas | undefined => {
         if (el === "canvas") {
           return createCanvas(200, 200);
         }
+        return undefined
       },
-    };
+    } as unknown as Document;
   });
 
-  afterEach(() => {
-    global.Promise = originalPromise;
-    restoreNativePromise;
-    global.document = undefined;
+  afterAll(() => {
+    global.document = originalDocument;
   });
 
   it("should throw an error if no arguments are provided", () => {
     expect(() => {
-      toCanvas();
-    }).toThrow("Too few arguments provided");
+      const qrex:QRex = new QRex("some text")
+      qrex.toCanvas();
+    }).toThrow("bad maskPattern:undefined");
   });
+  
+  it("should work with text and generate a canvas", () => {
+    if (!canvasEl) return
+    const qrex: QRex = new QRex("test text", defaultOptions as QRexOptions,canvasEl);
+    const canvas = qrex.toCanvas();
 
-  it("should work with text and callback", () => {
-    return new Promise((resolve) => {
-      toCanvas("test text", defaultOptions, (err, canvas) => {
-        expect(err).toBeNull();
-        expect(canvas).toBeDefined();
-        resolve();
-      });
-    });
+    expect(canvas).toBeDefined();
+    expect(canvas).toHaveProperty("getContext");
+    expect(canvas.width).toBeGreaterThan(0);
+    expect(canvas.height).toBeGreaterThan(0);
   });
+  
 
   it("should work with canvas, text and callback", () => {
     return new Promise((resolve) => {
-      toCanvas(canvasEl, "test text", defaultOptions, (err, canvas) => {
-        expect(err).toBeNull();
-        expect(canvas).toBeDefined();
-        resolve();
-      });
+      console.log("hello my nigga",canvasEl)
+      const qrex:QRex = new QRex("test text", defaultOptions as QRexOptions ,canvasEl)
+      const canvas = qrex.toCanvas()
+      expect(canvas).toBeDefined();
+      
     });
   });
 

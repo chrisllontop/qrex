@@ -104,7 +104,8 @@ describe("PNG renderToFile", () => {
       renderer.renderToFile(fileName, sampleQrData,{ margin: 10, scale: 1 }, (err) => {
         try {
           expect(err).toBeFalsy();
-          // expect(fsStub).toHaveBeenCalledWith(fileName);
+          console.log(fsStub)
+          expect(fsStub).toHaveBeenCalledWith(fileName);
           resolve();
         } catch (e) {
           reject(e);
@@ -137,6 +138,7 @@ describe("PNG renderToFile", () => {
   });
 
   it("should fail if error occurs during save", async () => {
+    
     const fsStub = vi.spyOn(fs, "createWriteStream").mockReturnValue(new StreamMock().forceErrorOnWrite());
 
     await new Promise((resolve, reject) => {
@@ -153,6 +155,8 @@ describe("PNG renderToFile", () => {
 
     fsStub.mockRestore();
   });
+
+  
 });
 
 describe("PNG renderToFileStream", () => {

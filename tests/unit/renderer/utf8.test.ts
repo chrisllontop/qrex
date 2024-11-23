@@ -3,9 +3,10 @@ import { describe, expect, it, vi } from "vitest";
 import { QRex } from "../../../src/core/qrex";
 import { RendererUtf8 } from "../../../src/renderer/utf8";
 
+const renderer:RendererUtf8 = new RendererUtf8()
 describe("RendererUtf8 interface", () => {
   it("should have render function", () => {
-    expect(typeof RendererUtf8.render).toBe("function");
+    expect(typeof renderer.render).toBe("function");
   });
 });
 
@@ -18,13 +19,13 @@ describe("RendererUtf8 render", () => {
 
   it("should not throw with only qrData param", () => {
     expect(() => {
-      str = RendererUtf8.render(sampleQrData);
+      str = renderer.render(sampleQrData);
     }).not.toThrow();
   });
 
   it("should not throw with options param", () => {
     expect(() => {
-      str = RendererUtf8.render(sampleQrData, { margin: 10, scale: 1 });
+      str = renderer.render(sampleQrData, { margin: 10, scale: 1 });
     }).not.toThrow();
   });
 
@@ -44,7 +45,7 @@ describe("RendererUtf8 renderToFile", () => {
     const fsStub = vi.spyOn(fs, "writeFile");
     fsStub.mockImplementationOnce((_, __, cb) => cb(null));
 
-    await RendererUtf8.renderToFile(fileName, sampleQrData, (err) => {
+    await renderer.renderToFile(fileName, sampleQrData, (err) => {
       expect(err).toBeNull();
       expect(fsStub).toHaveBeenCalledWith(fileName, expect.any(String), expect.any(Function));
     });
@@ -56,7 +57,7 @@ describe("RendererUtf8 renderToFile", () => {
     const fsStub = vi.spyOn(fs, "writeFile");
     fsStub.mockImplementationOnce((_, __, cb) => cb(null));
 
-    await RendererUtf8.renderToFile(fileName, sampleQrData, { margin: 10, scale: 1 }, (err) => {
+    await renderer.renderToFile(fileName, sampleQrData, { margin: 10, scale: 1 }, (err) => {
       expect(err).toBeNull();
       expect(fsStub).toHaveBeenCalledWith(fileName, expect.any(String), expect.any(Function));
     });
@@ -68,7 +69,7 @@ describe("RendererUtf8 renderToFile", () => {
     const fsStub = vi.spyOn(fs, "writeFile");
     fsStub.mockImplementationOnce((_, __, cb) => cb(new Error("Write failed")));
 
-    await RendererUtf8.renderToFile(fileName, sampleQrData, (err) => {
+    await renderer.renderToFile(fileName, sampleQrData, (err) => {
       expect(err).toBeInstanceOf(Error);
       expect(err.message).toBe("Write failed");
     });

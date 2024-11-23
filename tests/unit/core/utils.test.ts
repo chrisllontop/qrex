@@ -13,7 +13,7 @@ const EXPECTED_SYMBOL_SIZES = [
 it("Symbol size", () => {
   expect(() => {
     CoreUtils.getSymbolSize(-1);
-  }).toThrow('should be in range from 1 to 40');
+  }).toThrow("should be in range from 1 to 40");
 
   expect(() => {
     CoreUtils.getSymbolSize(0);
@@ -55,7 +55,7 @@ it("Set/Get SJIS function", () => {
 
   expect(CoreUtils.isKanjiModeEnabled()).toBe(false);
 
-  const testFunc = (c:any) => `test_${c}`;
+  const testFunc = (c: string) => `test_${c}`;
 
   CoreUtils.setToSJISFunction(testFunc);
 

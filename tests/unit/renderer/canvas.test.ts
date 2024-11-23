@@ -37,7 +37,7 @@ describe("RendererCanvas render", () => {
       version: 2,
       maskPattern: 0,
     });
-    let canvasEl: any;
+    let canvasEl: Canvas | HTMLCanvasElement | undefined = undefined;
     let renderer: RendererCanvas;
     expect(() => {
       renderer = new RendererCanvas();
@@ -68,7 +68,6 @@ describe("RendererCanvas render to provided canvas", () => {
       version: 2,
       maskPattern: 0,
     });
-    const canvasEl = createCanvas(200, 200);
     let renderer: RendererCanvas;
     expect(() => {
       renderer = new RendererCanvas();
@@ -101,7 +100,7 @@ describe("RendererCanvas renderToDataURL", () => {
       version: 2,
       maskPattern: 0,
     });
-    let url;
+    let url: string | undefined = undefined;
     let renderer: RendererCanvas;
     expect(() => {
       renderer = new RendererCanvas();
@@ -116,14 +115,15 @@ describe("RendererCanvas renderToDataURL", () => {
       version: 2,
       maskPattern: 0,
     });
-    let url;
+    let url: string | undefined = undefined;
     let renderer: RendererCanvas;
     expect(() => {
       renderer = new RendererCanvas();
       url = renderer.renderToDataURL(sampleQrData, {
+        // @ts-ignore TODO - Improve types in QRex options
         margin: 10,
         scale: 1,
-        type: "image/png",
+        type: "image/png" as "png",
       });
     }).not.toThrow();
 
@@ -171,8 +171,7 @@ describe("RendererCanvas renderToDataURL to provided canvas", () => {
       version: 2,
       maskPattern: 0,
     });
-    const canvasEl = createCanvas(200, 200);
-    let url;
+    let url: string | undefined = undefined;
 
     expect(() => {
       const renderer: RendererCanvas = new RendererCanvas();
@@ -187,15 +186,15 @@ describe("RendererCanvas renderToDataURL to provided canvas", () => {
       version: 2,
       maskPattern: 0,
     });
-    const canvasEl = createCanvas(200, 200);
-    let url;
+    let url: string | undefined = undefined;
 
     expect(() => {
       const renderer: RendererCanvas = new RendererCanvas();
       url = renderer.renderToDataURL(sampleQrData, {
+        // @ts-ignore TODO - Improve types in QRex options
         margin: 10,
         scale: 1,
-        type: "image/png",
+        type: "image/png" as "png",
       });
     }).toThrow();
 

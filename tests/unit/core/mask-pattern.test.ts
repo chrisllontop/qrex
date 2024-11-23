@@ -2,8 +2,6 @@ import { describe, expect, it } from "vitest";
 import { BitMatrix } from "../../../src/core/bit-matrix";
 import { MaskPattern } from "../../../src/core/mask-pattern";
 import type { MaskPatternType } from "../../../src/types/qrex.type";
-import type { BitMatrix as BitMatrixType } from "../../../src/core/bit-matrix";
-
 
 describe("Mask pattern - Pattern references", () => {
   it("Should return 8 patterns", () => {
@@ -69,16 +67,14 @@ describe("MaskPattern from value", () => {
     expect(result).toBe(5);
   });
 
-
   it("Should return undefined if value is invalid", () => {
     const invalidInputs: (number | string | null)[] = [-1, null, "invalid"];
-    invalidInputs.forEach((input) => {
+    for (const input of invalidInputs) {
       const result = MaskPattern.from(input as unknown as MaskPatternType);
       expect(result).toBeUndefined();
-    });
+    }
   });
 });
-
 
 describe("Mask pattern - Apply mask", () => {
   const patterns: number = Object.keys(MaskPattern.Patterns).length;
@@ -118,7 +114,6 @@ describe("Mask pattern - Apply mask", () => {
     }).toThrow();
   });
 });
-
 
 describe("Mask pattern - Penalty calculations", () => {
   it("Penalty N1", () => {

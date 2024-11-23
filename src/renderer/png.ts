@@ -4,7 +4,7 @@ import type { QRData, QRexOptions } from "../types/qrex.type";
 import { RendererUtils } from "./utils";
 
 export class RendererPng {
-  public render(qrData: QRData, options?: QRexOptions) {
+  public render(qrData: QRData, options?: QRexOptions): PNG {
     const opts = RendererUtils.getOptions(options);
     const pngOpts = opts.rendererOpts;
     const size = RendererUtils.getImageWidth(qrData.modules.size, opts);
@@ -40,7 +40,7 @@ export class RendererPng {
     png.pack();
   }
 
-  public renderToFile(path: string, qrData: QRData, options, cb) {
+  public renderToFile(path: string, qrData: QRData, options?: QRexOptions, cb?) {
     if (typeof cb === "undefined") {
       cb = options;
       options = undefined;
@@ -60,7 +60,7 @@ export class RendererPng {
     this.renderToFileStream(stream, qrData, options);
   }
 
-  public renderToFileStream(stream, qrData: QRData, options) {
+  public renderToFileStream(stream, qrData: QRData, options?: QRexOptions) {
     const png = this.render(qrData, options);
     png.pack().pipe(stream);
   }

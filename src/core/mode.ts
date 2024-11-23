@@ -67,8 +67,8 @@ function toString(mode: DataMode) {
 /**
  * Check if input param is a valid mode object
  */
-function isValid(mode: DataMode) {
-  return Boolean(mode?.bit && mode.ccBits);
+function isValid(mode?: DataMode) {
+  return Boolean(mode?.bit && mode?.ccBits);
 }
 
 /**
@@ -100,7 +100,7 @@ function fromString(string: ModeType): DataMode {
  * Returns mode from a value.
  * If value is not a valid mode, returns defaultValue
  */
-function from(value: ModeType | DataMode, defaultValue: DataMode): DataMode {
+function from(value?: ModeType | DataMode, defaultValue?: DataMode): DataMode | undefined {
   try {
     if (typeof value === "string") {
       return fromString(value);

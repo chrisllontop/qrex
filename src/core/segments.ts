@@ -204,14 +204,14 @@ function buildGraph(nodes: ReturnType<typeof buildNodes>, version: number) {
  * Builds a segment from a specified data and mode.
  * If a mode is not specified, the more suitable will be used.
  */
-function buildSingleSegment(data: string, modesHint: DataMode | ModeType) {
-  let mode: DataMode;
+function buildSingleSegment(data: string, modesHint?: DataMode | ModeType) {
+  let mode: DataMode | undefined;
   const bestMode = Mode.getBestModeForData(data);
 
   mode = Mode.from(modesHint, bestMode);
 
   // Make sure data can be encoded
-  if (mode !== Mode.BYTE && mode.bit < bestMode.bit) {
+  if (mode !== Mode.BYTE && mode && mode.bit < bestMode.bit) {
     throw new Error(
       `"${data}" cannot be encoded with mode ${Mode.toString(mode)}.
  Suggested mode is: ${Mode.toString(bestMode)}`,
@@ -251,9 +251,13 @@ function buildSingleSegment(data: string, modesHint: DataMode | ModeType) {
  * If property "mode" is not present, the more suitable mode will be used.
  *
  */
-function fromArray(array: Segment[]) {
+function fromArray(array: Segment[] | string[]) {
   return array.reduce((acc: Segment[], seg) => {
-    acc.push(buildSingleSegment(seg?.data as string, seg.mode)!);
+    if (typeof seg === "string") {
+      acc.push(buildSingleSegment(seg as string, undefined)!);
+    } else if (seg.data) {
+      acc.push(buildSingleSegment(seg.data as string, seg.mode)!);
+    }
     return acc;
   }, []);
 }

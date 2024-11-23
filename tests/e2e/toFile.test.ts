@@ -12,7 +12,7 @@ const defaultOptions = {
 
 describe("toFile - no promise available", () => {
   const fileName = path.join(os.tmpdir(), "qrimage.png");
-  let originalPromise;
+  let originalPromise: PromiseConstructor;
   beforeAll(() => {
     originalPromise = global.Promise;
     removeNativePromise();
@@ -21,7 +21,7 @@ describe("toFile - no promise available", () => {
 
   afterAll(() => {
     global.Promise = originalPromise;
-    restoreNativePromise;
+    restoreNativePromise();
     global.document = undefined;
   });
 

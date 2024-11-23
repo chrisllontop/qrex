@@ -1,6 +1,6 @@
 type SJIS_UTF8Entry = [number, string];
 
-const SJIS_UTF8:SJIS_UTF8Entry[] = [
+const SJIS_UTF8: SJIS_UTF8Entry[] = [
   [
     0x8140,
     "　、。，．・：；？！゛゜´｀¨＾￣＿ヽヾゝゞ〃仝々〆〇ー―‐／＼～∥｜…‥‘’“”（）〔〕［］｛｝〈〉《》「」『』【】＋－±×",
@@ -303,7 +303,7 @@ const SJIS_UTF8:SJIS_UTF8Entry[] = [
   [0xea80, "黴黶黷黹黻黼黽鼇鼈皷鼕鼡鼬鼾齊齒齔齣齟齠齡齦齧齬齪齷齲齶龕龜龠堯槇遙瑤凜熙"],
 ];
 
-export default function toSJIS(utf8Char:string):number | undefined {
+export default function toSJIS(utf8Char: string): number | undefined {
   if (!utf8Char || utf8Char === "") return;
 
   for (let i = 0; i < SJIS_UTF8.length; i++) {

@@ -9,7 +9,7 @@ const defaultOptions = {
 };
 
 describe("toDataURL - no promise available", () => {
-  let originalPromise;
+  let originalPromise: PromiseConstructor;
   beforeAll(() => {
     originalPromise = global.Promise;
     removeNativePromise();

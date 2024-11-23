@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { QRex } from "../../../src/core/qrex";
 import { RendererTerminal } from "../../../src/renderer/terminal";
 
-const renderer:RendererTerminal = new RendererTerminal()
+const renderer: RendererTerminal = new RendererTerminal();
 describe("RendererTerminal interface", () => {
   it("should have render function", () => {
     expect(typeof renderer.render).toBe("function");
@@ -14,7 +14,7 @@ describe("RendererTerminal render big", () => {
     version: 2,
     maskPattern: 0,
   });
-  let str;
+  let str: string;
 
   it("should not throw with only qrData param", () => {
     expect(() => {
@@ -24,6 +24,7 @@ describe("RendererTerminal render big", () => {
 
   it("should not throw with options param", () => {
     expect(() => {
+      // @ts-ignore TODO - Improve types in QRex options
       str = renderer.render(sampleQrData, { margin: 10, scale: 1 });
     }).not.toThrow();
   });
@@ -48,7 +49,7 @@ describe("TerminalRenderer render small", () => {
     version: 2,
     maskPattern: 0,
   });
-  let str;
+  let str: string;
   let calledCallback = false;
   const callback = () => {
     calledCallback = true;
@@ -63,6 +64,7 @@ describe("TerminalRenderer render small", () => {
   it("should not throw with options param and without callback", () => {
     expect(() => {
       str = renderer.render(sampleQrData, {
+        // @ts-ignore TODO - Improve types in QRex options
         margin: 10,
         scale: 1,
         small: true,

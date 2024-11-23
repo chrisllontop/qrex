@@ -9,7 +9,7 @@ const baseOptions = {
   maskPattern: 0,
 };
 describe("toString - no promise available", () => {
-  let originalPromise;
+  let originalPromise: PromiseConstructor;
   beforeEach(() => {
     originalPromise = global.Promise;
     removeNativePromise();

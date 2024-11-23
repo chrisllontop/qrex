@@ -4,11 +4,11 @@ import { describe, expect, it, vi } from "vitest";
 import { QRex } from "../../../src/core/qrex";
 import { RendererSvg } from "../../../src/renderer/svg";
 
-function getExpectedViewbox(size:number, margin:number) {
+function getExpectedViewbox(size: number, margin: number) {
   const expectedQrCodeSize = size + margin * 2;
   return `0 0 ${expectedQrCodeSize} ${expectedQrCodeSize}`;
 }
-const renderer:RendererSvg = new RendererSvg()
+const renderer: RendererSvg = new RendererSvg();
 function testSvgFragment(svgFragment, expectedTags) {
   return new Promise((resolve, reject) => {
     const parser = new htmlparser.Parser(
@@ -39,7 +39,6 @@ function testSvgFragment(svgFragment, expectedTags) {
 }
 
 function buildTest(data, opts, expectedTags) {
-  
   const svg = renderer.render(data, opts);
   return testSvgFragment(svg, expectedTags.slice());
 }

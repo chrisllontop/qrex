@@ -24,8 +24,6 @@ describe("Error Level from Input Value", () => {
     expect(ECLevel.from(undefined as unknown as ErrorCorrectionLevel, ECLevel.M)).toBe(ECLevel.M);
     expect(ECLevel.from("" as ErrorCorrectionLevel, ECLevel.Q)).toBe(ECLevel.Q);
   });
-
-  
 });
 
 describe("Error Level Validity", () => {

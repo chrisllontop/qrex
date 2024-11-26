@@ -5,14 +5,14 @@ export abstract class QRexBase {
   protected readonly opts?: QRexOptions;
   protected readonly data: QrContent;
 
-  constructor(data: QrContent, opts?: QRexOptions) {
+  constructor(data?: QrContent, opts?: QRexOptions) {
     this.data = data;
     this.opts = opts;
     this.checkParams(data, opts);
   }
 
   protected checkParams(text: QrContent, opts?: QRexOptions) {
-    if (typeof text === "undefined") {
+    if (!text) {
       throw new Error("String required as first argument");
     }
     // TODO - Add opts validation

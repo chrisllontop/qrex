@@ -170,7 +170,7 @@ describe("SvgRenderer", () => {
       const writeFileMock = vi.fn((file, content, callback) => callback());
 
       vi.spyOn(fs, "writeFile").mockImplementation(writeFileMock);
-
+      // @ts-ignore
       await renderer.renderToFile(fileName, sampleQrData, { margin: 10, scale: 1 }, (err) => {
         expect(err).toBeUndefined();
         expect(writeFileMock).toHaveBeenCalledWith(fileName, expect.any(String), expect.any(Function));

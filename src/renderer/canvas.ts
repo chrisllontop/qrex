@@ -2,7 +2,7 @@ import type { QRData, QRexOptions } from "../types/qrex.type";
 import { RendererUtils } from "./utils";
 
 export class RendererCanvas {
-  private readonly canvas: HTMLCanvasElement;
+  canvas: HTMLCanvasElement;
 
   constructor(canvas?: HTMLCanvasElement) {
     this.canvas = canvas ?? this.getCanvasElement();
@@ -30,6 +30,7 @@ export class RendererCanvas {
 
   public render(qrData: QRData, options?: QRexOptions): HTMLCanvasElement {
     let opts = options;
+    // this.canvas = document.createElement('canvas');
     const canvasEl = this.canvas;
 
     opts = RendererUtils.getOptions(opts);

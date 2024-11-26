@@ -1,19 +1,8 @@
 import { describe, expect, it } from "vitest";
-import toSJIS from "../../../helper/to-sjis";
 import { ECLevel } from "../../../src/core/error-correction-level";
 import { QRex } from "../../../src/core/qrex";
 import { Version } from "../../../src/core/version";
-import type {
-  QRexOptions,
-  QRData,
-  QrContent,
-  ErrorCorrectionLevelBit,
-  MaskPatternType,
-  Segment,
-  ErrorCorrectionLevelString,
-  DataMode,
-} from "../../../src/types/qrex.type";
-import { version } from "canvas";
+import type { QrContent, MaskPatternType, ErrorCorrectionLevelString } from "../../../src/types/qrex.type";
 
 describe("QRCode Interface", () => {
   const defaultOptions = {
@@ -58,20 +47,6 @@ describe("QRCode Interface", () => {
       }),
     ).not.toThrow();
   });
-
-  // it("Should accept data as array of objects", () => {
-  //   expect(() => {
-  //     QRex.create(
-  //       [
-  //         { data: "ABCDEFG", mode: "alphanumeric" },
-  //         { data: "abcdefg" },
-  //         { data: "晒三", mode: "kanji" },
-  //         { data: "0123456", mode: "numeric" },
-  //       ],
-  //       { toSJISFunc: toSJIS, maskPattern: 0 },
-  //     );
-  //   }).not.toThrow();
-  // });
 
   it("Should accept errorCorrectionLevel as string", () => {
     expect(() =>
@@ -164,34 +139,3 @@ describe("QRCode Version", () => {
     }).toThrow("No valid version provided");
   });
 });
-
-// describe("QRCode Capacity", () => {
-//   it("Should contain 7 byte characters", () => {
-//     const qr = QRex.create([{ data: "abcdefg", mode: "byte" }], {
-//       maskPattern: 0,
-//     });
-//     expect(qr.version).toBe(1);
-//   });
-
-//   it("Should contain 17 numeric characters", () => {
-//     const qr = QRex.create([{ data: "12345678901234567", mode: "numeric" }], {
-//       maskPattern: 0,
-//     });
-//     expect(qr.version).toBe(1);
-//   });
-
-//   it("Should contain 10 alphanumeric characters", () => {
-//     const qr = QRex.create([{ data: "ABCDEFGHIL", mode: "alphanumeric" }], {
-//       maskPattern: 0,
-//     });
-//     expect(qr.version).toBe(1);
-//   });
-
-//   it("Should contain 4 kanji characters", () => {
-//     const qr = QRex.create([{ data: "ＡＩぐサ", mode: "kanji" }], {
-//       toSJISFunc: toSJIS,
-//       maskPattern: 0,
-//     });
-//     expect(qr.version).toBe(1);
-//   });
-// });

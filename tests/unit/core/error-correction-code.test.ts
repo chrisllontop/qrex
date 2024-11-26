@@ -28,13 +28,11 @@ describe("Error Correction Blocks", () => {
   it("should return a positive number of blocks", () => {
     for (let v = 1; v <= 40; v++) {
       for (const level of levels) {
-        // Fetch the expected blocks count from the EC_BLOCKS_TABLE
         const expectedBlocks = ECCode.getBlocksCount(v, level);
         expect(expectedBlocks).toBeGreaterThan(0);
       }
     }
 
-    // Test invalid error correction level
     expect(() => {
       // @ts-ignore
       ECCode.getBlocksCount(1, undefined);

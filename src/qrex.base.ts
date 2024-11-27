@@ -5,7 +5,7 @@ export abstract class QRexBase {
   protected readonly opts?: QRexOptions;
   protected readonly data: QrContent;
 
-  constructor(data?: QrContent, opts?: QRexOptions) {
+  constructor(data: QrContent, opts?: QRexOptions) {
     this.data = data;
     this.opts = opts;
     this.checkParams(data, opts);

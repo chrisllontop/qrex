@@ -6,11 +6,9 @@ import type { QRexOptions, QrContent } from "./types/qrex.type";
 export class QRex extends QRexBase {
   private readonly rendererCanvas: RendererCanvas;
   private readonly rendererSvgTag = new RendererSvgTag();
-  canvas: HTMLCanvasElement;
 
-  constructor(data?: QrContent, opts?: QRexOptions, canvas?: HTMLCanvasElement) {
+  constructor(data: QrContent, opts?: QRexOptions, canvas?: HTMLCanvasElement) {
     super(data, opts);
-    this.canvas = canvas || document.createElement("canvas");
     this.rendererCanvas = new RendererCanvas(canvas);
   }
 

@@ -12,6 +12,7 @@ export class RendererCanvas {
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     if (!this.canvas.style) {
+      // @ts-ignore
       this.canvas.style = {};
     }
     this.canvas.height = size;

@@ -188,10 +188,6 @@ describe("Segments from array", () => {
     ]);
   });
 
-  // it("should return an empty array", () => {
-  //   expect(Segments.fromArray([{}])).toEqual([]);
-  // });
-
   it("should throw if segment cannot be encoded with specified mode", () => {
     expect(() => {
       Segments.fromArray([{ data: "ABCDE", mode: "numeric" }]);

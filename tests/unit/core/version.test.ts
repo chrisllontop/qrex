@@ -215,10 +215,6 @@ describe("Version from value", () => {
   it("should return default value if version is invalid", () => {
     expect(Version.from(1)).toBe(1);
   });
-
-  // it("should return default value if version is undefined", () => {
-  //   expect(Version.from(-1)).toBe(1);
-  // });
 });
 
 describe("Version capacity", () => {

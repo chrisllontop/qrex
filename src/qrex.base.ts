@@ -12,7 +12,7 @@ export abstract class QRexBase {
   }
 
   protected checkParams(text: QrContent, opts?: QRexOptions) {
-    if (typeof text === "undefined") {
+    if (!text) {
       throw new Error("String required as first argument");
     }
     // TODO - Add opts validation

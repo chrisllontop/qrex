@@ -1,6 +1,6 @@
 import { type Canvas, createCanvas } from "canvas";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { QRex } from "../../src/browser";
+import { QRex } from "../../src/qrex.browser";
 import type { QRexOptions } from "../../src/types/qrex.type";
 
 const defaultOptions = {

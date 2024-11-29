@@ -1,6 +1,6 @@
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { QRex } from "../../src/server";
+import { QRex } from "../../src/qrex";
 
 const baseOptions = {
   maskPattern: 0,

@@ -16,7 +16,7 @@ const generateConfig = (name: string, type: "commonjs" | "module") => {
     plugins: [
       codecovWebpackPlugin({
         enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
-        bundleName: name,
+        bundleName: `${name}-${folder}`,
         uploadToken: process.env.CODECOV_TOKEN,
       }),
     ],

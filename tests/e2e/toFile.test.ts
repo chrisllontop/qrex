@@ -1,7 +1,7 @@
 import os from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import { QRex } from "../../src/server";
+import { QRex } from "../../src/qrex";
 import { removeNativePromise, restoreNativePromise } from "../helpers";
 
 const defaultOptions = {

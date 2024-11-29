@@ -1,5 +1,4 @@
 import path from "node:path";
-import { codecovWebpackPlugin } from "@codecov/webpack-plugin";
 import { defineConfig } from "@rspack/cli";
 
 const babelConfig = {
@@ -13,13 +12,6 @@ const generateConfig = (name: string, type: "commonjs" | "module") => {
   const libraryType = type === "commonjs" ? "commonjs2" : "module";
 
   return defineConfig({
-    plugins: [
-      codecovWebpackPlugin({
-        enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
-        bundleName: `${name}-${folder}`,
-        uploadToken: process.env.CODECOV_TOKEN,
-      }),
-    ],
     module: {
       rules: [
         {

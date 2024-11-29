@@ -42,9 +42,6 @@ const generateConfig = (name: string, type: "commonjs" | "module") => {
       library: {
         type: libraryType,
       },
-      environment: {
-        module: type === "module",
-      },
     },
     experiments: {
       outputModule: type === "module",

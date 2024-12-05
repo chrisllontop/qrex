@@ -1,20 +1,7 @@
-import {
-  type RenderOptions,
-  QRData,
-  type Callback,
-  type SegmentInterface,
-  RenderFunc,
-  type RenderFuncServer,
-} from "./types/qrex.type";
+import type { RenderOptions, Callback, SegmentInterface, RenderFuncServer } from "./types/qrex.type";
 
-import canPromise from "./can-promise.js";
-import * as QRCode from "./core/qrex.js";
-
-// import * as Utf8Renderer from "./renderer/utf8.js";
-// import * as TerminalRenderer from "./renderer/terminal.js";
-// import * as SvgRenderer from "./renderer/svg.js";
-// import { toCanvas } from "./browser.js";
-// import type { Writable } from 'stream';
+import canPromise from "./can-promise";
+import * as QRCode from "./core/qrex";
 import { RendererPng } from "./renderer/png";
 import { RendererUtf8 } from "./renderer/utf8";
 import { RendererTerminal } from "./renderer/terminal";

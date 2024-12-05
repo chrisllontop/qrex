@@ -1,5 +1,5 @@
-import type { ErrorCorrectionLevelBit } from "../types/qrex.type.js";
-import { L, M, Q, H } from "./error-correction-level.js";
+import type { ErrorCorrectionLevelBit } from "../types/qrex.type";
+import { L, M, Q, H } from "./error-correction-level";
 
 const EC_BLOCKS_TABLE: number[] = [
   // L  M  Q  H

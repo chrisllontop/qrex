@@ -47,10 +47,10 @@ const generateConfig = (name: string, type: "commonjs" | "module") => {
 };
 
 const config = [
-  generateConfig("qrex", "commonjs"),
-  generateConfig("qrex.browser", "commonjs"),
-  generateConfig("qrex", "module"),
-  generateConfig("qrex.browser", "module"),
+  generateConfig("server", "commonjs"),
+  generateConfig("browser", "commonjs"),
+  generateConfig("server", "module"),
+  generateConfig("browser", "module"),
 ];
 
 export default config;

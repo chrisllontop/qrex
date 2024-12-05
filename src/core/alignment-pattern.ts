@@ -8,7 +8,7 @@
  * and their number depends on the symbol version.
  */
 
-import { getSymbolSize } from "./utils.js";
+import { getSymbolSize } from "./utils";
 
 /**
  * Calculate the row/column coordinates of the center module of each alignment pattern

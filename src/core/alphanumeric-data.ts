@@ -1,6 +1,6 @@
-import type { DataMode } from "../types/qrex.type.js";
-import type { BitBuffer } from "./bit-buffer.js";
-import { ALPHANUMERIC } from "./mode.js";
+import type { DataMode } from "../types/qrex.type";
+import type { BitBuffer } from "./bit-buffer";
+import { ALPHANUMERIC } from "./mode";
 
 /**
  * Array of characters available in alphanumeric mode

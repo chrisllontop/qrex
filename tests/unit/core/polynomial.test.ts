@@ -17,8 +17,8 @@ describe("Generator Polynomial", () => {
 
 describe("Polynomial Operations", () => {
   test("Should return correct result for polynomial multiplication", () => {
-    const p1 = [0, 1, 2, 3, 4];
-    const p2 = [5, 6];
+    const p1 = new Uint8Array([0, 1, 2, 3, 4]);
+    const p2 = new Uint8Array([5, 6]);
 
     const result = Polynomial.mul(p1, p2);
     expect(result instanceof Uint8Array).toBe(true);
@@ -26,7 +26,7 @@ describe("Polynomial Operations", () => {
   });
 
   test("Should return correct result for polynomial modulus", () => {
-    const p1 = [0, 1, 2, 3, 4];
+    const p1 = new Uint8Array([0, 1, 2, 3, 4]);
     const result = Polynomial.mod(p1, Polynomial.generateECPolynomial(2));
     expect(result instanceof Uint8Array).toBe(true);
     expect(result.length).toBe(2);

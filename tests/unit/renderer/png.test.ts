@@ -1,40 +1,40 @@
+// @ts-nocheck
 import fs from "node:fs";
 import { PNG } from "pngjs";
 import { describe, expect, it, vi } from "vitest";
-import { QRex } from "../../../src/core/qrex";
+import { QRex as QRCode } from "../../../src/core/qrex";
 import { RendererPng } from "../../../src/renderer/png";
 import StreamMock from "../../mocks/writable-stream";
 
+const renderobject = new RendererPng();
 describe("PNG renderer interface", () => {
-  const renderer: RendererPng = new RendererPng();
   it("should have render function", () => {
-    expect(renderer.render).toBeTypeOf("function");
+    expect(renderobject.render).toBeTypeOf("function");
   });
 
   it("should have renderToDataURL function", () => {
-    expect(renderer.renderToDataURL).toBeTypeOf("function");
+    expect(renderobject.renderToDataURL).toBeTypeOf("function");
   });
 
   it("should have renderToFile function", () => {
-    expect(renderer.renderToFile).toBeTypeOf("function");
+    expect(renderobject.renderToFile).toBeTypeOf("function");
   });
 
   it("should have renderToFileStream function", () => {
-    expect(renderer.renderToFileStream).toBeTypeOf("function");
+    expect(renderobject.renderToFileStream).toBeTypeOf("function");
   });
 });
 
 describe("PNG render", () => {
-  const sampleQrData = QRex.create("sample text", {
+  const sampleQrData = QRCode.create("sample text", {
     version: 2,
     maskPattern: 0,
   });
 
   it("should not throw with only qrData param and return PNG instance", () => {
     let png: PNG;
-    const renderer: RendererPng = new RendererPng();
     expect(() => {
-      png = renderer.render(sampleQrData);
+      png = renderobject.render(sampleQrData);
     }).not.toThrow();
     expect(png).toBeInstanceOf(PNG);
     expect(png.width).toBe(png.height);
@@ -43,10 +43,8 @@ describe("PNG render", () => {
 
   it("should not throw with options param and return correct size", () => {
     let png: PNG;
-    const renderer: RendererPng = new RendererPng();
     expect(() => {
-      png = renderer.render(sampleQrData, {
-        // @ts-ignore TODO - Improve types in QRex options
+      png = renderobject.render(sampleQrData, {
         margin: 10,
         scale: 1,
       });
@@ -58,15 +56,14 @@ describe("PNG render", () => {
 });
 
 describe("PNG renderToDataURL", () => {
-  const sampleQrData = QRex.create("sample text", {
+  const sampleQrData = QRCode.create("sample text", {
     version: 2,
     maskPattern: 0,
   });
 
   it("should not generate errors with only qrData param and return a string", async () => {
     const url = await new Promise((resolve, reject) => {
-      const renderer: RendererPng = new RendererPng();
-      renderer.renderToDataURL(sampleQrData, (err, url) => {
+      renderobject.renderToDataURL(sampleQrData, (err, url) => {
         if (err) reject(err);
         else resolve(url);
       });
@@ -76,8 +73,7 @@ describe("PNG renderToDataURL", () => {
 
   it("should not generate errors with options param and return a valid data URL", async () => {
     const url = await new Promise((resolve, reject) => {
-      const renderer: RendererPng = new RendererPng();
-      renderer.renderToDataURL(sampleQrData, { margin: 10, scale: 1 }, (err, url) => {
+      renderobject.renderToDataURL(sampleQrData, { margin: 10, scale: 1 }, (err, url) => {
         if (err) reject(err);
         else resolve(url);
       });
@@ -91,21 +87,20 @@ describe("PNG renderToDataURL", () => {
 });
 
 describe("PNG renderToFile", () => {
-  const sampleQrData = QRex.create("sample text", {
+  const sampleQrData = QRCode.create("sample text", {
     version: 2,
     maskPattern: 0,
   });
   const fileName = "qrimage.png";
 
   it("should not generate errors with only qrData param and save file with correct file name", async () => {
-    const fsStub = vi.spyOn(fs, "createWriteStream").mockReturnValue(new StreamMock() as unknown as fs.WriteStream);
+    const fsStub = vi.spyOn(fs, "createWriteStream").mockReturnValue(new StreamMock());
 
     await new Promise<void>((resolve, reject) => {
-      const renderer: RendererPng = new RendererPng();
-      renderer.renderToFile(fileName, sampleQrData, { margin: 10, scale: 1 }, (err) => {
+      renderobject.renderToFile(fileName, sampleQrData, (err) => {
         try {
           expect(err).toBeFalsy();
-
+          expect(fsStub).toHaveBeenCalledWith(fileName);
           resolve();
         } catch (e) {
           reject(e);
@@ -117,14 +112,13 @@ describe("PNG renderToFile", () => {
   });
 
   it("should not generate errors with options param and save file with correct file name", async () => {
-    const fsStub = vi.spyOn(fs, "createWriteStream").mockReturnValue(new StreamMock() as unknown as fs.WriteStream);
-
-    const renderer: RendererPng = new RendererPng();
+    const fsStub = vi.spyOn(fs, "createWriteStream").mockReturnValue(new StreamMock());
 
     await new Promise<void>((resolve, reject) => {
-      renderer.renderToFile(fileName, sampleQrData, { margin: 10, scale: 1 }, (err) => {
+      renderobject.renderToFile(fileName, sampleQrData, { margin: 10, scale: 1 }, (err) => {
         try {
           expect(err).toBeFalsy();
+          expect(fsStub).toHaveBeenCalledWith(fileName);
           resolve();
         } catch (e) {
           reject(e);
@@ -138,11 +132,10 @@ describe("PNG renderToFile", () => {
   it("should fail if error occurs during save", async () => {
     const fsStub = vi.spyOn(fs, "createWriteStream").mockReturnValue(new StreamMock().forceErrorOnWrite());
 
-    await new Promise((resolve, reject) => {
-      const renderer: RendererPng = new RendererPng();
-      renderer.renderToFile(fileName, sampleQrData, { margin: 10, scale: 1 }, (err) => {
+    await new Promise<void>((resolve, reject) => {
+      renderobject.renderToFile(fileName, sampleQrData, (err) => {
         try {
-          expect(err).toBeUndefined();
+          expect(err).toBeTruthy();
           resolve();
         } catch (e) {
           reject(e);
@@ -155,22 +148,20 @@ describe("PNG renderToFile", () => {
 });
 
 describe("PNG renderToFileStream", () => {
-  const sampleQrData = QRex.create("sample text", {
+  const sampleQrData = QRCode.create("sample text", {
     version: 2,
     maskPattern: 0,
   });
 
   it("should not throw with only qrData param", () => {
     expect(() => {
-      const renderer: RendererPng = new RendererPng();
-      renderer.renderToFileStream(new StreamMock(), sampleQrData);
+      renderobject.renderToFileStream(new StreamMock(), sampleQrData);
     }).not.toThrow();
   });
 
   it("should not throw with options param", () => {
     expect(() => {
-      const renderer: RendererPng = new RendererPng();
-      renderer.renderToFileStream(new StreamMock(), sampleQrData, {
+      renderobject.renderToFileStream(new StreamMock(), sampleQrData, {
         margin: 10,
         scale: 1,
       });

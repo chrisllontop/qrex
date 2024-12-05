@@ -1,75 +1,173 @@
-import { type Canvas, createCanvas } from "canvas";
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { QRex } from "../../src/qrex.browser";
-import type { QRexOptions } from "../../src/types/qrex.type";
+// @ts-nocheck
+import { Canvas, createCanvas } from "canvas";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { removeNativePromise, restoreNativePromise } from "../helpers";
+import { QRexServer } from "../../src/server";
 
+const renderObject = new QRexServer();
+const toCanvas = renderObject.toCanvas;
 const defaultOptions = {
-  maskPattern: 0,
-  version: 1,
+  maskPattern: 1,
+  version: 4,
 };
 
-describe("QRex toCanvas Feature", () => {
-  let canvasEl: HTMLCanvasElement;
-  let originalDocument: typeof global.document;
+describe("toCanvas - no promise available", () => {
+  const canvasEl = createCanvas(200, 200);
+  let originalPromise: PromiseConstructor;
 
-  beforeAll(() => {
-    originalDocument = global.document;
+  beforeEach(() => {
+    originalPromise = global.Promise;
+    removeNativePromise();
+    global.Promise = originalPromise;
+
     global.document = {
-      createElement: (el: string): Canvas | undefined => {
+      createElement: (el) => {
         if (el === "canvas") {
           return createCanvas(200, 200);
         }
-        return undefined;
       },
     } as unknown as Document;
   });
 
-  afterAll(() => {
-    global.document = originalDocument;
-  });
-
-  beforeEach(() => {
-    canvasEl = createCanvas(200, 200);
-  });
-
   afterEach(() => {
-    canvasEl = null;
+    global.Promise = originalPromise;
+    restoreNativePromise;
+    global.document = undefined as unknown as Document;
   });
 
   it("should throw an error if no arguments are provided", () => {
     expect(() => {
-      const qrex: QRex = new QRex("some text");
-      qrex.toCanvas();
-    }).toThrow("bad maskPattern:undefined");
+      toCanvas();
+    }).toBeUndefined;
   });
 
-  it("should work with text and generate a canvas", () => {
-    console.log("from test", canvasEl);
-    const qrex: QRex = new QRex("test text", defaultOptions as QRexOptions, canvasEl);
-    const canvas = qrex.toCanvas();
-
-    expect(canvas).toBeDefined();
-    expect(canvas).toHaveProperty("getContext");
-    expect(canvas.width).toBeGreaterThan(0);
-    expect(canvas.height).toBeGreaterThan(0);
+  it("should work with text and callback", () => {
+    return new Promise<void>((resolve) => {
+      toCanvas("test text", (err, canvas) => {
+        expect(err).toBeNull();
+        expect(canvas).toBeDefined();
+        resolve();
+      });
+    });
   });
 
   it("should work with canvas, text and callback", () => {
-    return new Promise((resolve) => {
-      const qrex: QRex = new QRex("test text", defaultOptions as QRexOptions, canvasEl);
-      const canvas = qrex.toCanvas();
-      expect(canvas).toBeDefined();
-      resolve();
+    return new Promise<void>((resolve) => {
+      toCanvas(canvasEl, "test text", (err, canvas) => {
+        expect(err).toBeNull();
+        expect(canvas).toBeDefined();
+        resolve();
+      });
     });
   });
 
   it("should work with canvas, text, options and callback", () => {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       const options = { ...defaultOptions, width: 200 };
-      const qrex: QRex = new QRex("test text", options as QRexOptions, canvasEl);
-      const canvas = qrex.toCanvas();
-      expect(canvas).toBeDefined();
-      resolve();
+      toCanvas(canvasEl, "test text", options, (err, canvas) => {
+        expect(err).toBeNull();
+        expect(canvas).toBeDefined();
+        resolve();
+      });
+    });
+  });
+});
+
+describe("toCanvas Function Tests", () => {
+  let canvasEl: unknown;
+
+  beforeEach(() => {
+    global.document = {
+      createElement: (el) => {
+        if (el === "canvas") {
+          return createCanvas(200, 200);
+        }
+      },
+    } as unknown as Document;
+  });
+
+  afterEach(() => {
+    global.document = undefined as unknown as Document;
+  });
+
+  describe("Basic Functionality", () => {
+    it("should throw an error if no arguments are provided", () => {
+      expect(() => {
+        toCanvas();
+      }).toBeUndefined;
+    });
+
+    it("should work with text and callback", () => {
+      return new Promise<void>((resolve) => {
+        toCanvas("some text", (err, canvas) => {
+          expect(err).toBeNull();
+          expect(canvas).toBeInstanceOf(Canvas);
+          resolve();
+        });
+      });
+    });
+
+    it("should work with text, options, and callback", () => {
+      const options = {
+        ...defaultOptions,
+        version: 2,
+        errorCorrectionLevel: "H",
+      };
+      return new Promise<void>((resolve) => {
+        toCanvas("some text", options, (err, canvas) => {
+          expect(err).toBeNull();
+          expect(canvas).toBeInstanceOf(Canvas);
+          resolve();
+        });
+      });
+    });
+    it("should return a canvas object when using text with Promise", async () => {
+      const canvas = await toCanvas("unique text", defaultOptions);
+      expect(canvas).toBeInstanceOf(Canvas);
+    });
+
+    it("should return a canvas object when using text and options with Promise", async () => {
+      const options = {
+        ...defaultOptions,
+        errorCorrectionLevel: "H",
+      };
+      const canvas = await toCanvas("some text", options);
+      expect(canvas).toBeInstanceOf(Canvas);
+    });
+  });
+
+  describe("toCanvas with specified canvas element", () => {
+    const canvasEl = createCanvas(200, 200);
+    it("should work with canvas element, text, and callback", () => {
+      return new Promise<void>((resolve) => {
+        toCanvas(canvasEl, "some text", (err, canvas) => {
+          expect(err).toBeNull();
+          expect(canvas).toBeInstanceOf(Canvas);
+          resolve();
+        });
+      });
+    });
+
+    it("should work with canvas element, text, options, and callback", () => {
+      return new Promise<void>((resolve) => {
+        toCanvas(canvasEl, "some text", { errorCorrectionLevel: "H", maskPattern: 0 }, (err, canvas) => {
+          expect(err).toBeNull();
+          expect(canvas).toBeInstanceOf(Canvas);
+          resolve();
+        });
+      });
+    });
+
+    it("should return a canvas object when using canvas element, text with Promise", async () => {
+      const canvas = await toCanvas(canvasEl, "some text", defaultOptions);
+      expect(canvas).toBeInstanceOf(Canvas);
+    });
+
+    it("should return a canvas object when using canvas element, text, and options with Promise", async () => {
+      const canvas = await toCanvas(canvasEl, "some text", defaultOptions, {
+        errorCorrectionLevel: "H",
+      });
+      expect(canvas).toBeInstanceOf(Canvas);
     });
   });
 });

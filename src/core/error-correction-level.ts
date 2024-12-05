@@ -1,11 +1,15 @@
-import type { ErrorCorrectionLevel, ErrorCorrectionLevelBit, ErrorCorrectionLevelString } from "../types/qrex.type";
+import type { ErrorCorrectionLevelBit } from "../types/qrex.type";
 
-const L: ErrorCorrectionLevelBit = { bit: 1 };
-const M: ErrorCorrectionLevelBit = { bit: 0 };
-const Q: ErrorCorrectionLevelBit = { bit: 3 };
-const H: ErrorCorrectionLevelBit = { bit: 2 };
+export const L: ErrorCorrectionLevelBit = { bit: 1 };
+export const M: ErrorCorrectionLevelBit = { bit: 0 };
+export const Q: ErrorCorrectionLevelBit = { bit: 3 };
+export const H: ErrorCorrectionLevelBit = { bit: 2 };
 
-function fromString(string: ErrorCorrectionLevelString) {
+function fromString(string: string): ErrorCorrectionLevelBit {
+  if (typeof string !== "string") {
+    throw new Error("Param is not a string");
+  }
+
   const lcStr = string.toLowerCase();
 
   switch (lcStr) {
@@ -30,22 +34,22 @@ function fromString(string: ErrorCorrectionLevelString) {
   }
 }
 
-function isValid(level?: ErrorCorrectionLevelBit) {
-  return Boolean(level && typeof level?.bit !== "undefined" && level.bit >= 0 && level.bit < 4);
+export function isValid(level: ErrorCorrectionLevelBit): boolean {
+  return level && typeof level.bit !== "undefined" && level.bit >= 0 && level.bit < 4;
 }
 
-function from(value: ErrorCorrectionLevel, defaultValue: ErrorCorrectionLevelBit) {
-  try {
-    if (typeof value === "string") {
-      return fromString(value);
-    }
+export function from(
+  value: ErrorCorrectionLevelBit | string,
+  defaultValue?: ErrorCorrectionLevelBit,
+): ErrorCorrectionLevelBit {
+  if (isValid(value as ErrorCorrectionLevelBit)) {
+    return value as ErrorCorrectionLevelBit;
+  }
 
-    if (isValid(value)) {
-      return value;
-    }
-    throw new Error("Invalid Error Correction Level");
+  try {
+    return fromString(value as string);
   } catch (e) {
-    return defaultValue;
+    return defaultValue!;
   }
 }
 

@@ -1,6 +1,6 @@
-import * as fs from "node:fs";
-import type { QRData, QRexOptions } from "../types/qrex.type";
+import fs from "node:fs";
 import { RendererUtils } from "./utils";
+import type { Callback, QRData, RenderOptions } from "../types/qrex.type";
 
 export class RendererUtf8 {
   private BLOCK_CHAR = {
@@ -17,15 +17,16 @@ export class RendererUtf8 {
     WB: "▀",
   };
 
-  private getBlockChar(top: number, bottom: number, blocks): string {
+  private getBlockChar = (top: boolean, bottom: boolean, blocks: typeof this.BLOCK_CHAR) => {
     if (top && bottom) return blocks.BB;
     if (top && !bottom) return blocks.BW;
     if (!top && bottom) return blocks.WB;
     return blocks.WW;
-  }
+  };
 
-  public render(qrData: QRData, options?: QRexOptions) {
-    const opts = RendererUtils.getOptions(options);
+  public render = (qrData: QRData, options: RenderOptions | undefined, cb?: Callback) => {
+    const Utils = new RendererUtils();
+    const opts = Utils.getOptions(options);
     let blocks = this.BLOCK_CHAR;
     if (opts.color.dark.hex === "#ffffff" || opts.color.light.hex === "#000000") {
       blocks = this.INVERTED_BLOCK_CHAR;
@@ -48,7 +49,7 @@ export class RendererUtf8 {
         const topModule = data[i * size + j];
         const bottomModule = data[(i + 1) * size + j];
 
-        output += this.getBlockChar(topModule, bottomModule, blocks);
+        output += this.getBlockChar(topModule as boolean, bottomModule as boolean, blocks);
       }
 
       output += `${vMargin}
@@ -57,11 +58,19 @@ export class RendererUtf8 {
 
     output += hMargin.slice(0, -1);
 
-    return output;
-  }
+    if (typeof cb === "function") {
+      cb(null, output);
+    }
 
-  public renderToFile(path: string, qrData: QRData, options?: QRexOptions): void {
+    return output;
+  };
+
+  public renderToFile = (path: string, qrData: QRData, options?: RenderOptions, cb?: Callback) => {
+    if (typeof cb === "undefined") {
+      cb = options as unknown as Callback;
+      options = undefined;
+    }
     const utf8 = this.render(qrData, options);
-    fs.writeFileSync(path, utf8);
-  }
+    fs.writeFile(path, utf8, cb);
+  };
 }

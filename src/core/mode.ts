@@ -1,43 +1,47 @@
-import type { DataMode, ModeType } from "../types/qrex.type";
-import { Regex } from "./regex";
-import { VersionCheck } from "./version-check";
+import { isValid as _isValid } from "./version-check";
+import { testNumeric, testAlphanumeric, testKanji } from "./regex";
+import type { DataMode } from "../types/qrex.type";
 
-const NUMERIC: DataMode = {
-  id: "numeric",
+export const NUMERIC: DataMode = {
+  id: "Numeric",
   bit: 1 << 0,
   ccBits: [10, 12, 14],
 };
 
-const ALPHANUMERIC: DataMode = {
-  id: "alphanumeric",
+export const ALPHANUMERIC: DataMode = {
+  id: "Alphanumeric",
   bit: 1 << 1,
   ccBits: [9, 11, 13],
 };
 
-const BYTE: DataMode = {
-  id: "byte",
+export const BYTE: DataMode = {
+  id: "Byte",
   bit: 1 << 2,
   ccBits: [8, 16, 16],
 };
 
-const KANJI: DataMode = {
-  id: "kanji",
+export const KANJI: DataMode = {
+  id: "Kanji",
   bit: 1 << 3,
   ccBits: [8, 10, 12],
 };
 
-const MIXED = {
+export const MIXED: DataMode = {
   bit: -1,
 };
 
 /**
  * Returns the number of bits needed to store the data length
  * according to QR Code specifications.
+ *
+ * @param  {Mode}   mode    Data mode
+ * @param  {Number} version QR Code version
+ * @return {Number}         Number of bits
  */
-function getCharCountIndicator(mode: DataMode, version: number): number {
+export function getCharCountIndicator(mode: DataMode, version: number): number {
   if (!mode.ccBits) throw new Error(`Invalid mode: ${mode}`);
 
-  if (!VersionCheck.isValid(version)) {
+  if (!_isValid(version)) {
     throw new Error(`Invalid version: ${version}`);
   }
 
@@ -48,34 +52,45 @@ function getCharCountIndicator(mode: DataMode, version: number): number {
 
 /**
  * Returns the most efficient mode to store the specified data
+ *
+ * @param  {String} dataStr Input data string
+ * @return {Mode}           Best mode
  */
-function getBestModeForData(dataStr: string) {
-  if (Regex.testNumeric(dataStr)) return NUMERIC;
-  if (Regex.testAlphanumeric(dataStr)) return ALPHANUMERIC;
-  if (Regex.testKanji(dataStr)) return KANJI;
+export function getBestModeForData(dataStr: string): DataMode {
+  if (testNumeric(dataStr)) return NUMERIC;
+  if (testAlphanumeric(dataStr)) return ALPHANUMERIC;
+  if (testKanji(dataStr)) return KANJI;
   return BYTE;
 }
 
 /**
  * Return mode name as string
+ *
+ * @param {Mode} mode Mode object
+ * @returns {String}  Mode name
  */
-function toString(mode: DataMode) {
+export function toString(mode: DataMode): string {
   if (mode?.id) return mode.id;
   throw new Error("Invalid mode");
 }
 
 /**
  * Check if input param is a valid mode object
+ *
+ * @param   {Mode}    mode Mode object
+ * @returns {Boolean} True if valid mode, false otherwise
  */
-function isValid(mode?: DataMode) {
-  return Boolean(mode?.bit && mode?.ccBits);
+export function isValid(mode: DataMode): boolean {
+  return !!mode?.bit && !!mode.ccBits;
 }
 
 /**
  * Get mode object from its name
  *
+ * @param   {String} string Mode name
+ * @returns {Mode}          Mode object
  */
-function fromString(string: ModeType): DataMode {
+function fromString(string: string): DataMode {
   if (typeof string !== "string") {
     throw new Error("Param is not a string");
   }
@@ -99,22 +114,24 @@ function fromString(string: ModeType): DataMode {
 /**
  * Returns mode from a value.
  * If value is not a valid mode, returns defaultValue
+ *
+ * @param  {Mode|String} value        Encoding mode
+ * @param  {Mode}        defaultValue Fallback value
+ * @return {Mode}                     Encoding mode
  */
-function from(value?: ModeType | DataMode, defaultValue?: DataMode): DataMode | undefined {
+export function from(value: DataMode | string | null, defaultValue: DataMode): DataMode {
+  if (isValid(value as DataMode)) {
+    return value as DataMode;
+  }
+
   try {
-    if (typeof value === "string") {
-      return fromString(value);
-    }
-    if (isValid(value)) {
-      return value;
-    }
-    throw new Error("Invalid mode");
+    return fromString(value as string);
   } catch (e) {
     return defaultValue;
   }
 }
 
-export const Mode = {
+const Mode = {
   NUMERIC,
   ALPHANUMERIC,
   BYTE,
@@ -124,5 +141,8 @@ export const Mode = {
   getBestModeForData,
   toString,
   isValid,
+  fromString,
   from,
 };
+
+export default Mode;

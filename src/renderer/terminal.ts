@@ -1,15 +1,15 @@
-import type { QRData, QRexOptions } from "../types/qrex.type";
-import { Terminal } from "./terminal/terminal";
+import type { Callback, QRData, RenderOptions } from "../types/qrex.type";
 import { TerminalSmall } from "./terminal/terminal-small";
+import { TerminalBig } from "./terminal/terminal-big";
 
 export class RendererTerminal {
-  private terminal = new Terminal();
-  private terminalSmall = new TerminalSmall();
-
-  public render(qrData: QRData, options?: QRexOptions): string {
+  public render = (qrData: QRData, options: RenderOptions, cb: Callback) => {
+    const terminalBig = new TerminalBig();
+    const terminalSmall = new TerminalSmall();
     if (options?.small) {
-      return this.terminalSmall.render(qrData, options);
+      return terminalSmall.render(qrData, options, cb);
     }
-    return this.terminal.render(qrData);
-  }
+
+    return terminalBig.render(qrData, options, cb);
+  };
 }

@@ -1,29 +1,31 @@
+// @ts-nocheck
 import { Canvas, createCanvas } from "canvas";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { QRex } from "../../../src/core/qrex";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+import { QRex as QRCode } from "../../../src/core/qrex";
 import { RendererCanvas } from "../../../src/renderer/canvas";
+import { QRData, QRexOptions } from "../../../src/types/qrex.type";
 
+const rendererCanvas = new RendererCanvas();
 describe("RendererCanvas interface", () => {
   it("should have render function", () => {
-    expect(typeof RendererCanvas.prototype.render).toBe("function");
+    expect(typeof rendererCanvas.render).toBe("function");
   });
 
   it("should have renderToDataURL function", () => {
-    expect(typeof RendererCanvas.prototype.renderToDataURL).toBe("function");
+    expect(typeof rendererCanvas.renderToDataURL).toBe("function");
   });
 });
 
 describe("RendererCanvas render", () => {
-  let originalDocument: typeof global.document;
+  let originalDocument: Document;
 
   beforeAll(() => {
     originalDocument = global.document;
     global.document = {
-      createElement: (el: string): Canvas | undefined => {
+      createElement: (el) => {
         if (el === "canvas") {
           return createCanvas(200, 200);
         }
-        return undefined;
       },
     } as unknown as Document;
   });
@@ -33,60 +35,86 @@ describe("RendererCanvas render", () => {
   });
 
   it("should not throw if canvas is not provided", () => {
-    const sampleQrData = QRex.create("sample text", {
+    const sampleQrData = QRCode.create("sample text", {
       version: 2,
       maskPattern: 0,
     });
-    let canvasEl: Canvas | HTMLCanvasElement | undefined = undefined;
-    let renderer: RendererCanvas;
+    let canvasEl: HTMLCanvasElement;
+
     expect(() => {
-      renderer = new RendererCanvas();
-      canvasEl = renderer.render(sampleQrData);
+      canvasEl = rendererCanvas.render(sampleQrData);
     }).not.toThrow();
 
     expect(canvasEl instanceof Canvas).toBe(true);
   });
 
-  it("should throw if canvas cannot be created", () => {
-    global.document = undefined;
-
-    const sampleQrData = QRex.create("sample text", {
+  it("should not throw with options param", () => {
+    const sampleQrData = QRCode.create("sample text", {
       version: 2,
       maskPattern: 0,
     });
-    let renderer: RendererCanvas;
+    let canvasEl: HTMLCanvasElement;
+
     expect(() => {
-      renderer = new RendererCanvas();
-      renderer.render(sampleQrData);
+      canvasEl = rendererCanvas.render(sampleQrData, { margin: 10, scale: 1 });
+    }).not.toThrow();
+
+    expect(canvasEl.width).toBe(25 + 10 * 2);
+    expect(canvasEl.width).toBe(canvasEl.height);
+  });
+
+  it("should throw if canvas cannot be created", () => {
+    global.document = undefined as unknown as Document;
+
+    const sampleQrData = QRCode.create("sample text", {
+      version: 2,
+      maskPattern: 0,
+    });
+    expect(() => {
+      rendererCanvas.render(sampleQrData);
     }).toThrow();
   });
 });
 
 describe("RendererCanvas render to provided canvas", () => {
   it("should not throw with only qrData and canvas param", () => {
-    const sampleQrData = QRex.create("sample text", {
+    const sampleQrData = QRCode.create("sample text", {
       version: 2,
       maskPattern: 0,
     });
-    let renderer: RendererCanvas;
+    const canvasEl = createCanvas(200, 200);
+
     expect(() => {
-      renderer = new RendererCanvas();
-      renderer.render(sampleQrData);
-    }).toThrow();
+      rendererCanvas.render(sampleQrData, canvasEl);
+    }).not.toThrow();
+  });
+
+  it("should not throw with options param", () => {
+    const sampleQrData = QRCode.create("sample text", {
+      version: 2,
+      maskPattern: 0,
+    });
+    const canvasEl = createCanvas(200, 200);
+
+    expect(() => {
+      rendererCanvas.render(sampleQrData, canvasEl, { margin: 10, scale: 1 });
+    }).not.toThrow();
+
+    expect(canvasEl.width).toBe(25 + 10 * 2);
+    expect(canvasEl.width).toBe(canvasEl.height);
   });
 });
 
 describe("RendererCanvas renderToDataURL", () => {
-  let originalDocument: typeof global.document;
+  let originalDocument: Document;
 
   beforeAll(() => {
     originalDocument = global.document;
     global.document = {
-      createElement: (el: string): Canvas | undefined => {
+      createElement: (el) => {
         if (el === "canvas") {
           return createCanvas(200, 200);
         }
-        return undefined;
       },
     } as unknown as Document;
   });
@@ -96,34 +124,31 @@ describe("RendererCanvas renderToDataURL", () => {
   });
 
   it("should not throw if canvas is not provided", () => {
-    const sampleQrData = QRex.create("sample text", {
+    const sampleQrData = QRCode.create("sample text", {
       version: 2,
       maskPattern: 0,
     });
-    let url: string | undefined = undefined;
-    let renderer: RendererCanvas;
+    let url: string;
+
     expect(() => {
-      renderer = new RendererCanvas();
-      url = renderer.renderToDataURL(sampleQrData);
+      url = rendererCanvas.renderToDataURL(sampleQrData);
     }).not.toThrow();
 
     expect(url).toBeDefined();
   });
 
   it("should not throw with options param", () => {
-    const sampleQrData = QRex.create("sample text", {
+    const sampleQrData = QRCode.create("sample text", {
       version: 2,
       maskPattern: 0,
     });
-    let url: string | undefined = undefined;
-    let renderer: RendererCanvas;
+    let url: string;
+
     expect(() => {
-      renderer = new RendererCanvas();
-      url = renderer.renderToDataURL(sampleQrData, {
-        // @ts-ignore TODO - Improve types in QRex options
+      url = rendererCanvas.renderToDataURL(sampleQrData, {
         margin: 10,
         scale: 1,
-        type: "image/png" as "png",
+        type: "image/png",
       });
     }).not.toThrow();
 
@@ -131,34 +156,31 @@ describe("RendererCanvas renderToDataURL", () => {
   });
 
   it("should return a string", () => {
-    const sampleQrData = QRex.create("sample text", {
+    const sampleQrData = QRCode.create("sample text", {
       version: 2,
       maskPattern: 0,
     });
-    const renderer: RendererCanvas = new RendererCanvas();
-    const url = renderer.renderToDataURL(sampleQrData);
+    const url = rendererCanvas.renderToDataURL(sampleQrData);
 
     expect(typeof url).toBe("string");
   });
 
   it("should have correct header in data URL", () => {
-    const sampleQrData = QRex.create("sample text", {
+    const sampleQrData = QRCode.create("sample text", {
       version: 2,
       maskPattern: 0,
     });
-    const renderer: RendererCanvas = new RendererCanvas();
-    const url = renderer.renderToDataURL(sampleQrData);
+    const url = rendererCanvas.renderToDataURL(sampleQrData);
 
     expect(url.split(",")[0]).toBe("data:image/png;base64");
   });
 
   it("should have correct length for base64 string", () => {
-    const sampleQrData = QRex.create("sample text", {
+    const sampleQrData = QRCode.create("sample text", {
       version: 2,
       maskPattern: 0,
     });
-    const renderer: RendererCanvas = new RendererCanvas();
-    const url = renderer.renderToDataURL(sampleQrData);
+    const url = rendererCanvas.renderToDataURL(sampleQrData);
 
     const b64png = url.split(",")[1];
     expect(b64png.length % 4).toBe(0);
@@ -166,73 +188,69 @@ describe("RendererCanvas renderToDataURL", () => {
 });
 
 describe("RendererCanvas renderToDataURL to provided canvas", () => {
-  it("should throw with only qrData", () => {
-    const sampleQrData = QRex.create("sample text", {
-      version: 2,
-      maskPattern: 0,
-    });
-    let url: string | undefined = undefined;
-
-    expect(() => {
-      const renderer: RendererCanvas = new RendererCanvas();
-      url = renderer.renderToDataURL(sampleQrData);
-    }).toThrow("You need to specify a canvas element");
-
-    expect(url).toBeUndefined();
-  });
-
-  it("should not throw with options param", () => {
-    const sampleQrData = QRex.create("sample text", {
-      version: 2,
-      maskPattern: 0,
-    });
-    let url: string | undefined = undefined;
-
-    expect(() => {
-      const renderer: RendererCanvas = new RendererCanvas();
-      url = renderer.renderToDataURL(sampleQrData, {
-        // @ts-ignore TODO - Improve types in QRex options
-        margin: 10,
-        scale: 1,
-        type: "image/png" as "png",
-      });
-    }).toThrow();
-
-    expect(url).toBeUndefined();
-  });
-
-  it("should return a string", () => {
-    const sampleQrData = QRex.create("sample text", {
+  it("should not throw with only qrData and canvas param", () => {
+    const sampleQrData = QRCode.create("sample text", {
       version: 2,
       maskPattern: 0,
     });
     const canvasEl = createCanvas(200, 200);
-    const renderer: RendererCanvas = new RendererCanvas(canvasEl);
-    const url = renderer.renderToDataURL(sampleQrData);
+    let url: string;
+
+    expect(() => {
+      url = rendererCanvas.renderToDataURL(sampleQrData, canvasEl);
+    }).not.toThrow();
+
+    expect(url).toBeDefined();
+  });
+
+  it("should not throw with options param", () => {
+    const sampleQrData = QRCode.create("sample text", {
+      version: 2,
+      maskPattern: 0,
+    });
+    const canvasEl = createCanvas(200, 200);
+    let url: string;
+
+    expect(() => {
+      url = rendererCanvas.renderToDataURL(sampleQrData, canvasEl, {
+        margin: 10,
+        scale: 1,
+        type: "image/png",
+      });
+    }).not.toThrow();
+
+    expect(url).toBeDefined();
+  });
+
+  it("should return a string", () => {
+    const sampleQrData = QRCode.create("sample text", {
+      version: 2,
+      maskPattern: 0,
+    });
+    const canvasEl = createCanvas(200, 200);
+    const url = rendererCanvas.renderToDataURL(sampleQrData, canvasEl);
 
     expect(typeof url).toBe("string");
   });
 
   it("should have correct header in data URL", () => {
-    const sampleQrData = QRex.create("sample text", {
+    const sampleQrData = QRCode.create("sample text", {
       version: 2,
       maskPattern: 0,
     });
     const canvasEl = createCanvas(200, 200);
-    const renderer: RendererCanvas = new RendererCanvas(canvasEl);
-    const url = renderer.renderToDataURL(sampleQrData);
+    const url = rendererCanvas.renderToDataURL(sampleQrData, canvasEl);
 
     expect(url.split(",")[0]).toBe("data:image/png;base64");
   });
 
   it("should have correct length for base64 string", () => {
-    const sampleQrData = QRex.create("sample text", {
+    const sampleQrData = QRCode.create("sample text", {
       version: 2,
       maskPattern: 0,
     });
     const canvasEl = createCanvas(200, 200);
-    const renderer: RendererCanvas = new RendererCanvas(canvasEl);
-    const url = renderer.renderToDataURL(sampleQrData);
+    const url = rendererCanvas.renderToDataURL(sampleQrData, canvasEl);
 
     const b64png = url.split(",")[1];
     expect(b64png.length % 4).toBe(0);

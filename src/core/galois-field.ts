@@ -1,5 +1,5 @@
-const EXP_TABLE = new Uint8Array(512);
-const LOG_TABLE = new Uint8Array(256);
+const EXP_TABLE: Uint8Array = new Uint8Array(512);
+const LOG_TABLE: Uint8Array = new Uint8Array(256);
 /**
  * Precompute the log and anti-log tables for faster computation later
  *
@@ -8,7 +8,7 @@ const LOG_TABLE = new Uint8Array(256);
  *
  * ref {@link https://en.wikiversity.org/wiki/Reed%E2%80%93Solomon_codes_for_coders#Introduction_to_mathematical_fields}
  */
-(function initTables() {
+(function initTables(): void {
   let x = 1;
   for (let i = 0; i < 255; i++) {
     EXP_TABLE[i] = x;
@@ -35,23 +35,33 @@ const LOG_TABLE = new Uint8Array(256);
 
 /**
  * Returns log value of n inside Galois Field
+ *
+ * @param  {Number} n
+ * @return {Number}
  */
-function log(n: number) {
+export function log(n: number): number {
   if (n < 1) throw new Error(`log(${n})`);
   return LOG_TABLE[n];
 }
 
 /**
  * Returns anti-log value of n inside Galois Field
+ *
+ * @param  {Number} n
+ * @return {Number}
  */
-function exp(n: number) {
+export function exp(n: number): number {
   return EXP_TABLE[n];
 }
 
 /**
  * Multiplies two number inside Galois Field
+ *
+ * @param  {Number} x
+ * @param  {Number} y
+ * @return {Number}
  */
-function mul(x: number, y: number) {
+export function mul(x: number, y: number): number {
   if (x === 0 || y === 0) return 0;
 
   // should be EXP_TABLE[(LOG_TABLE[x] + LOG_TABLE[y]) % 255] if EXP_TABLE wasn't oversized

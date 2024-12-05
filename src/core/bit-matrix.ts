@@ -1,17 +1,13 @@
 /**
  * Helper class to handle QR Code symbol modules
+ *
+ * @param {Number} size Symbol size
  */
 export class BitMatrix {
-  /** Symbol size */
   size: number;
-  /** Data */
   data: Uint8Array;
-  /** Reserved bits */
   reservedBit: Uint8Array;
 
-  /**
-   * @param size Symbol size
-   */
   constructor(size: number) {
     if (!size || size < 1) {
       throw new Error("BitMatrix size must be defined and greater than 0");
@@ -25,32 +21,49 @@ export class BitMatrix {
   /**
    * Set bit value at specified location
    * If reserved flag is set, this bit will be ignored during masking process
+   *
+   * @param {Number}  row
+   * @param {Number}  col
+   * @param {Boolean} value
+   * @param {Boolean} reserved
    */
-  set(row: number, col: number, value: number, reserved?: boolean) {
+  set(row: number, col: number, value: boolean, reserved: boolean) {
     const index = row * this.size + col;
-    this.data[index] = value;
-    if (reserved) this.reservedBit[index] = Number(true);
+    this.data[index] = value ? 1 : 0;
+    if (reserved) this.reservedBit[index] = 1;
   }
 
   /**
    * Returns bit value at specified location
+   *
+   * @param  {Number}  row
+   * @param  {Number}  col
+   * @return {Boolean}
    */
-  get(row: number, col: number) {
-    return this.data[row * this.size + col];
+  get(row: number, col: number): boolean {
+    return this.data[row * this.size + col] === 1;
   }
 
   /**
    * Applies xor operator at specified location
    * (used during masking process)
+   *
+   * @param {Number}  row
+   * @param {Number}  col
+   * @param {Boolean} value
    */
-  xor(row: number, col: number, value: number) {
-    this.data[row * this.size + col] ^= value;
+  xor(row: number, col: number, value: boolean): void {
+    this.data[row * this.size + col] ^= value ? 1 : 0;
   }
 
   /**
    * Check if bit at specified location is reserved
+   *
+   * @param {Number}   row
+   * @param {Number}   col
+   * @return {Boolean}
    */
-  isReserved(row: number, col: number) {
-    return this.reservedBit[row * this.size + col];
+  isReserved(row: number, col: number): boolean {
+    return this.reservedBit[row * this.size + col] === 1;
   }
 }

@@ -44,41 +44,43 @@ const expectedPattern111 = [
 
 describe("MaskPattern validity", () => {
   it("Should return false if no input", () => {
-    expect(MaskPattern.isValid(undefined as unknown as MaskPatternType)).toBe(false);
+    expect(MaskPattern.isValid()).toBe(false);
   });
 
   it("Should return false if value is not a number", () => {
-    expect(MaskPattern.isValid("" as unknown as MaskPatternType)).toBe(true);
+    expect(MaskPattern.isValid("")).toBe(false);
   });
 
   it("Should return false if value is not in range", () => {
-    expect(MaskPattern.isValid(-1 as MaskPatternType)).toBe(false);
+    //@ts-ignore
+    expect(MaskPattern.isValid(-1)).toBe(false);
   });
-
   it("Should return false if value is not in range", () => {
-    expect(MaskPattern.isValid(8 as MaskPatternType)).toBe(false);
+    //@ts-ignore
+    expect(MaskPattern.isValid(8)).toBe(false);
   });
 });
 
 describe("MaskPattern from value", () => {
   it("Should return correct mask pattern from a number", () => {
-    const input: MaskPatternType = 5;
-    const result = MaskPattern.from(input);
-    expect(result).toBe(5);
+    expect(MaskPattern.from(5)).toBe(5);
+  });
+
+  it("Should return correct mask pattern from a string", () => {
+    expect(MaskPattern.from("5")).toBe(5);
   });
 
   it("Should return undefined if value is invalid", () => {
-    const invalidInputs: (number | string | null)[] = [-1, null, "invalid"];
-    for (const input of invalidInputs) {
-      const result = MaskPattern.from(input as unknown as MaskPatternType);
-      expect(result).toBeUndefined();
-    }
+    //@ts-ignore
+    expect(MaskPattern.from(-1)).toBeUndefined();
+    //@ts-ignore
+    expect(MaskPattern.from(null)).toBeUndefined();
   });
 });
 
 describe("Mask pattern - Apply mask", () => {
-  const patterns: number = Object.keys(MaskPattern.Patterns).length;
-  const expectedPatterns: number[][] = [
+  const patterns = Object.keys(MaskPattern.Patterns).length;
+  const expectedPatterns = [
     expectedPattern000,
     expectedPattern001,
     expectedPattern010,
@@ -99,18 +101,19 @@ describe("Mask pattern - Apply mask", () => {
 
   it("Should leave reserved bit unchanged", () => {
     const matrix = new BitMatrix(2);
-    matrix.set(0, 0, 0, true);
-    matrix.set(0, 1, 0, true);
-    matrix.set(1, 0, 0, true);
-    matrix.set(1, 1, 0, true);
-    MaskPattern.applyMask(0 as MaskPatternType, matrix);
-
-    expect(matrix.data).toEqual(new Uint8Array([0, 0, 0, 0]));
+    matrix.set(0, 0, false, true);
+    matrix.set(0, 1, false, true);
+    matrix.set(1, 0, false, true);
+    matrix.set(1, 1, false, true);
+    MaskPattern.applyMask(0, matrix);
+    //@ts-ignore
+    expect(matrix.data).toEqual(new Uint8Array([false, false, false, false]));
   });
 
   it("Should throw if pattern is invalid", () => {
     expect(() => {
-      MaskPattern.applyMask(-1 as MaskPatternType, new BitMatrix(1));
+      //@ts-ignore
+      MaskPattern.applyMask(-1, new BitMatrix(1));
     }).toThrow();
   });
 });
@@ -163,7 +166,7 @@ describe("Mask pattern - Penalty calculations", () => {
   });
 
   it("Penalty N3", () => {
-    const matrix = new BitMatrix(11);
+    const matrix: BitMatrix = new BitMatrix(11);
     matrix.data = new Uint8Array([
       0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1,
       1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0,

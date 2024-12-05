@@ -44,6 +44,7 @@
   "dependencies": {
     "dijkstrajs": "^1.0.1",
     "pngjs": "^5.0.0",
+    "tsx": "^4.19.2",
     "yargs": "^15.3.1"
   },
   "devDependencies": {
@@ -53,6 +54,7 @@
     "@rspack/cli": "^1.1.0",
     "@rspack/core": "^1.1.0",
     "@types/node": "^22.9.1",
+    "@types/pngjs": "^6.0.5",
     "@vitest/coverage-istanbul": "2.1.4",
     "@vitest/coverage-v8": "^2.1.5",
     "babel-loader": "^9.2.1",

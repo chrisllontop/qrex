@@ -1,14 +1,19 @@
 #!/usr/bin/env node
-var yargs = require('yargs')
-var qr = require('../src')
+// var yargs = require('yargs')
+// var qr = require('../src')
+import yargs from "yargs";
+// import * as qr from "../src/index.js";
+import {QRexServer} from "../src/server"
+const qr = new QRexServer()
+
 
 function save (file, text, options) {
+  
   qr.toFile(file, text, options, function (err, data) {
     if (err) {
-      console.error('Error:', err.message)
       process.exit(1)
     }
-
+    
     console.log('saved qrcode to: ' + file + '\n')
   })
 }

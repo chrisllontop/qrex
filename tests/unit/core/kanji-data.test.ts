@@ -2,10 +2,10 @@ import { describe, expect, it } from "vitest";
 import toSJIS from "../../../helper/to-sjis";
 import { BitBuffer } from "../../../src/core/bit-buffer";
 import { KanjiData } from "../../../src/core/kanji-data";
-import { Mode } from "../../../src/core/mode";
-import { CoreUtils } from "../../../src/core/utils";
+import Mode from "../../../src/core/mode";
+import CoreUtils from "../../../src/core/utils";
 
-CoreUtils.setToSJISFunction(toSJIS);
+CoreUtils.setToSJISFunction(toSJIS as (utf8Char: string) => number);
 
 describe("Kanji Data", () => {
   it("should handle valid Kanji data", () => {

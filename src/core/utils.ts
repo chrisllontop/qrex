@@ -1,6 +1,5 @@
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-let toSJISFunction: (arg0: any) => any;
-const CODEWORDS_COUNT = [
+let toSJISFunction: ((kanji: string) => number) | undefined;
+const CODEWORDS_COUNT: number[] = [
   0, // Not used
   26,
   44,
@@ -50,7 +49,7 @@ const CODEWORDS_COUNT = [
  * @param  {Number} version QR Code version
  * @return {Number}         size of QR code
  */
-function getSymbolSize(version: number): number {
+export function getSymbolSize(version: number): number {
   if (!version) throw new Error('"version" cannot be null or undefined');
   if (version < 1 || version > 40) throw new Error('"version" should be in range from 1 to 40');
   return version * 4 + 17;
@@ -62,26 +61,28 @@ function getSymbolSize(version: number): number {
  * @param  {Number} version QR Code version
  * @return {Number}         Data length in bits
  */
-function getSymbolTotalCodewords(version: number): number {
+export function getSymbolTotalCodewords(version: number): number {
   return CODEWORDS_COUNT[version];
 }
 
 /**
  * Encode data with Bose-Chaudhuri-Hocquenghem
+ *
+ * @param  {Number} data Value to encode
+ * @return {Number}      Encoded value
  */
-function getBCHDigit(data: number) {
+export function getBCHDigit(data: number): number {
   let digit = 0;
-  let value = data;
 
-  while (value !== 0) {
+  while (data !== 0) {
     digit++;
-    value >>>= 1;
+    data >>>= 1;
   }
 
   return digit;
 }
 
-function setToSJISFunction(f) {
+export function setToSJISFunction(f: (kanji: string) => number): void {
   if (typeof f !== "function") {
     throw new Error('"toSJISFunc" is not a valid function.');
   }
@@ -89,15 +90,19 @@ function setToSJISFunction(f) {
   toSJISFunction = f;
 }
 
-function isKanjiModeEnabled() {
+export function isKanjiModeEnabled(): boolean {
   return typeof toSJISFunction !== "undefined";
 }
 
-function toSJIS(kanji) {
+export function toSJIS(kanji: string): number {
+  if (!toSJISFunction) {
+    throw new Error("toSJISFunction is not defined.");
+  }
   return toSJISFunction(kanji);
 }
 
-export const CoreUtils = {
+// Default export the Utils object
+const CoreUtils = {
   getSymbolSize,
   getSymbolTotalCodewords,
   getBCHDigit,
@@ -105,3 +110,5 @@ export const CoreUtils = {
   isKanjiModeEnabled,
   toSJIS,
 };
+
+export default CoreUtils;

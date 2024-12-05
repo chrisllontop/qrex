@@ -1,7 +1,7 @@
-import type { QRData } from "../../types/qrex.type";
+import type { Callback, QRData, RenderOptions } from "../../types/qrex.type";
 
-export class Terminal {
-  public render(qrData: QRData): string {
+export class TerminalBig {
+  public render(qrData: QRData, options: RenderOptions, cb: Callback) {
     const size = qrData.modules.size;
     const data = qrData.modules.data;
 
@@ -13,7 +13,6 @@ export class Terminal {
     const hMargin = Array(size + 3).join(white);
     const vMargin = Array(2).join(white);
 
-    // Add horizontal margin
     output += `${hMargin}
 `;
     for (let i = 0; i < size; ++i) {
@@ -24,14 +23,17 @@ export class Terminal {
 
         output += data[i * size + j] ? black : white; // getBlockChar(topModule, bottomModule)
       }
-      // Add vertical margin after each row
+      // output += white+'\n'
       output += `${vMargin}
 `;
     }
 
-    // Add horizontal margin at the bottom
     output += `${hMargin}
 `;
+
+    if (typeof cb === "function") {
+      cb(null, output);
+    }
 
     return output;
   }

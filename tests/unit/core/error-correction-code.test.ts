@@ -1,24 +1,28 @@
 import { describe, expect, it } from "vitest";
 import { ECCode } from "../../../src/core/error-correction-code";
 import { ECLevel } from "../../../src/core/error-correction-level";
+import Mode from "../../../src/core/mode";
+import CoreUtils from "../../../src/core/utils";
+import { Version } from "../../../src/core/version";
 
 describe("Error Correction Codewords", () => {
   const levels = [ECLevel.L, ECLevel.M, ECLevel.Q, ECLevel.H];
 
-  it("should return the correct number of error correction codewords", () => {
+  it("should return correct number of error correction codewords", () => {
     for (let v = 1; v <= 40; v++) {
-      for (const level of levels) {
-        // Fetch the expected codewords count from the EC_CODEWORDS_TABLE
-        const expectedCodewords = ECCode.getTotalCodewordsCount(v, level);
-        expect(expectedCodewords).toBeGreaterThan(0);
+      const totalCodewords = CoreUtils.getSymbolTotalCodewords(v);
+      const reservedByte = Math.ceil((Mode.getCharCountIndicator(Mode.BYTE, v) + 4) / 8);
+
+      for (let l = 0; l < levels.length; l++) {
+        const dataCodewords = Version.getCapacity(v, levels[l], Mode.BYTE) + reservedByte;
+
+        const expectedCodewords = totalCodewords - dataCodewords;
+
+        expect(ECCode.getTotalCodewordsCount(v, levels[l])).toBe(expectedCodewords);
       }
     }
-
-    // Test invalid error correction level
-    expect(() => {
-      // @ts-ignore
-      ECCode.getTotalCodewordsCount(1, undefined);
-    }).toThrow("Invalid error correction level");
+    // @ts-ignore
+    expect(ECCode.getTotalCodewordsCount(1)).toBeUndefined();
   });
 });
 
@@ -27,15 +31,11 @@ describe("Error Correction Blocks", () => {
 
   it("should return a positive number of blocks", () => {
     for (let v = 1; v <= 40; v++) {
-      for (const level of levels) {
-        const expectedBlocks = ECCode.getBlocksCount(v, level);
-        expect(expectedBlocks).toBeGreaterThan(0);
+      for (let l = 0; l < levels.length; l++) {
+        expect(ECCode.getBlocksCount(v, levels[l])).toBeGreaterThan(0);
       }
     }
-
-    expect(() => {
-      // @ts-ignore
-      ECCode.getBlocksCount(1, undefined);
-    }).toThrow("Invalid error correction level");
+    // @ts-ignore
+    expect(ECCode.getBlocksCount(1)).toBeUndefined();
   });
 });

@@ -1,22 +1,26 @@
-import type { ErrorCorrectionLevelBit, MaskPatternType } from "../types/qrex.type";
-import { CoreUtils } from "./utils";
+import type { ErrorCorrectionLevelBit } from "../types/qrex.type";
+import { getBCHDigit } from "./utils";
 
 const G15 = (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0);
 const G15_MASK = (1 << 14) | (1 << 12) | (1 << 10) | (1 << 4) | (1 << 1);
-const G15_BCH = CoreUtils.getBCHDigit(G15);
+const G15_BCH = getBCHDigit(G15);
 
 /**
  * Returns format information with relative error correction bits
  *
  * The format information is a 15-bit sequence containing 5 data bits,
  * with 10 error correction bits calculated using the (15, 5) BCH code.
+ *
+ * @param  {Number} errorCorrectionLevel Error correction level
+ * @param  {Number} mask                 Mask pattern
+ * @return {Number}                      Encoded format information bits
  */
-function getEncodedBits(errorCorrectionLevel: ErrorCorrectionLevelBit, mask: MaskPatternType) {
+export function getEncodedBits(errorCorrectionLevel: ErrorCorrectionLevelBit, mask: number) {
   const data = (errorCorrectionLevel.bit << 3) | mask;
   let d = data << 10;
 
-  while (CoreUtils.getBCHDigit(d) - G15_BCH >= 0) {
-    d ^= G15 << (CoreUtils.getBCHDigit(d) - G15_BCH);
+  while (getBCHDigit(d) - G15_BCH >= 0) {
+    d ^= G15 << (getBCHDigit(d) - G15_BCH);
   }
 
   // xor final data with mask pattern in order to ensure that

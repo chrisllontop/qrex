@@ -1,12 +1,14 @@
+//@ts-nocheck
 import { describe, expect, it } from "vitest";
 import { AlphanumericData } from "../../../src/core/alphanumeric-data";
 import { ByteData } from "../../../src/core/byte-data";
 import { ECLevel } from "../../../src/core/error-correction-level";
 import { KanjiData } from "../../../src/core/kanji-data";
-import { Mode } from "../../../src/core/mode";
+import Mode from "../../../src/core/mode";
 import NumericData from "../../../src/core/numeric-data";
 import { Version } from "../../../src/core/version";
 import { VersionCheck } from "../../../src/core/version-check";
+import { ErrorCorrectionLevelBit, Segment, SegmentInterface } from "../../../src/types/qrex.type";
 
 const EC_LEVELS = [ECLevel.L, ECLevel.M, ECLevel.Q, ECLevel.H];
 
@@ -190,11 +192,12 @@ const EXPECTED_VERSION_BITS = [
 
 describe("Version validity", () => {
   it("should return false if no input", () => {
-    expect(VersionCheck.isValid(-1)).toBeFalsy();
+    //@ts-ignore
+    expect(VersionCheck.isValid()).toBeFalsy();
   });
 
   it("should return false if version is not a number", () => {
-    expect(VersionCheck.isValid(-2)).toBeFalsy();
+    expect(VersionCheck.isValid("")).toBeFalsy();
   });
 
   it("should return false if version is not in range", () => {
@@ -209,32 +212,41 @@ describe("Version from value", () => {
   });
 
   it("should return correct version from a string", () => {
-    expect(Version.from(5)).toBe(5);
+    expect(Version.from("5")).toBe(5);
   });
 
   it("should return default value if version is invalid", () => {
-    expect(Version.from(1)).toBe(1);
+    expect(Version.from(0, 1)).toBe(1);
+  });
+
+  it("should return default value if version is undefined", () => {
+    //@ts-ignore
+    expect(Version.from(null, 1)).toBe(1);
   });
 });
 
 describe("Version capacity", () => {
   it("should throw if version is undefined", () => {
     expect(() => {
+      //@ts-ignore
       Version.getCapacity();
     }).toThrow();
   });
 
   it("should throw if version is not a number", () => {
     expect(() => {
+      //@ts-ignore
       Version.getCapacity("");
     }).toThrow();
   });
 
   it("should throw if version is not in range", () => {
     expect(() => {
+      //@ts-ignore
       Version.getCapacity(0);
     }).toThrow();
     expect(() => {
+      //@ts-ignore
       Version.getCapacity(41);
     }).toThrow();
   });
@@ -311,6 +323,7 @@ describe("Version best match", () => {
           results.push({
             version: v + 1,
             level: null,
+            //@ts-ignore
             result: Version.getBestVersionForData(data, null),
             expected: v + 1,
           });
@@ -330,19 +343,23 @@ describe("Version best match", () => {
     checkBestVersionForCapacity(EXPECTED_BYTE_CAPACITY, ByteData);
   });
 
-  // it("should return undefined if data is too big", () => {
-  //   for (const [i, level] of EC_LEVELS.entries()) {
-  //     const exceededCapacity = EXPECTED_NUMERIC_CAPACITY[39][i] + 1;
-  //     const tooBigData = new NumericData(new Array(exceededCapacity + 1).join("-"));
-  //     expect(Version.getBestVersionForData(tooBigData, level)).toBeFalsy();
-  //   }
-  // });
+  it("should return undefined if data is too big", () => {
+    for (const [i, level] of EC_LEVELS.entries()) {
+      const exceededCapacity = EXPECTED_NUMERIC_CAPACITY[39][i] + 1;
+      const tooBigData = new NumericData(new Array(exceededCapacity + 1).join("-"));
+      expect(Version.getBestVersionForData(tooBigData, level)).toBeFalsy();
+    }
+  });
 
   it("should return a version number if input array is valid", () => {
-    expect(Version.getBestVersionForData([new ByteData("abc"), new NumericData("1234")])).toBeTruthy();
+    expect(
+      //@ts-ignore
+      Version.getBestVersionForData([new ByteData("abc"), new NumericData("1234")]),
+    ).toBeTruthy();
   });
 
   it("should return 1 if array is empty", () => {
+    //@ts-ignore
     expect(Version.getBestVersionForData([])).toBe(1);
   });
 });

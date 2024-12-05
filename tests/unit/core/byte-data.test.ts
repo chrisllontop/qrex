@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { BitBuffer } from "../../../src/core/bit-buffer";
 import { ByteData } from "../../../src/core/byte-data";
-import { Mode } from "../../../src/core/mode";
+import Mode from "../../../src/core/mode";
 
 describe("Byte Data: String Input", () => {
   it("should handle string input correctly", () => {
@@ -27,7 +27,7 @@ describe("Byte Data: String Input", () => {
 
 describe("Byte Data: Byte Input", () => {
   it("should handle byte input correctly", () => {
-    const bytes = new Uint8ClampedArray([1, 231, 32, 22]);
+    const bytes = new Uint8Array([1, 231, 32, 22]);
 
     const byteData = new ByteData(bytes);
     expect(byteData.getLength()).toBe(bytes.length);
@@ -35,6 +35,6 @@ describe("Byte Data: Byte Input", () => {
 
     const bitBuffer = new BitBuffer();
     byteData.write(bitBuffer);
-    expect(new Uint8ClampedArray(bitBuffer.buffer)).toEqual(bytes);
+    expect(new Uint8Array(bitBuffer.buffer)).toEqual(bytes);
   });
 });

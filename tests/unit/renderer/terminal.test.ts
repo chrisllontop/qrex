@@ -1,16 +1,17 @@
+// @ts-nocheck
 import { describe, expect, it } from "vitest";
-import { QRex } from "../../../src/core/qrex";
+import { QRex as QRCode } from "../../../src/core/qrex";
 import { RendererTerminal } from "../../../src/renderer/terminal";
 
-const renderer: RendererTerminal = new RendererTerminal();
-describe("RendererTerminal interface", () => {
+const renderObject = new RendererTerminal();
+describe("renderObject interface", () => {
   it("should have render function", () => {
-    expect(typeof renderer.render).toBe("function");
+    expect(typeof renderObject.render).toBe("function");
   });
 });
 
-describe("RendererTerminal render big", () => {
-  const sampleQrData = QRex.create("sample text", {
+describe("renderObject render big", () => {
+  const sampleQrData = QRCode.create("sample text", {
     version: 2,
     maskPattern: 0,
   });
@@ -18,14 +19,13 @@ describe("RendererTerminal render big", () => {
 
   it("should not throw with only qrData param", () => {
     expect(() => {
-      str = renderer.render(sampleQrData);
+      str = renderObject.render(sampleQrData);
     }).not.toThrow();
   });
 
   it("should not throw with options param", () => {
     expect(() => {
-      // @ts-ignore TODO - Improve types in QRex options
-      str = renderer.render(sampleQrData, { margin: 10, scale: 1 });
+      str = renderObject.render(sampleQrData, { margin: 10, scale: 1 });
     }).not.toThrow();
   });
 
@@ -35,7 +35,7 @@ describe("RendererTerminal render big", () => {
 
   it("should not throw with inverse options", () => {
     expect(() => {
-      str = renderer.render(sampleQrData, { inverse: true });
+      str = renderObject.render(sampleQrData, { inverse: true });
     }).not.toThrow();
   });
 
@@ -45,7 +45,7 @@ describe("RendererTerminal render big", () => {
 });
 
 describe("TerminalRenderer render small", () => {
-  const sampleQrData = QRex.create("sample text", {
+  const sampleQrData = QRCode.create("sample text", {
     version: 2,
     maskPattern: 0,
   });
@@ -57,14 +57,13 @@ describe("TerminalRenderer render small", () => {
 
   it("should not throw with only qrData param", () => {
     expect(() => {
-      str = renderer.render(sampleQrData);
+      str = renderObject.render(sampleQrData);
     }).not.toThrow();
   });
 
   it("should not throw with options param and without callback", () => {
     expect(() => {
-      str = renderer.render(sampleQrData, {
-        // @ts-ignore TODO - Improve types in QRex options
+      str = renderObject.render(sampleQrData, {
         margin: 10,
         scale: 1,
         small: true,
@@ -74,7 +73,7 @@ describe("TerminalRenderer render small", () => {
 
   it("should not throw with options param and callback", () => {
     expect(() => {
-      str = renderer.render(sampleQrData, { margin: 10, scale: 1, small: true }, callback);
+      str = renderObject.render(sampleQrData, { margin: 10, scale: 1, small: true }, callback);
     }).not.toThrow();
   });
 
@@ -83,12 +82,12 @@ describe("TerminalRenderer render small", () => {
   });
 
   it("should call a callback", () => {
-    expect(calledCallback).toBe(false);
+    expect(calledCallback).toBe(true);
   });
 
   it("should not throw with inverse options", () => {
     expect(() => {
-      str = renderer.render(sampleQrData, {
+      str = renderObject.render(sampleQrData, {
         small: true,
         inverse: true,
       });

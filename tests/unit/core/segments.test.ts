@@ -2,10 +2,11 @@ import { describe, expect, it } from "vitest";
 import toSJIS from "../../../helper/to-sjis";
 import { AlphanumericData } from "../../../src/core/alphanumeric-data";
 import { ByteData } from "../../../src/core/byte-data";
-import { Mode } from "../../../src/core/mode";
+import Mode from "../../../src/core/mode";
 import NumericData from "../../../src/core/numeric-data";
 import { Segments } from "../../../src/core/segments";
-import { CoreUtils } from "../../../src/core/utils";
+import CoreUtils from "../../../src/core/utils";
+import type { SegmentInterface } from "../../../src/types/qrex.type";
 
 let testData = [
   {
@@ -168,7 +169,7 @@ describe("Segments from array", () => {
       Segments.fromArray([
         { data: "abcdef", mode: Mode.BYTE },
         { data: "12345", mode: Mode.NUMERIC },
-      ]),
+      ] as SegmentInterface[]),
     ).toEqual([new ByteData("abcdef"), new NumericData("12345")]);
   });
 
@@ -177,37 +178,45 @@ describe("Segments from array", () => {
       Segments.fromArray([
         { data: "abcdef", mode: "byte" },
         { data: "12345", mode: "numeric" },
-      ]),
+      ] as SegmentInterface[]),
     ).toEqual([new ByteData("abcdef"), new NumericData("12345")]);
   });
 
   it("should return correct segment from array of objects if mode is not specified", () => {
-    expect(Segments.fromArray([{ data: "abcdef" }, { data: "12345" }])).toEqual([
+    expect(Segments.fromArray([{ data: "abcdef" }, { data: "12345" }] as SegmentInterface[])).toEqual([
       new ByteData("abcdef"),
       new NumericData("12345"),
     ]);
   });
 
+  it("should return an empty array", () => {
+    expect(Segments.fromArray([{}] as SegmentInterface[])).toEqual([]);
+  });
+
   it("should throw if segment cannot be encoded with specified mode", () => {
     expect(() => {
-      Segments.fromArray([{ data: "ABCDE", mode: "numeric" }]);
-    }).toThrow('"ABCDE" cannot be encoded with mode numeric.');
+      Segments.fromArray([{ data: "ABCDE", mode: "numeric" }] as SegmentInterface[]);
+    }).toThrow('"ABCDE" cannot be encoded with mode Numeric.');
   });
 
   it("should use Byte mode if kanji support is disabled", () => {
-    expect(Segments.fromArray([{ data: "０１２３", mode: Mode.KANJI }])).toEqual([new ByteData("０１２３")]);
+    expect(Segments.fromArray([{ data: "０１２３", mode: Mode.KANJI }] as SegmentInterface[])).toEqual([
+      new ByteData("０１２３"),
+    ]);
   });
 });
 
 describe("Segments optimization", () => {
   it("should use Byte mode if Kanji support is disabled", () => {
-    expect(Segments.fromString("乂ЁЖ", 1)).toEqual(Segments.fromArray([{ data: "乂ЁЖ", mode: "byte" }]));
+    expect(Segments.fromString("乂ЁЖ", 1)).toEqual(
+      Segments.fromArray([{ data: "乂ЁЖ", mode: "byte" }] as SegmentInterface[]),
+    );
   });
 
   it("should match Segments from test data", () => {
     CoreUtils.setToSJISFunction(toSJIS);
     for (const data of testData) {
-      expect(Segments.fromString(data.input, 1)).toEqual(Segments.fromArray(data.result));
+      expect(Segments.fromString(data.input, 1)).toEqual(Segments.fromArray(data.result as SegmentInterface[]));
     }
   });
 });

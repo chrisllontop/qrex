@@ -1,19 +1,20 @@
-import * as fs from "node:fs";
-import type { QRData, QRexOptions } from "../types/qrex.type";
+import type { Callback, QRData, RenderOptions } from "../types/qrex.type";
 import { RendererSvgTag } from "./svg-tag";
+import fs from "node:fs";
 
 export class RendererSvg {
-  private rendererSvgTag = new RendererSvgTag();
+  private renderSvgTag = new RendererSvgTag();
+  public render = this.renderSvgTag.render;
 
-  public render(qrData: QRData, options?: QRexOptions): string {
-    return this.rendererSvgTag.render(qrData, options);
-  }
-
-  public renderToFile(path: string, qrData: QRData, options?: QRexOptions): void {
-    const svgTag = this.render(qrData, options);
+  public renderToFile = (path: string, qrData: QRData, options?: RenderOptions | Callback, cb?: Callback) => {
+    if (typeof cb === "undefined" || typeof options === "function") {
+      cb = options as Callback;
+      options = undefined;
+    }
+    const svgTag = this.render(qrData, options as RenderOptions, cb);
 
     const xmlStr = `<?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">${svgTag}`;
 
-    fs.writeFileSync(path, xmlStr);
-  }
+    fs.writeFile(path, xmlStr, cb);
+  };
 }

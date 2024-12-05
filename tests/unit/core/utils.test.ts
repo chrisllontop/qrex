@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { CoreUtils } from "../../../src/core/utils";
+import CoreUtils from "../../../src/core/utils";
 
 /**
  * QR Code sizes. Each element refers to a version
@@ -12,8 +12,9 @@ const EXPECTED_SYMBOL_SIZES = [
 
 it("Symbol size", () => {
   expect(() => {
-    CoreUtils.getSymbolSize(-1);
-  }).toThrow("should be in range from 1 to 40");
+    //@ts-ignore
+    CoreUtils.getSymbolSize();
+  }).toThrow('"version" cannot be null or undefined');
 
   expect(() => {
     CoreUtils.getSymbolSize(0);
@@ -50,15 +51,16 @@ it("BCH Digit", () => {
 
 it("Set/Get SJIS function", () => {
   expect(() => {
-    CoreUtils.setToSJISFunction(-1);
+    //@ts-ignore
+    CoreUtils.setToSJISFunction();
   }).toThrow('"toSJISFunc" is not a valid function.');
 
   expect(CoreUtils.isKanjiModeEnabled()).toBe(false);
 
-  const testFunc = (c: string) => `test_${c}`;
+  const testFunc = (kanji: string) => Number(`test_${kanji}`);
 
   CoreUtils.setToSJISFunction(testFunc);
 
   expect(CoreUtils.isKanjiModeEnabled()).toBe(true);
-  expect(CoreUtils.toSJIS("a")).toBe("test_a");
+  expect(CoreUtils.toSJIS("a")).toBe(Number.NaN);
 });

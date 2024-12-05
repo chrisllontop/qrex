@@ -1,25 +1,34 @@
-import type { ErrorCorrectionLevelBit, MaskPatternType, Segment } from "../types/qrex.type";
-import type { QRData, QRexOptions, QrContent } from "../types/qrex.type";
-import { AlignmentPattern } from "./alignment-pattern";
+import { getSymbolTotalCodewords, getSymbolSize, setToSJISFunction } from "./utils";
+import { M, from } from "./error-correction-level";
 import { BitBuffer } from "./bit-buffer";
 import { BitMatrix } from "./bit-matrix";
-import { ECCode } from "./error-correction-code";
-import { ECLevel } from "./error-correction-level";
-import { FinderPattern } from "./finder-pattern";
-import { FormatInfo } from "./format-info";
-import { MaskPattern } from "./mask-pattern";
-import { Mode } from "./mode";
+import { getPositions } from "./alignment-pattern";
+import { getPositions as _getPositions } from "./finder-pattern";
+import { getBestMask, applyMask, from as _from } from "./mask-pattern";
+import { getTotalCodewordsCount, getBlocksCount } from "./error-correction-code";
 import { ReedSolomonEncoder } from "./reed-solomon-encoder";
-import { Segments } from "./segments";
-import { CoreUtils } from "./utils";
-import { Version } from "./version";
+import { getEncodedBits, getBestVersionForData, from as __from } from "./version";
+import { getEncodedBits as _getEncodedBits } from "./format-info";
+import { getCharCountIndicator } from "./mode";
+import { fromArray, rawSplit, fromString } from "./segments";
+import type {
+  DataMode,
+  ErrorCorrectionLevelBit,
+  MaskPatternType,
+  QRexOptions,
+  Segment,
+  SegmentInterface,
+} from "../types/qrex.type";
 
 /**
  * Add finder patterns bits to matrix
+ *
+ * @param  {BitMatrix} matrix  Modules matrix
+ * @param  {Number}    version QR Code version
  */
-function setupFinderPattern(matrix: BitMatrix, version: number) {
+function setupFinderPattern(matrix: BitMatrix, version: number): void {
   const size = matrix.size;
-  const pos = FinderPattern.getPositions(version);
+  const pos = _getPositions(version);
 
   for (let i = 0; i < pos.length; i++) {
     const row = pos[i][0];
@@ -36,9 +45,9 @@ function setupFinderPattern(matrix: BitMatrix, version: number) {
           (c >= 0 && c <= 6 && (r === 0 || r === 6)) ||
           (r >= 2 && r <= 4 && c >= 2 && c <= 4)
         ) {
-          matrix.set(row + r, col + c, Number(true), true);
+          matrix.set(row + r, col + c, true, true);
         } else {
-          matrix.set(row + r, col + c, Number(false), true);
+          matrix.set(row + r, col + c, false, true);
         }
       }
     }
@@ -49,14 +58,16 @@ function setupFinderPattern(matrix: BitMatrix, version: number) {
  * Add timing pattern bits to matrix
  *
  * Note: this function must be called before {@link setupAlignmentPattern}
+ *
+ * @param  {BitMatrix} matrix Modules matrix
  */
-function setupTimingPattern(matrix: BitMatrix) {
+function setupTimingPattern(matrix: BitMatrix): void {
   const size = matrix.size;
 
   for (let r = 8; r < size - 8; r++) {
     const value = r % 2 === 0;
-    matrix.set(r, 6, Number(value), true);
-    matrix.set(6, r, Number(value), true);
+    matrix.set(r, 6, value, true);
+    matrix.set(6, r, value, true);
   }
 }
 
@@ -64,9 +75,12 @@ function setupTimingPattern(matrix: BitMatrix) {
  * Add alignment patterns bits to matrix
  *
  * Note: this function must be called after {@link setupTimingPattern}
+ *
+ * @param  {BitMatrix} matrix  Modules matrix
+ * @param  {Number}    version QR Code version
  */
-function setupAlignmentPattern(matrix: BitMatrix, version: number) {
-  const pos = AlignmentPattern.getPositions(version);
+function setupAlignmentPattern(matrix: BitMatrix, version: number): void {
+  const pos = getPositions(version);
 
   for (let i = 0; i < pos.length; i++) {
     const row = pos[i][0];
@@ -75,9 +89,9 @@ function setupAlignmentPattern(matrix: BitMatrix, version: number) {
     for (let r = -2; r <= 2; r++) {
       for (let c = -2; c <= 2; c++) {
         if (r === -2 || r === 2 || c === -2 || c === 2 || (r === 0 && c === 0)) {
-          matrix.set(row + r, col + c, Number(true), true);
+          matrix.set(row + r, col + c, true, true);
         } else {
-          matrix.set(row + r, col + c, Number(false), true);
+          matrix.set(row + r, col + c, false, true);
         }
       }
     }
@@ -86,10 +100,14 @@ function setupAlignmentPattern(matrix: BitMatrix, version: number) {
 
 /**
  * Add version info bits to matrix
+ *
+ * @param  {BitMatrix} matrix  Modules matrix
+ * @param  {Number}    version QR Code version
  */
-function setupVersionInfo(matrix: BitMatrix, version: number) {
+function setupVersionInfo(matrix: BitMatrix, version: number): void {
   const size = matrix.size;
-  const bits = Version.getEncodedBits(version);
+  const bits = getEncodedBits(version);
+
   let row: number;
   let col: number;
   let mod: boolean;
@@ -99,13 +117,17 @@ function setupVersionInfo(matrix: BitMatrix, version: number) {
     col = (i % 3) + size - 8 - 3;
     mod = ((bits >> i) & 1) === 1;
 
-    matrix.set(row, col, Number(mod), true);
-    matrix.set(col, row, Number(mod), true);
+    matrix.set(row, col, mod, true);
+    matrix.set(col, row, mod, true);
   }
 }
 
 /**
  * Add format info bits to matrix
+ *
+ * @param  {BitMatrix} matrix               Modules matrix
+ * @param  {ErrorCorrectionLevel}    errorCorrectionLevel Error correction level
+ * @param  {Number}    maskPattern          Mask pattern reference value
  */
 function setupFormatInfo(
   matrix: BitMatrix,
@@ -113,7 +135,7 @@ function setupFormatInfo(
   maskPattern: MaskPatternType,
 ) {
   const size = matrix.size;
-  const bits = FormatInfo.getEncodedBits(errorCorrectionLevel, maskPattern);
+  const bits = _getEncodedBits(errorCorrectionLevel, maskPattern);
   let i: number;
   let mod: boolean;
 
@@ -122,31 +144,34 @@ function setupFormatInfo(
 
     // vertical
     if (i < 6) {
-      matrix.set(i, 8, Number(mod), true);
+      matrix.set(i, 8, mod, true);
     } else if (i < 8) {
-      matrix.set(i + 1, 8, Number(mod), true);
+      matrix.set(i + 1, 8, mod, true);
     } else {
-      matrix.set(size - 15 + i, 8, Number(mod), true);
+      matrix.set(size - 15 + i, 8, mod, true);
     }
 
     // horizontal
     if (i < 8) {
-      matrix.set(8, size - i - 1, Number(mod), true);
+      matrix.set(8, size - i - 1, mod, true);
     } else if (i < 9) {
-      matrix.set(8, 15 - i - 1 + 1, Number(mod), true);
+      matrix.set(8, 15 - i - 1 + 1, mod, true);
     } else {
-      matrix.set(8, 15 - i - 1, Number(mod), true);
+      matrix.set(8, 15 - i - 1, mod, true);
     }
   }
 
   // fixed module
-  matrix.set(size - 8, 8, 1, true);
+  matrix.set(size - 8, 8, true, true); // true = 1
 }
 
 /**
  * Add encoded data bits to matrix
+ *
+ * @param  {BitMatrix}  matrix Modules matrix
+ * @param  {Uint8Array} data   Data codewords
  */
-function setupData(matrix: BitMatrix, data: Uint8Array) {
+function setupData(matrix: BitMatrix, data: Uint8Array): void {
   const size = matrix.size;
   let inc = -1;
   let row = size - 1;
@@ -165,7 +190,7 @@ function setupData(matrix: BitMatrix, data: Uint8Array) {
             dark = ((data[byteIndex] >>> bitIndex) & 1) === 1;
           }
 
-          matrix.set(row, col - c, Number(dark));
+          matrix.set(row, col - c, dark, false);
           bitIndex--;
 
           if (bitIndex === -1) {
@@ -188,14 +213,19 @@ function setupData(matrix: BitMatrix, data: Uint8Array) {
 
 /**
  * Create encoded codewords from data input
+ *
+ * @param  {Number}   version              QR Code version
+ * @param  {ErrorCorrectionLevel}   errorCorrectionLevel Error correction level
+ * @param  {ByteData} data                 Data input
+ * @return {Uint8Array}                    Buffer containing encoded codewords
  */
-function createData(version: number, errorCorrectionLevel: ErrorCorrectionLevelBit, segments: Segment[]) {
+function createData(version: number, errorCorrectionLevel: ErrorCorrectionLevelBit, segments: Segment[]): Uint8Array {
   // Prepare data buffer
   const buffer = new BitBuffer();
 
   for (const data of segments) {
     // prefix data with mode indicator (4 bits)
-    buffer.put(data.mode.bit, 4);
+    buffer.put((data.mode as DataMode).bit, 4);
 
     // Prefix data with character count indicator.
     // The character count indicator is a string of bits that represents the
@@ -204,15 +234,21 @@ function createData(version: number, errorCorrectionLevel: ErrorCorrectionLevelB
     // and must be a certain number of bits long, depending on the QR version
     // and data mode
     // @see {@link Mode.getCharCountIndicator}.
-    buffer.put(data.getLength!(), Mode.getCharCountIndicator(data.mode, version));
-
+    if (data.getLength) {
+      buffer.put(data.getLength(), getCharCountIndicator(data.mode as DataMode, version));
+    }
     // add binary data sequence to buffer
-    data.write!(buffer);
+    if (data.write) {
+      data.write(buffer);
+    }
   }
 
   // Calculate required number of bits
-  const totalCodewords = CoreUtils.getSymbolTotalCodewords(version);
-  const ecTotalCodewords = ECCode.getTotalCodewordsCount(version, errorCorrectionLevel);
+  const totalCodewords = getSymbolTotalCodewords(version);
+  const ecTotalCodewords = getTotalCodewordsCount(version, errorCorrectionLevel);
+  if (!ecTotalCodewords) {
+    throw new Error("Error correction total codewords not found.");
+  }
   const dataTotalCodewordsBits = (totalCodewords - ecTotalCodewords) * 8;
 
   // Add a terminator.
@@ -230,7 +266,7 @@ function createData(version: number, errorCorrectionLevel: ErrorCorrectionLevelB
   // After adding the terminator, if the number of bits in the string is not a multiple of 8,
   // pad the string on the right with 0s to make the string's length a multiple of 8.
   while (buffer.getLengthInBits() % 8 !== 0) {
-    buffer.putBit(0);
+    buffer.putBit(false); // 0 = false
   }
 
   // Add pad bytes if the string is still shorter than the total number of required bits.
@@ -248,20 +284,29 @@ function createData(version: number, errorCorrectionLevel: ErrorCorrectionLevelB
 /**
  * Encode input data with Reed-Solomon and return codewords with
  * relative error correction bits
+ *
+ * @param  {BitBuffer} bitBuffer            Data to encode
+ * @param  {Number}    version              QR Code version
+ * @param  {ErrorCorrectionLevel} errorCorrectionLevel Error correction level
+ * @return {Uint8Array}                     Buffer containing encoded codewords
  */
 function createCodewords(bitBuffer: BitBuffer, version: number, errorCorrectionLevel: ErrorCorrectionLevelBit) {
   // Total codewords for this QR code version (Data + Error correction)
-  const totalCodewords = CoreUtils.getSymbolTotalCodewords(version);
+  const totalCodewords = getSymbolTotalCodewords(version);
 
   // Total number of error correction codewords
-  const ecTotalCodewords = ECCode.getTotalCodewordsCount(version, errorCorrectionLevel);
-
+  const ecTotalCodewords = getTotalCodewordsCount(version, errorCorrectionLevel);
+  if (!ecTotalCodewords) {
+    throw new Error("Error correction total codewords not found.");
+  }
   // Total number of data codewords
   const dataTotalCodewords = totalCodewords - ecTotalCodewords;
 
   // Total number of blocks
-  const ecTotalBlocks = ECCode.getBlocksCount(version, errorCorrectionLevel);
-
+  const ecTotalBlocks = getBlocksCount(version, errorCorrectionLevel);
+  if (!ecTotalBlocks) {
+    throw new Error("Error correction total Blocks not found.");
+  }
   // Calculate how many blocks each group should contain
   const blocksInGroup2 = totalCodewords % ecTotalBlocks;
   const blocksInGroup1 = ecTotalBlocks - blocksInGroup2;
@@ -325,28 +370,41 @@ function createCodewords(bitBuffer: BitBuffer, version: number, errorCorrectionL
 
 /**
  * Build QR Code symbol
+ *
+ * @param  {String} data                 Input string
+ * @param  {Number} version              QR Code version
+ * @param  {ErrorCorretionLevel} errorCorrectionLevel Error level
+ * @param  {MaskPattern} maskPattern     Mask pattern
+ * @return {Object}                      Object containing symbol data
  */
 function createSymbol(
-  data: QrContent,
+  data: string | SegmentInterface[],
+  version: number,
   errorCorrectionLevel: ErrorCorrectionLevelBit,
-  maskPattern?: MaskPatternType,
-  version?: number,
-): QRData {
-  let estimatedVersion = version;
+  maskPattern: MaskPatternType,
+) {
+  let segments: Segment[];
+  if (Array.isArray(data)) {
+    segments = fromArray(data);
+  } else if (typeof data === "string") {
+    let estimatedVersion: number | undefined = version;
 
-  if (!estimatedVersion) {
-    const rawSegments = Segments.rawSplit(data);
+    if (!estimatedVersion) {
+      const rawSegments = rawSplit(data);
 
-    // Estimate best version that can contain raw splitted segments
-    estimatedVersion = Version.getBestVersionForData(rawSegments, errorCorrectionLevel);
+      // Estimate best version that can contain raw splitted segments
+      estimatedVersion = getBestVersionForData(rawSegments, errorCorrectionLevel);
+    }
+
+    // Build optimized segments
+    // If estimated version is undefined, try with the highest version
+    segments = fromString(data, estimatedVersion || 40);
+  } else {
+    throw new Error("Invalid data");
   }
 
-  // Build optimized segments
-  // If estimated version is undefined, try with the highest version
-  const segments = Segments.fromString(data, estimatedVersion || 40);
-
   // Get the min version that can contain data
-  const bestVersion = Version.getBestVersionForData(segments, errorCorrectionLevel);
+  const bestVersion = getBestVersionForData(segments, errorCorrectionLevel);
 
   // If no version is found, data cannot be stored
   if (!bestVersion) {
@@ -370,7 +428,7 @@ Minimum version required to store current data is: ${bestVersion}.
   const dataBits = createData(version, errorCorrectionLevel, segments);
 
   // Allocate matrix buffer
-  const moduleCount = CoreUtils.getSymbolSize(version);
+  const moduleCount = getSymbolSize(version);
   const modules = new BitMatrix(moduleCount);
 
   // Add function modules
@@ -393,48 +451,56 @@ Minimum version required to store current data is: ${bestVersion}.
 
   if (Number.isNaN(maskPattern)) {
     // Find best mask pattern
-    maskPattern = MaskPattern.getBestMask(modules, setupFormatInfo.bind(null, modules, errorCorrectionLevel));
+    maskPattern = getBestMask(modules, setupFormatInfo.bind(null, modules, errorCorrectionLevel));
   }
 
   // Apply mask pattern
-  MaskPattern.applyMask(maskPattern!, modules);
+  applyMask(maskPattern, modules);
 
   // Replace format info bits with correct values
-  setupFormatInfo(modules, errorCorrectionLevel, maskPattern!);
+  setupFormatInfo(modules, errorCorrectionLevel, maskPattern);
 
   return {
     modules: modules,
     version: version,
     errorCorrectionLevel: errorCorrectionLevel,
-    maskPattern: maskPattern!,
+    maskPattern: maskPattern,
     segments: segments,
   };
 }
 
 /**
- * QR Code create
+ * QR Code
+ *
+ * @param {String | Array} data                 Input data
+ * @param {Object} options                      Optional configurations
+ * @param {Number} options.version              QR Code version
+ * @param {String} options.errorCorrectionLevel Error correction level
+ * @param {Function} options.toSJISFunc         Helper func to convert utf8 to sjis
  */
-function create(data: QrContent, options?: QRexOptions) {
+export function create(data?: string | SegmentInterface[], options?: QRexOptions) {
   if (typeof data === "undefined" || data === "") {
     throw new Error("No input text");
   }
 
-  let errorCorrectionLevel = ECLevel.M;
-  let version: number | undefined;
-  let mask: MaskPatternType | undefined;
+  let errorCorrectionLevel: ErrorCorrectionLevelBit = M;
+  let version: number;
+  let mask: MaskPatternType | undefined = 0;
 
-  if (options) {
-    // Use higher error correction level as default
-    errorCorrectionLevel = ECLevel.from(options.errorCorrectionLevel, ECLevel.M);
-    version = Version.from(options.version);
-    mask = MaskPattern.from(options.maskPattern);
+  // Use higher error correction level as default
+  if (options?.errorCorrectionLevel) errorCorrectionLevel = from(options.errorCorrectionLevel);
+  if (options?.version) version = __from(options.version)!;
+  if (options?.maskPattern) mask = _from(options.maskPattern);
 
-    if (options.toSJISFunc) {
-      CoreUtils.setToSJISFunction(options.toSJISFunc);
-    }
+  if (options?.toSJISFunc) {
+    setToSJISFunction(options.toSJISFunc);
   }
 
-  return createSymbol(data, errorCorrectionLevel, mask, version);
+  if (mask === undefined) {
+    throw new Error("mask pattern is undefined");
+  }
+
+  return createSymbol(data, version!, errorCorrectionLevel, mask);
 }
 
 export const QRex = {

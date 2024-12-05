@@ -1,9 +1,9 @@
-import type { DataMode, SegmentInterface } from "../types/qrex.type";
+import type { DataMode } from "../types/qrex.type";
 import type { BitBuffer } from "./bit-buffer";
-import { Mode } from "./mode";
-import { CoreUtils } from "./utils";
+import Mode from "./mode";
+import CoreUtils from "./utils";
 
-export class KanjiData implements SegmentInterface {
+export class KanjiData {
   mode: DataMode;
   data: string;
   length: number;
@@ -22,15 +22,13 @@ export class KanjiData implements SegmentInterface {
     return this.data.length;
   }
 
-  getBitsLength(): number {
-    return KanjiData.getBitsLength(this.data.length);
-  }
-
   write(bitBuffer: BitBuffer): void {
+    let i: number;
+
     // In the Shift JIS system, Kanji characters are represented by a two byte combination.
     // These byte values are shifted from the JIS X 0208 values.
     // JIS X 0208 gives details of the shift coded representation.
-    for (let i = 0; i < this.data.length; i++) {
+    for (i = 0; i < this.data.length; i++) {
       let value = CoreUtils.toSJIS(this.data[i]);
 
       // For characters with Shift JIS values from 0x8140 to 0x9FFC:
@@ -38,7 +36,7 @@ export class KanjiData implements SegmentInterface {
         // Subtract 0x8140 from Shift JIS value
         value -= 0x8140;
 
-        // For characters with Shift JIS values from 0xE040 to 0xEBBF:
+        // For characters with Shift JIS values from 0xE040 to 0xEBBF
       } else if (value >= 0xe040 && value <= 0xebbf) {
         // Subtract 0xC140 from Shift JIS value
         value -= 0xc140;
@@ -56,5 +54,13 @@ Make sure your charset is UTF-8`,
       // Convert result to a 13-bit binary string
       bitBuffer.put(value, 13);
     }
+  }
+
+  /**
+   * Returns the total bits required for the Kanji data.
+   * @returns {number} - The total bits required.
+   */
+  getBitsLength(): number {
+    return KanjiData.getBitsLength(this.data.length);
   }
 }

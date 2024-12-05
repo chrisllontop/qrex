@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { AlignmentPattern as pattern } from "../../../src/core/alignment-pattern";
-
 /**
  * Row/column coordinates of the center module of each alignment pattern.
  * Each sub-array refers to a qr code version.

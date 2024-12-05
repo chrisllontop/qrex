@@ -1,7 +1,7 @@
-import type { ErrorCorrectionLevelBit } from "../types/qrex.type";
-import { ECLevel } from "./error-correction-level";
+import type { ErrorCorrectionLevelBit } from "../types/qrex.type.js";
+import { L, M, Q, H } from "./error-correction-level.js";
 
-const EC_BLOCKS_TABLE = [
+const EC_BLOCKS_TABLE: number[] = [
   // L  M  Q  H
   1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 2, 2, 4, 1, 2, 4, 4, 2, 4, 4, 4, 2, 4, 6, 5, 2, 4, 6, 6, 2, 5, 8, 8, 4, 5, 8,
   8, 4, 5, 8, 11, 4, 8, 10, 11, 4, 9, 12, 16, 4, 9, 16, 16, 6, 10, 12, 18, 6, 10, 17, 16, 6, 11, 16, 19, 6, 13, 18, 21,
@@ -10,7 +10,7 @@ const EC_BLOCKS_TABLE = [
   19, 37, 51, 60, 19, 38, 53, 63, 20, 40, 56, 66, 21, 43, 59, 70, 22, 45, 62, 74, 24, 47, 65, 77, 25, 49, 68, 81,
 ];
 
-const EC_CODEWORDS_TABLE = [
+const EC_CODEWORDS_TABLE: number[] = [
   // L  M  Q  H
   7, 10, 13, 17, 10, 16, 22, 28, 15, 26, 36, 44, 20, 36, 52, 64, 26, 48, 72, 88, 36, 64, 96, 112, 40, 72, 108, 130, 48,
   88, 132, 156, 60, 110, 160, 192, 72, 130, 192, 224, 80, 150, 224, 264, 96, 176, 260, 308, 104, 198, 288, 352, 120,
@@ -24,41 +24,51 @@ const EC_CODEWORDS_TABLE = [
 /**
  * Returns the number of error correction block that the QR Code should contain
  * for the specified version and error correction level.
+ *
+ * @param  {Number} version              QR Code version
+ * @param  {Number} errorCorrectionLevel Error correction level
+ * @return {Number}                      Number of error correction blocks
  */
-function getBlocksCount(version: number, errorCorrectionLevel: ErrorCorrectionLevelBit) {
+export function getBlocksCount(version: number, errorCorrectionLevel: ErrorCorrectionLevelBit): number | undefined {
   switch (errorCorrectionLevel) {
-    case ECLevel.L:
+    case L:
       return EC_BLOCKS_TABLE[(version - 1) * 4];
-    case ECLevel.M:
+    case M:
       return EC_BLOCKS_TABLE[(version - 1) * 4 + 1];
-    case ECLevel.Q:
+    case Q:
       return EC_BLOCKS_TABLE[(version - 1) * 4 + 2];
-    case ECLevel.H:
+    case H:
       return EC_BLOCKS_TABLE[(version - 1) * 4 + 3];
     default:
-      throw new Error("Invalid error correction level");
+      return undefined;
   }
 }
 
 /**
  * Returns the number of error correction codewords to use for the specified
  * version and error correction level.
+ *
+ * @param  {Number} version              QR Code version
+ * @param  {Number} errorCorrectionLevel Error correction level
+ * @return {Number}                      Number of error correction codewords
  */
-function getTotalCodewordsCount(version: number, errorCorrectionLevel: ErrorCorrectionLevelBit) {
+export function getTotalCodewordsCount(
+  version: number,
+  errorCorrectionLevel: ErrorCorrectionLevelBit,
+): number | undefined {
   switch (errorCorrectionLevel) {
-    case ECLevel.L:
+    case L:
       return EC_CODEWORDS_TABLE[(version - 1) * 4];
-    case ECLevel.M:
+    case M:
       return EC_CODEWORDS_TABLE[(version - 1) * 4 + 1];
-    case ECLevel.Q:
+    case Q:
       return EC_CODEWORDS_TABLE[(version - 1) * 4 + 2];
-    case ECLevel.H:
+    case H:
       return EC_CODEWORDS_TABLE[(version - 1) * 4 + 3];
     default:
-      throw new Error("Invalid error correction level");
+      return undefined;
   }
 }
-
 export const ECCode = {
   getBlocksCount,
   getTotalCodewordsCount,

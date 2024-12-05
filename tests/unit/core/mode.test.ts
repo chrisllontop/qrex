@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Mode } from "../../../src/core/mode";
-import type { DataMode } from "../../../src/types/qrex.type";
+import Mode from "../../../src/core/mode";
 
 describe("Mode bits", () => {
   const EXPECTED_BITS = {
@@ -52,13 +51,14 @@ describe("Char count bits", () => {
   });
 
   it("Throws on invalid mode or version", () => {
+    //@ts-ignore
     expect(() => Mode.getCharCountIndicator({}, 1)).toThrow();
     expect(() => Mode.getCharCountIndicator(Mode.BYTE, 0)).toThrow();
   });
 });
 
 describe("Best mode", () => {
-  const EXPECTED_MODE: Record<string, DataMode> = {
+  const EXPECTED_MODE = {
     12345: Mode.NUMERIC,
     abcde: Mode.BYTE,
     "1234a": Mode.BYTE,
@@ -72,6 +72,7 @@ describe("Best mode", () => {
 
   it("Best mode for data", () => {
     for (const data of Object.keys(EXPECTED_MODE)) {
+      //@ts-ignore
       expect(Mode.getBestModeForData(data)).toBe(EXPECTED_MODE[data]);
     }
   });
@@ -86,8 +87,10 @@ describe("Is valid", () => {
   });
 
   it("Invalid modes", () => {
+    //@ts-ignore
     expect(Mode.isValid(undefined)).toBe(false);
     expect(Mode.isValid({ bit: 1 })).toBe(false);
+    //@ts-ignore
     expect(Mode.isValid({ ccBits: [] })).toBe(false);
   });
 });
@@ -102,8 +105,11 @@ describe("From value", () => {
 
   it("From name or mode", () => {
     for (const { name, mode } of modes) {
+      //@ts-ignore
       expect(Mode.from(name)).toBe(mode);
+      //@ts-ignore
       expect(Mode.from(name.toUpperCase())).toBe(mode);
+      //@ts-ignore
       expect(Mode.from(mode)).toBe(mode);
     }
 
@@ -114,13 +120,14 @@ describe("From value", () => {
 
 describe("To string", () => {
   it("String representation of modes", () => {
-    expect(Mode.toString(Mode.NUMERIC)).toBe("numeric");
-    expect(Mode.toString(Mode.ALPHANUMERIC)).toBe("alphanumeric");
-    expect(Mode.toString(Mode.BYTE)).toBe("byte");
-    expect(Mode.toString(Mode.KANJI)).toBe("kanji");
+    expect(Mode.toString(Mode.NUMERIC)).toBe("Numeric");
+    expect(Mode.toString(Mode.ALPHANUMERIC)).toBe("Alphanumeric");
+    expect(Mode.toString(Mode.BYTE)).toBe("Byte");
+    expect(Mode.toString(Mode.KANJI)).toBe("Kanji");
   });
 
   it("Throws on invalid mode", () => {
+    //@ts-ignore
     expect(() => Mode.toString({})).toThrow();
   });
 });

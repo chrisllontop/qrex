@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { BitBuffer } from "../../../src/core/bit-buffer";
-import { Mode } from "../../../src/core/mode";
+import Mode from "../../../src/core/mode";
 import NumericData from "../../../src/core/numeric-data";
 
 const testData = [

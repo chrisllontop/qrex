@@ -17,15 +17,15 @@ describe("Bit Matrix", () => {
     expect(bm.data.length).toBe(4);
     expect(bm.reservedBit.length).toBe(4);
 
-    bm.set(0, 1, 1, true);
-    expect(bm.get(0, 1)).toBe(1);
-    expect(bm.isReserved(0, 1)).toBe(1);
+    bm.set(0, 1, true, true);
+    expect(bm.get(0, 1)).toBe(true);
+    expect(bm.isReserved(0, 1)).toBe(true);
 
-    bm.xor(0, 1, 1);
-    expect(bm.get(0, 1)).toBe(0);
+    bm.xor(0, 1, true);
+    expect(bm.get(0, 1)).toBe(false);
 
-    bm.set(0, 1, 1);
-    expect(bm.get(0, 1)).toBe(1);
-    expect(bm.isReserved(0, 1)).toBe(1);
+    bm.set(0, 1, true, false);
+    expect(bm.get(0, 1)).toBe(true);
+    expect(bm.isReserved(0, 1)).toBe(true);
   });
 });

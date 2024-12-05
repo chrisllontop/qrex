@@ -1,37 +1,37 @@
-import type { DataMode, SegmentInterface } from "../types/qrex.type";
-import type { BitBuffer } from "./bit-buffer";
-import { Mode } from "./mode";
+import type { DataMode } from "../types/qrex.type.js";
+import type { BitBuffer } from "./bit-buffer.js";
+import Mode from "./mode.js";
 
-export class ByteData implements SegmentInterface<Uint8Array> {
+export class ByteData {
   mode: DataMode;
   data: Uint8Array;
   length: number;
 
-  constructor(data: Uint8Array | string) {
+  constructor(data: string | Uint8Array) {
     this.mode = Mode.BYTE;
     if (typeof data === "string") {
       this.data = new TextEncoder().encode(data);
     } else {
       this.data = new Uint8Array(data);
     }
-    this.length = this.data.length;
+    this.length = this.data?.length ?? 0;
   }
 
-  static getBitsLength(length: number) {
+  static getBitsLength(length: number): number {
     return length * 8;
   }
 
-  getLength() {
+  getLength(): number {
     return this.data.length;
   }
 
-  getBitsLength() {
-    return ByteData.getBitsLength(this.data.length);
-  }
-
-  write(bitBuffer: BitBuffer) {
+  write(bitBuffer: BitBuffer): void {
     for (let i = 0, l = this.data.length; i < l; i++) {
       bitBuffer.put(this.data[i], 8);
     }
+  }
+
+  getBitsLength(): number {
+    return ByteData.getBitsLength(this.data.length);
   }
 }

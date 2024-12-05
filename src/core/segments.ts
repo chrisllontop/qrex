@@ -1,26 +1,40 @@
-import { find_path } from "dijkstrajs";
-import type { DataMode, ModeType, Segment } from "../types/qrex.type";
+import { NUMERIC, ALPHANUMERIC, BYTE, KANJI, getCharCountIndicator, getBestModeForData, from, toString } from "./mode";
+import NumericData from "./numeric-data";
 import { AlphanumericData } from "./alphanumeric-data";
 import { ByteData } from "./byte-data";
 import { KanjiData } from "./kanji-data";
-import { Mode } from "./mode";
-import NumericData from "./numeric-data";
-import { Regex } from "./regex";
-import { CoreUtils } from "./utils";
+import {
+  NUMERIC as _NUMERIC,
+  ALPHANUMERIC as _ALPHANUMERIC,
+  BYTE as _BYTE,
+  KANJI as _KANJI,
+  BYTE_KANJI,
+} from "./regex";
+import { isKanjiModeEnabled } from "./utils";
+import pkg from "dijkstrajs";
+import type { DataMode, Graph, GraphTableEntry, Segment, SegmentInterface } from "../types/qrex.type";
+const { find_path } = pkg;
 
 /**
  * Returns UTF8 byte length
+ *
+ * @param  {String} str Input string
+ * @return {Number}     Number of byte
  */
-function getStringByteLength(str: string) {
+function getStringByteLength(str: string): number {
   return unescape(encodeURIComponent(str)).length;
 }
 
 /**
  * Get a list of segments of the specified mode
  * from a string
+ *
+ * @param  {Mode}   mode Segment mode
+ * @param  {String} str  String to process
+ * @return {Array}       Array of object with segments data
  */
-function getSegments(regex: RegExp, mode: DataMode, str: string) {
-  const segments: Segment[] = [];
+function getSegments(regex: RegExp, mode: DataMode, str: string): SegmentInterface[] {
+  const segments: SegmentInterface[] = [];
   let result: RegExpExecArray | null;
 
   while ((result = regex.exec(str)) !== null) {
@@ -38,40 +52,55 @@ function getSegments(regex: RegExp, mode: DataMode, str: string) {
 /**
  * Extracts a series of segments with the appropriate
  * modes from a string
+ *
+ * @param  {String} dataStr Input string
+ * @return {Array}          Array of object with segments data
  */
-function getSegmentsFromString(dataStr: string) {
-  const numSegs = getSegments(Regex.NUMERIC, Mode.NUMERIC, dataStr);
-  const alphaNumSegs = getSegments(Regex.ALPHANUMERIC, Mode.ALPHANUMERIC, dataStr);
-  let byteSegs: Segment[];
-  let kanjiSegs: Segment[];
+function getSegmentsFromString(dataStr: string): SegmentInterface[] {
+  const numSegs = getSegments(_NUMERIC, NUMERIC, dataStr);
+  const alphaNumSegs = getSegments(_ALPHANUMERIC, ALPHANUMERIC, dataStr);
+  let byteSegs: SegmentInterface[];
+  let kanjiSegs: SegmentInterface[];
 
-  if (CoreUtils.isKanjiModeEnabled()) {
-    byteSegs = getSegments(Regex.BYTE, Mode.BYTE, dataStr);
-    kanjiSegs = getSegments(Regex.KANJI, Mode.KANJI, dataStr);
+  if (isKanjiModeEnabled()) {
+    byteSegs = getSegments(_BYTE, BYTE, dataStr);
+    kanjiSegs = getSegments(_KANJI, KANJI, dataStr);
   } else {
-    byteSegs = getSegments(Regex.BYTE_KANJI, Mode.BYTE, dataStr);
+    byteSegs = getSegments(BYTE_KANJI, BYTE, dataStr);
     kanjiSegs = [];
   }
 
   const segs = numSegs.concat(alphaNumSegs, byteSegs, kanjiSegs);
 
-  return segs.sort((s1, s2) => s1.index! - s2.index!);
+  return segs
+    .sort((s1, s2) => s1.index! - s2.index!)
+    .map((obj) => ({
+      data: obj.data,
+      mode: obj.mode,
+      length: obj.length,
+    }));
 }
 
 /**
  * Returns how many bits are needed to encode a string of
  * specified length with the specified mode
+ *
+ * @param  {Number} length String length
+ * @param  {Mode} mode     Segment mode
+ * @return {Number}        Bit length
  */
-function getSegmentBitsLength(length: number, mode: DataMode) {
+function getSegmentBitsLength(length: number, mode: DataMode): number {
   switch (mode) {
-    case Mode.NUMERIC:
+    case NUMERIC:
       return NumericData.getBitsLength(length);
-    case Mode.ALPHANUMERIC:
+    case ALPHANUMERIC:
       return AlphanumericData.getBitsLength(length);
-    case Mode.KANJI:
+    case KANJI:
       return KanjiData.getBitsLength(length);
-    case Mode.BYTE:
+    case BYTE:
       return ByteData.getBitsLength(length);
+    default:
+      throw new Error(`Unknown mode: ${mode}`);
   }
 }
 
@@ -81,8 +110,8 @@ function getSegmentBitsLength(length: number, mode: DataMode) {
  * @param  {Array} segs Array of object with segments data
  * @return {Array}      Array of object with segments data
  */
-function mergeSegments(segs) {
-  return segs.reduce((acc, curr) => {
+function mergeSegments(segs: SegmentInterface[]): SegmentInterface[] {
+  return segs.reduce<SegmentInterface[]>((acc, curr) => {
     const prevSeg = acc.length - 1 >= 0 ? acc[acc.length - 1] : null;
     if (prevSeg && prevSeg.mode === curr.mode) {
       acc[acc.length - 1].data += curr.data;
@@ -106,39 +135,42 @@ function mergeSegments(segs) {
  * possible encoding mode.
  *
  * Each node represents a possible segment.
+ *
+ * @param  {Array} segs Array of object with segments data
+ * @return {Array}      Array of object with segments data
  */
-function buildNodes(segs: Segment[]) {
-  const nodes = [];
+function buildNodes(segs: SegmentInterface[]): SegmentInterface[][] {
+  const nodes: SegmentInterface[][] = [];
   for (let i = 0; i < segs.length; i++) {
     const seg = segs[i];
 
     switch (seg.mode) {
-      case Mode.NUMERIC:
+      case NUMERIC:
         nodes.push([
           seg,
-          { data: seg.data, mode: Mode.ALPHANUMERIC, length: seg.length },
-          { data: seg.data, mode: Mode.BYTE, length: seg.length },
+          { data: seg.data, mode: ALPHANUMERIC, length: seg.length },
+          { data: seg.data, mode: BYTE, length: seg.length },
         ]);
         break;
-      case Mode.ALPHANUMERIC:
-        nodes.push([seg, { data: seg.data, mode: Mode.BYTE, length: seg.length }]);
+      case ALPHANUMERIC:
+        nodes.push([seg, { data: seg.data, mode: BYTE, length: seg.length }]);
         break;
-      case Mode.KANJI:
+      case KANJI:
         nodes.push([
           seg,
           {
             data: seg.data,
-            mode: Mode.BYTE,
-            length: getStringByteLength(seg.data as string),
+            mode: BYTE,
+            length: getStringByteLength(seg.data),
           },
         ]);
         break;
-      case Mode.BYTE:
+      case BYTE:
         nodes.push([
           {
             data: seg.data,
-            mode: Mode.BYTE,
-            length: getStringByteLength(seg.data as string),
+            mode: BYTE,
+            length: getStringByteLength(seg.data),
           },
         ]);
     }
@@ -154,10 +186,14 @@ function buildNodes(segs: Segment[]) {
  *
  * At each connection will be assigned a weight depending on the
  * segment's byte length.
+ *
+ * @param  {Array} nodes    Array of object with segments data
+ * @param  {Number} version QR Code version
+ * @return {Object}         Graph of all possible segments
  */
-function buildGraph(nodes: ReturnType<typeof buildNodes>, version: number) {
-  const table: { [key: string]: { node: Segment; lastCount: number } } = {};
-  const graph: { [key: string]: { [key: string]: number } } = { start: {} };
+function buildGraph(nodes: SegmentInterface[][], version: number): Graph {
+  const table: Record<string, GraphTableEntry> = {};
+  const graph: Graph["map"] = { start: {} };
   let prevNodeIds = ["start"];
 
   for (let i = 0; i < nodes.length; i++) {
@@ -169,7 +205,7 @@ function buildGraph(nodes: ReturnType<typeof buildNodes>, version: number) {
       const key = `${i}${j}`;
 
       currentNodeIds.push(key);
-      table[key] = { node: node as Segment, lastCount: 0 };
+      table[key] = { node: node, lastCount: 0 };
       graph[key] = {};
 
       for (let n = 0; n < prevNodeIds.length; n++) {
@@ -177,15 +213,17 @@ function buildGraph(nodes: ReturnType<typeof buildNodes>, version: number) {
 
         if (table[prevNodeId] && table[prevNodeId].node.mode === node.mode) {
           graph[prevNodeId][key] =
-            getSegmentBitsLength(table[prevNodeId].lastCount + node.length, node.mode)! -
-            getSegmentBitsLength(table[prevNodeId].lastCount, node.mode)!;
+            getSegmentBitsLength(table[prevNodeId].lastCount + node.length, node.mode as DataMode) -
+            getSegmentBitsLength(table[prevNodeId].lastCount, node.mode as DataMode);
 
           table[prevNodeId].lastCount += node.length;
         } else {
           if (table[prevNodeId]) table[prevNodeId].lastCount = node.length;
 
           graph[prevNodeId][key] =
-            getSegmentBitsLength(node.length, node.mode)! + 4 + Mode.getCharCountIndicator(node.mode, version); // switch cost
+            getSegmentBitsLength(node.length, node.mode as DataMode) +
+            4 +
+            getCharCountIndicator(node.mode as DataMode, version); // switch cost
         }
       }
     }
@@ -203,38 +241,44 @@ function buildGraph(nodes: ReturnType<typeof buildNodes>, version: number) {
 /**
  * Builds a segment from a specified data and mode.
  * If a mode is not specified, the more suitable will be used.
+ *
+ * @param  {String} data             Input data
+ * @param  {Mode | String} modesHint Data mode
+ * @return {Segment}                 Segment
  */
-function buildSingleSegment(data: string, modesHint?: DataMode | ModeType) {
-  let mode: DataMode | undefined;
-  const bestMode = Mode.getBestModeForData(data);
+function buildSingleSegment(data: string, modesHint: DataMode | string | null): Segment {
+  let mode: DataMode;
+  const bestMode = getBestModeForData(data);
 
-  mode = Mode.from(modesHint, bestMode);
+  mode = from(modesHint, bestMode);
 
   // Make sure data can be encoded
-  if (mode !== Mode.BYTE && mode && mode.bit < bestMode.bit) {
+  if (mode !== BYTE && mode.bit < bestMode.bit) {
     throw new Error(
-      `"${data}" cannot be encoded with mode ${Mode.toString(mode)}.
- Suggested mode is: ${Mode.toString(bestMode)}`,
+      `"${data}" cannot be encoded with mode ${toString(mode)}.
+        Suggested mode is: ${toString(bestMode)}`,
     );
   }
 
   // Use Mode.BYTE if Kanji support is disabled
-  if (mode === Mode.KANJI && !CoreUtils.isKanjiModeEnabled()) {
-    mode = Mode.BYTE;
+  if (mode === KANJI && !isKanjiModeEnabled()) {
+    mode = BYTE;
   }
 
   switch (mode) {
-    case Mode.NUMERIC:
+    case NUMERIC:
       return new NumericData(data);
 
-    case Mode.ALPHANUMERIC:
+    case ALPHANUMERIC:
       return new AlphanumericData(data);
 
-    case Mode.KANJI:
+    case KANJI:
       return new KanjiData(data);
 
-    case Mode.BYTE:
+    case BYTE:
       return new ByteData(data);
+    default:
+      throw new Error(`Unknown mode: ${mode}`);
   }
 }
 
@@ -250,14 +294,17 @@ function buildSingleSegment(data: string, modesHint?: DataMode | ModeType) {
  * Objects must contain at least the property "data".
  * If property "mode" is not present, the more suitable mode will be used.
  *
+ * @param  {Array} array Array of objects with segments data
+ * @return {Array}       Array of Segments
  */
-function fromArray(array: Segment[] | string[]) {
-  return array.reduce((acc: Segment[], seg) => {
+export function fromArray(array: (string | SegmentInterface)[]): Segment[] {
+  return array.reduce<Segment[]>((acc, seg) => {
     if (typeof seg === "string") {
-      acc.push(buildSingleSegment(seg as string, undefined)!);
+      acc.push(buildSingleSegment(seg, null));
     } else if (seg.data) {
-      acc.push(buildSingleSegment(seg.data as string, seg.mode)!);
+      acc.push(buildSingleSegment(seg.data, seg.mode || null));
     }
+
     return acc;
   }, []);
 }
@@ -265,8 +312,12 @@ function fromArray(array: Segment[] | string[]) {
 /**
  * Builds an optimized sequence of segments from a string,
  * which will produce the shortest possible bitstream.
+ *
+ * @param  {String} data    Input string
+ * @param  {Number} version QR Code version
+ * @return {Array}          Array of segments
  */
-function fromString(data: string, version: number) {
+export function fromString(data: string, version: number) {
   const segs = getSegmentsFromString(data);
 
   const nodes = buildNodes(segs);
@@ -287,8 +338,11 @@ function fromString(data: string, version: number) {
  * The produced segments are far from being optimized.
  * The output of this function is only used to estimate a QR Code version
  * which may contain the data.
+ *
+ * @param  {string} data Input string
+ * @return {Array}       Array of segments
  */
-function rawSplit(data: string) {
+export function rawSplit(data: string): Segment[] {
   return fromArray(getSegmentsFromString(data));
 }
 

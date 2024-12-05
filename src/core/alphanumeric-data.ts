@@ -1,6 +1,6 @@
-import type { DataMode, SegmentInterface } from "../types/qrex.type";
-import type { BitBuffer } from "./bit-buffer";
-import { Mode } from "./mode";
+import type { DataMode } from "../types/qrex.type.js";
+import type { BitBuffer } from "./bit-buffer.js";
+import { ALPHANUMERIC } from "./mode.js";
 
 /**
  * Array of characters available in alphanumeric mode
@@ -11,7 +11,7 @@ import { Mode } from "./mode";
  *
  * @type {Array}
  */
-const ALPHA_NUM_CHARS = [
+const ALPHA_NUM_CHARS: string[] = [
   "0",
   "1",
   "2",
@@ -59,26 +59,25 @@ const ALPHA_NUM_CHARS = [
   ":",
 ];
 
-export class AlphanumericData implements SegmentInterface {
+export class AlphanumericData {
   mode: DataMode;
   data: string;
   length: number;
-
   constructor(data: string) {
-    this.mode = Mode.ALPHANUMERIC;
+    this.mode = ALPHANUMERIC;
     this.data = data;
     this.length = this.data?.length ?? 0;
   }
 
-  getLength() {
+  getLength(): number {
     return this.data.length;
   }
 
-  getBitsLength() {
+  getBitsLength(): number {
     return AlphanumericData.getBitsLength(this.data.length);
   }
 
-  write(bitBuffer: BitBuffer) {
+  write(bitBuffer: BitBuffer): void {
     let i: number;
 
     // Input data characters are divided into groups of two characters
@@ -101,7 +100,7 @@ export class AlphanumericData implements SegmentInterface {
     }
   }
 
-  static getBitsLength(length: number) {
+  static getBitsLength(length: number): number {
     return 11 * Math.floor(length / 2) + 6 * (length % 2);
   }
 }

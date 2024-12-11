@@ -62,7 +62,7 @@ export class QRex extends QRexBase {
     const type = this.opts?.type || this.getTypeFromFilename(path);
     const renderer = this.getRendererFromType(type);
     if ("renderToFile" in renderer) {
-      const renderToFile = renderer.renderToFile.bind(null, path);
+      const renderToFile = renderer.renderToFile.bind(renderer, path);
       return this.render(renderToFile);
     }
     throw new Error("File is not supported for this renderer");

@@ -39,13 +39,13 @@ export class QRex extends QRexBase {
 
   public toString() {
     const renderer = this.getStringRendererFromType(this.opts?.type);
-    return this.render(renderer.render);
+    return this.render(renderer.render.bind(renderer));
   }
 
   public toDataURL() {
     const renderer = this.getRendererFromType(this.opts?.type);
     if ("renderToDataURL" in renderer) {
-      return this.render(renderer.renderToDataURL);
+      return this.render(renderer.renderToDataURL.bind(renderer));
     }
     throw new Error("Data URL is not supported for this renderer");
   }
@@ -53,7 +53,7 @@ export class QRex extends QRexBase {
   public toBuffer() {
     const renderer = this.getRendererFromType(this.opts?.type);
     if ("renderToBuffer" in renderer) {
-      return this.render(renderer.renderToBuffer);
+      return this.render(renderer.renderToBuffer.bind(renderer));
     }
     throw new Error("Buffer is not supported for this renderer");
   }

@@ -259,7 +259,7 @@ Segments list can be passed as an array of object:
 ```javascript
   const QRex = require('qrex')
 
-  constsegs = [
+  const segs = [
     { data: 'ABCDEFG', mode: 'alphanumeric' },
     { data: '0123456', mode: 'numeric' }
   ]

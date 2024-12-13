@@ -4,6 +4,7 @@ import { RendererSvg } from "./renderer/svg";
 import { RendererTerminal } from "./renderer/terminal";
 import { RendererUtf8 } from "./renderer/utf8";
 import type { RendererType } from "./types/qrex.type";
+import type { Stream } from "node:stream";
 
 export class QRex extends QRexBase {
   private getTypeFromFilename(path: string): RendererType {
@@ -39,13 +40,13 @@ export class QRex extends QRexBase {
 
   public toString() {
     const renderer = this.getStringRendererFromType(this.opts?.type);
-    return this.render(renderer.render);
+    return this.render(renderer.render.bind(renderer));
   }
 
   public toDataURL() {
     const renderer = this.getRendererFromType(this.opts?.type);
     if ("renderToDataURL" in renderer) {
-      return this.render(renderer.renderToDataURL);
+      return this.render(renderer.renderToDataURL.bind(renderer));
     }
     throw new Error("Data URL is not supported for this renderer");
   }
@@ -53,7 +54,7 @@ export class QRex extends QRexBase {
   public toBuffer() {
     const renderer = this.getRendererFromType(this.opts?.type);
     if ("renderToBuffer" in renderer) {
-      return this.render(renderer.renderToBuffer);
+      return this.render(renderer.renderToBuffer.bind(renderer));
     }
     throw new Error("Buffer is not supported for this renderer");
   }
@@ -62,15 +63,15 @@ export class QRex extends QRexBase {
     const type = this.opts?.type || this.getTypeFromFilename(path);
     const renderer = this.getRendererFromType(type);
     if ("renderToFile" in renderer) {
-      const renderToFile = renderer.renderToFile.bind(null, path);
+      const renderToFile = renderer.renderToFile.bind(renderer, path);
       return this.render(renderToFile);
     }
     throw new Error("File is not supported for this renderer");
   }
 
-  public toFileStream(stream) {
+  public toFileStream(stream: Stream) {
     const renderer = this.getRendererFromType("png") as RendererPng;
-    const renderToFileStream = renderer.renderToFileStream.bind(null, stream);
+    const renderToFileStream = renderer.renderToFileStream.bind(renderer, stream);
 
     return this.render(renderToFileStream);
   }

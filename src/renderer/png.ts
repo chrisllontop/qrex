@@ -2,6 +2,7 @@ import * as fs from "node:fs";
 import { PNG } from "pngjs";
 import type { QRData, QRexOptions } from "../types/qrex.type";
 import { RendererUtils } from "./utils";
+import type { Stream } from "node:stream";
 
 export class RendererPng {
   public render(qrData: QRData, options?: QRexOptions): PNG {
@@ -60,7 +61,7 @@ export class RendererPng {
     this.renderToFileStream(stream, qrData, options);
   }
 
-  public renderToFileStream(stream, qrData: QRData, options?: QRexOptions) {
+  public renderToFileStream(stream: Stream, qrData: QRData, options?: QRexOptions) {
     const png = this.render(qrData, options);
     return png.pack().pipe(stream);
   }

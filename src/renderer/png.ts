@@ -62,7 +62,7 @@ export class RendererPng {
 
   public renderToFileStream(stream, qrData: QRData, options?: QRexOptions) {
     const png = this.render(qrData, options);
-    png.pack().pipe(stream);
+    return png.pack().pipe(stream);
   }
 
   public renderToDataURL(qrData: QRData, options?: QRexOptions, cb?) {

@@ -72,6 +72,6 @@ export class QRex extends QRexBase {
     const renderer = this.getRendererFromType("png") as RendererPng;
     const renderToFileStream = renderer.renderToFileStream.bind(null, stream);
 
-    this.render(renderToFileStream);
+    return this.render(renderToFileStream);
   }
 }

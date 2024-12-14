@@ -1,10 +1,10 @@
+import type { WriteStream } from "node:fs";
 import { QRexBase } from "./qrex.base";
 import { RendererPng } from "./renderer/png";
 import { RendererSvg } from "./renderer/svg";
 import { RendererTerminal } from "./renderer/terminal";
 import { RendererUtf8 } from "./renderer/utf8";
 import type { RendererType } from "./types/qrex.type";
-import type { Stream } from "node:stream";
 
 export class QRex extends QRexBase {
   private getTypeFromFilename(path: string): RendererType {
@@ -69,10 +69,10 @@ export class QRex extends QRexBase {
     throw new Error("File is not supported for this renderer");
   }
 
-  public toFileStream(stream: Stream) {
+  public toFileStream(stream: WriteStream) {
     const renderer = this.getRendererFromType("png") as RendererPng;
     const renderToFileStream = renderer.renderToFileStream.bind(renderer, stream);
 
-    this.render(renderToFileStream);
+    return this.render(renderToFileStream);
   }
 }

@@ -1,6 +1,6 @@
 import * as fs from "node:fs";
 import type { WriteStream } from "node:fs";
-import { PNG } from "pngjs";
+import { PNG } from "pngjs/browser";
 import type { QRData, QRexOptions } from "../types/qrex.type";
 import { RendererUtils } from "./utils";
 
@@ -12,8 +12,9 @@ export class RendererPng {
 
     pngOpts.width = size;
     pngOpts.height = size;
-
+    
     const pngImage = new PNG(pngOpts);
+    
     RendererUtils.qrToImageData(pngImage.data, qrData, opts);
 
     return pngImage;
@@ -21,16 +22,23 @@ export class RendererPng {
 
   public async renderToBuffer(qrData: QRData, options?: QRexOptions): Promise<Buffer> {
     const png = this.render(qrData, options);
-    const buffer = [];
+    const chunks: Buffer[] = [];
 
-    png.on("data", (data) => {
-      buffer.push(data);
+    return new Promise<Buffer>((resolve, reject) => {
+      png.on("data", (chunk) => {
+        chunks.push(chunk);
+      });
+  
+      png.on("end", () => {
+        resolve(Buffer.concat(chunks));
+      });
+  
+      png.on("error", (err) => {
+        reject(err);
+      });
+  
+      png.pack();
     });
-
-    png.on("end", () => {
-      return Buffer.concat(buffer);
-    });
-    return png.pack();
   }
 
   public renderToFile(path: string, qrData: QRData, options?: QRexOptions) {
@@ -45,7 +53,6 @@ export class RendererPng {
 
   public async renderToDataURL(qrData: QRData, options?: QRexOptions) {
     const qrBuffer = await this.renderToBuffer(qrData, options);
-    console.log("QR BUFFER", qrBuffer.toString("base64"));
     let dataUrl = "data:image/png;base64,";
     dataUrl += qrBuffer.toString("base64");
     return dataUrl;

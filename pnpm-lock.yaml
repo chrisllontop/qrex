@@ -36,6 +36,9 @@ importers:
       '@types/node':
         specifier: ^22.9.1
         version: 22.9.1
+      '@types/pngjs':
+        specifier: ^6.0.5
+        version: 6.0.5
       '@vitest/coverage-istanbul':
         specifier: 2.1.4
         version: 2.1.4(vitest@2.1.4(@types/node@22.9.1)(@vitest/ui@2.1.4)(terser@5.36.0))
@@ -1086,6 +1089,9 @@ packages:
 
   '@types/node@22.9.1':
     resolution: {integrity: sha512-p8Yy/8sw1caA8CdRIQBG5tiLHmxtQKObCijiAa9Ez+d4+PRffM4054xbju0msf+cvhJpnFEeNjxmVT/0ipktrg==}
+
+  '@types/pngjs@6.0.5':
+    resolution: {integrity: sha512-0k5eKfrA83JOZPppLtS2C7OUtyNAl2wKNxfyYl9Q5g9lPkgBl/9hNyAu6HuEH2J4XmIv2znEpkDd0SaZVxW6iQ==}
 
   '@types/qs@6.9.17':
     resolution: {integrity: sha512-rX4/bPcfmvxHDv0XjfJELTTr+iB+tn032nPILqHm5wbthUUUuVtNGGqzhya9XUxjTP8Fpr0qYgSZZKxGY++svQ==}
@@ -4142,6 +4148,10 @@ snapshots:
   '@types/node@22.9.1':
     dependencies:
       undici-types: 6.19.8
+
+  '@types/pngjs@6.0.5':
+    dependencies:
+      '@types/node': 22.9.1
 
   '@types/qs@6.9.17': {}
 

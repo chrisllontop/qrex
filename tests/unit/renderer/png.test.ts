@@ -64,24 +64,15 @@ describe("PNG renderToDataURL", () => {
   });
 
   it("should not generate errors with only qrData param and return a string", async () => {
-    const url = await new Promise((resolve, reject) => {
-      const renderer: RendererPng = new RendererPng();
-      renderer.renderToDataURL(sampleQrData, (err, url) => {
-        if (err) reject(err);
-        else resolve(url);
-      });
-    });
+    const renderer: RendererPng = new RendererPng();
+    const url = await renderer.renderToDataURL(sampleQrData);
     expect(url).toBeTypeOf("string");
   });
 
   it("should not generate errors with options param and return a valid data URL", async () => {
-    const url = await new Promise((resolve, reject) => {
-      const renderer: RendererPng = new RendererPng();
-      renderer.renderToDataURL(sampleQrData, { margin: 10, scale: 1 }, (err, url) => {
-        if (err) reject(err);
-        else resolve(url);
-      });
-    });
+    const renderer: RendererPng = new RendererPng();
+
+    const url = await renderer.renderToDataURL(sampleQrData, { margin: 10, scale: 1 });
 
     expect(url).toBeTypeOf("string");
     expect(url.split(",")[0]).toBe("data:image/png;base64");
@@ -100,18 +91,8 @@ describe("PNG renderToFile", () => {
   it("should not generate errors with only qrData param and save file with correct file name", async () => {
     const fsStub = vi.spyOn(fs, "createWriteStream").mockReturnValue(new StreamMock() as unknown as fs.WriteStream);
 
-    await new Promise<void>((resolve, reject) => {
-      const renderer: RendererPng = new RendererPng();
-      renderer.renderToFile(fileName, sampleQrData, { margin: 10, scale: 1 }, (err) => {
-        try {
-          expect(err).toBeFalsy();
-
-          resolve();
-        } catch (e) {
-          reject(e);
-        }
-      });
-    });
+    const renderer: RendererPng = new RendererPng();
+    await renderer.renderToFile(fileName, sampleQrData, { margin: 10, scale: 1 });
 
     fsStub.mockRestore();
   });
@@ -121,16 +102,7 @@ describe("PNG renderToFile", () => {
 
     const renderer: RendererPng = new RendererPng();
 
-    await new Promise<void>((resolve, reject) => {
-      renderer.renderToFile(fileName, sampleQrData, { margin: 10, scale: 1 }, (err) => {
-        try {
-          expect(err).toBeFalsy();
-          resolve();
-        } catch (e) {
-          reject(e);
-        }
-      });
-    });
+    await renderer.renderToFile(fileName, sampleQrData, { margin: 10, scale: 1 });
 
     fsStub.mockRestore();
   });
@@ -138,17 +110,8 @@ describe("PNG renderToFile", () => {
   it("should fail if error occurs during save", async () => {
     const fsStub = vi.spyOn(fs, "createWriteStream").mockReturnValue(new StreamMock().forceErrorOnWrite());
 
-    await new Promise((resolve, reject) => {
-      const renderer: RendererPng = new RendererPng();
-      renderer.renderToFile(fileName, sampleQrData, { margin: 10, scale: 1 }, (err) => {
-        try {
-          expect(err).toBeUndefined();
-          resolve();
-        } catch (e) {
-          reject(e);
-        }
-      });
-    });
+    const renderer: RendererPng = new RendererPng();
+    await renderer.renderToFile(fileName, sampleQrData, { margin: 10, scale: 1 });
 
     fsStub.mockRestore();
   });

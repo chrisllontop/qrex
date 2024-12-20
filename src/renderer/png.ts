@@ -1,6 +1,6 @@
 import * as fs from "node:fs";
 import type { WriteStream } from "node:fs";
-import { PNG } from "pngjs/browser";
+import { PNG } from "pngjs";
 import type { QRData, QRexOptions } from "../types/qrex.type";
 import { RendererUtils } from "./utils";
 
@@ -12,9 +12,9 @@ export class RendererPng {
 
     pngOpts.width = size;
     pngOpts.height = size;
-    
+
     const pngImage = new PNG(pngOpts);
-    
+
     RendererUtils.qrToImageData(pngImage.data, qrData, opts);
 
     return pngImage;
@@ -28,15 +28,15 @@ export class RendererPng {
       png.on("data", (chunk) => {
         chunks.push(chunk);
       });
-  
+
       png.on("end", () => {
         resolve(Buffer.concat(chunks));
       });
-  
+
       png.on("error", (err) => {
         reject(err);
       });
-  
+
       png.pack();
     });
   }

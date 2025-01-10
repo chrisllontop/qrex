@@ -82,7 +82,7 @@ Recognized extensions are `png`, `svg` and `txt`.
 ```
 
 ```javascript
-// index.js -> bundle.js
+// index.js
 import { QRex } from 'qrex'
 
 const canvas = document.getElementById('canvas')
@@ -105,7 +105,7 @@ qr.toCanvas(canvas)
 
 ### NodeJS
 ```javascript
-const { QRex } = require('qrex')
+import { QRex } from 'qrex'
 
 const qr = new QRex('I am a pony!')
 qr.toDataURL()
@@ -114,8 +114,8 @@ qr.toDataURL()
 ```
 
 For terminal output:
-```js
-const { QRex } = require('qrex')
+```javascript
+import { QRex } from 'qrex'
 
 const qr = new QRex('I am a pony!', { type: 'terminal' })
 qr.toString()
@@ -247,7 +247,7 @@ In this way no segment optimizations will be applied under the hood.<br>
 Segments list can be passed as an array of object:
 
 ```javascript
-const { QRex } = require('qrex')
+import { QRex } from 'qrex'
 
 const segments = [
   { data: 'ABCDEFG', mode: 'alphanumeric' },
@@ -272,8 +272,8 @@ An helper method is provided by the lib through an optional file that you can in
 **Note:** Support for Kanji mode is only needed if you want to benefit of the data compression, otherwise is still possible to encode kanji using Byte mode (See [Multibyte characters](#multibyte-characters)).
 
 ```javascript
-const { QRex } = require('qrex')
-const toSJIS = require('qrex/helper/to-sjis')
+import { QRex } from 'qrex'
+import { toSJIS } from 'qrex/helper/to-sjis'
 
 const qr = new QRex(kanjiString, { toSJISFunc: toSJIS })
 qr.toDataURL()
@@ -300,8 +300,7 @@ QR Codes can hold arbitrary byte-based binary data. If you attempt to create a b
 
 ```javascript
 // Regular array example
-// WARNING: Element values will be clamped to 0-255 even if your data contains higher values.
-const { QRex } = require('qrex')
+import { QRex } from 'qrex'
 
 const binaryData = [{ data: [253,254,255], mode: 'byte' }]
 const qr = new QRex(binaryData)
@@ -312,7 +311,7 @@ qr.toFile('foo.png')
 
 ```javascript
 // Uint8ClampedArray example
-const { QRex } = require('qrex')
+import { QRex } from 'qrex'
 
 const binaryData = [{ 
   data: new Uint8ClampedArray([253,254,255]), 
@@ -326,8 +325,8 @@ qr.toFile('foo.png')
 
 ```javascript
 // Node Buffer example
-// WARNING: Element values will be clamped to 0-255 even if your data contains higher values.
-const { QRex } = require('qrex')
+import { Buffer } from 'node:buffer'
+import { QRex } from 'qrex'
 
 const binaryData = [{ 
   data: Buffer.from([253,254,255]), 
@@ -443,11 +442,11 @@ Writes QR Code image to stream. Only works with `png` format for now.
 
 ##### Example
 ```javascript
-const fs = require('fs')
-const { QRex } = require('qrex')
+import { createWriteStream } from 'node:fs'
+import { QRex } from 'qrex'
 
 const qr = new QRex('Hello World')
-const out = fs.createWriteStream('foo.png')
+const out = createWriteStream('foo.png')
 qr.toFileStream(out)
   .then(() => console.log('QR code saved!'))
   .catch(err => console.error(err))

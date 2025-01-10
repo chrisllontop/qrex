@@ -43,9 +43,6 @@ const generateConfig = (name: string) => {
   });
 };
 
-const config = [
-  generateConfig("qrex"),
-  generateConfig("qrex.browser"),
-];
+const config = [generateConfig("qrex"), generateConfig("qrex.browser")];
 
 export default config;

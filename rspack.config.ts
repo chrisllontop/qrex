@@ -6,12 +6,9 @@ const babelConfig = {
   presets: ["@babel/preset-typescript", ["@babel/preset-env", { targets: "defaults, IE >= 10, Safari >= 5.1" }]],
 };
 
-const generateConfig = (name: string, type: "commonjs" | "module") => {
-  const folder = type === "commonjs" ? "cjs" : "esm";
-  const target = type === "commonjs" ? "node" : "web";
-  const libraryType = type === "commonjs" ? "commonjs2" : "module";
-
+const generateConfig = (name: string) => {
   return defineConfig({
+    devtool: false,
     module: {
       rules: [
         {
@@ -29,16 +26,16 @@ const generateConfig = (name: string, type: "commonjs" | "module") => {
     },
     entry: `./src/${name}.ts`,
     output: {
-      path: path.resolve(process.cwd(), `dist/${folder}`),
+      path: path.resolve(process.cwd(), "dist"),
       filename: `${name}.js`,
       library: {
-        type: libraryType,
+        type: "module",
       },
     },
     experiments: {
-      outputModule: type === "module",
+      outputModule: true,
     },
-    target,
+    target: "web",
     externals: {
       "node:fs": "commonjs fs",
       pngjs: "commonjs pngjs",
@@ -47,10 +44,8 @@ const generateConfig = (name: string, type: "commonjs" | "module") => {
 };
 
 const config = [
-  generateConfig("qrex", "commonjs"),
-  generateConfig("qrex.browser", "commonjs"),
-  generateConfig("qrex", "module"),
-  generateConfig("qrex.browser", "module"),
+  generateConfig("qrex"),
+  generateConfig("qrex.browser"),
 ];
 
 export default config;

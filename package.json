@@ -11,16 +11,10 @@
     "node-qrcode",
     "qrcode-generator"
   ],
-  "main": "dist/cjs/qrex.js",
-  "module": "dist/esm/qrex.js",
-  "exports": {
-    ".": {
-      "require": "./dist/cjs/qrex.js",
-      "import": "./dist/esm/qrex.js"
-    }
-  },
+  "main": "dist/qrex.js",
+  "module": "dist/qrex.js",
   "browser": {
-    "./dist/cjs/qrex.js": "./dist/cjs/qrex.browser.js",
+    "./dist/qrex.js": "./dist/qrex.browser.js",
     "fs": false
   },
   "files": [
@@ -31,7 +25,7 @@
   "homepage": "https://github.com/chrisllontop/qrex",
   "license": "MIT",
   "scripts": {
-    "build": "rspack build",
+    "build": "rm -rf dist && rspack build",
     "lint:ci": "biome lint && biome format",
     "lint:fix": "biome lint --write && biome format --write",
     "test:dev": "vitest --watch",

@@ -1,5 +1,5 @@
 # qrex
-> QR code/2d barcode generator
+> Modern QR code generator for Node.js and Browser
 
 - [Highlights](#highlights)
 - [Installation](#installation)
@@ -12,16 +12,14 @@
 - [API](#api)
 - [License](#license)
 
-## Highlights
-- Works on server and client (and react native with svg)
-- CLI utility
-- Save QR code as image
-- Support for Numeric, Alphanumeric, Kanji and Byte mode
-- Support for mixed modes
-- Support for chinese, cyrillic, greek and japanese characters
-- Support for multibyte characters (like emojis :smile:)
-- Auto generates optimized segments for best data compression and smallest QR Code size
-- App agnostic readability, QR Codes by definition are app agnostic
+## Features
+- 🌐 Universal - Works in Node.js, Browsers and React Native (via SVG)
+- 🎨 Multiple formats - PNG, SVG, Terminal output, and more
+- 📦 ESM first - Modern ES modules support
+- 🔤 Multi-encoding - Supports Numeric, Alphanumeric, Kanji and Byte modes
+- 🌏 International - Full UTF-8 support including emoji
+- ⚡ Optimized - Auto generates optimal segments for best compression
+- 📱 Compatible - QR codes readable by any standard scanner
 
 ## Installation
 Inside your project folder do:
@@ -84,14 +82,12 @@ Recognized extensions are `png`, `svg` and `txt`.
 ```
 
 ```javascript
-// index.js -> bundle.js
-var qrex = require('qrex')
-const canvas = document.getElementById('canvas')
+// index.js
+import { QRex } from 'qrex'
 
-QRex.toCanvas(canvas, 'sample text', function (error) {
-  if (error) console.error(error)
-  console.log('success!');
-})
+const canvas = document.getElementById('canvas')
+const qr = new QRex('sample text')
+qr.toCanvas(canvas)
 ```
 
 #### Precompiled bundle
@@ -102,56 +98,48 @@ QRex.toCanvas(canvas, 'sample text', function (error) {
 
 <script src="/build/qrex.js"></script>
 <script>
-  QRex.toCanvas(document.getElementById('canvas'), 'sample text', function (error) {
-    if (error) console.error(error)
-    console.log('success!');
-  })
+  const qr = new QRex('sample text')
+  qr.toCanvas(document.getElementById('canvas'))
 </script>
 ```
 
-If you install through `npm`, precompiled files will be available in `node_modules/qrex/build/` folder.
-
-The precompiled bundle have support for [Internet Explorer 10+, Safari 5.1+, and all evergreen browsers](https://browserl.ist/?q=defaults%2C+IE+%3E%3D+10%2C+Safari+%3E%3D+5.1).
-
 ### NodeJS
-Require the module `qrex`
-
 ```javascript
-const QRex = require('qrex')
+import { QRex } from 'qrex'
 
-QRex.toDataURL('I am a pony!', function (err, url) {
-  console.log(url)
-})
+const qr = new QRex('I am a pony!')
+qr.toDataURL()
+  .then(url => console.log(url))
+  .catch(err => console.error(err))
 ```
 
-render a qrex for the terminal
-```js
-const QRex = require('qrex')
+For terminal output:
+```javascript
+import { QRex } from 'qrex'
 
-QRex.toString('I am a pony!',{type:'terminal'}, function (err, url) {
-  console.log(url)
-})
+const qr = new QRex('I am a pony!', { type: 'terminal' })
+qr.toString()
+  .then(output => console.log(output))
+  .catch(err => console.error(err))
 ```
 
 ### ES6/ES7
 Promises and Async/Await can be used in place of callback function.
 
 ```javascript
-import QRex from 'qrex'
+import { QRex } from 'qrex'
 
 // With promises
-QRex.toDataURL('I am a pony!')
-  .then(url => {
-    console.log(url)
-  })
-  .catch(err => {
-    console.error(err)
-  })
+const qr = new QRex('I am a pony!')
+qr.toDataURL()
+  .then(url => console.log(url))
+  .catch(err => console.error(err))
 
 // With async/await
 const generateQR = async text => {
   try {
-    console.log(await QRex.toDataURL(text))
+    const qr = new QRex(text)
+    console.log(await qr.toDataURL())
   } catch (err) {
     console.error(err)
   }
@@ -181,9 +169,10 @@ Error level can be set through `options.errorCorrectionLevel` property.<br>
 If not specified, the default value is `M`.
 
 ```javascript
-QRex.toDataURL('some text', { errorCorrectionLevel: 'H' }, function (err, url) {
-  console.log(url)
-})
+const qr = new QRex('some text', { errorCorrectionLevel: 'H' })
+qr.toDataURL()
+  .then(url => console.log(url))
+  .catch(err => console.error(err))
 ```
 
 ## QR Code capacity
@@ -209,9 +198,10 @@ QR Code version can be set through `options.version` property.<br>
 If no version is specified, the more suitable value will be used. Unless a specific version is required, this option is not needed.
 
 ```javascript
-QRex.toDataURL('some text', { version: 2 }, function (err, url) {
-  console.log(url)
-})
+const qr = new QRex('some text', { version: 2 })
+qr.toDataURL()
+  .then(url => console.log(url))
+  .catch(err => console.error(err))
 ```
 
 ## Encoding modes
@@ -257,16 +247,17 @@ In this way no segment optimizations will be applied under the hood.<br>
 Segments list can be passed as an array of object:
 
 ```javascript
-  const QRex = require('qrex')
+import { QRex } from 'qrex'
 
-  const segs = [
-    { data: 'ABCDEFG', mode: 'alphanumeric' },
-    { data: '0123456', mode: 'numeric' }
-  ]
+const segments = [
+  { data: 'ABCDEFG', mode: 'alphanumeric' },
+  { data: '0123456', mode: 'numeric' }
+]
 
-  QRex.toDataURL(segs, function (err, url) {
-    console.log(url)
-  })
+const qr = new QRex(segments)
+qr.toDataURL()
+  .then(url => console.log(url))
+  .catch(err => console.error(err))
 ```
 
 ### Kanji mode
@@ -281,12 +272,13 @@ An helper method is provided by the lib through an optional file that you can in
 **Note:** Support for Kanji mode is only needed if you want to benefit of the data compression, otherwise is still possible to encode kanji using Byte mode (See [Multibyte characters](#multibyte-characters)).
 
 ```javascript
-  const qrex = require('qrex')
-const toSJIS = require('qrex/helper/to-sjis')
+import { QRex } from 'qrex'
+import { toSJIS } from 'qrex/helper/to-sjis'
 
-QRex.toDataURL(kanjiString, { toSJISFunc: toSJIS }, function (err, url) {
-  console.log(url)
-})
+const qr = new QRex(kanjiString, { toSJISFunc: toSJIS })
+qr.toDataURL()
+  .then(url => console.log(url))
+  .catch(err => console.error(err))
 ```
 
 With precompiled bundle:
@@ -298,52 +290,52 @@ With precompiled bundle:
 <script src="/build/qrex.min.js"></script>
 <script src="/build/qrex.tosjis.min.js"></script>
 <script>
-  QRex.toCanvas(document.getElementById('canvas'),
-      'sample text', { toSJISFunc: QRex.toSJIS }, function (error) {
-        if (error) console.error(error)
-        console.log('success!')
-      })
+  const qr = new QRex('sample text', { toSJISFunc: QRex.toSJIS })
+  qr.toCanvas(document.getElementById('canvas'))
 </script>
 ```
 
 ## Binary data
-QR Codes can hold arbitrary byte-based binary data. If you attempt to create a binary QR Code by first converting the data to a JavaScript string, it will fail to encode propery because string encoding adds additional bytes. Instead, you must pass a [`Uint8ClampedArray`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray) or compatible array, or a Node [Buffer](https://nodejs.org/api/buffer.html), as follows:
+QR Codes can hold arbitrary byte-based binary data. If you attempt to create a binary QR Code by first converting the data to a JavaScript string, it will fail to encode properly because string encoding adds additional bytes. Instead, you must pass a [`Uint8ClampedArray`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray) or compatible array, or a Node [Buffer](https://nodejs.org/api/buffer.html), as follows:
 
 ```javascript
 // Regular array example
-// WARNING: Element values will be clamped to 0-255 even if your data contains higher values.
-const QRex = require('qrex')
-QRex.toFile(
-  'foo.png',
-  [{ data: [253,254,255], mode: 'byte' }],
-  ...options,
-  ...callback,
-)
+import { QRex } from 'qrex'
+
+const binaryData = [{ data: [253,254,255], mode: 'byte' }]
+const qr = new QRex(binaryData)
+qr.toFile('foo.png')
+  .then(() => console.log('QR code saved!'))
+  .catch(err => console.error(err))
 ```
 
 ```javascript
 // Uint8ClampedArray example
-const QRex = require('qrex')
+import { QRex } from 'qrex'
 
-QRex.toFile(
-  'foo.png',
-  [{ data: new Uint8ClampedArray([253,254,255]), mode: 'byte' }],
-  ...options,
-  ...callback,
-)
+const binaryData = [{ 
+  data: new Uint8ClampedArray([253,254,255]), 
+  mode: 'byte' 
+}]
+const qr = new QRex(binaryData)
+qr.toFile('foo.png')
+  .then(() => console.log('QR code saved!'))
+  .catch(err => console.error(err))
 ```
 
 ```javascript
 // Node Buffer example
-// WARNING: Element values will be clamped to 0-255 even if your data contains higher values.
-const QRex = require('qrex')
+import { Buffer } from 'node:buffer'
+import { QRex } from 'qrex'
 
-QRex.toFile(
-  'foo.png',
-  [{ data: Buffer.from([253,254,255]), mode: 'byte' }],
-  ...options,
-  ...callback,
-)
+const binaryData = [{ 
+  data: Buffer.from([253,254,255]), 
+  mode: 'byte' 
+}]
+const qr = new QRex(binaryData)
+qr.toFile('foo.png')
+  .then(() => console.log('QR code saved!'))
+  .catch(err => console.error(err))
 ```
 
 ## Multibyte characters
@@ -357,22 +349,22 @@ Note that a single Kanji/Kana or Emoji can take up to 4 bytes.
 
 ## API
 Browser:
-- [create()](#createtext-options)
-- [toCanvas()](#tocanvascanvaselement-text-options-cberror)
-- [toDataURL()](#todataurltext-options-cberror-url)
-- [toString()](#tostringtext-options-cberror-string)
+- [constructor()](#constructor)
+- [toCanvas()](#tocanvas)
+- [toDataURL()](#todataurl)
+- [toString()](#tostring)
 
 Server:
-- [create()](#createtext-options)
-- [toCanvas()](#tocanvascanvas-text-options-cberror)
-- [toDataURL()](#todataurltext-options-cberror-url-1)
-- [toString()](#tostringtext-options-cberror-string-1)
-- [toFile()](#tofilepath-text-options-cberror)
-- [toFileStream()](#tofilestreamstream-text-options)
+- [constructor()](#constructor)
+- [toCanvas()](#tocanvas)
+- [toDataURL()](#todataurl)
+- [toString()](#tostring)
+- [toFile()](#tofile)
+- [toFileStream()](#tofilestream)
 
 ### Browser API
-#### `create(text, [options])`
-Creates QR Code symbol and returns a qrcode object.
+#### `constructor(text, [options])`
+Creates a new QRex instance.
 
 ##### `text`
 Type: `String|Array`
@@ -382,98 +374,29 @@ Text to encode or a list of objects describing segments.
 ##### `options`
 See [QR Code options](#qr-code-options).
 
-##### `returns`
-Type: `Object`
-
+##### Example
 ```javascript
-// QRex object
-{
-  modules,              // Bitmatrix class with modules data
-  version,              // Calculated QR Code version
-  errorCorrectionLevel, // Error Correction Level
-  maskPattern,          // Calculated Mask pattern
-  segments              // Generated segments
-}
+const qr = new QRex('Hello World', { errorCorrectionLevel: 'H' })
 ```
 
-<br>
-
-#### `toCanvas(canvasElement, text, [options], [cb(error)])`
-#### `toCanvas(text, [options], [cb(error, canvas)])`
-Draws qr code symbol to canvas.<br>
-If `canvasElement` is omitted a new canvas is returned.
-
-##### `canvasElement`
-Type: `DOMElement`
-
-Canvas where to draw QR Code.
-
-##### `text`
-Type: `String|Array`
-
-Text to encode or a list of objects describing segments.
-
-##### `options`
-See [Options](#options).
-
-##### `cb`
-Type: `Function`
-
-Callback function called on finish.
+#### `toCanvas([canvasElement])`
+Draws QR code symbol to canvas. Returns a Promise that resolves with the canvas element.
+If `canvasElement` is omitted a new canvas is created.
 
 ##### Example
-
 ```javascript
-QRex.toCanvas('text', { errorCorrectionLevel: 'H' }, function (err, canvas) {
-  if (err) throw err
-
-  const container = document.getElementById('container')
-  container.appendChild(canvas)
-})
+const qr = new QRex('Hello World')
+qr.toCanvas(document.getElementById('canvas'))
+  .then(() => console.log('QR drawn!'))
+  .catch(err => console.error(err))
 ```
 
-<br>
-
-#### `toDataURL(text, [options], [cb(error, url)])`
-#### `toDataURL(canvasElement, text, [options], [cb(error, url)])`
-Returns a Data URI containing a representation of the QR Code image.<br>
-If provided, `canvasElement` will be used as canvas to generate the data URI.
-
-##### `canvasElement`
-Type: `DOMElement`
-
-Canvas where to draw QR Code.
-
-##### `text`
-Type: `String|Array`
-
-Text to encode or a list of objects describing segments.
-
-##### `options`
-- ###### `type`
-  Type: `String`<br>
-  Default: `image/png`
-
-  Data URI format.<br>
-  Possible values are: `image/png`, `image/jpeg`, `image/webp`.<br>
-
-- ###### `rendererOpts.quality`
-  Type: `Number`<br>
-  Default: `0.92`
-
-  A Number between `0` and `1` indicating image quality if the requested type is `image/jpeg` or `image/webp`.
-
-See [Options](#options) for other settings.
-
-##### `cb`
-Type: `Function`
-
-Callback function called on finish.
+#### `toDataURL()`
+Returns a Promise that resolves with a Data URI containing a representation of the QR Code image.
 
 ##### Example
-
 ```javascript
-const opts = {
+const qr = new QRex('Hello World', {
   errorCorrectionLevel: 'H',
   type: 'image/jpeg',
   quality: 0.3,
@@ -482,62 +405,52 @@ const opts = {
     dark: "#010599FF",
     light: "#FFBF60FF"
   }
-}
-
-QRex.toDataURL('text', opts, function (err, url) {
-  if (err) throw err
-
-  const img = document.getElementById('image')
-  img.src = url
 })
-```
-<br>
 
-#### `toString(text, [options], [cb(error, string)])`
-
-Returns a string representation of the QR Code.<br>
-
-## Setup
-
-Install the dependencies:
-
-```bash
-npm install
+qr.toDataURL()
+  .then(url => {
+    document.getElementById('image').src = url
+  })
+  .catch(err => console.error(err))
 ```
 
-## Get Started
+#### `toString()`
+Returns a Promise that resolves with a string representation of the QR Code.
 
-Start the dev server:
-
-```bash
-npm run dev
+##### Example
+```javascript
+const qr = new QRex('Hello World', { type: 'terminal' })
+qr.toString()
+  .then(str => console.log(str))
+  .catch(err => console.error(err))
 ```
 
-Build the app for production:
+### Server API
+#### `toFile(path)`
+Writes QR Code image to file. Returns a Promise.
 
-```bash
-npm run build
+##### Example
+```javascript
+const qr = new QRex('Hello World')
+qr.toFile('foo.png')
+  .then(() => console.log('QR code saved!'))
+  .catch(err => console.error(err))
 ```
 
-<br>
-
-#### `toFileStream(stream, text, [options])`
+#### `toFileStream(stream)`
 Writes QR Code image to stream. Only works with `png` format for now.
 
-##### `stream`
-Type: `stream.Writable`
+##### Example
+```javascript
+import { createWriteStream } from 'node:fs'
+import { QRex } from 'qrex'
 
-Node stream.
-
-##### `text`
-Type: `String|Array`
-
-Text to encode or a list of objects describing segments.
-
-##### `options`
-See [Options](#options).
-
-<br>
+const qr = new QRex('Hello World')
+const out = createWriteStream('foo.png')
+qr.toFileStream(out)
+  .then(() => console.log('QR code saved!'))
+  .catch(err => console.error(err))
+```
 
 ### Options
 
@@ -601,7 +514,7 @@ Color of dark module. Value must be in hex format (RGBA).<br>
 Note: dark color should always be darker than `color.light`.
 
 ##### `color.light`
-Type: `String`<br>
+Type: `String`<en>
 Default: `#ffffffff`
 
 Color of light module. Value must be in hex format (RGBA).<br>

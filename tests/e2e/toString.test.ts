@@ -14,18 +14,43 @@ describe("toString", () => {
       qrex.toString();
     }).toThrow("String required as first argument");
   });
+
+  it("should not throw an error for valid SVG renderer", async () => {
+    const qrex: QRex = new QRex("http://www.google.com", { maskPattern: 0, version: 3, type: "svg" });
+    expect(() => qrex.toString()).not.toThrow();
+  });
+
+  it("should not throw an error for valid UTF8 renderer", async () => {
+    const qrex: QRex = new QRex("http://www.google.com", { maskPattern: 0, version: 3, type: "txt" });
+    expect(() => qrex.toString()).not.toThrow();
+  });
+
+  it("should not throw an error for valid terminal renderer", async () => {
+    const qrex: QRex = new QRex("http://www.google.com", { maskPattern: 0, version: 3, type: "terminal" });
+    expect(() => qrex.toString()).not.toThrow();
+  });
 });
 
 describe("toString svg", () => {
   const file = path.join(__dirname, "/svgtag.expected.out");
 
-  it("should return an error for invalid version with callback", () => {
+  it("should return an error for invalid maskPattern with callback", () => {
     const qrex: QRex = new QRex("http://www.google.com");
     expect(() => qrex.toString()).toThrow("bad maskPattern:undefined");
   });
 
-  it("should return an error for invalid version with promise", async () => {
+  it("should return an error for invalid maskPattern with promise", async () => {
     const qrex: QRex = new QRex("http://www.google.com");
     expect(() => qrex.toString()).toThrow("bad maskPattern:undefined");
+  });
+
+  it("should return an error for invalid version with callback", () => {
+    const qrex: QRex = new QRex("http://www.google.com", { maskPattern: 0 });
+    expect(() => qrex.toString()).toThrow("No valid version provided");
+  });
+
+  it("should return an error for invalid version with promise", async () => {
+    const qrex: QRex = new QRex("http://www.google.com", { maskPattern: 0 });
+    expect(() => qrex.toString()).toThrow("No valid version provided");
   });
 });

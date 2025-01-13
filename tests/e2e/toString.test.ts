@@ -16,20 +16,17 @@ describe("toString", () => {
   });
 
   it("should not throw an error for valid SVG renderer", async () => {
-    const qrex: QRex = new QRex("http://www.google.com", {maskPattern: 0,
-      version: 3, type: 'svg'});
+    const qrex: QRex = new QRex("http://www.google.com", { maskPattern: 0, version: 3, type: "svg" });
     expect(() => qrex.toString()).not.toThrow();
   });
 
   it("should not throw an error for valid UTF8 renderer", async () => {
-    const qrex: QRex = new QRex("http://www.google.com", {maskPattern: 0,
-      version: 3, type: 'txt'});
+    const qrex: QRex = new QRex("http://www.google.com", { maskPattern: 0, version: 3, type: "txt" });
     expect(() => qrex.toString()).not.toThrow();
   });
 
   it("should not throw an error for valid terminal renderer", async () => {
-    const qrex: QRex = new QRex("http://www.google.com", {maskPattern: 0,
-      version: 3, type: 'terminal'});
+    const qrex: QRex = new QRex("http://www.google.com", { maskPattern: 0, version: 3, type: "terminal" });
     expect(() => qrex.toString()).not.toThrow();
   });
 });
@@ -48,12 +45,12 @@ describe("toString svg", () => {
   });
 
   it("should return an error for invalid version with callback", () => {
-    const qrex: QRex = new QRex("http://www.google.com", {maskPattern: 0});
+    const qrex: QRex = new QRex("http://www.google.com", { maskPattern: 0 });
     expect(() => qrex.toString()).toThrow("No valid version provided");
   });
 
   it("should return an error for invalid version with promise", async () => {
-    const qrex: QRex = new QRex("http://www.google.com", {maskPattern: 0});
+    const qrex: QRex = new QRex("http://www.google.com", { maskPattern: 0 });
     expect(() => qrex.toString()).toThrow("No valid version provided");
   });
 });

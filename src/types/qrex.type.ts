@@ -15,7 +15,7 @@ export type QRexOptions = {
   errorCorrectionLevel?: ErrorCorrectionLevel;
   /** Mask pattern */
   maskPattern?: MaskPatternType;
-  toSJISFunc?: (text: string) => Uint8Array;
+  toSJISFunc?: (text: string) => number | undefined;
 };
 
 export type QrContent = string;

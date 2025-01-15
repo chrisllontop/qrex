@@ -1,11 +1,6 @@
 import path from "node:path";
 import { defineConfig } from "@rspack/cli";
 
-const babelConfig = {
-  babelrc: false,
-  presets: ["@babel/preset-typescript", ["@babel/preset-env", { targets: "defaults, IE >= 10, Safari >= 5.1" }]],
-};
-
 const generateConfig = (name: string) => {
   return defineConfig({
     devtool: false,
@@ -14,35 +9,46 @@ const generateConfig = (name: string) => {
         {
           test: /\.ts$/,
           exclude: /node_modules/,
-          use: {
-            loader: "babel-loader",
-            options: babelConfig,
-          },
-        },
-      ],
+          loader: "builtin:swc-loader",
+          options: {
+            jsc: {
+              parser: {
+                syntax: "typescript"
+              }
+            }
+          }
+        }
+      ]
     },
     resolve: {
-      extensions: [".ts", ".js"],
+      extensions: [".ts", ".js"]
     },
     entry: `./src/${name}.ts`,
     output: {
       path: path.resolve(process.cwd(), "dist"),
       filename: `${name}.js`,
       library: {
-        type: "module",
-      },
+        type: "module"
+      }
     },
     experiments: {
-      outputModule: true,
+      outputModule: true
     },
-    target: "web",
+    target: ["web", "es2015"],
+    optimization: {
+      minimize: true
+    },
     externals: {
       "node:fs": "commonjs fs",
-      pngjs: "commonjs pngjs",
-    },
+      pngjs: "commonjs pngjs"
+    }
   });
 };
 
-const config = [generateConfig("qrex"), generateConfig("qrex.browser")];
+const config = [
+  generateConfig("qrex"),
+  generateConfig("qrex.browser"),
+  generateConfig("helper/to-sjis")
+];
 
 export default config;

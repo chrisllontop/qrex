@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import toSJIS from "../../../helper/to-sjis";
+import toSJIS from "../../../src/helper/to-sjis";
 import { AlphanumericData } from "../../../src/core/alphanumeric-data";
 import { ByteData } from "../../../src/core/byte-data";
 import { Mode } from "../../../src/core/mode";

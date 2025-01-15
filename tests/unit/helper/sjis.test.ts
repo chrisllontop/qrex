@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import toSJIS from "../../../helper/to-sjis";
+import toSJIS from "../../../src/helper/to-sjis";
 
 describe("SJIS from char", () => {
   it("should return undefined if character is invalid", () => {

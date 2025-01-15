@@ -1,15 +1,26 @@
 # qrex
 > Modern QR code generator for Node.js and Browser
 
-- [Highlights](#highlights)
+- [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
+  - [CLI](#cli)
+  - [Browser](#browser)
+  - [NodeJS](#nodejs)
+  - [ES6/ES7](#es6es7)
 - [Error correction level](#error-correction-level)
 - [QR Code capacity](#qr-code-capacity)
 - [Encoding Modes](#encoding-modes)
+  - [Mixed modes](#mixed-modes)
+  - [Auto mode](#auto-mode)
+  - [Manual mode](#manual-mode)
+  - [Kanji mode](#kanji-mode)
 - [Binary data](#binary-data)
 - [Multibyte characters](#multibyte-characters)
 - [API](#api)
+  - [Browser API](#browser-api)
+  - [Server API](#server-api)
+  - [Options](#options)
 - [License](#license)
 
 ## Features
@@ -520,7 +531,7 @@ Default: `#ffffffff`
 Color of light module. Value must be in hex format (RGBA).<br>
 
 ## License
-[MIT](https://github.com/chrisllontop/qrex/blob/main/license)
+[MIT License](./LICENSE)
 
 The word "QR Code" is registered trademark of:<br>
-DENSO WAVE INCORPORATED
+[DENSO WAVE INCORPORATED](https://www.denso-wave.com)

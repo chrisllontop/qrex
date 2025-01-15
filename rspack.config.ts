@@ -13,42 +13,38 @@ const generateConfig = (name: string) => {
           options: {
             jsc: {
               parser: {
-                syntax: "typescript"
-              }
-            }
-          }
-        }
-      ]
+                syntax: "typescript",
+              },
+            },
+          },
+        },
+      ],
     },
     resolve: {
-      extensions: [".ts", ".js"]
+      extensions: [".ts", ".js"],
     },
     entry: `./src/${name}.ts`,
     output: {
       path: path.resolve(process.cwd(), "dist"),
       filename: `${name}.js`,
       library: {
-        type: "module"
-      }
+        type: "module",
+      },
     },
     experiments: {
-      outputModule: true
+      outputModule: true,
     },
     target: ["web", "es2015"],
     optimization: {
-      minimize: true
+      minimize: true,
     },
     externals: {
       "node:fs": "commonjs fs",
-      pngjs: "commonjs pngjs"
-    }
+      pngjs: "commonjs pngjs",
+    },
   });
 };
 
-const config = [
-  generateConfig("qrex"),
-  generateConfig("qrex.browser"),
-  generateConfig("helper/to-sjis")
-];
+const config = [generateConfig("qrex"), generateConfig("qrex.browser"), generateConfig("helper/to-sjis")];
 
 export default config;

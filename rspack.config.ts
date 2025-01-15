@@ -45,6 +45,6 @@ const generateConfig = (name: string) => {
   });
 };
 
-const config = [generateConfig("qrex"), generateConfig("qrex.browser")];
+const config = [generateConfig("qrex"), generateConfig("qrex.browser"), generateConfig("helper/to-sjis")];
 
 export default config;

@@ -1,4 +1,4 @@
-import type { QRData, QRexOptions } from "../types/qrex.type";
+import type { QRData, QrexOptions } from "../types/qrex.type";
 import { Terminal } from "./terminal/terminal";
 import { TerminalSmall } from "./terminal/terminal-small";
 
@@ -6,7 +6,7 @@ export class RendererTerminal {
   private terminal = new Terminal();
   private terminalSmall = new TerminalSmall();
 
-  public render(qrData: QRData, options?: QRexOptions): string {
+  public render(qrData: QRData, options?: QrexOptions): string {
     if (options?.small) {
       return this.terminalSmall.render(qrData, options);
     }

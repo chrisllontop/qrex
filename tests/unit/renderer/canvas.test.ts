@@ -1,6 +1,6 @@
 import { Canvas, createCanvas } from "canvas";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { QRex } from "../../../src/core/qrex";
+import { Qrex } from "../../../src/core/qrex";
 import { RendererCanvas } from "../../../src/renderer/canvas";
 
 describe("RendererCanvas interface", () => {
@@ -33,7 +33,7 @@ describe("RendererCanvas render", () => {
   });
 
   it("should not throw if canvas is not provided", () => {
-    const sampleQrData = QRex.create("sample text", {
+    const sampleQrData = Qrex.create("sample text", {
       version: 2,
       maskPattern: 0,
     });
@@ -50,7 +50,7 @@ describe("RendererCanvas render", () => {
   it("should throw if canvas cannot be created", () => {
     global.document = undefined;
 
-    const sampleQrData = QRex.create("sample text", {
+    const sampleQrData = Qrex.create("sample text", {
       version: 2,
       maskPattern: 0,
     });
@@ -64,7 +64,7 @@ describe("RendererCanvas render", () => {
 
 describe("RendererCanvas render to provided canvas", () => {
   it("should not throw with only qrData and canvas param", () => {
-    const sampleQrData = QRex.create("sample text", {
+    const sampleQrData = Qrex.create("sample text", {
       version: 2,
       maskPattern: 0,
     });
@@ -96,7 +96,7 @@ describe("RendererCanvas renderToDataURL", () => {
   });
 
   it("should not throw if canvas is not provided", () => {
-    const sampleQrData = QRex.create("sample text", {
+    const sampleQrData = Qrex.create("sample text", {
       version: 2,
       maskPattern: 0,
     });
@@ -111,7 +111,7 @@ describe("RendererCanvas renderToDataURL", () => {
   });
 
   it("should not throw with options param", () => {
-    const sampleQrData = QRex.create("sample text", {
+    const sampleQrData = Qrex.create("sample text", {
       version: 2,
       maskPattern: 0,
     });
@@ -120,7 +120,7 @@ describe("RendererCanvas renderToDataURL", () => {
     expect(() => {
       renderer = new RendererCanvas();
       url = renderer.renderToDataURL(sampleQrData, {
-        // @ts-ignore TODO - Improve types in QRex options
+        // @ts-ignore TODO - Improve types in Qrex options
         margin: 10,
         scale: 1,
         type: "image/png" as "png",
@@ -131,7 +131,7 @@ describe("RendererCanvas renderToDataURL", () => {
   });
 
   it("should return a string", () => {
-    const sampleQrData = QRex.create("sample text", {
+    const sampleQrData = Qrex.create("sample text", {
       version: 2,
       maskPattern: 0,
     });
@@ -142,7 +142,7 @@ describe("RendererCanvas renderToDataURL", () => {
   });
 
   it("should have correct header in data URL", () => {
-    const sampleQrData = QRex.create("sample text", {
+    const sampleQrData = Qrex.create("sample text", {
       version: 2,
       maskPattern: 0,
     });
@@ -153,7 +153,7 @@ describe("RendererCanvas renderToDataURL", () => {
   });
 
   it("should have correct length for base64 string", () => {
-    const sampleQrData = QRex.create("sample text", {
+    const sampleQrData = Qrex.create("sample text", {
       version: 2,
       maskPattern: 0,
     });
@@ -167,7 +167,7 @@ describe("RendererCanvas renderToDataURL", () => {
 
 describe("RendererCanvas renderToDataURL to provided canvas", () => {
   it("should throw with only qrData", () => {
-    const sampleQrData = QRex.create("sample text", {
+    const sampleQrData = Qrex.create("sample text", {
       version: 2,
       maskPattern: 0,
     });
@@ -182,7 +182,7 @@ describe("RendererCanvas renderToDataURL to provided canvas", () => {
   });
 
   it("should not throw with options param", () => {
-    const sampleQrData = QRex.create("sample text", {
+    const sampleQrData = Qrex.create("sample text", {
       version: 2,
       maskPattern: 0,
     });
@@ -191,7 +191,7 @@ describe("RendererCanvas renderToDataURL to provided canvas", () => {
     expect(() => {
       const renderer: RendererCanvas = new RendererCanvas();
       url = renderer.renderToDataURL(sampleQrData, {
-        // @ts-ignore TODO - Improve types in QRex options
+        // @ts-ignore TODO - Improve types in Qrex options
         margin: 10,
         scale: 1,
         type: "image/png" as "png",
@@ -202,7 +202,7 @@ describe("RendererCanvas renderToDataURL to provided canvas", () => {
   });
 
   it("should return a string", () => {
-    const sampleQrData = QRex.create("sample text", {
+    const sampleQrData = Qrex.create("sample text", {
       version: 2,
       maskPattern: 0,
     });
@@ -214,7 +214,7 @@ describe("RendererCanvas renderToDataURL to provided canvas", () => {
   });
 
   it("should have correct header in data URL", () => {
-    const sampleQrData = QRex.create("sample text", {
+    const sampleQrData = Qrex.create("sample text", {
       version: 2,
       maskPattern: 0,
     });
@@ -226,7 +226,7 @@ describe("RendererCanvas renderToDataURL to provided canvas", () => {
   });
 
   it("should have correct length for base64 string", () => {
-    const sampleQrData = QRex.create("sample text", {
+    const sampleQrData = Qrex.create("sample text", {
       version: 2,
       maskPattern: 0,
     });

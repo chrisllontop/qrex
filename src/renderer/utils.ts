@@ -1,4 +1,4 @@
-import type { ColorObject, QRexOptions } from "../types/qrex.type";
+import type { ColorObject, QrexOptions } from "../types/qrex.type";
 
 function hex2rgba(hex: string): ColorObject {
   if (!hex || typeof hex !== "string") {
@@ -32,7 +32,7 @@ function hex2rgba(hex: string): ColorObject {
   };
 }
 
-function getOptions(opts?: QRexOptions) {
+function getOptions(opts?: QrexOptions) {
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const options: any = opts ?? {}; // TODO Add full type for options
   if (!options.color) options.color = {};

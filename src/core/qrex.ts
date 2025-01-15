@@ -1,5 +1,5 @@
 import type { ErrorCorrectionLevelBit, MaskPatternType, Segment } from "../types/qrex.type";
-import type { QRData, QRexOptions, QrContent } from "../types/qrex.type";
+import type { QRData, QrexOptions, QrContent } from "../types/qrex.type";
 import { AlignmentPattern } from "./alignment-pattern";
 import { BitBuffer } from "./bit-buffer";
 import { BitMatrix } from "./bit-matrix";
@@ -414,7 +414,7 @@ Minimum version required to store current data is: ${bestVersion}.
 /**
  * QR Code create
  */
-function create(data: QrContent, options?: QRexOptions) {
+function create(data: QrContent, options?: QrexOptions) {
   if (typeof data === "undefined" || data === "") {
     throw new Error("No input text");
   }
@@ -437,6 +437,6 @@ function create(data: QrContent, options?: QRexOptions) {
   return createSymbol(data, errorCorrectionLevel, mask, version);
 }
 
-export const QRex = {
+export const Qrex = {
   create,
 };

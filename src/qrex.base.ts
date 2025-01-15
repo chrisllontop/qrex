@@ -1,17 +1,17 @@
-import { QRex as QRexCore } from "./core/qrex";
-import type { QRexOptions, QrContent, RenderFunctionBase } from "./types/qrex.type";
+import { Qrex as QrexCore } from "./core/qrex";
+import type { QrexOptions, QrContent, RenderFunctionBase } from "./types/qrex.type";
 
-export abstract class QRexBase {
-  protected readonly opts?: QRexOptions;
+export abstract class QrexBase {
+  protected readonly opts?: QrexOptions;
   protected readonly data: QrContent;
 
-  constructor(data: QrContent, opts?: QRexOptions) {
+  constructor(data: QrContent, opts?: QrexOptions) {
     this.data = data;
     this.opts = opts;
     this.checkParams(data, opts);
   }
 
-  protected checkParams(text: QrContent, opts?: QRexOptions) {
+  protected checkParams(text: QrContent, opts?: QrexOptions) {
     if (!text) {
       throw new Error("String required as first argument");
     }
@@ -19,7 +19,7 @@ export abstract class QRexBase {
   }
 
   public create() {
-    return QRexCore.create(this.data, this.opts);
+    return QrexCore.create(this.data, this.opts);
   }
 
   protected render<T>(renderFunc: RenderFunctionBase<T>): T {

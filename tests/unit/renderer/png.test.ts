@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import { PNG } from "pngjs";
 import { describe, expect, it, vi } from "vitest";
-import { QRex } from "../../../src/core/qrex";
+import { Qrex } from "../../../src/core/qrex";
 import { RendererPng } from "../../../src/renderer/png";
 import StreamMock from "../../mocks/writable-stream";
 
@@ -25,7 +25,7 @@ describe("PNG renderer interface", () => {
 });
 
 describe("PNG render", () => {
-  const sampleQrData = QRex.create("sample text", {
+  const sampleQrData = Qrex.create("sample text", {
     version: 2,
     maskPattern: 0,
   });
@@ -46,7 +46,7 @@ describe("PNG render", () => {
     const renderer: RendererPng = new RendererPng();
     expect(() => {
       png = renderer.render(sampleQrData, {
-        // @ts-ignore TODO - Improve types in QRex options
+        // @ts-ignore TODO - Improve types in Qrex options
         margin: 10,
         scale: 1,
       });
@@ -58,7 +58,7 @@ describe("PNG render", () => {
 });
 
 describe("PNG renderToDataURL", () => {
-  const sampleQrData = QRex.create("sample text", {
+  const sampleQrData = Qrex.create("sample text", {
     version: 2,
     maskPattern: 0,
   });
@@ -82,7 +82,7 @@ describe("PNG renderToDataURL", () => {
 });
 
 describe("PNG renderToFile", () => {
-  const sampleQrData = QRex.create("sample text", {
+  const sampleQrData = Qrex.create("sample text", {
     version: 2,
     maskPattern: 0,
   });
@@ -118,7 +118,7 @@ describe("PNG renderToFile", () => {
 });
 
 describe("PNG renderToFileStream", () => {
-  const sampleQrData = QRex.create("sample text", {
+  const sampleQrData = Qrex.create("sample text", {
     version: 2,
     maskPattern: 0,
   });

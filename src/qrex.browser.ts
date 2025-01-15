@@ -1,13 +1,13 @@
-import { QRexBase } from "./qrex.base";
+import { QrexBase } from "./qrex.base";
 import { RendererCanvas } from "./renderer/canvas";
 import { RendererSvgTag } from "./renderer/svg-tag";
-import type { QRexOptions, QrContent } from "./types/qrex.type";
+import type { QrexOptions, QrContent } from "./types/qrex.type";
 
-export class QRex extends QRexBase {
+export class Qrex extends QrexBase {
   private readonly rendererCanvas: RendererCanvas;
   private readonly rendererSvgTag = new RendererSvgTag();
 
-  constructor(data: QrContent, opts?: QRexOptions, canvas?: HTMLCanvasElement) {
+  constructor(data: QrContent, opts?: QrexOptions, canvas?: HTMLCanvasElement) {
     super(data, opts);
     this.rendererCanvas = new RendererCanvas(canvas);
   }

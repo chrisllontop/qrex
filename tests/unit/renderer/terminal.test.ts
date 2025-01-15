@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { QRex } from "../../../src/core/qrex";
+import { Qrex } from "../../../src/core/qrex";
 import { RendererTerminal } from "../../../src/renderer/terminal";
 
 const renderer: RendererTerminal = new RendererTerminal();
@@ -10,7 +10,7 @@ describe("RendererTerminal interface", () => {
 });
 
 describe("RendererTerminal render big", () => {
-  const sampleQrData = QRex.create("sample text", {
+  const sampleQrData = Qrex.create("sample text", {
     version: 2,
     maskPattern: 0,
   });
@@ -24,7 +24,7 @@ describe("RendererTerminal render big", () => {
 
   it("should not throw with options param", () => {
     expect(() => {
-      // @ts-ignore TODO - Improve types in QRex options
+      // @ts-ignore TODO - Improve types in Qrex options
       str = renderer.render(sampleQrData, { margin: 10, scale: 1 });
     }).not.toThrow();
   });
@@ -45,7 +45,7 @@ describe("RendererTerminal render big", () => {
 });
 
 describe("TerminalRenderer render small", () => {
-  const sampleQrData = QRex.create("sample text", {
+  const sampleQrData = Qrex.create("sample text", {
     version: 2,
     maskPattern: 0,
   });
@@ -64,7 +64,7 @@ describe("TerminalRenderer render small", () => {
   it("should not throw with options param and without callback", () => {
     expect(() => {
       str = renderer.render(sampleQrData, {
-        // @ts-ignore TODO - Improve types in QRex options
+        // @ts-ignore TODO - Improve types in Qrex options
         margin: 10,
         scale: 1,
         small: true,

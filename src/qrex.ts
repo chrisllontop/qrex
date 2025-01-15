@@ -1,12 +1,12 @@
 import type { WriteStream } from "node:fs";
-import { QRexBase } from "./qrex.base";
+import { QrexBase } from "./qrex.base";
 import { RendererPng } from "./renderer/png";
 import { RendererSvg } from "./renderer/svg";
 import { RendererTerminal } from "./renderer/terminal";
 import { RendererUtf8 } from "./renderer/utf8";
 import type { RendererType } from "./types/qrex.type";
 
-export class QRex extends QRexBase {
+export class Qrex extends QrexBase {
   private getTypeFromFilename(path: string): RendererType {
     return <RendererType>path.slice(((path.lastIndexOf(".") - 1) >>> 0) + 2).toLowerCase();
   }

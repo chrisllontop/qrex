@@ -6,7 +6,7 @@ export type RendererType = "canvas" | "svg" | "terminal" | "txt" | "utf8" | "png
 /**
  * QR Code options
  */
-export type QRexOptions = {
+export type QrexOptions = {
   /** Output type */
   type?: RendererType;
   /** QR Code version */
@@ -64,7 +64,7 @@ export interface SegmentInterface<T = string> {
   write?(bitBuffer: BitBuffer): void;
 }
 
-export type RenderFunctionBase<T> = (data: QRData, opts?: QRexOptions) => T;
+export type RenderFunctionBase<T> = (data: QRData, opts?: QrexOptions) => T;
 
 export type ColorObject = {
   r: number;

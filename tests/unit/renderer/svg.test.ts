@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import htmlparser from "htmlparser2";
 import { describe, expect, it, vi } from "vitest";
-import { QRex } from "../../../src/core/qrex";
+import { Qrex } from "../../../src/core/qrex";
 import { RendererSvg } from "../../../src/renderer/svg";
 
 function getExpectedViewbox(size: number, margin: number) {
@@ -53,7 +53,7 @@ describe("SvgRenderer", () => {
   });
 
   describe("Svg render", () => {
-    const data = QRex.create("sample text", { version: 2, maskPattern: 0 });
+    const data = Qrex.create("sample text", { version: 2, maskPattern: 0 });
     const size = data.modules.size;
 
     it("should render SVG with scale 4 and margin 4", async () => {
@@ -149,7 +149,7 @@ describe("SvgRenderer", () => {
   });
 
   describe("Svg renderToFile", () => {
-    const sampleQrData = QRex.create("sample text", {
+    const sampleQrData = Qrex.create("sample text", {
       version: 2,
       maskPattern: 0,
     });

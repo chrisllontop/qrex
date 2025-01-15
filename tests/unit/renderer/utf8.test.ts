@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { QRex } from "../../../src/core/qrex";
+import { Qrex } from "../../../src/core/qrex";
 import { RendererUtf8 } from "../../../src/renderer/utf8";
 
 const renderer: RendererUtf8 = new RendererUtf8();
@@ -10,7 +10,7 @@ describe("RendererUtf8 interface", () => {
 });
 
 describe("RendererUtf8 render", () => {
-  const sampleQrData = QRex.create("sample text", {
+  const sampleQrData = Qrex.create("sample text", {
     version: 2,
     maskPattern: 0,
   });
@@ -24,7 +24,7 @@ describe("RendererUtf8 render", () => {
 
   it("should not throw with options param", () => {
     expect(() => {
-      // @ts-ignore TODO - Improve types in QRex options
+      // @ts-ignore TODO - Improve types in Qrex options
       str = renderer.render(sampleQrData, { margin: 10, scale: 1 });
     }).not.toThrow();
   });

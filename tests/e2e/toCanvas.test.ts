@@ -1,14 +1,14 @@
 import { type Canvas, createCanvas } from "canvas";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { QRex } from "../../src/qrex.browser";
-import type { QRexOptions } from "../../src/types/qrex.type";
+import { Qrex } from "../../src/qrex.browser";
+import type { QrexOptions } from "../../src/types/qrex.type";
 
 const defaultOptions = {
   maskPattern: 0,
   version: 1,
 };
 
-describe("QRex toCanvas Feature", () => {
+describe("Qrex toCanvas Feature", () => {
   let canvasEl: HTMLCanvasElement;
   let originalDocument: typeof global.document;
 
@@ -38,14 +38,14 @@ describe("QRex toCanvas Feature", () => {
 
   it("should throw an error if no arguments are provided", () => {
     expect(() => {
-      const qrex: QRex = new QRex("some text");
+      const qrex: Qrex = new Qrex("some text");
       qrex.toCanvas();
     }).toThrow("bad maskPattern:undefined");
   });
 
   it("should work with text and generate a canvas", () => {
     console.log("from test", canvasEl);
-    const qrex: QRex = new QRex("test text", defaultOptions as QRexOptions, canvasEl);
+    const qrex: Qrex = new Qrex("test text", defaultOptions as QrexOptions, canvasEl);
     const canvas = qrex.toCanvas();
 
     expect(canvas).toBeDefined();
@@ -56,7 +56,7 @@ describe("QRex toCanvas Feature", () => {
 
   it("should work with canvas, text and callback", () => {
     return new Promise((resolve) => {
-      const qrex: QRex = new QRex("test text", defaultOptions as QRexOptions, canvasEl);
+      const qrex: Qrex = new Qrex("test text", defaultOptions as QrexOptions, canvasEl);
       const canvas = qrex.toCanvas();
       expect(canvas).toBeDefined();
       resolve();
@@ -66,7 +66,7 @@ describe("QRex toCanvas Feature", () => {
   it("should work with canvas, text, options and callback", () => {
     return new Promise((resolve) => {
       const options = { ...defaultOptions, width: 200 };
-      const qrex: QRex = new QRex("test text", options as QRexOptions, canvasEl);
+      const qrex: Qrex = new Qrex("test text", options as QrexOptions, canvasEl);
       const canvas = qrex.toCanvas();
       expect(canvas).toBeDefined();
       resolve();

@@ -1,15 +1,15 @@
 import { createCanvas } from "canvas";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { QRex } from "../../src/qrex.browser";
-import type { QRexOptions } from "../../src/types/qrex.type";
+import { Qrex } from "../../src/qrex.browser";
+import type { QrexOptions } from "../../src/types/qrex.type";
 
-const defaultOptions: QRexOptions = {
+const defaultOptions: QrexOptions = {
   maskPattern: 0,
   version: 1,
   errorCorrectionLevel: "L",
 };
 
-describe("QRex toDataURL Feature", () => {
+describe("Qrex toDataURL Feature", () => {
   let canvasEl: HTMLCanvasElement;
   let originalDocument: typeof global.document;
 
@@ -39,27 +39,27 @@ describe("QRex toDataURL Feature", () => {
 
   it("should throw an error if no arguments are provided", async () => {
     expect(() => {
-      const qrex: QRex = new QRex();
+      const qrex: Qrex = new Qrex();
       qrex.toDataURL();
     }).toThrow("String required as first argument");
   });
 
   it("should throw an error if no arguments are provided (browser)", async () => {
     expect(() => {
-      const qrex: QRex = new QRex();
+      const qrex: Qrex = new Qrex();
       qrex.toDataURL();
     }).toThrow("String required as first argument");
   });
 
   it("should throw an error if text is not provided (browser)", async () => {
     expect(() => {
-      const qrex: QRex = new QRex();
+      const qrex: Qrex = new Qrex();
       qrex.toDataURL();
     }).toThrow("String required as first argument");
   });
 
   it("should generate a valid Data URL using promise with error correction level L", async () => {
-    const qrex = new QRex(
+    const qrex = new Qrex(
       "i am a pony!",
       {
         maskPattern: 0,
@@ -75,7 +75,7 @@ describe("QRex toDataURL Feature", () => {
   });
 
   it("should reject promise with error correction level H", async () => {
-    const qrex = new QRex(
+    const qrex = new Qrex(
       "i am a pony!",
       {
         version: 3,
@@ -98,7 +98,7 @@ describe("QRex toDataURL Feature", () => {
       },
     } as unknown as Document;
 
-    const qrex = new QRex("i am a pony!", {
+    const qrex = new Qrex("i am a pony!", {
       ...defaultOptions,
       errorCorrectionLevel: "H",
       type: "image/png",

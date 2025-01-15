@@ -1,4 +1,4 @@
-import type { QRData, QRexOptions } from "../../types/qrex.type";
+import type { QRData, QrexOptions } from "../../types/qrex.type";
 
 type PaletteKey = "00" | "01" | "02" | "10" | "11" | "12" | "20" | "21" | "22";
 
@@ -44,7 +44,7 @@ export class TerminalSmall {
     return (this.mkCodePixel(modules, size, x, y) + this.mkCodePixel(modules, size, x, y + 1)) as PaletteKey;
   }
 
-  public render(qrData: QRData, options?: QRexOptions): string {
+  public render(qrData: QRData, options?: QrexOptions): string {
     const size = qrData.modules.size;
     const data = qrData.modules.data;
 

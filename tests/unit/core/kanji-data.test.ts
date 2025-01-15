@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import toSJIS from "../../../helper/to-sjis";
+import toSJIS from "../../../src/helper/to-sjis";
 import { BitBuffer } from "../../../src/core/bit-buffer";
 import { KanjiData } from "../../../src/core/kanji-data";
 import { Mode } from "../../../src/core/mode";

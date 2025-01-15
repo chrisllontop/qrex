@@ -50,6 +50,7 @@
     "canvas": "^2.8.0",
     "htmlparser2": "^4.1.0",
     "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.6.3",
     "vitest": "^2.1.5"
   },

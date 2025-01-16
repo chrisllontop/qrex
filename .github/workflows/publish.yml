@@ -18,7 +18,7 @@ jobs:
 
       - uses: pnpm/action-setup@v4
 
-      - uses: chrisllontop/gh-release-manager@v1
+      - uses: chrisllontop/gh-release-sync@v1
         with:
           lang: 'js'
 

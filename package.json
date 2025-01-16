@@ -1,7 +1,7 @@
 {
   "name": "qrex",
   "description": "QR-Code / 2D Barcode api with both server side and client side support using canvas",
-  "version": "1.0.0-beta1",
+  "version": "1.0.0-beta2",
   "author": "Christian Llontop <me@chrisllontop.com>",
   "keywords": [
     "qr",

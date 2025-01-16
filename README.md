@@ -82,7 +82,7 @@ Recognized extensions are `png`, `svg` and `txt`.
 `qrex` can be used in browser through modern bundlers like [Vite](https://vitejs.dev), [esbuild](https://esbuild.github.io), or [Rollup](https://rollupjs.org).
 
 ```javascript
-// Using with Vite/React
+// Using with React
 import { Qrex } from 'qrex'
 import { useEffect, useRef } from 'react'
 

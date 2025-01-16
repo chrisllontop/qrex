@@ -110,9 +110,7 @@ qr.toCanvas(canvas)
 import { Qrex } from 'qrex'
 
 const qr = new Qrex('I am a pony!')
-qr.toDataURL()
-  .then(url => console.log(url))
-  .catch(err => console.error(err))
+const url = await qr.toDataURL()
 ```
 
 For terminal output:
@@ -120,32 +118,20 @@ For terminal output:
 import { Qrex } from 'qrex'
 
 const qr = new Qrex('I am a pony!', { type: 'terminal' })
-qr.toString()
-  .then(output => console.log(output))
-  .catch(err => console.error(err))
+const output = await qr.toString()
 ```
 
 ### ES6/ES7
-Promises and Async/Await can be used in place of callback function.
-
-```javascript
+```javascript 
 import { Qrex } from 'qrex'
 
-// With promises
-const qr = new Qrex('I am a pony!')
-qr.toDataURL()
-  .then(url => console.log(url))
-  .catch(err => console.error(err))
-
-// With async/await
-const generateQR = async text => {
-  try {
-    const qr = new Qrex(text)
-    console.log(await qr.toDataURL())
-  } catch (err) {
-    console.error(err)
-  }
+const generateQR = async (text) => {
+  const qr = new Qrex(text)
+  const url = await qr.toDataURL()
 }
+
+// Usage
+await generateQR('Hello World!')
 ```
 
 ## Error correction level
@@ -172,9 +158,8 @@ If not specified, the default value is `M`.
 
 ```javascript
 const qr = new Qrex('some text', { errorCorrectionLevel: 'H' })
-qr.toDataURL()
-  .then(url => console.log(url))
-  .catch(err => console.error(err))
+const url = await qr.toDataURL()
+console.log(url)
 ```
 
 ## QR Code capacity
@@ -201,9 +186,8 @@ If no version is specified, the more suitable value will be used. Unless a speci
 
 ```javascript
 const qr = new Qrex('some text', { version: 2 })
-qr.toDataURL()
-  .then(url => console.log(url))
-  .catch(err => console.error(err))
+const url = await qr.toDataURL()
+console.log(url)
 ```
 
 ## Encoding modes
@@ -257,9 +241,8 @@ const segments = [
 ]
 
 const qr = new Qrex(segments)
-qr.toDataURL()
-  .then(url => console.log(url))
-  .catch(err => console.error(err))
+const url = await qr.toDataURL()
+console.log(url)
 ```
 
 ### Kanji mode
@@ -278,9 +261,8 @@ import { Qrex } from 'qrex'
 import { toSJIS } from 'qrex/helper/to-sjis'
 
 const qr = new Qrex(kanjiString, { toSJISFunc: toSJIS })
-qr.toDataURL()
-  .then(url => console.log(url))
-  .catch(err => console.error(err))
+const url = await qr.toDataURL()
+console.log(url)
 ```
 
 ## Binary data
@@ -292,9 +274,8 @@ import { Qrex } from 'qrex'
 
 const binaryData = [{ data: [253,254,255], mode: 'byte' }]
 const qr = new Qrex(binaryData)
-qr.toFile('foo.png')
-  .then(() => console.log('QR code saved!'))
-  .catch(err => console.error(err))
+await qr.toFile('foo.png')
+console.log('QR code saved!')
 ```
 
 ```javascript
@@ -306,9 +287,8 @@ const binaryData = [{
   mode: 'byte' 
 }]
 const qr = new Qrex(binaryData)
-qr.toFile('foo.png')
-  .then(() => console.log('QR code saved!'))
-  .catch(err => console.error(err))
+await qr.toFile('foo.png')
+console.log('QR code saved!')
 ```
 
 ```javascript
@@ -321,9 +301,7 @@ const binaryData = [{
   mode: 'byte' 
 }]
 const qr = new Qrex(binaryData)
-qr.toFile('foo.png')
-  .then(() => console.log('QR code saved!'))
-  .catch(err => console.error(err))
+await qr.toFile('foo.png')
 ```
 
 ## Multibyte characters
@@ -374,9 +352,7 @@ If `canvasElement` is omitted a new canvas is created.
 ##### Example
 ```javascript
 const qr = new Qrex('Hello World')
-qr.toCanvas(document.getElementById('canvas'))
-  .then(() => console.log('QR drawn!'))
-  .catch(err => console.error(err))
+await qr.toCanvas(document.getElementById('canvas'))
 ```
 
 #### `toDataURL()`
@@ -395,11 +371,8 @@ const qr = new Qrex('Hello World', {
   }
 })
 
-qr.toDataURL()
-  .then(url => {
-    document.getElementById('image').src = url
-  })
-  .catch(err => console.error(err))
+const url = await qr.toDataURL()
+document.getElementById('image').src = url
 ```
 
 #### `toString()`
@@ -408,9 +381,7 @@ Returns a Promise that resolves with a string representation of the QR Code.
 ##### Example
 ```javascript
 const qr = new Qrex('Hello World', { type: 'terminal' })
-qr.toString()
-  .then(str => console.log(str))
-  .catch(err => console.error(err))
+const str = await qr.toString()
 ```
 
 ### Server API
@@ -420,9 +391,7 @@ Writes QR Code image to file. Returns a Promise.
 ##### Example
 ```javascript
 const qr = new Qrex('Hello World')
-qr.toFile('foo.png')
-  .then(() => console.log('QR code saved!'))
-  .catch(err => console.error(err))
+await qr.toFile('foo.png')
 ```
 
 #### `toFileStream(stream)`
@@ -435,77 +404,59 @@ import { Qrex } from 'qrex'
 
 const qr = new Qrex('Hello World')
 const out = createWriteStream('foo.png')
-qr.toFileStream(out)
-  .then(() => console.log('QR code saved!'))
-  .catch(err => console.error(err))
+await qr.toFileStream(out)
 ```
 
 ### Options
 
-#### QR Code options
-##### `version`
-  Type: `Number`<br>
+The options object can be divided into two main categories:
+1. **QR Code Options**: Control the QR code generation itself (error correction, version, etc.)
+2. **Renderer Options**: Control how the QR code is displayed (colors, size, margins, etc.)
 
-  QR Code version. If not specified the more suitable value will be calculated.
+#### QR Code Options
 
-##### `errorCorrectionLevel`
-  Type: `String`<br>
-  Default: `M`
+These options affect the QR code's data structure and encoding:
 
-  Error correction level.<br>
-  Possible values are `low, medium, quartile, high` or `L, M, Q, H`.
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `version` | `Number` | `auto` | QR Code version (1-40). Higher versions can store more data but create larger codes. If not specified, the smallest possible version is used. |
+| `errorCorrectionLevel` | `String` | `M` | Error correction capability:<br>• `L`: ~7% recovery<br>• `M`: ~15% recovery<br>• `Q`: ~25% recovery<br>• `H`: ~30% recovery |
+| `maskPattern` | `Number` | `auto` | Pattern used to mask the symbol (0-7). Usually best to let the encoder choose. |
+| `toSJISFunc` | `Function` | `undefined` | Custom function for converting Kanji characters to Shift JIS values. Only needed for Kanji mode optimization. |
 
-##### `maskPattern`
-  Type: `Number`<br>
+#### Renderer Options
 
-  Mask pattern used to mask the symbol.<br>
-  Possible values are `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`.<br>
-  If not specified the more suitable value will be calculated.
+These options control the visual appearance of the QR code:
 
-##### `toSJISFunc`
-  Type: `Function`<br>
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `margin` | `Number` | `4` | Quiet zone size in modules |
+| `scale` | `Number` | `4` | Size of each module in pixels |
+| `width` | `Number` | `undefined` | Force specific width (overrides scale) |
+| `color.dark` | `String` | `#000000ff` | Color of dark modules (RGBA hex) |
+| `color.light` | `String` | `#ffffffff` | Color of light modules (RGBA hex) |
+| `small` | `Boolean` | `false` | Compress output (terminal only) |
 
-  Helper function used internally to convert a kanji to its Shift JIS value.<br>
-  Provide this function if you need support for Kanji mode.
+##### Example with both option types:
 
-#### Renderers options
-##### `margin`
-  Type: `Number`<br>
-  Default: `4`
+```javascript
+const qr = new Qrex('Hello World', {
+  // QR Code options
+  version: 5,
+  errorCorrectionLevel: 'H',
+  
+  // Renderer options
+  margin: 2,
+  scale: 8,
+  color: {
+    dark: '#010599FF',
+    light: '#FFBF60FF'
+  }
+})
+```
 
-  Define how much wide the quiet zone should be.
-
-##### `scale`
-  Type: `Number`<br>
-  Default: `4`
-
-  Scale factor. A value of `1` means 1px per modules (black dots).
-
-##### `small`
-  Type: `Boolean`<br>
-  Default: `false`
-
-  Relevant only for terminal renderer. Outputs smaller QR code.
-
-##### `width`
-  Type: `Number`<br>
-
-  Forces a specific width for the output image.<br>
-  If width is too small to contain the qr symbol, this option will be ignored.<br>
-  Takes precedence over `scale`.
-
-##### `color.dark`
-Type: `String`<br>
-Default: `#000000ff`
-
-Color of dark module. Value must be in hex format (RGBA).<br>
-Note: dark color should always be darker than `color.light`.
-
-##### `color.light`
-Type: `String`<en>
-Default: `#ffffffff`
-
-Color of light module. Value must be in hex format (RGBA).<br>
+**Note**: Not all options apply to all output formats. For example, `color` options 
+don't affect terminal output, and `small` only affects terminal output.
 
 ## License
 [MIT License](./LICENSE)

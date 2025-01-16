@@ -16,18 +16,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 🏷️ Verify release version
-        run: |
-          if [[ ! "${{ github.event.release.tag_name }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9]+)?$ ]]; then
-            echo "Invalid version format. Expected format: v1.0.0 or v1.0.0-alpha1"
-            exit 1
-          fi
-
-      - name: 🔄 Extract version
-        id: version
-        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
-
       - uses: pnpm/action-setup@v4
+
+      - uses: chrisllontop/gh-release-manager@v1
+        with:
+          lang: 'js'
 
       - name: 🔧 Setup Node.js
         uses: actions/setup-node@v3
@@ -43,9 +36,6 @@ jobs:
 
       - name: 🛠️ Build package
         run: pnpm build
-
-      - name: 📝 Update package version
-        run: npm version ${{ steps.version.outputs.version }} --no-git-tag-version
 
       - name: 💾 Commit version update
         uses: stefanzweifel/git-auto-commit-action@v5

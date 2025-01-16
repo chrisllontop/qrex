@@ -1,28 +1,28 @@
 #!/usr/bin/env node
 var yargs = require('yargs')
-var qr = require('../src')
+var { Qrex } = require('../dist')
 
-function save (file, text, options) {
-  qr.toFile(file, text, options, function (err, data) {
-    if (err) {
-      console.error('Error:', err.message)
-      process.exit(1)
-    }
-
+async function save(file, text, options) {
+  try {
+    const qr = new Qrex(text, options)
+    await qr.toFile(file)
     console.log('saved qrcode to: ' + file + '\n')
-  })
+  } catch (err) {
+    console.error('Error:', err.message)
+    process.exit(1)
+  }
 }
 
-function print (text, options) {
-  options.type = 'terminal'
-  qr.toString(text, options, function (err, text) {
-    if (err) {
-      console.error('Error:', err.message)
-      process.exit(1)
-    }
-
-    console.log(text)
-  })
+async function print(text, options) {
+  try {
+    options.type = 'terminal'
+    const qr = new Qrex(text, options)
+    const output = await qr.toString()
+    console.log(output)
+  } catch (err) {
+    console.error('Error:', err.message)
+    process.exit(1)
+  }
 }
 
 function parseOptions (args) {

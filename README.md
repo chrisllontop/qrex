@@ -79,39 +79,30 @@ If not specified, output type is guessed from file extension.<br>
 Recognized extensions are `png`, `svg` and `txt`.
 
 ### Browser
-`qrex` can be used in browser through module bundlers like [Browserify](https://github.com/substack/node-browserify) and [Webpack](https://github.com/webpack/webpack) or by including the precompiled bundle present in `build/` folder.
-
-#### Module bundlers
-```html
-<!-- index.html -->
-<html>
-  <body>
-    <canvas id="canvas"></canvas>
-    <script src="bundle.js"></script>
-  </body>
-</html>
-```
+`qrex` can be used in browser through modern bundlers like [Vite](https://vitejs.dev), [esbuild](https://esbuild.github.io), or [Rollup](https://rollupjs.org).
 
 ```javascript
-// index.js
+// Using with Vite/React
+import { Qrex } from 'qrex'
+import { useEffect, useRef } from 'react'
+
+function QRCode({ text }) {
+  const canvasRef = useRef(null)
+
+  useEffect(() => {
+    const qr = new Qrex(text)
+    qr.toCanvas(canvasRef.current)
+  }, [text])
+
+  return <canvas ref={canvasRef} />
+}
+
+// Using with vanilla JS
 import { Qrex } from 'qrex'
 
 const canvas = document.getElementById('canvas')
 const qr = new Qrex('sample text')
 qr.toCanvas(canvas)
-```
-
-#### Precompiled bundle
-
-```html
-
-<canvas id="canvas"></canvas>
-
-<script src="/build/qrex.js"></script>
-<script>
-  const qr = new Qrex('sample text')
-  qr.toCanvas(document.getElementById('canvas'))
-</script>
 ```
 
 ### NodeJS
@@ -290,20 +281,6 @@ const qr = new Qrex(kanjiString, { toSJISFunc: toSJIS })
 qr.toDataURL()
   .then(url => console.log(url))
   .catch(err => console.error(err))
-```
-
-With precompiled bundle:
-
-```html
-
-<canvas id="canvas"></canvas>
-
-<script src="/build/qrex.min.js"></script>
-<script src="/build/qrex.tosjis.min.js"></script>
-<script>
-  const qr = new Qrex('sample text', { toSJISFunc: Qrex.toSJIS })
-  qr.toCanvas(document.getElementById('canvas'))
-</script>
 ```
 
 ## Binary data

@@ -44,17 +44,15 @@ jobs:
       - name: 🛠️ Build package
         run: pnpm build
 
-      - name: 📝 Configure Git
-        run: |
-          git config --local user.email "me@chrisllontop.com"
-          git config --local user.name "Christian Llontop"
+      - name: 📝 Update package version
+        run: npm version ${{ steps.version.outputs.version }} --no-git-tag-version
 
-      - name: 🔄 Update and commit version
-        run: |
-          npm version ${{ steps.version.outputs.version }} --no-git-tag-version
-          git add package.json
-          git commit -m "Bump package version to ${{ steps.version.outputs.version }} [skip ci]"
-          git push
+      - name: 💾 Commit version update
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Bump package version to ${{ steps.version.outputs.version }} [skip ci]"
+          branch: main
+          file_pattern: 'package.json'
 
       - name: 🚀 Publish to npm
         run: npm publish

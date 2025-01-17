@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import htmlparser from "htmlparser2";
+import { Parser } from "htmlparser2";
 import { describe, expect, it, vi } from "vitest";
 import { Qrex } from "../../../src/core/qrex";
 import { RendererSvg } from "../../../src/renderer/svg";
@@ -11,7 +11,7 @@ function getExpectedViewbox(size: number, margin: number) {
 const renderer: RendererSvg = new RendererSvg();
 function testSvgFragment(svgFragment, expectedTags) {
   return new Promise((resolve, reject) => {
-    const parser = new htmlparser.Parser(
+    const parser = new Parser(
       {
         onopentag: (name, attribs) => {
           const tag = expectedTags.shift();

@@ -1,3 +1,4 @@
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 type ToSJISFunction = (arg0: any) => any;
 
 let toSJISFunction: ToSJISFunction;
@@ -83,7 +84,7 @@ function getBCHDigit(data: number): number {
   return digit;
 }
 
-function setToSJISFunction(f?: ToSJISFunction) {
+function setToSJISFunction(f?: ToSJISFunction): void {
   if (typeof f !== "function") {
     throw new Error('"toSJISFunc" is not a valid function.');
   }

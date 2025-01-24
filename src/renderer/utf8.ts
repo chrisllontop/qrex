@@ -7,7 +7,7 @@ type BlockChars = {
   WB: string;
   BB: string;
   BW: string;
-}
+};
 
 export class RendererUtf8 {
   private readonly BLOCK_CHAR: BlockChars = {

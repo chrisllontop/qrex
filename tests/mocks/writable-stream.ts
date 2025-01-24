@@ -1,8 +1,10 @@
-import { Writable } from "node:stream";
+import { Writable, type WritableOptions } from "node:stream";
 
 class WritableStream extends Writable {
-  constructor() {
-    super();
+  private forceError: boolean;
+
+  constructor(options?: WritableOptions) {
+    super(options);
     this.forceError = false;
 
     this.once("finish", () => {
@@ -10,17 +12,17 @@ class WritableStream extends Writable {
     });
   }
 
-  _write(data, encoding, cb) {
+  _write(chunk: unknown, encoding: BufferEncoding, callback: (error?: Error | null) => void): void {
     if (this.forceError) this.emit("error", new Error("Fake error"));
-    cb(this.forceError || null);
+    callback(this.forceError ? new Error("Fake error") : null);
   }
 
-  close(cb) {
+  close(callback?: () => void): void {
     this.emit("close");
-    if (cb) cb();
+    if (callback) callback();
   }
 
-  forceErrorOnWrite() {
+  forceErrorOnWrite(): this {
     this.forceError = true;
     return this;
   }

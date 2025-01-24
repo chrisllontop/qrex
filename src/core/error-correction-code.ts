@@ -44,7 +44,7 @@ function getBlocksCount(version: number, errorCorrectionLevel: ErrorCorrectionLe
  * Returns the number of error correction codewords to use for the specified
  * version and error correction level.
  */
-function getTotalCodewordsCount(version: number, errorCorrectionLevel: ErrorCorrectionLevelBit) {
+function getTotalCodewordsCount(version: number, errorCorrectionLevel?: ErrorCorrectionLevelBit) {
   switch (errorCorrectionLevel) {
     case ECLevel.L:
       return EC_CODEWORDS_TABLE[(version - 1) * 4];

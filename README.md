@@ -446,17 +446,99 @@ const qr = new Qrex('Hello World', {
   errorCorrectionLevel: 'H',
   
   // Renderer options
-  margin: 2,
-  scale: 8,
-  color: {
-    dark: '#010599FF',
-    light: '#FFBF60FF'
+  render: {
+    margin: 2,
+    scale: 8,
+    color: {
+      dark: '#010599FF',
+      light: '#FFBF60FF'
+    }
   }
 })
 ```
 
 **Note**: Not all options apply to all output formats. For example, `color` options 
 don't affect terminal output, and `small` only affects terminal output.
+
+#### Renderer-Specific Options
+
+Each renderer type supports specific options through the `renderConfig` object:
+
+##### Terminal Renderer (`terminal`, `txt`, `utf8`)
+```javascript
+{
+  renderConfig: {
+    small: boolean // Use smaller characters for more compact output
+  }
+}
+```
+
+##### PNG Renderer (`png`)
+```javascript
+{
+  renderConfig: {
+    // Inherits all PNG.js options
+    // See: https://github.com/lukeapage/pngjs#options
+    colorType: number,
+    deflateLevel: number,
+    deflateStrategy: number,
+    filterType: number,
+    // etc...
+  }
+}
+```
+
+##### Canvas Renderer (`canvas`)
+```javascript
+{
+  renderConfig: {
+    quality: number // Quality level for image/jpeg output (0.0-1.0)
+  }
+}
+```
+
+##### SVG Renderer (`svg`)
+The SVG renderer currently has no specific configuration options.
+
+##### Examples of passing render options directly to methods
+
+You can also pass render options directly to render methods instead of in the constructor:
+
+```javascript
+const qr = new Qrex('Hello World')
+
+// Terminal output with small characters
+await qr.toString({
+  renderConfig: {
+    small: true
+  }
+})
+
+// PNG with specific compression options
+await qr.toFile('qr.png', {
+  renderConfig: {
+    deflateLevel: 9,
+    filterType: 4
+  }
+})
+
+// Canvas with JPEG quality setting
+await qr.toDataURL({
+  type: 'image/jpeg',
+  renderConfig: {
+    quality: 0.8
+  }
+})
+
+// Custom colors and margin for any renderer
+await qr.toCanvas(canvas, {
+  margin: 2,
+  color: {
+    dark: '#010599FF',
+    light: '#FFBF60FF'
+  }
+})
+```
 
 ## License
 [MIT License](./LICENSE)

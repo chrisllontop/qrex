@@ -13,7 +13,7 @@ describe("Utils getOptions", () => {
       light: { r: 255, g: 255, b: 255, a: 255, hex: "#ffffff" },
     },
     type: undefined,
-    rendererOpts: {},
+    renderConfig: {},
   };
 
   it("should be defined", () => {
@@ -142,7 +142,7 @@ describe("Utils qrToImageData", () => {
     margin: margin,
     scale: scale,
     color: color,
-    rendererOpts: {},
+    renderConfig: {},
   };
 
   const expectedImageSize = (modules.size + margin * 2) * scale;

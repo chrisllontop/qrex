@@ -1,4 +1,4 @@
-import type { QRData, QrexOptions } from "../types/qrex.type";
+import type { QRData, QrexOptions, RenderOptions } from "../types/qrex.type";
 import { RendererUtils } from "./utils";
 
 export class RendererCanvas {
@@ -29,7 +29,7 @@ export class RendererCanvas {
     }
   }
 
-  public render(qrData: QRData, options?: QrexOptions): HTMLCanvasElement {
+  public render(qrData: QRData, options?: RenderOptions): HTMLCanvasElement {
     let opts = options;
     // this.canvas = document.createElement('canvas');
     const canvasEl = this.canvas;
@@ -47,12 +47,12 @@ export class RendererCanvas {
     return canvasEl;
   }
 
-  public renderToDataURL(qrData: QRData, options?: QrexOptions): string {
+  public renderToDataURL(qrData: QRData, options?: RenderOptions): string {
     const canvasEl = this.render(qrData, options);
 
     const type = options?.type || "image/png";
-    const rendererOpts = options?.rendererOpts || {};
+    const renderConfig = options?.render?.renderConfig || {};
 
-    return canvasEl.toDataURL(type, rendererOpts.quality);
+    return canvasEl.toDataURL(type, renderConfig.quality);
   }
 }

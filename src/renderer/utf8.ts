@@ -1,5 +1,5 @@
 import * as fs from "node:fs";
-import type { QRData, QrexOptions } from "../types/qrex.type";
+import type { QRData, QrexOptions, RenderOptions } from "../types/qrex.type";
 import { RendererUtils } from "./utils";
 
 type BlockChars = {
@@ -31,7 +31,7 @@ export class RendererUtf8 {
     return blocks.WW;
   }
 
-  public render(qrData: QRData, options?: QrexOptions): string {
+  public render(qrData: QRData, options?: RenderOptions): string {
     const opts = RendererUtils.getOptions(options);
     let blocks: BlockChars = this.BLOCK_CHAR;
     if (opts.color.dark.hex === "#ffffff" || opts.color.light.hex === "#000000") {
@@ -65,7 +65,7 @@ export class RendererUtf8 {
     return output;
   }
 
-  public renderToFile(path: string, qrData: QRData, options?: QrexOptions): void {
+  public renderToFile(path: string, qrData: QRData, options?: RenderOptions): void {
     const utf8 = this.render(qrData, options);
     fs.writeFileSync(path, utf8);
   }

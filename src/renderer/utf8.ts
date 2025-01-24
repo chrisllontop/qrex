@@ -2,31 +2,38 @@ import * as fs from "node:fs";
 import type { QRData, QrexOptions } from "../types/qrex.type";
 import { RendererUtils } from "./utils";
 
+type BlockChars = {
+  WW: string;
+  WB: string;
+  BB: string;
+  BW: string;
+}
+
 export class RendererUtf8 {
-  private BLOCK_CHAR = {
+  private readonly BLOCK_CHAR: BlockChars = {
     WW: " ",
     WB: "▄",
     BB: "█",
     BW: "▀",
   };
 
-  private INVERTED_BLOCK_CHAR = {
+  private readonly INVERTED_BLOCK_CHAR: BlockChars = {
     BB: " ",
     BW: "▄",
     WW: "█",
     WB: "▀",
   };
 
-  private getBlockChar(top: number, bottom: number, blocks): string {
+  private getBlockChar(top: number, bottom: number, blocks: BlockChars): string {
     if (top && bottom) return blocks.BB;
     if (top && !bottom) return blocks.BW;
     if (!top && bottom) return blocks.WB;
     return blocks.WW;
   }
 
-  public render(qrData: QRData, options?: QrexOptions) {
+  public render(qrData: QRData, options?: QrexOptions): string {
     const opts = RendererUtils.getOptions(options);
-    let blocks = this.BLOCK_CHAR;
+    let blocks: BlockChars = this.BLOCK_CHAR;
     if (opts.color.dark.hex === "#ffffff" || opts.color.light.hex === "#000000") {
       blocks = this.INVERTED_BLOCK_CHAR;
     }
@@ -36,8 +43,7 @@ export class RendererUtf8 {
 
     let output = "";
     let hMargin = Array(size + opts.margin * 2 + 1).join(blocks.WW);
-    hMargin = Array(opts.margin / 2 + 1).join(`${hMargin}
-`);
+    hMargin = Array(opts.margin / 2 + 1).join(`${hMargin}\n`);
 
     const vMargin = Array(opts.margin + 1).join(blocks.WW);
 
@@ -51,8 +57,7 @@ export class RendererUtf8 {
         output += this.getBlockChar(topModule, bottomModule, blocks);
       }
 
-      output += `${vMargin}
-`;
+      output += `${vMargin}\n`;
     }
 
     output += hMargin.slice(0, -1);

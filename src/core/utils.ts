@@ -1,5 +1,7 @@
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-let toSJISFunction: (arg0: any) => any;
+type ToSJISFunction = (arg0: any) => any;
+
+let toSJISFunction: ToSJISFunction;
+
 const CODEWORDS_COUNT = [
   0, // Not used
   26,
@@ -69,7 +71,7 @@ function getSymbolTotalCodewords(version: number): number {
 /**
  * Encode data with Bose-Chaudhuri-Hocquenghem
  */
-function getBCHDigit(data: number) {
+function getBCHDigit(data: number): number {
   let digit = 0;
   let value = data;
 
@@ -81,7 +83,7 @@ function getBCHDigit(data: number) {
   return digit;
 }
 
-function setToSJISFunction(f) {
+function setToSJISFunction(f?: ToSJISFunction) {
   if (typeof f !== "function") {
     throw new Error('"toSJISFunc" is not a valid function.');
   }
@@ -89,12 +91,12 @@ function setToSJISFunction(f) {
   toSJISFunction = f;
 }
 
-function isKanjiModeEnabled() {
+function isKanjiModeEnabled(): boolean {
   return typeof toSJISFunction !== "undefined";
 }
 
-function toSJIS(kanji) {
-  return toSJISFunction(kanji);
+function toSJIS(kanji: string): number | undefined {
+  return toSJISFunction?.(kanji);
 }
 
 export const CoreUtils = {

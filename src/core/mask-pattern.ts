@@ -10,7 +10,7 @@ const Patterns = {
   PATTERN101: 5,
   PATTERN110: 6,
   PATTERN111: 7,
-};
+} as const;
 
 /**
  * Weighted penalty scores for the undesirable features
@@ -20,12 +20,12 @@ const PenaltyScores = {
   N2: 3,
   N3: 40,
   N4: 10,
-};
+} as const;
 
 /**
  * Check if mask pattern value is valid
  */
-function isValid(mask: MaskPatternType) {
+function isValid(mask?: MaskPatternType): boolean {
   return mask != null && !Number.isNaN(mask) && mask >= 0 && mask <= 7;
 }
 
@@ -33,7 +33,7 @@ function isValid(mask: MaskPatternType) {
  * Returns mask pattern from a value.
  * If value is not valid, returns undefined
  */
-function from(value: MaskPatternType): MaskPatternType {
+function from(value?: MaskPatternType): MaskPatternType | undefined {
   return isValid(value) ? value : undefined;
 }
 
@@ -44,13 +44,13 @@ function from(value: MaskPatternType): MaskPatternType {
  * Points: N1 + i
  * i is the amount by which the number of adjacent modules of the same color exceeds 5
  */
-function getPenaltyN1(data) {
+function getPenaltyN1(data: BitMatrix): number {
   const size = data.size;
   let points = 0;
   let sameCountCol = 0;
   let sameCountRow = 0;
-  let lastCol = null;
-  let lastRow = null;
+  let lastCol: number | null = null;
+  let lastRow: number | null = null;
 
   for (let row = 0; row < size; row++) {
     sameCountCol = sameCountRow = 0;
@@ -88,7 +88,7 @@ function getPenaltyN1(data) {
  *
  * Points: N2 * (m - 1) * (n - 1)
  */
-function getPenaltyN2(data) {
+function getPenaltyN2(data: BitMatrix): number {
   const size = data.size;
   let points = 0;
 
@@ -109,7 +109,7 @@ function getPenaltyN2(data) {
  *
  * Points: N3 * number of pattern found
  */
-function getPenaltyN3(data) {
+function getPenaltyN3(data: BitMatrix): number {
   const size = data.size;
   let points = 0;
   let bitsCol = 0;
@@ -137,7 +137,7 @@ function getPenaltyN3(data) {
  * k is the rating of the deviation of the proportion of dark modules
  * in the symbol from 50% in steps of 5%
  */
-function getPenaltyN4(data) {
+function getPenaltyN4(data: BitMatrix): number {
   let darkCount = 0;
   const modulesCount = data.data.length;
 
@@ -151,7 +151,7 @@ function getPenaltyN4(data) {
 /**
  * Return mask value at given position
  */
-function getMaskAt(maskPattern: MaskPatternType, row: number, col: number) {
+function getMaskAt(maskPattern: MaskPatternType, row: number, col: number): boolean {
   switch (maskPattern) {
     case Patterns.PATTERN000:
       return (row + col) % 2 === 0;
@@ -178,7 +178,7 @@ function getMaskAt(maskPattern: MaskPatternType, row: number, col: number) {
 /**
  * Apply a mask pattern to a BitMatrix
  */
-function applyMask(pattern: MaskPatternType, data: BitMatrix) {
+function applyMask(pattern: MaskPatternType, data: BitMatrix): void {
   const size = data.size;
 
   for (let col = 0; col < size; col++) {
@@ -192,7 +192,7 @@ function applyMask(pattern: MaskPatternType, data: BitMatrix) {
 /**
  * Returns the best mask pattern for data
  */
-function getBestMask(data: BitMatrix, setupFormatFunc) {
+function getBestMask(data: BitMatrix, setupFormatFunc: (pattern: number) => void): MaskPatternType {
   const numPatterns = Object.keys(Patterns).length;
   let bestPattern = 0;
   let lowerPenalty = Number.POSITIVE_INFINITY;

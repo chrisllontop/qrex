@@ -7,7 +7,7 @@ import { GaloisField } from "./galois-field";
  * @param  {Uint8Array} p2 Polynomial
  * @return {Uint8Array}    Product of p1 and p2
  */
-function mul(p1, p2) {
+function mul(p1: Uint8Array, p2: Uint8Array): Uint8Array {
   const coeff = new Uint8Array(p1.length + p2.length - 1);
 
   for (let i = 0; i < p1.length; i++) {
@@ -26,7 +26,7 @@ function mul(p1, p2) {
  * @param  {Uint8Array} divisor  Polynomial
  * @return {Uint8Array}          Remainder
  */
-function mod(divident, divisor) {
+function mod(divident: Uint8Array, divisor: Uint8Array): Uint8Array {
   let result = new Uint8Array(divident);
 
   while (result.length - divisor.length >= 0) {
@@ -49,7 +49,7 @@ function mod(divident, divisor) {
  * Generate an irreducible generator polynomial of specified degree
  * (used by Reed-Solomon encoder)
  */
-function generateECPolynomial(degree: number) {
+function generateECPolynomial(degree: number): Uint8Array {
   let poly = new Uint8Array([1]);
   for (let i = 0; i < degree; i++) {
     poly = mul(poly, new Uint8Array([1, GaloisField.exp(i)]));

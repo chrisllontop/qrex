@@ -50,9 +50,9 @@ function getBestVersionForMixedData(segments: Segment[], errorCorrectionLevel: E
  * Returns version number from a value.
  * If value is not a valid version, triggers an error
  */
-function from(value: number) {
+function from(value?: number) {
   if (VersionCheck.isValid(value)) {
-    return value;
+    return value as number;
   }
 
   throw new Error("No valid version provided");

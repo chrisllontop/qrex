@@ -1,4 +1,27 @@
-import type { ColorObject, QrexOptions } from "../types/qrex.type";
+import type { ColorObject, QRData, QrexOptions, RendererType } from "../types/qrex.type";
+
+interface RenderOptions extends QrexOptions {
+  width?: number;
+  scale?: number;
+  margin?: number;
+  color?: {
+    dark?: string;
+    light?: string;
+  };
+  rendererOpts?: Record<string, unknown>;
+}
+
+interface ProcessedOptions {
+  width?: number;
+  scale: number;
+  margin: number;
+  color: {
+    dark: ColorObject;
+    light: ColorObject;
+  };
+  type?: RendererType;
+  rendererOpts: Record<string, unknown>;
+}
 
 function hex2rgba(hex: string): ColorObject {
   if (!hex || typeof hex !== "string") {
@@ -32,9 +55,8 @@ function hex2rgba(hex: string): ColorObject {
   };
 }
 
-function getOptions(opts?: QrexOptions) {
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  const options: any = opts ?? {}; // TODO Add full type for options
+function getOptions(opts?: RenderOptions): ProcessedOptions {
+  const options = opts ?? {};
   if (!options.color) options.color = {};
 
   const margin =
@@ -44,9 +66,9 @@ function getOptions(opts?: QrexOptions) {
   const scale = options.scale || 4;
 
   return {
-    width: width,
+    width,
     scale: width ? 4 : scale,
-    margin: margin,
+    margin,
     color: {
       dark: hex2rgba(options.color.dark || "#000000ff"),
       light: hex2rgba(options.color.light || "#ffffffff"),
@@ -56,16 +78,16 @@ function getOptions(opts?: QrexOptions) {
   };
 }
 
-function getScale(qrSize: number, opts) {
+function getScale(qrSize: number, opts: ProcessedOptions): number {
   return opts.width && opts.width >= qrSize + opts.margin * 2 ? opts.width / (qrSize + opts.margin * 2) : opts.scale;
 }
 
-function getImageWidth(qrSize, opts) {
+function getImageWidth(qrSize: number, opts: ProcessedOptions): number {
   const scale = getScale(qrSize, opts);
   return Math.floor((qrSize + opts.margin * 2) * scale);
 }
 
-function qrToImageData(imgData, qr, opts) {
+function qrToImageData(imgData: Uint8Array | Uint8ClampedArray, qr: QRData, opts: ProcessedOptions): void {
   const size = qr.modules.size;
   const data = qr.modules.data;
   const scale = getScale(size, opts);

@@ -44,10 +44,12 @@ describe("RendererCanvas render", () => {
       canvasEl = renderer.render(sampleQrData);
     }).not.toThrow();
 
+    // @ts-ignore
     expect(canvasEl instanceof Canvas).toBe(true);
   });
 
   it("should throw if canvas cannot be created", () => {
+    // @ts-ignore
     global.document = undefined;
 
     const sampleQrData = Qrex.create("sample text", {
@@ -207,7 +209,7 @@ describe("RendererCanvas renderToDataURL to provided canvas", () => {
       maskPattern: 0,
     });
     const canvasEl = createCanvas(200, 200);
-    const renderer: RendererCanvas = new RendererCanvas(canvasEl);
+    const renderer: RendererCanvas = new RendererCanvas(canvasEl as unknown as HTMLCanvasElement);
     const url = renderer.renderToDataURL(sampleQrData);
 
     expect(typeof url).toBe("string");
@@ -219,7 +221,7 @@ describe("RendererCanvas renderToDataURL to provided canvas", () => {
       maskPattern: 0,
     });
     const canvasEl = createCanvas(200, 200);
-    const renderer: RendererCanvas = new RendererCanvas(canvasEl);
+    const renderer: RendererCanvas = new RendererCanvas(canvasEl as unknown as HTMLCanvasElement);
     const url = renderer.renderToDataURL(sampleQrData);
 
     expect(url.split(",")[0]).toBe("data:image/png;base64");
@@ -231,7 +233,7 @@ describe("RendererCanvas renderToDataURL to provided canvas", () => {
       maskPattern: 0,
     });
     const canvasEl = createCanvas(200, 200);
-    const renderer: RendererCanvas = new RendererCanvas(canvasEl);
+    const renderer: RendererCanvas = new RendererCanvas(canvasEl as unknown as HTMLCanvasElement);
     const url = renderer.renderToDataURL(sampleQrData);
 
     const b64png = url.split(",")[1];

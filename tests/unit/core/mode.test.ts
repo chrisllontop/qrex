@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { Mode } from "../../../src/core/mode";
-import type { DataMode } from "../../../src/types/qrex.type";
+import type { DataMode, ModeType } from "../../../src/types/qrex.type";
 
 describe("Mode bits", () => {
-  const EXPECTED_BITS = {
+  const EXPECTED_BITS: Record<ModeType, number> = {
     numeric: 1,
     alphanumeric: 2,
     byte: 4,
@@ -21,7 +21,7 @@ describe("Mode bits", () => {
 });
 
 describe("Char count bits", () => {
-  const EXPECTED_BITS = {
+  const EXPECTED_BITS: Record<Exclude<ModeType, "mixed">, [number, number, number]> = {
     numeric: [10, 12, 14],
     alphanumeric: [9, 11, 13],
     byte: [8, 16, 16],
@@ -52,6 +52,7 @@ describe("Char count bits", () => {
   });
 
   it("Throws on invalid mode or version", () => {
+    // @ts-ignore Testing invalid mode object
     expect(() => Mode.getCharCountIndicator({}, 1)).toThrow();
     expect(() => Mode.getCharCountIndicator(Mode.BYTE, 0)).toThrow();
   });
@@ -87,13 +88,15 @@ describe("Is valid", () => {
 
   it("Invalid modes", () => {
     expect(Mode.isValid(undefined)).toBe(false);
+    // @ts-ignore Testing invalid mode with only bit property
     expect(Mode.isValid({ bit: 1 })).toBe(false);
+    // @ts-ignore Testing invalid mode with only ccBits property
     expect(Mode.isValid({ ccBits: [] })).toBe(false);
   });
 });
 
 describe("From value", () => {
-  const modes = [
+  const modes: Array<{ name: ModeType; mode: DataMode }> = [
     { name: "numeric", mode: Mode.NUMERIC },
     { name: "alphanumeric", mode: Mode.ALPHANUMERIC },
     { name: "kanji", mode: Mode.KANJI },
@@ -103,12 +106,12 @@ describe("From value", () => {
   it("From name or mode", () => {
     for (const { name, mode } of modes) {
       expect(Mode.from(name)).toBe(mode);
-      expect(Mode.from(name.toUpperCase())).toBe(mode);
+      expect(Mode.from(name.toUpperCase() as ModeType)).toBe(mode);
       expect(Mode.from(mode)).toBe(mode);
     }
 
-    expect(Mode.from("", Mode.NUMERIC)).toBe(Mode.NUMERIC);
-    expect(Mode.from(null, Mode.NUMERIC)).toBe(Mode.NUMERIC);
+    expect(Mode.from(undefined, Mode.NUMERIC)).toBe(Mode.NUMERIC);
+    expect(Mode.from(undefined, Mode.NUMERIC)).toBe(Mode.NUMERIC);
   });
 });
 
@@ -121,6 +124,7 @@ describe("To string", () => {
   });
 
   it("Throws on invalid mode", () => {
+    // @ts-ignore Testing invalid mode object
     expect(() => Mode.toString({})).toThrow();
   });
 });

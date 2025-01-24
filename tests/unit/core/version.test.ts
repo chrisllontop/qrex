@@ -7,8 +7,11 @@ import { Mode } from "../../../src/core/mode";
 import NumericData from "../../../src/core/numeric-data";
 import { Version } from "../../../src/core/version";
 import { VersionCheck } from "../../../src/core/version-check";
+import type { ErrorCorrectionLevelBit, Segment } from "../../../src/types/qrex.type";
 
-const EC_LEVELS = [ECLevel.L, ECLevel.M, ECLevel.Q, ECLevel.H];
+const EC_LEVELS: ErrorCorrectionLevelBit[] = [ECLevel.L, ECLevel.M, ECLevel.Q, ECLevel.H];
+
+type CapacityArray = readonly (readonly number[])[];
 
 const EXPECTED_NUMERIC_CAPACITY = [
   [41, 34, 27, 17],
@@ -51,7 +54,7 @@ const EXPECTED_NUMERIC_CAPACITY = [
   [6479, 5039, 3599, 2735],
   [6743, 5313, 3791, 2927],
   [7089, 5596, 3993, 3057],
-];
+] as const;
 
 const EXPECTED_ALPHANUMERIC_CAPACITY = [
   [25, 20, 16, 10],
@@ -94,7 +97,7 @@ const EXPECTED_ALPHANUMERIC_CAPACITY = [
   [3927, 3054, 2181, 1658],
   [4087, 3220, 2298, 1774],
   [4296, 3391, 2420, 1852],
-];
+] as const;
 
 const EXPECTED_KANJI_CAPACITY = [
   [10, 8, 7, 4],
@@ -137,7 +140,7 @@ const EXPECTED_KANJI_CAPACITY = [
   [1661, 1292, 923, 701],
   [1729, 1362, 972, 750],
   [1817, 1435, 1024, 784],
-];
+] as const;
 
 const EXPECTED_BYTE_CAPACITY = [
   [17, 14, 11, 7],
@@ -180,13 +183,13 @@ const EXPECTED_BYTE_CAPACITY = [
   [2699, 2099, 1499, 1139],
   [2809, 2213, 1579, 1219],
   [2953, 2331, 1663, 1273],
-];
+] as const;
 
 const EXPECTED_VERSION_BITS = [
   0x07c94, 0x085bc, 0x09a99, 0x0a4d3, 0x0bbf6, 0x0c762, 0x0d847, 0x0e60d, 0x0f928, 0x10b78, 0x1145d, 0x12a17, 0x13532,
   0x149a6, 0x15683, 0x168c9, 0x177ec, 0x18ec4, 0x191e1, 0x1afab, 0x1b08e, 0x1cc1a, 0x1d33f, 0x1ed75, 0x1f250, 0x209d5,
   0x216f0, 0x228ba, 0x2379f, 0x24b0b, 0x2542e, 0x26a64, 0x27541, 0x28c69,
-];
+] as const;
 
 describe("Version validity", () => {
   it("should return false if no input", () => {
@@ -220,12 +223,14 @@ describe("Version from value", () => {
 describe("Version capacity", () => {
   it("should throw if version is undefined", () => {
     expect(() => {
+      // @ts-ignore Testing undefined version
       Version.getCapacity();
     }).toThrow();
   });
 
   it("should throw if version is not a number", () => {
     expect(() => {
+      // @ts-ignore Testing invalid version type
       Version.getCapacity("");
     }).toThrow();
   });
@@ -240,11 +245,18 @@ describe("Version capacity", () => {
   });
 
   it("should return correct capacities for each mode and version", () => {
+    interface TestResult {
+      version: number;
+      level: ErrorCorrectionLevelBit;
+      result: number;
+      expected: number;
+    }
+
     const results = {
-      numeric: [],
-      alphanumeric: [],
-      kanji: [],
-      byte: [],
+      numeric: [] as TestResult[],
+      alphanumeric: [] as TestResult[],
+      kanji: [] as TestResult[],
+      byte: [] as TestResult[],
     };
 
     EC_LEVELS.forEach((level, l) => {
@@ -276,25 +288,34 @@ describe("Version capacity", () => {
       }
     });
 
-    for (const { version, level, result, expected } of results.numeric) {
+    for (const { result, expected } of results.numeric) {
       expect(result).toBe(expected);
     }
 
-    for (const { version, level, result, expected } of results.alphanumeric) {
+    for (const { result, expected } of results.alphanumeric) {
       expect(result).toBe(expected);
     }
-    for (const { version, level, result, expected } of results.kanji) {
+    for (const { result, expected } of results.kanji) {
       expect(result).toBe(expected);
     }
-    for (const { version, level, result, expected } of results.byte) {
+    for (const { result, expected } of results.byte) {
       expect(result).toBe(expected);
     }
   });
 });
 
 describe("Version best match", () => {
-  function checkBestVersionForCapacity(expectedCapacity, DataCtor) {
-    const results = [];
+  type DataConstructor = typeof NumericData | typeof AlphanumericData | typeof KanjiData | typeof ByteData;
+
+  function checkBestVersionForCapacity(expectedCapacity: CapacityArray, DataCtor: DataConstructor): void {
+    interface TestResult {
+      version: number;
+      level: ErrorCorrectionLevelBit | undefined;
+      result: number;
+      expected: number;
+    }
+
+    const results: TestResult[] = [];
 
     for (let v = 0; v < 40; v++) {
       for (const [l, level] of EC_LEVELS.entries()) {
@@ -303,22 +324,22 @@ describe("Version best match", () => {
         results.push({
           version: v + 1,
           level,
-          result: Version.getBestVersionForData(data, level),
+          result: Version.getBestVersionForData(data as unknown as Segment[], level),
           expected: v + 1,
         });
 
         if (l === 1) {
           results.push({
             version: v + 1,
-            level: null,
-            result: Version.getBestVersionForData(data, null),
+            level: undefined,
+            result: Version.getBestVersionForData(data as unknown as Segment[], undefined),
             expected: v + 1,
           });
         }
       }
     }
 
-    for (const { version, level, result, expected } of results) {
+    for (const { result, expected } of results) {
       expect(result).toBe(expected);
     }
   }
@@ -330,16 +351,8 @@ describe("Version best match", () => {
     checkBestVersionForCapacity(EXPECTED_BYTE_CAPACITY, ByteData);
   });
 
-  // it("should return undefined if data is too big", () => {
-  //   for (const [i, level] of EC_LEVELS.entries()) {
-  //     const exceededCapacity = EXPECTED_NUMERIC_CAPACITY[39][i] + 1;
-  //     const tooBigData = new NumericData(new Array(exceededCapacity + 1).join("-"));
-  //     expect(Version.getBestVersionForData(tooBigData, level)).toBeFalsy();
-  //   }
-  // });
-
   it("should return a version number if input array is valid", () => {
-    expect(Version.getBestVersionForData([new ByteData("abc"), new NumericData("1234")])).toBeTruthy();
+    expect(Version.getBestVersionForData([new ByteData("abc"), new NumericData("1234")] as Segment[])).toBeTruthy();
   });
 
   it("should return 1 if array is empty", () => {

@@ -7,7 +7,7 @@ describe("Byte Data: String Input", () => {
   it("should handle string input correctly", () => {
     const text = "1234";
     const textBitLength = 32;
-    const textByte = [49, 50, 51, 52];
+    const textByte = new Uint8Array([49, 50, 51, 52]);
     const utf8Text = "\u00bd + \u00bc = \u00be";
 
     const byteData = new ByteData(text);
@@ -18,7 +18,7 @@ describe("Byte Data: String Input", () => {
 
     const bitBuffer = new BitBuffer();
     byteData.write(bitBuffer);
-    expect(bitBuffer.buffer).toEqual(textByte);
+    expect(new Uint8Array(bitBuffer.buffer)).toEqual(textByte);
 
     const byteDataUtf8 = new ByteData(utf8Text);
     expect(byteDataUtf8.getLength()).toBe(12);
@@ -27,7 +27,7 @@ describe("Byte Data: String Input", () => {
 
 describe("Byte Data: Byte Input", () => {
   it("should handle byte input correctly", () => {
-    const bytes = new Uint8ClampedArray([1, 231, 32, 22]);
+    const bytes = new Uint8Array([1, 231, 32, 22]);
 
     const byteData = new ByteData(bytes);
     expect(byteData.getLength()).toBe(bytes.length);
@@ -35,6 +35,6 @@ describe("Byte Data: Byte Input", () => {
 
     const bitBuffer = new BitBuffer();
     byteData.write(bitBuffer);
-    expect(new Uint8ClampedArray(bitBuffer.buffer)).toEqual(bytes);
+    expect(new Uint8Array(bitBuffer.buffer)).toEqual(bytes);
   });
 });

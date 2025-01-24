@@ -50,6 +50,7 @@ it("BCH Digit", () => {
 
 it("Set/Get SJIS function", () => {
   expect(() => {
+    // @ts-ignore Testing invalid value
     CoreUtils.setToSJISFunction(-1);
   }).toThrow('"toSJISFunc" is not a valid function.');
 

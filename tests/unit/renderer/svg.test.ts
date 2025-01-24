@@ -3,18 +3,27 @@ import { Parser } from "htmlparser2";
 import { describe, expect, it, vi } from "vitest";
 import { Qrex } from "../../../src/core/qrex";
 import { RendererSvg } from "../../../src/renderer/svg";
+import type { QRData } from "../../../src/types/qrex.type";
 
-function getExpectedViewbox(size: number, margin: number) {
+interface ExpectedTag {
+  name: string;
+  attribs: Array<{ name: string; value: string }>;
+}
+
+function getExpectedViewbox(size: number, margin: number): string {
   const expectedQrCodeSize = size + margin * 2;
   return `0 0 ${expectedQrCodeSize} ${expectedQrCodeSize}`;
 }
+
 const renderer: RendererSvg = new RendererSvg();
-function testSvgFragment(svgFragment, expectedTags) {
+
+function testSvgFragment(svgFragment: string, expectedTags: ExpectedTag[]): Promise<void> {
   return new Promise((resolve, reject) => {
     const parser = new Parser(
       {
-        onopentag: (name, attribs) => {
+        onopentag: (name: string, attribs: { [key: string]: string | undefined }) => {
           const tag = expectedTags.shift();
+          if (!tag) return;
 
           expect(tag.name).toBe(name);
           for (const attr of tag.attribs) {
@@ -26,7 +35,7 @@ function testSvgFragment(svgFragment, expectedTags) {
           resolve();
         },
 
-        onerror: (e) => {
+        onerror: (e: Error) => {
           reject(e);
         },
       },
@@ -38,7 +47,8 @@ function testSvgFragment(svgFragment, expectedTags) {
   });
 }
 
-function buildTest(data, opts, expectedTags) {
+function buildTest(data: QRData, opts: unknown, expectedTags: ExpectedTag[]): Promise<void> {
+  // @ts-ignore Testing with various option combinations
   const svg = renderer.render(data, opts);
   return testSvgFragment(svg, expectedTags.slice());
 }
@@ -53,11 +63,11 @@ describe("SvgRenderer", () => {
   });
 
   describe("Svg render", () => {
-    const data = Qrex.create("sample text", { version: 2, maskPattern: 0 });
+    const data: QRData = Qrex.create("sample text", { version: 2, maskPattern: 0 });
     const size = data.modules.size;
 
     it("should render SVG with scale 4 and margin 4", async () => {
-      const expectedTags = [
+      const expectedTags: ExpectedTag[] = [
         {
           name: "svg",
           attribs: [{ name: "viewbox", value: getExpectedViewbox(size, 4) }],
@@ -89,7 +99,7 @@ describe("SvgRenderer", () => {
     });
 
     it("should render SVG with scale 0 and margin 8", async () => {
-      const expectedTags = [
+      const expectedTags: ExpectedTag[] = [
         {
           name: "svg",
           attribs: [{ name: "viewbox", value: getExpectedViewbox(size, 8) }],
@@ -118,7 +128,7 @@ describe("SvgRenderer", () => {
     });
 
     it("should render SVG with default options", async () => {
-      const expectedTags = [
+      const expectedTags: ExpectedTag[] = [
         {
           name: "svg",
           attribs: [{ name: "viewbox", value: getExpectedViewbox(size, 4) }],
@@ -131,7 +141,7 @@ describe("SvgRenderer", () => {
     });
 
     it("should render SVG with width 250", async () => {
-      const expectedTags = [
+      const expectedTags: ExpectedTag[] = [
         {
           name: "svg",
           attribs: [
@@ -149,40 +159,48 @@ describe("SvgRenderer", () => {
   });
 
   describe("Svg renderToFile", () => {
-    const sampleQrData = Qrex.create("sample text", {
+    const sampleQrData: QRData = Qrex.create("sample text", {
       version: 2,
       maskPattern: 0,
     });
     const fileName = "qrimage.svg";
 
     it("should render to file with correct filename and without error", async () => {
-      const writeFileMock = vi.fn((file, content, callback) => callback());
-
+      // @ts-ignore Mock implementation doesn't need exact typing
+      const writeFileMock = vi.fn((file: string, content: string, callback: (err?: Error) => void) => callback());
+      // @ts-ignore Mock implementation doesn't need exact typing
       vi.spyOn(fs, "writeFile").mockImplementation(writeFileMock);
 
-      await renderer.renderToFile(fileName, sampleQrData, (err) => {
+      // @ts-ignore Testing with callback
+      await renderer.renderToFile(fileName, sampleQrData, (err?: Error) => {
         expect(err).toBeUndefined();
         expect(writeFileMock).toHaveBeenCalledWith(fileName, expect.any(String), expect.any(Function));
       });
     });
 
     it("should render to file with options and without error", async () => {
-      const writeFileMock = vi.fn((file, content, callback) => callback());
-
+      // @ts-ignore Mock implementation doesn't need exact typing
+      const writeFileMock = vi.fn((file: string, content: string, callback: (err?: Error) => void) => callback());
+      // @ts-ignore Mock implementation doesn't need exact typing
       vi.spyOn(fs, "writeFile").mockImplementation(writeFileMock);
-      // @ts-ignore
-      await renderer.renderToFile(fileName, sampleQrData, { margin: 10, scale: 1 }, (err) => {
+
+      // @ts-ignore Testing with margin and scale options
+      await renderer.renderToFile(fileName, sampleQrData, { margin: 10, scale: 1 }, (err?: Error) => {
         expect(err).toBeUndefined();
         expect(writeFileMock).toHaveBeenCalledWith(fileName, expect.any(String), expect.any(Function));
       });
     });
 
     it("should fail if an error occurs during file save", async () => {
-      const writeFileMock = vi.fn((file, content, callback) => callback(new Error("File error")));
-
+      // @ts-ignore Mock implementation doesn't need exact typing
+      const writeFileMock = vi.fn((file: string, content: string, callback: (err?: Error) => void) =>
+        callback(new Error("File error")),
+      );
+      // @ts-ignore Mock implementation doesn't need exact typing
       vi.spyOn(fs, "writeFile").mockImplementation(writeFileMock);
 
-      await renderer.renderToFile(fileName, sampleQrData, (err) => {
+      // @ts-ignore Testing with callback
+      await renderer.renderToFile(fileName, sampleQrData, (err?: Error) => {
         expect(err).toBeTruthy();
       });
     });

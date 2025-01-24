@@ -7,7 +7,7 @@ import NumericData from "../../../src/core/numeric-data";
 import { Segments } from "../../../src/core/segments";
 import { CoreUtils } from "../../../src/core/utils";
 
-let testData = [
+const testData = [
   {
     input: "1A1",
     result: [{ data: "1A1", mode: Mode.ALPHANUMERIC }],
@@ -131,6 +131,7 @@ let testData = [
   },
 ];
 
+// @ts-ignore Test data with simplified segment structure
 const kanjiTestData = [
   {
     input: "乂ЁЖぞβ",
@@ -156,32 +157,40 @@ const kanjiTestData = [
   },
 ];
 
-testData = testData.concat(kanjiTestData);
+testData.push(...kanjiTestData);
 
 describe("Segments from array", () => {
   it("should return correct segment from array of string", () => {
+    // @ts-ignore Testing with string array input
     expect(Segments.fromArray(["abcdef", "12345"])).toEqual([new ByteData("abcdef"), new NumericData("12345")]);
   });
 
   it("should return correct segment from array of objects", () => {
+    // @ts-ignore Testing with simplified segment objects
     expect(
       Segments.fromArray([
+        // @ts-ignore Testing with simplified segment objects
         { data: "abcdef", mode: Mode.BYTE },
+        // @ts-ignore Testing with simplified segment objects
         { data: "12345", mode: Mode.NUMERIC },
       ]),
     ).toEqual([new ByteData("abcdef"), new NumericData("12345")]);
   });
 
   it("should return correct segment from array of objects if mode is specified as string", () => {
+    // @ts-ignore Testing with string mode input
     expect(
       Segments.fromArray([
+        // @ts-ignore Testing with simplified segment objects
         { data: "abcdef", mode: "byte" },
+        // @ts-ignore Testing with simplified segment objects
         { data: "12345", mode: "numeric" },
       ]),
     ).toEqual([new ByteData("abcdef"), new NumericData("12345")]);
   });
 
   it("should return correct segment from array of objects if mode is not specified", () => {
+    // @ts-ignore Testing with partial segment objects
     expect(Segments.fromArray([{ data: "abcdef" }, { data: "12345" }])).toEqual([
       new ByteData("abcdef"),
       new NumericData("12345"),
@@ -190,23 +199,27 @@ describe("Segments from array", () => {
 
   it("should throw if segment cannot be encoded with specified mode", () => {
     expect(() => {
+      // @ts-ignore Testing with invalid mode
       Segments.fromArray([{ data: "ABCDE", mode: "numeric" }]);
     }).toThrow('"ABCDE" cannot be encoded with mode numeric.');
   });
 
   it("should use Byte mode if kanji support is disabled", () => {
+    // @ts-ignore Testing with kanji mode
     expect(Segments.fromArray([{ data: "０１２３", mode: Mode.KANJI }])).toEqual([new ByteData("０１２３")]);
   });
 });
 
 describe("Segments optimization", () => {
   it("should use Byte mode if Kanji support is disabled", () => {
+    // @ts-ignore Testing with string input
     expect(Segments.fromString("乂ЁЖ", 1)).toEqual(Segments.fromArray([{ data: "乂ЁЖ", mode: "byte" }]));
   });
 
   it("should match Segments from test data", () => {
     CoreUtils.setToSJISFunction(toSJIS);
     for (const data of testData) {
+      // @ts-ignore Testing with simplified segment structure
       expect(Segments.fromString(data.input, 1)).toEqual(Segments.fromArray(data.result));
     }
   });

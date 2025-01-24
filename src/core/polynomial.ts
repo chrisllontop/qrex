@@ -3,16 +3,18 @@ import { GaloisField } from "./galois-field";
 /**
  * Multiplies two polynomials inside Galois Field
  *
- * @param  {Uint8Array} p1 Polynomial
- * @param  {Uint8Array} p2 Polynomial
+ * @param  {Iterable<number>} p1 Polynomial
+ * @param  {Iterable<number>} p2 Polynomial
  * @return {Uint8Array}    Product of p1 and p2
  */
-function mul(p1: Uint8Array, p2: Uint8Array): Uint8Array {
-  const coeff = new Uint8Array(p1.length + p2.length - 1);
+function mul(p1: Iterable<number>, p2: Iterable<number>): Uint8Array {
+  const p1Arr = new Uint8Array([...p1]);
+  const p2Arr = new Uint8Array([...p2]);
+  const coeff = new Uint8Array(p1Arr.length + p2Arr.length - 1);
 
-  for (let i = 0; i < p1.length; i++) {
-    for (let j = 0; j < p2.length; j++) {
-      coeff[i + j] ^= GaloisField.mul(p1[i], p2[j]);
+  for (let i = 0; i < p1Arr.length; i++) {
+    for (let j = 0; j < p2Arr.length; j++) {
+      coeff[i + j] ^= GaloisField.mul(p1Arr[i], p2Arr[j]);
     }
   }
 
@@ -22,18 +24,19 @@ function mul(p1: Uint8Array, p2: Uint8Array): Uint8Array {
 /**
  * Calculate the remainder of polynomials division
  *
- * @param  {Uint8Array} divident Polynomial
- * @param  {Uint8Array} divisor  Polynomial
+ * @param  {Iterable<number>} divident Polynomial
+ * @param  {Iterable<number>} divisor  Polynomial
  * @return {Uint8Array}          Remainder
  */
-function mod(divident: Uint8Array, divisor: Uint8Array): Uint8Array {
-  let result = new Uint8Array(divident);
+function mod(divident: Iterable<number>, divisor: Iterable<number>): Uint8Array {
+  let result = new Uint8Array([...divident]);
+  const divisorArr = new Uint8Array([...divisor]);
 
-  while (result.length - divisor.length >= 0) {
+  while (result.length - divisorArr.length >= 0) {
     const coeff = result[0];
 
-    for (let i = 0; i < divisor.length; i++) {
-      result[i] ^= GaloisField.mul(divisor[i], coeff);
+    for (let i = 0; i < divisorArr.length; i++) {
+      result[i] ^= GaloisField.mul(divisorArr[i], coeff);
     }
 
     // remove all zeros from buffer head

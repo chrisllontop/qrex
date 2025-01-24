@@ -62,7 +62,7 @@ function from(value?: number) {
  * Returns how much data can be stored with the specified QR code version
  * and error correction level
  */
-function getCapacity(version: number, errorCorrectionLevel: ErrorCorrectionLevelBit, mode?: DataMode) {
+function getCapacity(version: number, errorCorrectionLevel?: ErrorCorrectionLevelBit, mode?: DataMode) {
   if (!VersionCheck.isValid(version)) {
     throw new Error("Invalid QR Code version");
   }
@@ -101,7 +101,7 @@ function getCapacity(version: number, errorCorrectionLevel: ErrorCorrectionLevel
 /**
  * Returns the minimum version needed to contain the amount of data
  */
-function getBestVersionForData(data: Segment[], errorCorrectionLevel: ErrorCorrectionLevel): number {
+function getBestVersionForData(data: Segment[], errorCorrectionLevel?: ErrorCorrectionLevel): number {
   let seg: Segment;
 
   const ecl = ECLevel.from(errorCorrectionLevel, ECLevel.M);

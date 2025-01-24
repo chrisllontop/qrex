@@ -121,7 +121,9 @@ describe("PNG renderToFile", () => {
   });
 
   it("should fail if error occurs during save", async () => {
-    const fsStub = vi.spyOn(fs, "createWriteStream").mockReturnValue(new StreamMock().forceErrorOnWrite() as unknown as fs.WriteStream);
+    const fsStub = vi
+      .spyOn(fs, "createWriteStream")
+      .mockReturnValue(new StreamMock().forceErrorOnWrite() as unknown as fs.WriteStream);
 
     const renderer: RendererPng = new RendererPng();
     await renderer.renderToFile(fileName, sampleQrData, {

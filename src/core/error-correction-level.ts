@@ -34,14 +34,14 @@ function isValid(level?: ErrorCorrectionLevelBit) {
   return Boolean(level && typeof level?.bit !== "undefined" && level.bit >= 0 && level.bit < 4);
 }
 
-function from(value: ErrorCorrectionLevel, defaultValue: ErrorCorrectionLevelBit) {
+function from(value: ErrorCorrectionLevel | undefined, defaultValue: ErrorCorrectionLevelBit) {
   try {
     if (typeof value === "string") {
       return fromString(value);
     }
 
     if (isValid(value)) {
-      return value;
+      return value as ErrorCorrectionLevelBit;
     }
     throw new Error("Invalid Error Correction Level");
   } catch (e) {

@@ -38,7 +38,7 @@ export type ErrorCorrectionLevel = ErrorCorrectionLevelBit | ErrorCorrectionLeve
 
 export type MaskPatternType = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
-export type ModeType = "alphanumeric" | "byte" | "kanji" | "numeric";
+export type ModeType = "alphanumeric" | "byte" | "kanji" | "numeric" | "mixed";
 
 /**
  * Mode Object

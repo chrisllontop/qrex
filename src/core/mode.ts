@@ -26,8 +26,10 @@ const KANJI: DataMode = {
   ccBits: [8, 10, 12],
 };
 
-const MIXED = {
+const MIXED: DataMode = {
+  id: "mixed",
   bit: -1,
+  ccBits: [0, 0, 0],
 };
 
 /**

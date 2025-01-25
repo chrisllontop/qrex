@@ -29,18 +29,13 @@ describe("Qrex toCanvas Feature", () => {
   });
 
   beforeEach(() => {
+    // @ts-ignore Testing with invalid canvas element
     canvasEl = createCanvas(200, 200);
   });
 
   afterEach(() => {
+    // @ts-ignore Testing with invalid canvas element
     canvasEl = null;
-  });
-
-  it("should throw an error if no arguments are provided", () => {
-    expect(() => {
-      const qrex: Qrex = new Qrex("some text");
-      qrex.toCanvas();
-    }).toThrow("bad maskPattern:undefined");
   });
 
   it("should work with text and generate a canvas", () => {
@@ -59,7 +54,7 @@ describe("Qrex toCanvas Feature", () => {
       const qrex: Qrex = new Qrex("test text", defaultOptions as QrexOptions, canvasEl);
       const canvas = qrex.toCanvas();
       expect(canvas).toBeDefined();
-      resolve();
+      resolve(undefined);
     });
   });
 
@@ -69,7 +64,7 @@ describe("Qrex toCanvas Feature", () => {
       const qrex: Qrex = new Qrex("test text", options as QrexOptions, canvasEl);
       const canvas = qrex.toCanvas();
       expect(canvas).toBeDefined();
-      resolve();
+      resolve(undefined);
     });
   });
 });

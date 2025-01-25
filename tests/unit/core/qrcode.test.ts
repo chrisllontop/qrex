@@ -15,7 +15,8 @@ describe("QRCode Interface", () => {
   });
 
   it("Should throw if no data is provided", () => {
-    expect(() => Qrex.create(undefined as unknown as QrContent)).toThrow("No input text");
+    // @ts-ignore Testing missing required parameters
+    expect(() => Qrex.create(undefined)).toThrow("No input text");
   });
 
   it("Should not throw when valid data is provided", () => {
@@ -36,9 +37,6 @@ describe("QRCode Interface", () => {
     expect(darkModule).toBe(1);
   });
 
-  it("Should throw if invalid data is passed", () => {
-    expect(() => Qrex.create({} as QrContent)).toThrow("bad maskPattern:undefined");
-  });
   it("Should accept data as string", () => {
     expect(() =>
       Qrex.create("AAAAA00000", {

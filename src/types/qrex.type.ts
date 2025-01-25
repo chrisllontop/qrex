@@ -3,9 +3,20 @@ import type { BitMatrix } from "../core/bit-matrix";
 
 export type RendererType = "canvas" | "svg" | "terminal" | "txt" | "utf8" | "png";
 
-/**
- * QR Code options
- */
+export type RenderOptions = {
+  width?: number; // Minimum 21
+  scale?: number; // Default: 4
+  margin?: number; // Default: 4
+  color?: {
+    dark?: string; // Hex color, default: "#000000ff"
+    light?: string; // Hex color, default: "#ffffffff"
+  };
+  renderConfig?: RenderConfig;
+};
+
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+export type RenderConfig = Record<string, any>;
+
 export type QrexOptions = {
   /** Output type */
   type?: RendererType;
@@ -16,6 +27,19 @@ export type QrexOptions = {
   /** Mask pattern */
   maskPattern?: MaskPatternType;
   toSJISFunc?: (text: string) => number | undefined;
+  render?: RenderOptions;
+};
+
+export type ProcessedRenderOptions = {
+  width?: number;
+  scale: number;
+  margin: number;
+  color: {
+    dark: ColorObject;
+    light: ColorObject;
+  };
+  type?: RendererType;
+  renderConfig: RenderConfig;
 };
 
 export type QrContent = string;
@@ -64,7 +88,7 @@ export interface SegmentInterface<T = string> {
   write?(bitBuffer: BitBuffer): void;
 }
 
-export type RenderFunctionBase<T> = (data: QRData, opts?: QrexOptions) => T;
+export type RenderFunctionBase<T> = (data: QRData, opts?: RenderOptions) => T;
 
 export type ColorObject = {
   r: number;

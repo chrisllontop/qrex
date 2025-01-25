@@ -1,13 +1,13 @@
 import * as fs from "node:fs";
 import type { WriteStream } from "node:fs";
 import { PNG } from "pngjs";
-import type { QRData, QrexOptions } from "../types/qrex.type";
+import type { QRData, QrexOptions, RenderOptions } from "../types/qrex.type";
 import { RendererUtils } from "./utils";
 
 export class RendererPng {
-  public render(qrData: QRData, options?: QrexOptions): PNG {
+  public render(qrData: QRData, options?: RenderOptions): PNG {
     const opts = RendererUtils.getOptions(options);
-    const pngOpts = opts.rendererOpts;
+    const pngOpts = opts.renderConfig;
     const size = RendererUtils.getImageWidth(qrData.modules.size, opts);
 
     pngOpts.width = size;
@@ -20,7 +20,7 @@ export class RendererPng {
     return pngImage;
   }
 
-  public async renderToBuffer(qrData: QRData, options?: QrexOptions): Promise<Buffer> {
+  public async renderToBuffer(qrData: QRData, options?: RenderOptions): Promise<Buffer> {
     const png = this.render(qrData, options);
     const chunks: Buffer[] = [];
 
@@ -41,17 +41,17 @@ export class RendererPng {
     });
   }
 
-  public renderToFile(path: string, qrData: QRData, options?: QrexOptions) {
+  public renderToFile(path: string, qrData: QRData, options?: RenderOptions) {
     const stream = fs.createWriteStream(path);
     this.renderToFileStream(stream, qrData, options);
   }
 
-  public renderToFileStream(stream: WriteStream, qrData: QRData, options?: QrexOptions) {
+  public renderToFileStream(stream: WriteStream, qrData: QRData, options?: RenderOptions) {
     const png = this.render(qrData, options);
     png.pack().pipe(stream);
   }
 
-  public async renderToDataURL(qrData: QRData, options?: QrexOptions) {
+  public async renderToDataURL(qrData: QRData, options?: RenderOptions) {
     const qrBuffer = await this.renderToBuffer(qrData, options);
     let dataUrl = "data:image/png;base64,";
     dataUrl += qrBuffer.toString("base64");

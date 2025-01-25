@@ -1,4 +1,4 @@
-import type { QRData, QrexOptions } from "../types/qrex.type";
+import type { QRData, QrexOptions, RenderOptions } from "../types/qrex.type";
 import { RendererUtils } from "./utils";
 
 export class RendererCanvas {
@@ -29,17 +29,14 @@ export class RendererCanvas {
     }
   }
 
-  public render(qrData: QRData, options?: QrexOptions): HTMLCanvasElement {
-    let opts = options;
-    // this.canvas = document.createElement('canvas');
+  public render(qrData: QRData, options?: RenderOptions): HTMLCanvasElement {
+    const processedOpts = RendererUtils.getOptions(options);
     const canvasEl = this.canvas;
-
-    opts = RendererUtils.getOptions(opts);
-    const size = RendererUtils.getImageWidth(qrData.modules.size, opts);
+    const size = RendererUtils.getImageWidth(qrData.modules.size, processedOpts);
 
     const ctx = canvasEl.getContext("2d")!;
     const image = ctx!.createImageData(size, size);
-    RendererUtils.qrToImageData(image.data, qrData, opts);
+    RendererUtils.qrToImageData(image.data, qrData, processedOpts);
 
     this.clearCanvas(ctx, size);
     ctx!.putImageData(image, 0, 0);
@@ -47,12 +44,11 @@ export class RendererCanvas {
     return canvasEl;
   }
 
-  public renderToDataURL(qrData: QRData, options?: QrexOptions): string {
+  public renderToDataURL(qrData: QRData, options?: RenderOptions): string {
     const canvasEl = this.render(qrData, options);
+    const renderConfig = options?.renderConfig || {};
+    const mimeType = renderConfig.mimeType || "image/png";
 
-    const type = options?.type || "image/png";
-    const rendererOpts = options?.rendererOpts || {};
-
-    return canvasEl.toDataURL(type, rendererOpts.quality);
+    return canvasEl.toDataURL(mimeType, renderConfig.quality);
   }
 }

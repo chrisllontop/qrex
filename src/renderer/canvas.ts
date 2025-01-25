@@ -30,16 +30,13 @@ export class RendererCanvas {
   }
 
   public render(qrData: QRData, options?: RenderOptions): HTMLCanvasElement {
-    let opts = options;
-    // this.canvas = document.createElement('canvas');
+    const processedOpts = RendererUtils.getOptions(options);
     const canvasEl = this.canvas;
-
-    opts = RendererUtils.getOptions(opts);
-    const size = RendererUtils.getImageWidth(qrData.modules.size, opts);
+    const size = RendererUtils.getImageWidth(qrData.modules.size, processedOpts);
 
     const ctx = canvasEl.getContext("2d")!;
     const image = ctx!.createImageData(size, size);
-    RendererUtils.qrToImageData(image.data, qrData, opts);
+    RendererUtils.qrToImageData(image.data, qrData, processedOpts);
 
     this.clearCanvas(ctx, size);
     ctx!.putImageData(image, 0, 0);
@@ -49,10 +46,9 @@ export class RendererCanvas {
 
   public renderToDataURL(qrData: QRData, options?: RenderOptions): string {
     const canvasEl = this.render(qrData, options);
+    const renderConfig = options?.renderConfig || {};
+    const mimeType = renderConfig.mimeType || "image/png";
 
-    const type = options?.type || "image/png";
-    const renderConfig = options?.render?.renderConfig || {};
-
-    return canvasEl.toDataURL(type, renderConfig.quality);
+    return canvasEl.toDataURL(mimeType, renderConfig.quality);
   }
 }

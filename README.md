@@ -361,17 +361,26 @@ Returns a Promise that resolves with a Data URI containing a representation of t
 ##### Example
 ```javascript
 const qr = new Qrex('Hello World', {
+  // QR Code options
   errorCorrectionLevel: 'H',
-  type: 'image/jpeg',
-  quality: 0.3,
-  margin: 1,
-  color: {
-    dark: "#010599FF",
-    light: "#FFBF60FF"
+  
+  // Render options
+  render: {
+    margin: 1,
+    color: {
+      dark: "#010599FF",
+      light: "#FFBF60FF"
+    }
   }
 })
 
-const url = await qr.toDataURL()
+// Specify image type and quality in renderConfig
+const url = await qr.toDataURL({
+  type: 'image/jpeg',
+  renderConfig: {
+    quality: 0.3
+  }
+})
 document.getElementById('image').src = url
 ```
 

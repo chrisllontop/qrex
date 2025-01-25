@@ -409,24 +409,30 @@ await qr.toFileStream(out)
 
 ### Options
 
-The options object can be divided into two main categories:
-1. **QR Code Options**: Control the QR code generation itself (error correction, version, etc.)
-2. **Renderer Options**: Control how the QR code is displayed (colors, size, margins, etc.)
+Qrex provides a flexible configuration system that allows you to customize both the QR code generation and its visual representation. Options can be defined in two ways:
+
+1. **Global Configuration**: Through the `options` parameter in the constructor
+   - QR Code options are defined at the root level
+   - Render options are defined under the `render` property
+2. **Per-Method Configuration**: Directly in render methods
 
 #### QR Code Options
 
-These options affect the QR code's data structure and encoding:
+These options control the fundamental aspects of QR code generation and are defined at the root level of the options object:
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `version` | `Number` | `auto` | QR Code version (1-40). Higher versions can store more data but create larger codes. If not specified, the smallest possible version is used. |
-| `errorCorrectionLevel` | `String` | `M` | Error correction capability:<br>• `L`: ~7% recovery<br>• `M`: ~15% recovery<br>• `Q`: ~25% recovery<br>• `H`: ~30% recovery |
-| `maskPattern` | `Number` | `auto` | Pattern used to mask the symbol (0-7). Usually best to let the encoder choose. |
-| `toSJISFunc` | `Function` | `undefined` | Custom function for converting Kanji characters to Shift JIS values. Only needed for Kanji mode optimization. |
+| `version` | `Number` | `auto` | QR Code version (1-40). Higher versions can store more data but create larger codes |
+| `errorCorrectionLevel` | `String` | `M` | Error correction capability (`L`: ~7%, `M`: ~15%, `Q`: ~25%, `H`: ~30%) |
+| `maskPattern` | `Number` | `auto` | Pattern used to mask the symbol (0-7) |
+| `toSJISFunc` | `Function` | `undefined` | Function for Kanji character conversion |
+| `render` | `Object (RenderOptions)`  | `undefined` | Container for render options when defined globally |
 
-#### Renderer Options
+#### Render Options
 
-These options control the visual appearance of the QR code:
+These options control the visual output and can be defined in two ways:
+1. Under the `render` property in the global configuration
+2. Directly in render methods to override global settings
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
@@ -435,17 +441,18 @@ These options control the visual appearance of the QR code:
 | `width` | `Number` | `undefined` | Force specific width (overrides scale) |
 | `color.dark` | `String` | `#000000ff` | Color of dark modules (RGBA hex) |
 | `color.light` | `String` | `#ffffffff` | Color of light modules (RGBA hex) |
-| `small` | `Boolean` | `false` | Compress output (terminal only) |
+| `renderConfig` | `Object` | `undefined` | Renderer-specific configuration options (e.g., PNG compression, terminal display, JPEG quality) |
 
-##### Example with both option types:
+#### Usage Examples
 
+1. **Global Configuration**:
 ```javascript
 const qr = new Qrex('Hello World', {
-  // QR Code options
+  // QR Code options at root level
   version: 5,
   errorCorrectionLevel: 'H',
   
-  // Renderer options
+  // Render options under 'render' property
   render: {
     margin: 2,
     scale: 8,
@@ -455,66 +462,29 @@ const qr = new Qrex('Hello World', {
     }
   }
 })
+
+// Uses global configuration
+await qr.toCanvas()
 ```
 
-**Note**: Not all options apply to all output formats. For example, `color` options 
-don't affect terminal output, and `small` only affects terminal output.
-
-#### Renderer-Specific Options
-
-Each renderer type supports specific options through the `renderConfig` object:
-
-##### Terminal Renderer (`terminal`, `txt`, `utf8`)
-```javascript
-{
-  renderConfig: {
-    small: boolean // Use smaller characters for more compact output
-  }
-}
-```
-
-##### PNG Renderer (`png`)
-```javascript
-{
-  renderConfig: {
-    // Inherits all PNG.js options
-    // See: https://github.com/lukeapage/pngjs#options
-    colorType: number,
-    deflateLevel: number,
-    deflateStrategy: number,
-    filterType: number,
-    // etc...
-  }
-}
-```
-
-##### Canvas Renderer (`canvas`)
-```javascript
-{
-  renderConfig: {
-    quality: number // Quality level for image/jpeg output (0.0-1.0)
-  }
-}
-```
-
-##### SVG Renderer (`svg`)
-The SVG renderer currently has no specific configuration options.
-
-##### Examples of passing render options directly to methods
-
-You can also pass render options directly to render methods instead of in the constructor:
-
+2. **Per-Method Configuration Override**:
 ```javascript
 const qr = new Qrex('Hello World')
 
-// Terminal output with small characters
-await qr.toString({
-  renderConfig: {
-    small: true
+// Override render options for specific method
+await qr.toCanvas({
+  margin: 2,
+  scale: 8,
+  color: {
+    dark: '#010599FF',
+    light: '#FFBF60FF'
   }
 })
+```
 
-// PNG with specific compression options
+3. **Renderer-Specific Options**:
+```javascript
+// PNG-specific options
 await qr.toFile('qr.png', {
   renderConfig: {
     deflateLevel: 9,
@@ -522,20 +492,18 @@ await qr.toFile('qr.png', {
   }
 })
 
-// Canvas with JPEG quality setting
+// Terminal-specific options
+await qr.toString({
+  renderConfig: {
+    small: true
+  }
+})
+
+// JPEG quality for Canvas/DataURL
 await qr.toDataURL({
   type: 'image/jpeg',
   renderConfig: {
     quality: 0.8
-  }
-})
-
-// Custom colors and margin for any renderer
-await qr.toCanvas(canvas, {
-  margin: 2,
-  color: {
-    dark: '#010599FF',
-    light: '#FFBF60FF'
   }
 })
 ```

@@ -5,6 +5,7 @@ const defaultOptions = {
   maskPattern: 0,
   errorCorrectionLevel: "L",
 };
+
 describe("toFileStream", () => {
   it("should throw if stream is not provided", () => {
     const qrex: Qrex = new Qrex("some text");

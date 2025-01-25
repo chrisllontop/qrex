@@ -25,4 +25,3 @@ describe("toString", () => {
     expect(() => qrex.toString()).not.toThrow();
   });
 });
-

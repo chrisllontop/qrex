@@ -111,8 +111,8 @@ describe("TerminalSmall render output structure", () => {
   it("should have proper line endings", () => {
     const lines = output.split("\n");
     expect(lines.length).toBeGreaterThan(1);
-    lines.slice(0, -1).forEach(line => {
+    for (const line of lines.slice(0, -1)) {
       expect(line).toMatch(/\x1b\[0m$/);
-    });
+    }
   });
 });

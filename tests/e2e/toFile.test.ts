@@ -4,7 +4,7 @@ import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { Qrex } from "../../src/qrex";
 import { removeNativePromise, restoreNativePromise } from "../helpers";
-import { MaskPatternType } from "../../src/types/qrex.type";
+import type { MaskPatternType } from "../../src/types/qrex.type";
 
 const defaultOptions = {
   maskPattern: 0 as MaskPatternType,
@@ -34,7 +34,8 @@ describe("toFile - no promise available", () => {
     try {
       const qrex: Qrex = new Qrex("some text", defaultOptions);
       qrex.toFile(fileName);
-    } catch (error: any) {
+    } catch (error) {
+      // @ts-ignore Testing for error message
       expect(error.message).toBe("No valid version provided");
     }
   });
@@ -53,11 +54,10 @@ describe("toFile", () => {
   it("should throw if path is not provided", () => {
     const qrex: Qrex = new Qrex("some text");
     expect(() => qrex.toFile(fileName)).toThrow("bad maskPattern:undefined");
-  })
-  
+  });
+
   it("should throw if text is not provided", () => {
     const qrex: Qrex = new Qrex("some text");
     expect(() => qrex.toFile(fileName)).toThrow("bad maskPattern:undefined");
   });
-
 });

@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import { PNG } from "pngjs";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi, afterAll } from "vitest";
 import { Qrex } from "../../../src/core/qrex";
 import { RendererPng } from "../../../src/renderer/png";
 import type { QRData } from "../../../src/types/qrex.type";
@@ -92,6 +92,13 @@ describe("PNG renderToFile", () => {
     maskPattern: 0,
   });
   const fileName = "qrimage.png";
+
+  afterAll(() => {
+    // Clean up test file if it exists
+    if (fs.existsSync(fileName)) {
+      fs.unlinkSync(fileName);
+    }
+  });
 
   it("should not generate errors with only qrData param and save file with correct file name", async () => {
     const fsStub = vi.spyOn(fs, "createWriteStream").mockReturnValue(new StreamMock() as unknown as fs.WriteStream);

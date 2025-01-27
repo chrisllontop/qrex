@@ -8,6 +8,13 @@ import { CoreUtils } from "../../../src/core/utils";
 CoreUtils.setToSJISFunction(toSJIS);
 
 describe("Kanji Data", () => {
+  it("should handle undefined data", () => {
+    // @ts-ignore Testing undefined case
+    const kanjiData = new KanjiData(undefined);
+    expect(kanjiData.length).toBe(0);
+    expect(kanjiData.data).toBeUndefined();
+  });
+
   it("should handle valid Kanji data", () => {
     const data = "漢字漾癶";
     const length = 4;

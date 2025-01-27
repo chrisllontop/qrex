@@ -68,25 +68,27 @@ describe("TerminalRenderer render small", () => {
     }).not.toThrow();
   });
 
+  it("should use small renderer when renderConfig.small is true", () => {
+    expect(() => {
+      str = renderer.render(sampleQrData, {
+        renderConfig: {
+          small: true,
+        },
+      });
+    }).not.toThrow();
+    // Small renderer output is typically shorter than regular renderer
+    const regularOutput = renderer.render(sampleQrData);
+    expect(str.length).toBeLessThan(regularOutput.length);
+  });
+
   it("should not throw with options param and without callback", () => {
     expect(() => {
       str = renderer.render(sampleQrData, {
-        // @ts-ignore Testing with margin, scale and small options
         margin: 10,
         scale: 1,
-        small: true,
-      });
-    }).not.toThrow();
-  });
-
-  it("should not throw with options param and callback", () => {
-    expect(() => {
-      str = renderer.render(sampleQrData, {
-        // @ts-ignore Testing with margin, scale, small options and callback
-        margin: 10,
-        scale: 1,
-        small: true,
-        callback,
+        renderConfig: {
+          small: true,
+        },
       });
     }).not.toThrow();
   });
@@ -102,9 +104,10 @@ describe("TerminalRenderer render small", () => {
   it("should not throw with inverse options", () => {
     expect(() => {
       str = renderer.render(sampleQrData, {
-        // @ts-ignore Testing with small and inverse options
-        small: true,
-        inverse: true,
+        renderConfig: {
+          small: true,
+          inverse: true,
+        },
       });
     }).not.toThrow();
   });

@@ -27,7 +27,7 @@ describe("RendererUtf8 renderToFile", () => {
   it("should write QR code to file", () => {
     renderer.renderToFile(testFilePath, sampleQrData);
     expect(fs.existsSync(testFilePath)).toBe(true);
-    const fileContent = fs.readFileSync(testFilePath, 'utf8');
+    const fileContent = fs.readFileSync(testFilePath, "utf8");
     expect(typeof fileContent).toBe("string");
     expect(fileContent.length).toBeGreaterThan(0);
   });
@@ -61,8 +61,8 @@ describe("RendererUtf8 render", () => {
     const str = renderer.render(sampleQrData, {
       color: {
         dark: "#ffffff",
-        light: "#000000"
-      }
+        light: "#000000",
+      },
     });
     expect(typeof str).toBe("string");
     expect(str).toContain("█"); // Should contain inverted full block

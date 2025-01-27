@@ -7,9 +7,9 @@ class NumericData implements SegmentInterface {
   data: string;
   length: number;
 
-  constructor(data: string) {
+  constructor(data: string | number) {
     this.mode = Mode.NUMERIC;
-    this.data = data.toString();
+    this.data = data?.toString();
     this.length = this.data?.length ?? 0;
   }
 
@@ -18,11 +18,11 @@ class NumericData implements SegmentInterface {
   }
 
   getLength(): number {
-    return this.data.length;
+    return this.length;
   }
 
   getBitsLength(): number {
-    return NumericData.getBitsLength(this.data.length);
+    return NumericData.getBitsLength(this.length);
   }
 
   write(bitBuffer: BitBuffer): void {
@@ -32,7 +32,7 @@ class NumericData implements SegmentInterface {
 
     // The input data string is divided into groups of three digits,
     // and each group is converted to its 10-bit binary equivalent.
-    for (i = 0; i + 3 <= this.data.length; i += 3) {
+    for (i = 0; i + 3 <= this.length; i += 3) {
       group = this.data.substr(i, 3);
       value = Number.parseInt(group, 10);
 
@@ -41,7 +41,7 @@ class NumericData implements SegmentInterface {
 
     // If the number of input digits is not an exact multiple of three,
     // the final one or two digits are converted to 4 or 7 bits respectively.
-    const remainingNum = this.data.length - i;
+    const remainingNum = this.length - i;
     if (remainingNum > 0) {
       group = this.data.substr(i);
       value = Number.parseInt(group, 10);

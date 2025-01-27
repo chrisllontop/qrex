@@ -62,6 +62,33 @@ describe("QRCode Interface", () => {
       }),
     ).not.toThrow();
   });
+
+  it("Should throw when data is too big to be stored", () => {
+    // Create a string that's too large for any QR code version
+    const hugeData = new Array(20000).fill("A").join("");
+    expect(() => Qrex.create(hugeData)).toThrow("The amount of data is too big to be stored in a QR Code");
+  });
+
+  it("Should throw error when NaN mask pattern is provided", () => {
+    expect(() =>
+      Qrex.create("test", {
+        version: 1,
+        // @ts-ignore Testing NaN maskPattern
+        maskPattern: Number.NaN,
+      }),
+    ).toThrow("bad maskPattern:undefined");
+  });
+
+  it("Should accept custom toSJISFunc", () => {
+    const mockToSJIS = (str: string) => 0x8140;
+    expect(() =>
+      Qrex.create("test", {
+        version: 1,
+        maskPattern: 0 as MaskPatternType,
+        toSJISFunc: mockToSJIS,
+      }),
+    ).not.toThrow();
+  });
 });
 
 describe("QRCode Error Correction", () => {

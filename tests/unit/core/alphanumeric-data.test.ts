@@ -25,6 +25,13 @@ const testData = [
 ];
 
 describe("Alphanumeric Data", () => {
+  it("should handle undefined data", () => {
+    // @ts-ignore Testing undefined case
+    const alphanumericData = new AlphanumericData(undefined);
+    expect(alphanumericData.length).toBe(0);
+    expect(alphanumericData.data).toBeUndefined();
+  });
+
   it("should handle alphanumeric data correctly", () => {
     for (const data of testData) {
       const alphanumericData = new AlphanumericData(data.data);

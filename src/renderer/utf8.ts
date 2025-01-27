@@ -1,5 +1,5 @@
 import * as fs from "node:fs";
-import type { QRData, QrexOptions, RenderOptions } from "../types/qrex.type";
+import type { QRData, RenderOptions } from "../types/qrex.type";
 import { RendererUtils } from "./utils";
 
 type BlockChars = {

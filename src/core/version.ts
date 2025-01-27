@@ -15,8 +15,6 @@ function getBestVersionForDataLength(mode: DataMode, length: number, errorCorrec
       return currentVersion;
     }
   }
-
-  throw new Error("Data is too long to fit in a QR Code");
 }
 
 function getReservedBitsCount(mode: DataMode, version: number) {

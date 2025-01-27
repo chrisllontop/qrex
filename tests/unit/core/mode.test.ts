@@ -92,6 +92,8 @@ describe("Is valid", () => {
     expect(Mode.isValid({ bit: 1 })).toBe(false);
     // @ts-ignore Testing invalid mode with only ccBits property
     expect(Mode.isValid({ ccBits: [] })).toBe(false);
+    // @ts-ignore Testing invalid mode with ccBits but no bit
+    expect(Mode.isValid({ ccBits: [8, 16, 16] })).toBe(false);
   });
 });
 
@@ -126,5 +128,9 @@ describe("To string", () => {
   it("Throws on invalid mode", () => {
     // @ts-ignore Testing invalid mode object
     expect(() => Mode.toString({})).toThrow();
+    // @ts-ignore Testing undefined mode
+    expect(() => Mode.toString(undefined)).toThrow();
+    // @ts-ignore Testing mode without id
+    expect(() => Mode.toString({ bit: 1, ccBits: [] })).toThrow();
   });
 });

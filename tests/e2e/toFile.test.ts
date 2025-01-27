@@ -1,11 +1,13 @@
+import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { Qrex } from "../../src/qrex";
 import { removeNativePromise, restoreNativePromise } from "../helpers";
+import type { MaskPatternType } from "../../src/types/qrex.type";
 
 const defaultOptions = {
-  maskPattern: 0,
+  maskPattern: 0 as MaskPatternType,
 };
 
 describe("toFile - no promise available", () => {
@@ -20,14 +22,20 @@ describe("toFile - no promise available", () => {
   afterAll(() => {
     global.Promise = originalPromise;
     restoreNativePromise();
+    // @ts-ignore Testing in Node environment
     global.document = undefined;
+    // Clean up test file if it exists
+    if (fs.existsSync(fileName)) {
+      fs.unlinkSync(fileName);
+    }
   });
 
   it("should throw if a callback is not a function", () => {
     try {
-      const qrex: Qrex = new Qrex("some text", {}, defaultOptions);
+      const qrex: Qrex = new Qrex("some text", defaultOptions);
       qrex.toFile(fileName);
     } catch (error) {
+      // @ts-ignore Testing for error message
       expect(error.message).toBe("No valid version provided");
     }
   });
@@ -35,6 +43,13 @@ describe("toFile - no promise available", () => {
 
 describe("toFile", () => {
   const fileName = path.join(os.tmpdir(), "qrimage.png");
+
+  afterAll(() => {
+    // Clean up test file if it exists
+    if (fs.existsSync(fileName)) {
+      fs.unlinkSync(fileName);
+    }
+  });
 
   it("should throw if path is not provided", () => {
     const qrex: Qrex = new Qrex("some text");

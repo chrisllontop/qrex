@@ -31,6 +31,13 @@ const testData = [
 ];
 
 describe("Numeric Data", () => {
+  it("should handle undefined data", () => {
+    // @ts-ignore Testing undefined case
+    const numericData = new NumericData(undefined);
+    expect(numericData.length).toBe(0);
+    expect(numericData.data).toBe(undefined);
+  });
+
   for (const data of testData) {
     it(`Testing numeric data: ${data.data}`, () => {
       const numericData = new NumericData(data.data);

@@ -221,6 +221,14 @@ describe("Version from value", () => {
 });
 
 describe("Version capacity", () => {
+  it("should use BYTE mode as default when mode is undefined", () => {
+    const version = 1;
+    const ecLevel = ECLevel.L;
+    const byteCapacity = Version.getCapacity(version, ecLevel, Mode.BYTE);
+    const defaultCapacity = Version.getCapacity(version, ecLevel);
+    expect(defaultCapacity).toBe(byteCapacity);
+  });
+
   it("should throw if version is undefined", () => {
     expect(() => {
       // @ts-ignore Testing undefined version

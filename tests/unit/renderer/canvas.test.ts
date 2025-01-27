@@ -48,6 +48,20 @@ describe("RendererCanvas render", () => {
     expect(canvasEl instanceof Canvas).toBe(true);
   });
 
+  it("should handle canvas without style property", () => {
+    const sampleQrData = Qrex.create("sample text", {
+      version: 2,
+      maskPattern: 0,
+    });
+    const canvas = createCanvas(200, 200);
+    // @ts-ignore Explicitly remove style property for test
+    canvas.style = undefined;
+    const renderer = new RendererCanvas(canvas as unknown as HTMLCanvasElement);
+    expect(() => {
+      renderer.render(sampleQrData);
+    }).not.toThrow();
+  });
+
   it("should throw if canvas cannot be created", () => {
     // @ts-ignore
     global.document = undefined;
@@ -122,10 +136,11 @@ describe("RendererCanvas renderToDataURL", () => {
     expect(() => {
       renderer = new RendererCanvas();
       url = renderer.renderToDataURL(sampleQrData, {
-        // @ts-ignore TODO - Improve types in Qrex options
         margin: 10,
         scale: 1,
-        type: "image/png" as "png",
+        renderConfig: {
+          mimeType: "image/png",
+        },
       });
     }).not.toThrow();
 
@@ -193,10 +208,11 @@ describe("RendererCanvas renderToDataURL to provided canvas", () => {
     expect(() => {
       const renderer: RendererCanvas = new RendererCanvas();
       url = renderer.renderToDataURL(sampleQrData, {
-        // @ts-ignore TODO - Improve types in Qrex options
         margin: 10,
         scale: 1,
-        type: "image/png" as "png",
+        renderConfig: {
+          mimeType: "image/png",
+        },
       });
     }).toThrow();
 

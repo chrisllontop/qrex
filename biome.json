@@ -23,7 +23,8 @@
       "recommended": true,
       "suspicious": {
         "noShadowRestrictedNames": "off",
-        "noAssignInExpressions": "off"
+        "noAssignInExpressions": "off",
+        "noControlCharactersInRegex": "off"
       },
       "style": {
         "noParameterAssign": "off",

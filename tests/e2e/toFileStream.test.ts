@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { Qrex } from "../../src/qrex";
 
 const defaultOptions = {
@@ -9,6 +9,7 @@ const defaultOptions = {
 describe("toFileStream", () => {
   it("should throw if stream is not provided", () => {
     const qrex: Qrex = new Qrex("some text");
-    expect(() => qrex.toFileStream(defaultOptions)).toThrow("bad maskPattern:undefined");
+    // @ts-ignore Testing missing required parameters
+    expect(() => qrex.toFileStream(undefined, defaultOptions)).toThrow("bad maskPattern:undefined");
   });
 });

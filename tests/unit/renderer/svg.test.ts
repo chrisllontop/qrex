@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import { Parser } from "htmlparser2";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi, afterAll } from "vitest";
 import { Qrex } from "../../../src/core/qrex";
 import { RendererSvg } from "../../../src/renderer/svg";
 import type { QRData } from "../../../src/types/qrex.type";
@@ -164,6 +164,13 @@ describe("SvgRenderer", () => {
       maskPattern: 0,
     });
     const fileName = "qrimage.svg";
+
+    afterAll(() => {
+      // Clean up test file if it exists
+      if (fs.existsSync(fileName)) {
+        fs.unlinkSync(fileName);
+      }
+    });
 
     it("should render to file with correct filename and without error", async () => {
       // @ts-ignore Mock implementation doesn't need exact typing

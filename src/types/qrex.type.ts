@@ -1,10 +1,17 @@
 import type { BitBuffer } from "../core/bit-buffer";
 import type { BitMatrix } from "../core/bit-matrix";
 
-/** Available renderer types for QR code output */
+/**
+ * Available renderer types for QR code output.
+ * Supports multiple output formats including HTML5 Canvas, SVG, terminal output, and more.
+ */
 export type RendererType = "canvas" | "svg" | "terminal" | "txt" | "utf8" | "png";
 
-/** Options for QR codes rendering */
+/**
+ * Options for rendering QR codes.
+ * Controls the visual appearance and output format of the generated QR code,
+ * including size, colors, margins, and renderer-specific configurations.
+ */
 export type RenderOptions = {
   /** Width of the QR code in pixels (minimum: 21) */
   width?: number;
@@ -27,23 +34,32 @@ export type RenderOptions = {
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export type RenderConfig = Record<string, any>;
 
-/** Main configuration options for QR code generation */
+/**
+ * Main configuration options for QR code generation.
+ * Defines all aspects of the QR code including version, error correction,
+ * masking pattern, and rendering options. These settings determine the
+ * QR code's capacity, reliability, and visual appearance.
+ */
 export type QrexOptions = {
   /** Output renderer type */
   type?: RendererType;
-  /** QR Code version (1-40) */
+  /** QR Code version (1-40) controlling the size and data capacity */
   version?: number;
-  /** Error correction level (L, M, Q, H) */
+  /** Error correction level (L: 7%, M: 15%, Q: 25%, H: 30% recovery capacity) */
   errorCorrectionLevel?: ErrorCorrectionLevel;
-  /** Mask pattern (0-7) */
+  /** Mask pattern (0-7) for optimal module arrangement */
   maskPattern?: MaskPatternType;
-  /** Function to convert text to Shift JIS encoding */
+  /** Function to convert text to Shift JIS encoding for Kanji mode */
   toSJISFunc?: (text: string) => number | undefined;
   /** Rendering options for QR code output */
   render?: RenderOptions;
 };
 
-/** Processed and normalized rendering options with defaults applied */
+/**
+ * Processed and normalized rendering options with defaults applied.
+ * Contains the final configuration values used for rendering after
+ * merging user options with defaults and processing color values.
+ */
 export type ProcessedRenderOptions = {
   /** Final width of the QR code */
   width?: number;
@@ -67,7 +83,12 @@ export type ProcessedRenderOptions = {
 /** Content string for QR code generation */
 export type QrContent = string;
 
-/** Internal QR code data structure */
+/**
+ * Internal QR code data structure.
+ * Represents the complete QR code matrix and its configuration,
+ * including the binary data matrix, version, error correction,
+ * mask pattern, and encoded data segments.
+ */
 export type QRData = {
   /** Binary matrix representing QR code modules */
   modules: BitMatrix;
@@ -81,13 +102,19 @@ export type QRData = {
   segments: Segment[];
 };
 
-/** Internal representation of error correction level */
+/**
+ * Internal representation of error correction level.
+ * Used for encoding the error correction level in the QR code format information.
+ */
 export type ErrorCorrectionLevelBit = {
   /** Bit value representing error correction level */
   bit: number;
 };
 
-/** String representation of error correction levels */
+/**
+ * String representation of error correction levels.
+ * Supports both short (L,M,Q,H) and descriptive names for error correction levels.
+ */
 export type ErrorCorrectionLevelString = "L" | "M" | "Q" | "H" | "low" | "medium" | "quartile" | "high";
 
 /** Combined type for error correction level specification */
@@ -96,11 +123,21 @@ export type ErrorCorrectionLevel = ErrorCorrectionLevelBit | ErrorCorrectionLeve
 /** Valid mask pattern values (0-7) */
 export type MaskPatternType = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
-/** Available encoding modes for QR code data */
+/**
+ * Available encoding modes for QR code data.
+ * Different modes optimize encoding for specific types of content:
+ * - numeric: digits only
+ * - alphanumeric: digits and uppercase letters
+ * - byte: 8-bit data
+ * - kanji: Shift JIS characters
+ * - mixed: automatic mode selection
+ */
 export type ModeType = "alphanumeric" | "byte" | "kanji" | "numeric" | "mixed";
 
 /**
- * Mode Object
+ * Mode Object.
+ * Contains encoding specifications for different QR code data modes,
+ * including mode identifier and character count indicator lengths.
  */
 export type DataMode = {
   /** Model type */
@@ -114,7 +151,11 @@ export type DataMode = {
 /** Data segment type for QR code content */
 export type Segment = SegmentInterface | SegmentInterface<Uint8Array>;
 
-/** Interface for QR code data segments */
+/**
+ * Interface for QR code data segments.
+ * Defines the structure for encoded data segments within the QR code,
+ * supporting different data types and encoding modes.
+ */
 export interface SegmentInterface<T = string> {
   /** Segment data content */
   data: T;
@@ -135,7 +176,11 @@ export interface SegmentInterface<T = string> {
 /** Base type for renderer functions */
 export type RenderFunctionBase<T> = (data: QRData, opts?: RenderOptions) => T;
 
-/** Color representation object */
+/**
+ * Color representation object.
+ * Provides both RGB and hexadecimal representations of colors
+ * for flexible color handling across different renderers.
+ */
 export type ColorObject = {
   /** Red component (0-255) */
   r: number;

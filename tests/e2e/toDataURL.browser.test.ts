@@ -1,4 +1,4 @@
-import { createCanvas } from "canvas";
+import { type Canvas, createCanvas } from "canvas";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { Qrex } from "../../src/qrex.browser";
 import type { QrexOptions } from "../../src/types/qrex.type";
@@ -10,13 +10,13 @@ const defaultOptions: QrexOptions = {
 };
 
 describe("Qrex toDataURL Feature", () => {
-  let canvasEl: HTMLCanvasElement;
+  let canvasEl: HTMLCanvasElement | Canvas | undefined;
   let originalDocument: typeof global.document;
 
   beforeAll(() => {
     originalDocument = global.document;
     global.document = {
-      createElement: (el: string): HTMLCanvasElement | undefined => {
+      createElement: (el: string) => {
         if (el === "canvas") {
           return createCanvas(200, 200);
         }
@@ -34,11 +34,12 @@ describe("Qrex toDataURL Feature", () => {
   });
 
   afterEach(() => {
-    canvasEl = null;
+    canvasEl = undefined;
   });
 
   it("should throw an error if no arguments are provided", async () => {
     expect(() => {
+      // @ts-ignore - Testing invalid arguments
       const qrex: Qrex = new Qrex();
       qrex.toDataURL();
     }).toThrow("String required as first argument");
@@ -46,6 +47,7 @@ describe("Qrex toDataURL Feature", () => {
 
   it("should throw an error if no arguments are provided (browser)", async () => {
     expect(() => {
+      // @ts-ignore - Testing invalid arguments
       const qrex: Qrex = new Qrex();
       qrex.toDataURL();
     }).toThrow("String required as first argument");
@@ -53,6 +55,7 @@ describe("Qrex toDataURL Feature", () => {
 
   it("should throw an error if text is not provided (browser)", async () => {
     expect(() => {
+      // @ts-ignore - Testing invalid arguments
       const qrex: Qrex = new Qrex();
       qrex.toDataURL();
     }).toThrow("String required as first argument");
@@ -64,10 +67,9 @@ describe("Qrex toDataURL Feature", () => {
       {
         maskPattern: 0,
         errorCorrectionLevel: "L",
-        type: "image/png",
         version: 1,
       },
-      canvasEl,
+      canvasEl as HTMLCanvasElement,
     );
 
     const dataURL = qrex.toDataURL();
@@ -80,10 +82,9 @@ describe("Qrex toDataURL Feature", () => {
       {
         version: 3,
         errorCorrectionLevel: "H",
-        type: "image/png",
         maskPattern: 0,
       },
-      canvasEl,
+      canvasEl as HTMLCanvasElement,
     );
 
     await expect(() => qrex.toDataURL()).toBeUndefined;
@@ -91,7 +92,7 @@ describe("Qrex toDataURL Feature", () => {
 
   it("should create a canvas element when no canvas is provided", async () => {
     global.document = {
-      createElement: (el) => {
+      createElement: (el: string) => {
         if (el === "canvas") {
           return createCanvas(200, 200);
         }
@@ -101,7 +102,6 @@ describe("Qrex toDataURL Feature", () => {
     const qrex = new Qrex("i am a pony!", {
       ...defaultOptions,
       errorCorrectionLevel: "H",
-      type: "image/png",
       version: 5,
     });
 

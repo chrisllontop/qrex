@@ -50,7 +50,6 @@ function getOptions(opts?: RenderOptions): ProcessedRenderOptions {
       dark: hex2rgba(options.color.dark || "#000000ff"),
       light: hex2rgba(options.color.light || "#ffffffff"),
     },
-    type: options.type,
     renderConfig: options.renderConfig || {},
   };
 }

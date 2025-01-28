@@ -332,7 +332,7 @@ describe("Version best match", () => {
         results.push({
           version: v + 1,
           level,
-          result: Version.getBestVersionForData(data as unknown as Segment[], level),
+          result: Version.getBestVersionForData(data as unknown as Segment[], level)!,
           expected: v + 1,
         });
 
@@ -340,7 +340,7 @@ describe("Version best match", () => {
           results.push({
             version: v + 1,
             level: undefined,
-            result: Version.getBestVersionForData(data as unknown as Segment[], undefined),
+            result: Version.getBestVersionForData(data as unknown as Segment[], undefined)!,
             expected: v + 1,
           });
         }

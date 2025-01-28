@@ -1,4 +1,4 @@
-import type { ErrorCorrectionLevelBit, MaskPatternType, Segment } from "../types/qrex.type";
+import type { ErrorCorrectionLevel, ErrorCorrectionLevelBit, MaskPatternType, Segment } from "../types/qrex.type";
 import type { QRData, QrexOptions, QrContent } from "../types/qrex.type";
 import { AlignmentPattern } from "./alignment-pattern";
 import { BitBuffer } from "./bit-buffer";

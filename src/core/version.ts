@@ -99,7 +99,7 @@ function getCapacity(version: number, errorCorrectionLevel?: ErrorCorrectionLeve
 /**
  * Returns the minimum version needed to contain the amount of data
  */
-function getBestVersionForData(data: Segment[], errorCorrectionLevel?: ErrorCorrectionLevel): number {
+function getBestVersionForData(data: Segment[], errorCorrectionLevel?: ErrorCorrectionLevel) {
   let seg: Segment;
 
   const ecl = ECLevel.from(errorCorrectionLevel, ECLevel.M);

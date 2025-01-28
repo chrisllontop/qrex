@@ -34,12 +34,12 @@ export class KanjiData implements SegmentInterface {
       let value = CoreUtils.toSJIS(this.data[i]);
 
       // For characters with Shift JIS values from 0x8140 to 0x9FFC:
-      if (value >= 0x8140 && value <= 0x9ffc) {
+      if (value && value >= 0x8140 && value <= 0x9ffc) {
         // Subtract 0x8140 from Shift JIS value
         value -= 0x8140;
 
         // For characters with Shift JIS values from 0xE040 to 0xEBBF:
-      } else if (value >= 0xe040 && value <= 0xebbf) {
+      } else if (value && value >= 0xe040 && value <= 0xebbf) {
         // Subtract 0xC140 from Shift JIS value
         value -= 0xc140;
       } else {

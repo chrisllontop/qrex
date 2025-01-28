@@ -7,7 +7,7 @@ describe("toString", () => {
       // @ts-ignore Testing missing required parameters
       const qrex: Qrex = new Qrex();
       qrex.toString();
-    }).toThrow("String required as first argument");
+    }).toThrow("QR code content is required. Please provide a non-empty string to encode in the QR code");
   });
 
   it("should not throw an error for valid SVG renderer", async () => {

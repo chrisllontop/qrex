@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { ECLevel } from "../../../src/core/error-correction-level";
 import { Qrex } from "../../../src/core/qrex";
 import { Version } from "../../../src/core/version";
-import type { QrContent, MaskPatternType, ErrorCorrectionLevelString } from "../../../src/types/qrex.type";
+import type { MaskPatternType, ErrorCorrectionLevelString } from "../../../src/types/qrex.type";
 
 describe("QRCode Interface", () => {
   const defaultOptions = {

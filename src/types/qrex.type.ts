@@ -10,7 +10,7 @@ export type RendererType = "canvas" | "svg" | "terminal" | "txt" | "utf8" | "png
 /**
  * Options for rendering QR codes.
  * Controls the visual appearance and output format of the generated QR code,
- * including size, colors, margins, and renderer-specific configurations.
+ * including size, colors, margins, and renderer-specific configs.
  */
 export type RenderOptions = {
   /** Width of the QR code in pixels (minimum: 21) */
@@ -19,23 +19,23 @@ export type RenderOptions = {
   scale?: number;
   /** Margin around the QR code in modules (default: 4) */
   margin?: number;
-  /** Color configuration for QR code */
+  /** Color config for QR code */
   color?: {
     /** Color for the dark modules (hex color, default: "#000000ff") */
     dark?: string;
     /** Color for the light modules (hex color, default: "#ffffffff") */
     light?: string;
   };
-  /** Additional renderer-specific configuration */
+  /** Additional renderer-specific config */
   renderConfig?: RenderConfig;
 };
 
-/** Additional renderer-specific configuration options */
+/** Additional renderer-specific config options */
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export type RenderConfig = Record<string, any>;
 
 /**
- * Main configuration options for QR code generation.
+ * Main config options for QR code generation.
  * Defines all aspects of the QR code including version, error correction,
  * masking pattern, and rendering options. These settings determine the
  * QR code's capacity, reliability, and visual appearance.
@@ -57,7 +57,7 @@ export type QrexOptions = {
 
 /**
  * Processed and normalized rendering options with defaults applied.
- * Contains the final configuration values used for rendering after
+ * Contains the final config values used for rendering after
  * merging user options with defaults and processing color values.
  */
 export type ProcessedRenderOptions = {
@@ -67,7 +67,7 @@ export type ProcessedRenderOptions = {
   scale: number;
   /** Final margin size */
   margin: number;
-  /** Processed color configuration */
+  /** Processed color config */
   color: {
     /** Dark module color as RGB object */
     dark: ColorObject;
@@ -76,7 +76,7 @@ export type ProcessedRenderOptions = {
   };
   /** Selected renderer type */
   type?: RendererType;
-  /** Final renderer configuration */
+  /** Additional renderer-specific config */
   renderConfig: RenderConfig;
 };
 
@@ -85,7 +85,7 @@ export type QrContent = string;
 
 /**
  * Internal QR code data structure.
- * Represents the complete QR code matrix and its configuration,
+ * Represents the complete QR code matrix and its config,
  * including the binary data matrix, version, error correction,
  * mask pattern, and encoded data segments.
  */
@@ -94,7 +94,7 @@ export type QRData = {
   modules: BitMatrix;
   /** QR code version number */
   version: number;
-  /** Error correction level configuration */
+  /** Error correction level config */
   errorCorrectionLevel: ErrorCorrectionLevelBit;
   /** Selected mask pattern */
   maskPattern: MaskPatternType;

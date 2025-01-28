@@ -13,9 +13,14 @@ export abstract class QrexBase {
 
   protected checkParams(text: QrContent, opts?: QrexOptions) {
     if (!text) {
-      throw new Error("String required as first argument");
+      throw new Error("QR code content is required. Please provide a non-empty string to encode in the QR code");
     }
-    // TODO - Add opts validation
+    
+    if (opts?.maskPattern !== undefined) {
+      if (!Number.isInteger(opts.maskPattern) || opts.maskPattern < 0 || opts.maskPattern > 7) {
+        throw new Error("Mask pattern must be an integer between 0 and 7");
+      }
+    }
   }
 
   protected mergeRenderOptions(opts?: RenderOptions): RenderOptions {

@@ -120,8 +120,12 @@ export type ErrorCorrectionLevelString = "L" | "M" | "Q" | "H" | "low" | "medium
 /** Combined type for error correction level specification */
 export type ErrorCorrectionLevel = ErrorCorrectionLevelBit | ErrorCorrectionLevelString;
 
-/** Valid mask pattern values (0-7) */
-export type MaskPatternType = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+/** 
+ * Mask pattern value for QR code.
+ * Must be a number between 0 and 7 inclusive.
+ * Different patterns provide optimal scanning based on the QR content.
+ */
+export type MaskPatternType = number;
 
 /**
  * Available encoding modes for QR code data.

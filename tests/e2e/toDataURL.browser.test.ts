@@ -42,7 +42,7 @@ describe("Qrex toDataURL Feature", () => {
       // @ts-ignore - Testing invalid arguments
       const qrex: Qrex = new Qrex();
       qrex.toDataURL();
-    }).toThrow("String required as first argument");
+    }).toThrow("QR code content is required. Please provide a non-empty string to encode in the QR code");
   });
 
   it("should throw an error if no arguments are provided (browser)", async () => {
@@ -50,7 +50,7 @@ describe("Qrex toDataURL Feature", () => {
       // @ts-ignore - Testing invalid arguments
       const qrex: Qrex = new Qrex();
       qrex.toDataURL();
-    }).toThrow("String required as first argument");
+    }).toThrow("QR code content is required. Please provide a non-empty string to encode in the QR code");
   });
 
   it("should throw an error if text is not provided (browser)", async () => {
@@ -58,7 +58,7 @@ describe("Qrex toDataURL Feature", () => {
       // @ts-ignore - Testing invalid arguments
       const qrex: Qrex = new Qrex();
       qrex.toDataURL();
-    }).toThrow("String required as first argument");
+    }).toThrow("QR code content is required. Please provide a non-empty string to encode in the QR code");
   });
 
   it("should generate a valid Data URL using promise with error correction level L", async () => {

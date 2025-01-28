@@ -15,7 +15,7 @@ export abstract class QrexBase {
     if (!text) {
       throw new Error("QR code content is required. Please provide a non-empty string to encode in the QR code");
     }
-    
+
     if (opts?.maskPattern !== undefined) {
       if (!Number.isInteger(opts.maskPattern) || opts.maskPattern < 0 || opts.maskPattern > 7) {
         throw new Error("Mask pattern must be an integer between 0 and 7");

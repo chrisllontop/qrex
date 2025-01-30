@@ -42,15 +42,10 @@ export class RendererUtf8 {
     const data = qrData.modules.data;
 
     let output = "";
-    const margin = opts.margin as number; // We know this is a number from getOptions implementation
-    const marginLength = Math.max(1, size + margin * 2 + 1);
-    const marginHalfLength = Math.max(1, Math.floor(margin / 2) + 1);
-    const vMarginLength = Math.max(1, margin + 1);
+    let hMargin = Array(size + opts.margin * 2 + 1).join(blocks.WW);
+    hMargin = Array(opts.margin / 2 + 1).join(`${hMargin}\n`);
 
-    let hMargin = Array.from({ length: marginLength }, () => blocks.WW).join("");
-    hMargin = Array.from({ length: marginHalfLength }, () => `${hMargin}\n`).join("");
-
-    const vMargin = Array.from({ length: vMarginLength }, () => blocks.WW).join("");
+    const vMargin = Array(opts.margin + 1).join(blocks.WW);
 
     output += hMargin;
     for (let i = 0; i < size; i += 2) {

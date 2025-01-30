@@ -17,6 +17,14 @@ jobs:
           fetch-depth: 0
 
       - uses: pnpm/action-setup@v4
+      
+      - name: 🔄 Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: \${{ runner.os }}-node-modules-\${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            \${{ runner.os }}-node-modules-
 
       - uses: chrisllontop/gh-release-sync@v1
         with:
@@ -29,7 +37,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: 📦 Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: 🧪 Run tests
         run: pnpm test:ci

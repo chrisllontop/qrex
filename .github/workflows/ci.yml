@@ -17,13 +17,13 @@ jobs:
 
       - uses: pnpm/action-setup@v4
       
-      - name: 🔄 Cache pnpm modules
+      - name: 🔄 Cache node_modules
         uses: actions/cache@v4
         with:
-          path: ~/.pnpm-store
-          key: \${{ runner.os }}-pnpm-\${{ hashFiles('pnpm-lock.yaml') }}
+          path: node_modules
+          key: \${{ runner.os }}-node-modules-\${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: |
-            \${{ runner.os }}-pnpm-
+            \${{ runner.os }}-node-modules-
 
       - name: 📦 Install dependencies
         run: pnpm install --frozen-lockfile

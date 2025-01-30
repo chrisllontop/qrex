@@ -16,9 +16,17 @@ jobs:
         uses: actions/checkout@v3
 
       - uses: pnpm/action-setup@v4
+      
+      - name: 🔄 Cache pnpm modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: \${{ runner.os }}-pnpm-\${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            \${{ runner.os }}-pnpm-
 
       - name: 📦 Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: ✏️ Lint code
         run: pnpm lint:ci

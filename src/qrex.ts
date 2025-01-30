@@ -1,10 +1,10 @@
 import type { WriteStream } from "node:fs";
-import { QrexBase } from "./qrex.base";
-import { RendererPng } from "./renderer/png";
-import { RendererSvg } from "./renderer/svg";
-import { RendererTerminal } from "./renderer/terminal";
-import { RendererUtf8 } from "./renderer/utf8";
-import type { RendererType, RenderOptions } from "./types/qrex.type";
+import { QrexBase } from "./qrex.base.js";
+import { RendererPng } from "./renderer/png.js";
+import { RendererSvg } from "./renderer/svg.js";
+import { RendererTerminal } from "./renderer/terminal.js";
+import { RendererUtf8 } from "./renderer/utf8.js";
+import type { RendererType, RenderOptions } from "./types/qrex.type.js";
 
 export class Qrex extends QrexBase {
   private getTypeFromFilename(path: string): RendererType {
@@ -38,7 +38,7 @@ export class Qrex extends QrexBase {
     }
   }
 
-  public toString(renderOptions?: RenderOptions) {
+  public override toString(renderOptions?: RenderOptions) {
     const renderer = this.getStringRendererFromType(this.opts?.type);
     return this.render(renderer.render.bind(renderer), renderOptions);
   }

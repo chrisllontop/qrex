@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { AlphanumericData } from "../../../src/core/alphanumeric-data";
-import { ByteData } from "../../../src/core/byte-data";
-import { ECLevel } from "../../../src/core/error-correction-level";
-import { KanjiData } from "../../../src/core/kanji-data";
-import { Mode } from "../../../src/core/mode";
-import NumericData from "../../../src/core/numeric-data";
-import { Version } from "../../../src/core/version";
-import { VersionCheck } from "../../../src/core/version-check";
-import type { ErrorCorrectionLevelBit, Segment } from "../../../src/types/qrex.type";
+import { AlphanumericData } from "../../../src/core/alphanumeric-data.js";
+import { ByteData } from "../../../src/core/byte-data.js";
+import { ECLevel } from "../../../src/core/error-correction-level.js";
+import { KanjiData } from "../../../src/core/kanji-data.js";
+import { Mode } from "../../../src/core/mode.js";
+import NumericData from "../../../src/core/numeric-data.js";
+import { Version } from "../../../src/core/version.js";
+import { VersionCheck } from "../../../src/core/version-check.js";
+import type { ErrorCorrectionLevelBit, Segment } from "../../../src/types/qrex.type.js";
 
 const EC_LEVELS: ErrorCorrectionLevelBit[] = [ECLevel.L, ECLevel.M, ECLevel.Q, ECLevel.H];
 

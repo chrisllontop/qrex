@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { ECLevel } from "../../../src/core/error-correction-level";
-import { Qrex } from "../../../src/core/qrex";
-import { Version } from "../../../src/core/version";
-import type { MaskPatternType, ErrorCorrectionLevelString } from "../../../src/types/qrex.type";
+import { ECLevel } from "../../../src/core/error-correction-level.js";
+import { Qrex } from "../../../src/core/qrex.js";
+import { Version } from "../../../src/core/version.js";
+import type { MaskPatternType, ErrorCorrectionLevelString } from "../../../src/types/qrex.type.js";
 
 describe("QRCode Interface", () => {
   const defaultOptions = {

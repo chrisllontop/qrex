@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Qrex } from "../../src/qrex";
+import { Qrex } from "../../src/qrex.js";
 
 describe("toBuffer", () => {
   it("should not throw an error for the terminal renderer", async () => {

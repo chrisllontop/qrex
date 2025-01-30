@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { BitBuffer } from "../../../src/core/bit-buffer";
+import { BitBuffer } from "../../../src/core/bit-buffer.js";
 
 describe("Bit Buffer", () => {
   it("should handle bit buffer operations correctly", () => {

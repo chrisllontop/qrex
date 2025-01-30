@@ -1,6 +1,6 @@
 import * as fs from "node:fs";
-import type { QRData, RenderOptions } from "../types/qrex.type";
-import { RendererUtils } from "./utils";
+import type { QRData, RenderOptions } from "../types/qrex.type.js";
+import { RendererUtils } from "./utils.js";
 
 type BlockChars = {
   WW: string;
@@ -42,10 +42,15 @@ export class RendererUtf8 {
     const data = qrData.modules.data;
 
     let output = "";
-    let hMargin = Array(size + opts.margin * 2 + 1).join(blocks.WW);
-    hMargin = Array(opts.margin / 2 + 1).join(`${hMargin}\n`);
+    const margin = opts.margin as number;  // We know this is a number from getOptions implementation
+    const marginLength = Math.max(1, size + margin * 2 + 1);
+    const marginHalfLength = Math.max(1, Math.floor(margin / 2) + 1);
+    const vMarginLength = Math.max(1, margin + 1);
 
-    const vMargin = Array(opts.margin + 1).join(blocks.WW);
+    let hMargin = Array.from({ length: marginLength }, () => blocks.WW).join('');
+    hMargin = Array.from({ length: marginHalfLength }, () => hMargin + '\n').join('');
+
+    const vMargin = Array.from({ length: vMarginLength }, () => blocks.WW).join('');
 
     output += hMargin;
     for (let i = 0; i < size; i += 2) {

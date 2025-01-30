@@ -1,18 +1,18 @@
-import type { ErrorCorrectionLevel, ErrorCorrectionLevelBit, MaskPatternType, Segment } from "../types/qrex.type";
-import type { QRData, QrexOptions, QrContent } from "../types/qrex.type";
-import { AlignmentPattern } from "./alignment-pattern";
-import { BitBuffer } from "./bit-buffer";
-import { BitMatrix } from "./bit-matrix";
-import { ECCode } from "./error-correction-code";
-import { ECLevel } from "./error-correction-level";
-import { FinderPattern } from "./finder-pattern";
-import { FormatInfo } from "./format-info";
-import { MaskPattern } from "./mask-pattern";
-import { Mode } from "./mode";
-import { ReedSolomonEncoder } from "./reed-solomon-encoder";
-import { Segments } from "./segments";
-import { CoreUtils } from "./utils";
-import { Version } from "./version";
+import type { ErrorCorrectionLevelBit, MaskPatternType, Segment } from "../types/qrex.type.js";
+import type { QRData, QrexOptions, QrContent } from "../types/qrex.type.js";
+import { AlignmentPattern } from "./alignment-pattern.js";
+import { BitBuffer } from "./bit-buffer.js";
+import { BitMatrix } from "./bit-matrix.js";
+import { ECCode } from "./error-correction-code.js";
+import { ECLevel } from "./error-correction-level.js";
+import { FinderPattern } from "./finder-pattern.js";
+import { FormatInfo } from "./format-info.js";
+import { MaskPattern } from "./mask-pattern.js";
+import { Mode } from "./mode.js";
+import { ReedSolomonEncoder } from "./reed-solomon-encoder.js";
+import { Segments } from "./segments.js";
+import { CoreUtils } from "./utils.js";
+import { Version } from "./version.js";
 
 /**
  * Add finder patterns bits to matrix

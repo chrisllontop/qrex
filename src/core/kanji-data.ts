@@ -1,7 +1,7 @@
-import type { DataMode, SegmentInterface } from "../types/qrex.type";
-import type { BitBuffer } from "./bit-buffer";
-import { Mode } from "./mode";
-import { CoreUtils } from "./utils";
+import type { DataMode, SegmentInterface } from "../types/qrex.type.js";
+import type { BitBuffer } from "./bit-buffer.js";
+import { Mode } from "./mode.js";
+import { CoreUtils } from "./utils.js";
 
 export class KanjiData implements SegmentInterface {
   mode: DataMode;

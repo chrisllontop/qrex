@@ -1,9 +1,9 @@
 import fs from "node:fs";
 import { Parser } from "htmlparser2";
 import { describe, expect, it, vi, afterAll } from "vitest";
-import { Qrex } from "../../../src/core/qrex";
-import { RendererSvg } from "../../../src/renderer/svg";
-import type { QRData } from "../../../src/types/qrex.type";
+import { Qrex } from "../../../src/core/qrex.js";
+import { RendererSvg } from "../../../src/renderer/svg.js";
+import type { QRData } from "../../../src/types/qrex.type.js";
 
 interface ExpectedTag {
   name: string;

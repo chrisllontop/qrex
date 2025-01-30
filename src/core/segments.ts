@@ -1,12 +1,12 @@
 import { find_path } from "dijkstrajs";
-import type { DataMode, ModeType, Segment, SegmentInterface } from "../types/qrex.type";
-import { AlphanumericData } from "./alphanumeric-data";
-import { ByteData } from "./byte-data";
-import { KanjiData } from "./kanji-data";
-import { Mode } from "./mode";
-import NumericData from "./numeric-data";
-import { Regex } from "./regex";
-import { CoreUtils } from "./utils";
+import type { DataMode, ModeType, Segment } from "../types/qrex.type.js";
+import { AlphanumericData } from "./alphanumeric-data.js";
+import { ByteData } from "./byte-data.js";
+import { KanjiData } from "./kanji-data.js";
+import { Mode } from "./mode.js";
+import NumericData from "./numeric-data.js";
+import { Regex } from "./regex.js";
+import { CoreUtils } from "./utils.js";
 
 /**
  * Returns UTF8 byte length

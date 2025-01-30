@@ -1,7 +1,7 @@
-import { QrexBase } from "./qrex.base";
-import { RendererCanvas } from "./renderer/canvas";
-import { RendererSvgTag } from "./renderer/svg-tag";
-import type { QrexOptions, QrContent, RenderOptions } from "./types/qrex.type";
+import { QrexBase } from "./qrex.base.js";
+import { RendererCanvas } from "./renderer/canvas.js";
+import { RendererSvgTag } from "./renderer/svg-tag.js";
+import type { QrexOptions, QrContent, RenderOptions } from "./types/qrex.type.js";
 
 export class Qrex extends QrexBase {
   private readonly rendererCanvas: RendererCanvas;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Regex } from "../../../src/core/regex";
+import { Regex } from "../../../src/core/regex.js";
 
 describe("Regex", () => {
   it("should export a regex for NUMERIC", () => {

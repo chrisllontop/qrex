@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { GaloisField as GF } from "../../../src/core/galois-field";
+import { GaloisField as GF } from "../../../src/core/galois-field.js";
 
 describe("Galois Field", () => {
   it("should throw for log(n) with n < 1", () => {

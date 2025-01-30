@@ -1,4 +1,4 @@
-import { Polynomial } from "./polynomial";
+import { Polynomial } from "./polynomial.js";
 
 export class ReedSolomonEncoder {
   degree: number;

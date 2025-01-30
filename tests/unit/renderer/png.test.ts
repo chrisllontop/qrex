@@ -1,10 +1,10 @@
 import fs from "node:fs";
 import { PNG } from "pngjs";
 import { describe, expect, it, vi, afterAll } from "vitest";
-import { Qrex } from "../../../src/core/qrex";
-import { RendererPng } from "../../../src/renderer/png";
-import type { QRData } from "../../../src/types/qrex.type";
-import StreamMock from "../../mocks/writable-stream";
+import { Qrex } from "../../../src/core/qrex.js";
+import { RendererPng } from "../../../src/renderer/png.js";
+import type { QRData } from "../../../src/types/qrex.type.js";
+import StreamMock from "../../mocks/writable-stream.js";
 
 describe("PNG renderer interface", () => {
   const renderer: RendererPng = new RendererPng();

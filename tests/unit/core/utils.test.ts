@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { CoreUtils } from "../../../src/core/utils";
+import { CoreUtils } from "../../../src/core/utils.js";
 
 /**
  * QR Code sizes. Each element refers to a version

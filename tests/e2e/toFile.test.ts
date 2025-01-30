@@ -2,9 +2,9 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import { Qrex } from "../../src/qrex";
-import { removeNativePromise, restoreNativePromise } from "../helpers";
-import type { MaskPatternType } from "../../src/types/qrex.type";
+import { Qrex } from "../../src/qrex.js";
+import { removeNativePromise, restoreNativePromise } from "../helpers.js";
+import type { MaskPatternType } from "../../src/types/qrex.type.js";
 
 const defaultOptions = {
   maskPattern: 0 as MaskPatternType,

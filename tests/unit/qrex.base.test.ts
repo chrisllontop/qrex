@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { QrexBase } from "../../src/qrex.base";
+import { QrexBase } from "../../src/qrex.base.js";
 
 // Create a concrete class for testing the abstract QrexBase
 class TestQrex extends QrexBase {}

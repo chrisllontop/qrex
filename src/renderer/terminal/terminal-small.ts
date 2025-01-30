@@ -1,4 +1,4 @@
-import type { QRData, QrexOptions, RenderOptions } from "../../types/qrex.type";
+import type { QRData, RenderOptions } from "../../types/qrex.type.js";
 
 type PaletteKey = "00" | "01" | "02" | "10" | "11" | "12" | "20" | "21" | "22";
 

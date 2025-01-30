@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { BitMatrix } from "../../../src/core/bit-matrix";
-import { MaskPattern } from "../../../src/core/mask-pattern";
-import type { MaskPatternType } from "../../../src/types/qrex.type";
+import { BitMatrix } from "../../../src/core/bit-matrix.js";
+import { MaskPattern } from "../../../src/core/mask-pattern.js";
+import type { MaskPatternType } from "../../../src/types/qrex.type.js";
 
 describe("Mask pattern - Pattern references", () => {
   it("Should return 8 patterns", () => {

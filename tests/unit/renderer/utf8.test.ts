@@ -1,6 +1,6 @@
 import { describe, expect, it, afterEach } from "vitest";
-import { Qrex } from "../../../src/core/qrex";
-import { RendererUtf8 } from "../../../src/renderer/utf8";
+import { Qrex } from "../../../src/core/qrex.js";
+import { RendererUtf8 } from "../../../src/renderer/utf8.js";
 import * as fs from "node:fs";
 
 const renderer: RendererUtf8 = new RendererUtf8();

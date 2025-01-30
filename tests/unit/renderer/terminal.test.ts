@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { Qrex } from "../../../src/core/qrex";
-import { RendererTerminal } from "../../../src/renderer/terminal";
-import type { QRData } from "../../../src/types/qrex.type";
+import { Qrex } from "../../../src/core/qrex.js";
+import { RendererTerminal } from "../../../src/renderer/terminal.js";
+import type { QRData } from "../../../src/types/qrex.type.js";
 
 const renderer: RendererTerminal = new RendererTerminal();
 describe("RendererTerminal interface", () => {

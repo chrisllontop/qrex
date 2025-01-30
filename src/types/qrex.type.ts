@@ -1,5 +1,5 @@
-import type { BitBuffer } from "../core/bit-buffer";
-import type { BitMatrix } from "../core/bit-matrix";
+import type { BitBuffer } from "../core/bit-buffer.js";
+import type { BitMatrix } from "../core/bit-matrix.js";
 
 /**
  * Available renderer types for QR code output.
@@ -68,12 +68,12 @@ export type ProcessedRenderOptions = {
   /** Final margin size */
   margin: number;
   /** Processed color config */
-  color: {
+  color: Required<{
     /** Dark module color as RGB object */
     dark: ColorObject;
     /** Light module color as RGB object */
     light: ColorObject;
-  };
+  }>;
   /** Selected renderer type */
   type?: RendererType;
   /** Additional renderer-specific config */

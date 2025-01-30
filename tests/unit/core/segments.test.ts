@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import toSJIS from "../../../src/helper/to-sjis";
-import { AlphanumericData } from "../../../src/core/alphanumeric-data";
-import { ByteData } from "../../../src/core/byte-data";
-import { Mode } from "../../../src/core/mode";
-import NumericData from "../../../src/core/numeric-data";
-import { Segments } from "../../../src/core/segments";
-import { CoreUtils } from "../../../src/core/utils";
+import toSJIS from "../../../src/helper/to-sjis.js";
+import { AlphanumericData } from "../../../src/core/alphanumeric-data.js";
+import { ByteData } from "../../../src/core/byte-data.js";
+import { Mode } from "../../../src/core/mode.js";
+import NumericData from "../../../src/core/numeric-data.js";
+import { Segments } from "../../../src/core/segments.js";
+import { CoreUtils } from "../../../src/core/utils.js";
 
 const testData = [
   {

@@ -1,6 +1,6 @@
-import type { DataMode, ModeType } from "../types/qrex.type";
-import { Regex } from "./regex";
-import { VersionCheck } from "./version-check";
+import type { DataMode, ModeType } from "../types/qrex.type.js";
+import { Regex } from "./regex.js";
+import { VersionCheck } from "./version-check.js";
 
 const NUMERIC: DataMode = {
   id: "numeric",

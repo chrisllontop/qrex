@@ -1,7 +1,7 @@
 {
   "name": "qrex",
-  "description": "QR-Code / 2D Barcode api with both server side and client side support using canvas",
-  "version": "1.0.0-beta2",
+  "description": "Modern QR code generator for Node.js and Browser",
+  "version": "1.0.0",
   "author": "Christian Llontop <me@chrisllontop.com>",
   "keywords": [
     "qr",
@@ -45,16 +45,12 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@rspack/cli": "^1.1.0",
-    "@rspack/core": "^1.1.0",
     "@types/node": "^22.9.1",
     "@types/pngjs": "^6.0.5",
     "@vitest/coverage-istanbul": "^2.1.8",
     "@vitest/coverage-v8": "^2.1.8",
     "canvas": "^3.0.1",
     "htmlparser2": "^10.0.0",
-    "ts-loader": "^9.5.1",
-    "ts-node": "^10.9.2",
     "typescript": "^5.6.3",
     "vitest": "^2.1.5"
   },

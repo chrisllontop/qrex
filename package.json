@@ -13,8 +13,10 @@
   ],
   "main": "dist/qrex.js",
   "module": "dist/qrex.js",
+  "types": "dist/qrex.d.ts",
   "browser": {
     "./dist/qrex.js": "./dist/qrex.browser.js",
+    "./dist/qrex.d.ts": "./dist/qrex.browser.d.ts",
     "fs": false
   },
   "files": [

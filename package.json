@@ -21,10 +21,11 @@
     "bin",
     "dist"
   ],
+  "type": "module",
   "homepage": "https://github.com/chrisllontop/qrex",
   "license": "MIT",
   "scripts": {
-    "build": "rm -rf dist && rspack build",
+    "build": "tsc",
     "lint:ci": "biome lint && biome format",
     "lint:fix": "biome lint --write && biome format --write",
     "test:dev": "vitest --watch",

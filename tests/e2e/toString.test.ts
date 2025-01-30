@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Qrex } from "../../src/qrex";
+import { Qrex } from "../../src/qrex.js";
 
 describe("toString", () => {
   it("should throw if text is not provided", () => {

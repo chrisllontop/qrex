@@ -1,7 +1,7 @@
 import { Canvas, createCanvas } from "canvas";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { Qrex } from "../../../src/core/qrex";
-import { RendererCanvas } from "../../../src/renderer/canvas";
+import { Qrex } from "../../../src/core/qrex.js";
+import { RendererCanvas } from "../../../src/renderer/canvas.js";
 
 describe("RendererCanvas interface", () => {
   it("should have render function", () => {

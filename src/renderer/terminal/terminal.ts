@@ -1,4 +1,4 @@
-import type { QRData } from "../../types/qrex.type";
+import type { QRData } from "../../types/qrex.type.js";
 
 export class Terminal {
   public render(qrData: QRData): string {

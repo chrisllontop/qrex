@@ -1,8 +1,8 @@
 import * as fs from "node:fs";
 import type { WriteStream } from "node:fs";
 import { PNG } from "pngjs";
-import type { QRData, QrexOptions, RenderOptions } from "../types/qrex.type";
-import { RendererUtils } from "./utils";
+import type { QRData, RenderOptions } from "../types/qrex.type.js";
+import { RendererUtils } from "./utils.js";
 
 export class RendererPng {
   public render(qrData: QRData, options?: RenderOptions): PNG {

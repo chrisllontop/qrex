@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Qrex } from "../../src/qrex";
+import { Qrex } from "../../src/qrex.js";
 
 const defaultOptions = {
   maskPattern: 0,

@@ -1,18 +1,17 @@
 import { describe, expect, it, vi } from "vitest";
-import { Qrex } from "../../src/qrex.browser";
-import { RendererCanvas } from "../../src/renderer/canvas";
-import { RendererSvgTag } from "../../src/renderer/svg-tag";
-import type { MaskPatternType } from "../../src/types/qrex.type";
+import { Qrex } from "../../src/qrex.browser.js";
+import { RendererCanvas } from "../../src/renderer/canvas.js";
+import type { MaskPatternType } from "../../src/types/qrex.type.js";
 
 // Mock canvas and svg renderers
-vi.mock("../../src/renderer/canvas", () => ({
+vi.mock("../../src/renderer/canvas.js", () => ({
   RendererCanvas: vi.fn().mockImplementation(() => ({
     render: vi.fn().mockReturnValue("canvas-result"),
     renderToDataURL: vi.fn().mockReturnValue("data-url-result"),
   })),
 }));
 
-vi.mock("../../src/renderer/svg-tag", () => ({
+vi.mock("../../src/renderer/svg-tag.js", () => ({
   RendererSvgTag: vi.fn().mockImplementation(() => ({
     render: vi.fn().mockReturnValue("svg-result"),
   })),

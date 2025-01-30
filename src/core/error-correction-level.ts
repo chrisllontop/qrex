@@ -1,4 +1,4 @@
-import type { ErrorCorrectionLevel, ErrorCorrectionLevelBit, ErrorCorrectionLevelString } from "../types/qrex.type";
+import type { ErrorCorrectionLevel, ErrorCorrectionLevelBit, ErrorCorrectionLevelString } from "../types/qrex.type.js";
 
 const L: ErrorCorrectionLevelBit = { bit: 1 };
 const M: ErrorCorrectionLevelBit = { bit: 0 };

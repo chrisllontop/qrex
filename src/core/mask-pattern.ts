@@ -1,5 +1,5 @@
-import type { MaskPatternType } from "../types/qrex.type";
-import type { BitMatrix } from "./bit-matrix";
+import type { MaskPatternType } from "../types/qrex.type.js";
+import type { BitMatrix } from "./bit-matrix.js";
 
 const Patterns = {
   PATTERN000: 0,

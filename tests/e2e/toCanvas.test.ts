@@ -1,7 +1,7 @@
 import { type Canvas, createCanvas } from "canvas";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { Qrex } from "../../src/qrex.browser";
-import type { QrexOptions } from "../../src/types/qrex.type";
+import { Qrex } from "../../src/qrex.browser.js";
+import type { QrexOptions } from "../../src/types/qrex.type.js";
 
 const defaultOptions = {
   maskPattern: 0,

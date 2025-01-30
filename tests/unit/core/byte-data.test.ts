@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { BitBuffer } from "../../../src/core/bit-buffer";
-import { ByteData } from "../../../src/core/byte-data";
-import { Mode } from "../../../src/core/mode";
+import { BitBuffer } from "../../../src/core/bit-buffer.js";
+import { ByteData } from "../../../src/core/byte-data.js";
+import { Mode } from "../../../src/core/mode.js";
 
 describe("Byte Data: String Input", () => {
   it("should handle string input correctly", () => {

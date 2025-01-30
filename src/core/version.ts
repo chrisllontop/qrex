@@ -1,9 +1,9 @@
-import type { DataMode, ErrorCorrectionLevel, ErrorCorrectionLevelBit, Segment } from "../types/qrex.type";
-import { ECCode } from "./error-correction-code";
-import { ECLevel } from "./error-correction-level";
-import { Mode } from "./mode";
-import { CoreUtils } from "./utils";
-import { VersionCheck } from "./version-check";
+import type { DataMode, ErrorCorrectionLevel, ErrorCorrectionLevelBit, Segment } from "../types/qrex.type.js";
+import { ECCode } from "./error-correction-code.js";
+import { ECLevel } from "./error-correction-level.js";
+import { Mode } from "./mode.js";
+import { CoreUtils } from "./utils.js";
+import { VersionCheck } from "./version-check.js";
 
 /** Generator polynomial used to encode version information */
 const G18 = (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0);

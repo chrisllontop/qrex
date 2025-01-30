@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { Mode } from "../../../src/core/mode";
-import type { DataMode, ModeType } from "../../../src/types/qrex.type";
+import { Mode } from "../../../src/core/mode.js";
+import type { DataMode, ModeType } from "../../../src/types/qrex.type.js";
 
 describe("Mode bits", () => {
   const EXPECTED_BITS: Record<ModeType, number> = {

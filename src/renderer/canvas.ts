@@ -1,5 +1,5 @@
-import type { QRData, QrexOptions, RenderOptions } from "../types/qrex.type";
-import { RendererUtils } from "./utils";
+import type { QRData, RenderOptions } from "../types/qrex.type.js";
+import { RendererUtils } from "./utils.js";
 
 export class RendererCanvas {
   canvas: HTMLCanvasElement;

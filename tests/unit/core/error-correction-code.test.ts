@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { ECCode } from "../../../src/core/error-correction-code";
-import { ECLevel } from "../../../src/core/error-correction-level";
+import { ECCode } from "../../../src/core/error-correction-code.js";
+import { ECLevel } from "../../../src/core/error-correction-level.js";
 
 describe("Error Correction Codewords", () => {
   const levels = [ECLevel.L, ECLevel.M, ECLevel.Q, ECLevel.H];

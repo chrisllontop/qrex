@@ -1,5 +1,5 @@
-import type { ColorObject, QRData, QrexOptions, RenderOptions } from "../types/qrex.type";
-import { RendererUtils } from "./utils";
+import type { ColorObject, QRData, RenderOptions } from "../types/qrex.type.js";
+import { RendererUtils } from "./utils.js";
 
 export class RendererSvgTag {
   private getColorAttrib(color: ColorObject, attrib: string) {

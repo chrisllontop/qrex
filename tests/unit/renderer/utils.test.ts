@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { BitMatrix } from "../../../src/core/bit-matrix";
-import { RendererUtils } from "../../../src/renderer/utils";
-import type { ColorObject, QRData, QrexOptions } from "../../../src/types/qrex.type";
+import { BitMatrix } from "../../../src/core/bit-matrix.js";
+import { RendererUtils } from "../../../src/renderer/utils.js";
+import type { ColorObject, QRData, QrexOptions } from "../../../src/types/qrex.type.js";
 
 describe("Utils getOptions", () => {
   const defaultOptions = {

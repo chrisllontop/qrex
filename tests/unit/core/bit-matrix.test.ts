@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { BitMatrix } from "../../../src/core/bit-matrix";
+import { BitMatrix } from "../../../src/core/bit-matrix.js";
 
 describe("Bit Matrix", () => {
   it("should throw an error if size is 0", () => {

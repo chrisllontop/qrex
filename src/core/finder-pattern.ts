@@ -1,4 +1,4 @@
-import { CoreUtils } from "./utils";
+import { CoreUtils } from "./utils.js";
 
 const FINDER_PATTERN_SIZE = 7;
 

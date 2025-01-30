@@ -1,4 +1,4 @@
-import type { ColorObject, ProcessedRenderOptions, QRData, RenderOptions } from "../types/qrex.type";
+import type { ColorObject, ProcessedRenderOptions, QRData, RenderOptions } from "../types/qrex.type.js";
 
 function hex2rgba(hex: string): ColorObject {
   if (!hex || typeof hex !== "string") {
@@ -69,12 +69,13 @@ function qrToImageData(imgData: Uint8Array | Uint8ClampedArray, qr: QRData, opts
   const scale = getScale(size, opts);
   const symbolSize = Math.floor((size + opts.margin * 2) * scale);
   const scaledMargin = opts.margin * scale;
-  const palette = [opts.color.light, opts.color.dark];
+  const colors: { light: ColorObject; dark: ColorObject } = opts.color;
+  const palette: [ColorObject, ColorObject] = [colors.light, colors.dark];
 
   for (let i = 0; i < symbolSize; i++) {
     for (let j = 0; j < symbolSize; j++) {
       let posDst = (i * symbolSize + j) * 4;
-      let pxColor = opts.color.light;
+      let pxColor = colors.light;
 
       if (i >= scaledMargin && j >= scaledMargin && i < symbolSize - scaledMargin && j < symbolSize - scaledMargin) {
         const iSrc = Math.floor((i - scaledMargin) / scale);

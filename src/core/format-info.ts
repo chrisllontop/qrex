@@ -1,5 +1,5 @@
-import type { ErrorCorrectionLevelBit, MaskPatternType } from "../types/qrex.type";
-import { CoreUtils } from "./utils";
+import type { ErrorCorrectionLevelBit, MaskPatternType } from "../types/qrex.type.js";
+import { CoreUtils } from "./utils.js";
 
 const G15 = (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0);
 const G15_MASK = (1 << 14) | (1 << 12) | (1 << 10) | (1 << 4) | (1 << 1);

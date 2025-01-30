@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { Qrex } from "../../../../src/core/qrex";
-import { TerminalSmall } from "../../../../src/renderer/terminal/terminal-small";
-import type { QRData } from "../../../../src/types/qrex.type";
+import { Qrex } from "../../../../src/core/qrex.js";
+import { TerminalSmall } from "../../../../src/renderer/terminal/terminal-small.js";
+import type { QRData } from "../../../../src/types/qrex.type.js";
 
 const renderer = new TerminalSmall();
 

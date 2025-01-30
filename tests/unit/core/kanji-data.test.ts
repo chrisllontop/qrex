@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import toSJIS from "../../../src/helper/to-sjis";
-import { BitBuffer } from "../../../src/core/bit-buffer";
-import { KanjiData } from "../../../src/core/kanji-data";
-import { Mode } from "../../../src/core/mode";
-import { CoreUtils } from "../../../src/core/utils";
+import toSJIS from "../../../src/helper/to-sjis.js";
+import { BitBuffer } from "../../../src/core/bit-buffer.js";
+import { KanjiData } from "../../../src/core/kanji-data.js";
+import { Mode } from "../../../src/core/mode.js";
+import { CoreUtils } from "../../../src/core/utils.js";
 
 CoreUtils.setToSJISFunction(toSJIS);
 

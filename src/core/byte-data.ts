@@ -1,6 +1,6 @@
-import type { DataMode, SegmentInterface } from "../types/qrex.type";
-import type { BitBuffer } from "./bit-buffer";
-import { Mode } from "./mode";
+import type { DataMode, SegmentInterface } from "../types/qrex.type.js";
+import type { BitBuffer } from "./bit-buffer.js";
+import { Mode } from "./mode.js";
 
 export class ByteData implements SegmentInterface<Uint8Array> {
   mode: DataMode;

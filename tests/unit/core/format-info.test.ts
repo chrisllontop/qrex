@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { ECLevel } from "../../../src/core/error-correction-level";
-import { FormatInfo } from "../../../src/core/format-info";
-import { MaskPattern } from "../../../src/core/mask-pattern";
-import type { ErrorCorrectionLevelBit, MaskPatternType } from "../../../src/types/qrex.type";
+import { ECLevel } from "../../../src/core/error-correction-level.js";
+import { FormatInfo } from "../../../src/core/format-info.js";
+import { MaskPattern } from "../../../src/core/mask-pattern.js";
+import type { ErrorCorrectionLevelBit, MaskPatternType } from "../../../src/types/qrex.type.js";
 
 const EXPECTED_FORMAT_BITS: readonly number[][] = [
   [0x77c4, 0x72f3, 0x7daa, 0x789d, 0x662f, 0x6318, 0x6c41, 0x6976],

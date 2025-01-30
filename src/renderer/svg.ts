@@ -1,6 +1,6 @@
 import * as fs from "node:fs";
-import type { QRData, QrexOptions, RenderOptions } from "../types/qrex.type";
-import { RendererSvgTag } from "./svg-tag";
+import type { QRData, RenderOptions } from "../types/qrex.type.js";
+import { RendererSvgTag } from "./svg-tag.js";
 
 export class RendererSvg {
   private rendererSvgTag = new RendererSvgTag();

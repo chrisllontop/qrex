@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { ECLevel } from "../../../src/core/error-correction-level";
-import type { ErrorCorrectionLevel, ErrorCorrectionLevelBit } from "../../../src/types/qrex.type";
+import { ECLevel } from "../../../src/core/error-correction-level.js";
+import type { ErrorCorrectionLevel, ErrorCorrectionLevelBit } from "../../../src/types/qrex.type.js";
 
 const EC_LEVELS = [ECLevel.L, ECLevel.M, ECLevel.Q, ECLevel.H];
 

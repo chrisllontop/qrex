@@ -1,5 +1,5 @@
-import { Qrex as QrexCore } from "./core/qrex";
-import type { QrexOptions, QrContent, RenderFunctionBase, RenderOptions } from "./types/qrex.type";
+import { Qrex as QrexCore } from "./core/qrex.js";
+import type { QrexOptions, QrContent, RenderFunctionBase, RenderOptions } from "./types/qrex.type.js";
 
 export abstract class QrexBase {
   protected readonly opts?: QrexOptions;

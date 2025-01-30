@@ -1,6 +1,6 @@
-import type { QRData, RenderOptions } from "../types/qrex.type";
-import { Terminal } from "./terminal/terminal";
-import { TerminalSmall } from "./terminal/terminal-small";
+import type { QRData, RenderOptions } from "../types/qrex.type.js";
+import { Terminal } from "./terminal/terminal.js";
+import { TerminalSmall } from "./terminal/terminal-small.js";
 
 export class RendererTerminal {
   private terminal = new Terminal();
